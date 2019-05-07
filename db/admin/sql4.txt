@@ -1,0 +1,159 @@
+
+
+
+//Запрос для писем ректорам
+SELECT `v_take_part`.*,`v_invitation`.`count_invitation`,`v_place`.`count_place`, `univers`.`univerrod`,`univers`.`rector_r` FROM `v_take_part` left outer join `v_invitation` ON `v_take_part`.`id_u`=`v_invitation`.`id_u` left outer join `v_place` ON `v_take_part`.`id_u`=`v_place`.`id_u` left outer join `univers` ON `v_take_part`.`id_u`=`univers`.`id`
+
+//Запрос по студентам
+SELECT `works`.`id_u`,`wa`.`id_w`,`wa`.`id_a` FROM `works` join `wa` ON `wa`.`id_w`=`works`.`id` WHERE `works`.`invitation`='1' ORDER BY `id_u`
+
+SELECT `works`.`id_u`,`wa`.`id_w`,`wa`.`id_a`,CONCAT(`autors`.`suname`,' ',`autors`.`name`,' ',`autors`.`lname`) as fio_a
+FROM `works` 
+join `wa` ON `wa`.`id_w`=`works`.`id` 
+join `autors` ON `wa`.`id_a`=`autors`.`id`
+WHERE `works`.`invitation`='1' ORDER BY `id_u`,`fio_a`
+
+
+//v_invitation_2
+SELECT `works`.`id_u`,`univers`.`univerrod` as univer,CONCAT(`autors`.`suname`,' ',`autors`.`name`,' ',`autors`.`lname`) as fio_a
+FROM `works` 
+join `wa` ON `wa`.`id_w`=`works`.`id` 
+join `autors` ON `wa`.`id_a`=`autors`.`id`
+join `univers` ON `works`.`id_u`=`univers`.`id`
+WHERE `works`.`invitation`='1' and `univers`.`id`!=1 GROUP BY `id_u`,`fio_a` ORDER BY `univerrod`,`fio_a` 
+
+//Список студентов с тезисами
+SELECT `works`.`id`,`wa`.`id_a`,
+concat(`autors`.`suname`,' ',`autors`.`name`,' ',`autors`.`suname`) as fio_a,
+`univers`.`univerrod` as `univer`
+FROM `works` 
+left outer join `wa` on `works`.`id` = `wa`.`id_w`  
+left outer join `autors` on `wa`.`id_a` = `autors`.`id`
+left outer join `univers` on `works`.`id_u`=`univers`.`id`
+where `works`.`tesis`=1
+
+
+
+//Список всех имен в базе
+
+SELECT `autors`.`name` FROM `autors` Group by  `autors`.`name`  
+UNION 
+SELECT `leaders`.`name` FROM `leaders`  Group by  `leaders`.`name` 
+ORDER BY `name`
+
+
+
+//Фамилия и инициалы авторов руководителей
+
+SELECT  CONCAT(`suname`,' ',left(`name`,1),'.',left(`lname`,1),'.') FROM `autors`
+SELECT  CONCAT(`suname`,' ',left(`name`,1),'.',left(`lname`,1),'.') FROM `leaders`
+
+
+
+//<div id="operator"><?=$_SESSION['id']?><?=$_SESSION['usr']?></div>
+22
+
+
+//бейджики студентов
+select `works`.`id_u` AS `id_u`,`univers`.`univerrod` AS `univer`,`univerrod`,`univers`.`univerfull` AS `univerfull`,concat(`autors`.`suname`,' ',`autors`.`name`,' ',`autors`.`lname`) AS `fio_a` from (((`works` join `wa` on((`wa`.`id_w` = `works`.`id`))) join `autors` on((`wa`.`id_a` = `autors`.`id`))) join `univers` on((`works`.`id_u` = `univers`.`id`))) where ((`works`.`invitation` = '1') and (`works`.`id_u` <> '1')) order by `works`.`id_u`,concat(`autors`.`suname`,' ',`autors`.`name`,' ',`autors`.`lname`)
+
+ALTER TABLE `sections` CHANGE `room` `room` ENUM( '43', '53', '54' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Аудитория';
+ALTER TABLE `sections` ADD `room` ENUM( '7-43', '7-53', '7-54' ) NOT NULL DEFAULT '7-53' COMMENT 'Аудитория';
+
+SELECT `works`.*,`autors`.`arrival` FROM `works` JOIN `wa` on `works`.`id`=`wa`.`id_w` JOIN `autors` on `wa`.`id_a`=`autors`.`id` WHERE `autors`.`arrival` ='1' AND `works`.`invitation`='1'
+
+
+UPDATE `works` dest ,(SELECT `works`.`id`,`autors`.`arrival` as arr FROM `works` JOIN `wa` on `works`.`id`=`wa`.`id_w` JOIN `autors` on `wa`.`id_a`=`autors`.`id` WHERE `autors`.`arrival` ='1' AND `works`.`invitation`='1') src SET `dest`.`arrival`= `src`.`arr` WHERE `dest`.`id`=`src`.`id`
+
+// Очень большой запрос часть 1
+select works.id_u,t1.first,t2.second,t3.third,t4.diplom FROM works LEFT JOIN (select id_u, count(place)as first from works  where place = 'I' group by id_u)as t1 ON works.id_u = t1.id_u LEFT JOIN (select id_u, count(place)as second from works  where place = 'II' group by id_u)as t2 ON works.id_u = t2.id_u LEFT JOIN (select id_u, count(place)as third from works  where place = 'III' group by id_u)as t3 ON works.id_u = t3.id_u LEFT JOIN (select id_u, count(place)as diplom from works  where place = 'D' group by id_u)as t4 ON works.id_u = t4.id_u WHERE works.invitation = '1' AND works.arrival = '1' GROUP BY works.id_u
+
+//Очень хороший запрос 
+select works.id_u,t1.first,t2.second,t3.third,t4.diplom 
+FROM works 
+LEFT JOIN 
+	(select id_u, count(place) as first
+     from works  
+     where place = 'I' 
+     group by id_u)as t1 
+ON works.id_u = t1.id_u 
+LEFT JOIN 
+	(select id_u, count(place)as second from works  
+     where place = 'II' 
+     group by id_u)as t2 
+ON works.id_u = t2.id_u 
+LEFT JOIN 
+	(select id_u, count(place)as third 
+     from works  
+     where place = 'III' group by id_u)as t3 
+ON works.id_u = t3.id_u 
+LEFT JOIN 
+	(select id_u, count(place)as diplom 
+    from works  where place = 'D' group by id_u)as t4 
+ON works.id_u = t4.id_u 
+WHERE works.invitation = '1' AND works.arrival = '1' 
+GROUP BY works.id_u
+union all
+select ' ' as univer, 
+sum(t.first),
+sum(t.second),
+sum(t.third),
+sum(t.diplom) 
+FROM(select works.id_u,t1.first,t2.second,t3.third,t4.diplom FROM works LEFT JOIN (select id_u, count(place)as first from works  where place = 'I' group by id_u)as t1 ON works.id_u = t1.id_u LEFT JOIN (select id_u, count(place)as second from works  where place = 'II' group by id_u)as t2 ON works.id_u = t2.id_u LEFT JOIN (select id_u, count(place)as third from works  where place = 'III' group by id_u)as t3 ON works.id_u = t3.id_u LEFT JOIN (select id_u, count(place)as diplom from works  where place = 'D' group by id_u)as t4 ON works.id_u = t4.id_u WHERE works.invitation = '1' AND works.arrival = '1' GROUP BY works.id_u) as t
+
+
+
+
+(SELECT SUM(`actual`+`original`+`methods`+`theoretical`+`practical`+`literature`+`selfcontained`+`design`+`publication`+`government`+`tendentious`) AS sumball  FROM `reviews` WHERE `id_w`='3')
+
+
+
+UPDATE  `works` SET
+`works`.`balls` = ( SELECT SUM(  `actual` +  `original` +  `methods` +  `theoretical` +  `practical` +  `literature` +  `selfcontained` +  `design` +  `publication` +  `government` +  `tendentious` ) AS sumball
+FROM  `reviews`
+WHERE  `reviews`.id_w` =  `works`.`id`)
+
+SELECT sum(`actual` +  `original` +  `methods` +  `theoretical` +  `practical` +  `literature` +  `selfcontained` +  `design` +  `publication` +  `government` +  `tendentious` ) AS sumball,`id_w`FROM  `reviews`GROUP BY `id_w`
+UPDATE  `works` SET
+`works`.`balls` = (SELECT sumball FROM (SELECT sum(`actual` +  `original` +  `methods` +  `theoretical` +  `practical` +  `literature` +  `selfcontained` +  `design` +  `publication` +  `government` +  `tendentious` ) AS sumball,`id_w`FROM  `reviews`GROUP BY `id_w`) AS `tmp` WHERE `works`.`id` = `tmp`.`id_w` )
+
+
+
+ALTER TABLE `autors`
+  DROP `page`;
+
+
+'I','II','III','D'
+
+
+Место в конкурсе
+//Добавить в таблицу
+ALTER TABLE `autors` ADD `place` SET('I','II','III','D') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'D' COMMENT 'Место в конкурсе' AFTER `email`;
+
+//$_POST['place'] = trim(addslashes($_POST['place']));
+
+
+
+
+
+//<label>Місце:</label><?= cbo_place($wInfo['place']) ?><br>
+
+
+
+$query = "SELECT `works`.`id`,`works`.`title`,`place`,`sections`.`section`,`univers`.`univer`\n"
+        . "FROM `works`\n"
+        . "JOIN `sections` ON `sections`.`id` = `works`.`id_sec`\n"
+        . "JOIN `univers` ON `works`.`id_u` = `univers`.`id`\n"
+        . "WHERE `works`.`invitation` = '1' AND `works`.`arrival` = '1' ORDER BY `section`,`id`";
+
+//Обновление
+ALTER TABLE `leaders` ADD `id_tzmember` INT NULL DEFAULT NULL COMMENT 'Логин пользователя' AFTER `id`;
+ALTER TABLE `tz_members`
+  DROP `id_leader`,
+  DROP `email`,
+  DROP `regIP`;
+
+
+
+select `v_take_part`.`id_u` AS `id_u`,`v_take_part`.`count_take_part` AS `count_take_part`,`v_invitation`.`count_invitation` AS `count_invitation`,`v_place`.`count_place` AS `count_place`,`c2015`.`univers`.`univerrod` AS `univerrod`,`c2015`.`univers`.`rector_r` AS `rector_r`,`c2015`.`univers`.`posada` AS `posada` from (((`c2015`.`v_take_part` left join `c2015`.`v_invitation` on((`v_take_part`.`id_u` = `v_invitation`.`id_u`))) left join `c2015`.`v_place` on((`v_take_part`.`id_u` = `v_place`.`id_u`))) left join `c2015`.`univers` on((`v_take_part`.`id_u` = `c2015`.`univers`.`id`))) where (`c2015`.`univers`.`id` <> 1)
+select `v_take_part`.`id_u` AS `id_u`,`v_take_part`.`count_take_part` AS `count_take_part`,`v_invitation`.`count_invitation` AS `count_invitation`,`v_place`.`count_place` AS `count_place`,`c2017`.`univers`.`univerrod` AS `univerrod`,`c2017`.`univers`.`rector_r` AS `rector_r`,`c2017`.`univers`.`posada` AS `posada` from (((`c2017`.`v_take_part` left join `c2017`.`v_invitation` on((`v_take_part`.`id_u` = `v_invitation`.`id_u`))) left join `c2017`.`v_place` on((`v_take_part`.`id_u` = `v_place`.`id_u`))) left join `c2017`.`univers` on((`v_take_part`.`id_u` = `c2017`.`univers`.`id`))) where (`c2017`.`univers`.`id` <> 1)

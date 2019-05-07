@@ -1,0 +1,23 @@
+ALTER TABLE  `works` ADD  `place` SET(  'I',  'II',  'III',  'D' ) NOT NULL DEFAULT  'D' COMMENT  'Место в конкурсе' AFTER  `dead`
+
+
+
+//update works
+ALTER TABLE `works`  ADD `arrival` BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'Отметка о прибытии' AFTER `invitation`;
+
+
+//изменениея таблиц
+ALTER TABLE `autors`  ADD `phone` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'телефон' AFTER `arrival`;
+
+
+//
+SELECT
+`positions`.`position`,
+`univers`.`posada`,
+`univers`.`rector_r`,
+`univers`.`univerrod`,
+CONCAT(`leaders`.`suname`,' ' ,`leaders`.`name`,' ', `leaders`.`lname`) AS fil_l
+FROM `leaders`
+JOIN `positions` ON `leaders`.`id_pos`= `positions`.`id`
+JOIN `univers` ON `leaders`.`id_u`= `univers`.`id`
+WHERE `univers`.`id` != 1
