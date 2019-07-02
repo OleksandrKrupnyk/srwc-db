@@ -3,21 +3,21 @@
  * @author Krupnik
  * @copyright 2018
  */
-require "./../admin/config.inc.php";
-require "./../admin/functions.php";
-header("Content-Type: text/html; charset=utf-8");
+require './../admin/config.inc.php';
+require './../admin/functions.php';
+header('Content-Type: text/html; charset=utf-8');
 global $link;
 global $settings;
 //Прочитать настройки с БД
 read_settings();
 //Показувати програму конференції тільки при увімненій опції
-if ("1" == $settings['SHOW_PROGRAMA']):
+if ('1' == $settings['SHOW_PROGRAMA']):
 /* TODO
 Расширити программу конференції
 */
     ?>
     <!DOCTYPE html>
-    <html>
+    <html lang="ua">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link href="../css/print.css" type="text/css" rel="stylesheet">
@@ -63,16 +63,16 @@ while ($row = mysqli_fetch_array($result)) {
     $section = $row['section'];
     echo "<tr>\n\t<td>{$i}.</td><td>{$row['title']}</td>\n\t";
     echo "<td class=\"tda\">";
-    short_list_leader_or_autors_str($row['id'], "wa", true);
+    short_list_leader_or_autors_str($row['id'], 'wa', true);
     echo "</td>\n\t<td class=\"tdl\">";
-    short_list_leader_or_autors_str($row['id'], "wl");
+    short_list_leader_or_autors_str($row['id'], 'wl');
     echo "</td>\n\t";
     echo "<td class=\"tdu\">{$row['univer']}</td></tr>\n";
     $i++;//*/
 }
 echo "</table>";
 else:
-    Go_page("index.php");
+    Go_page('index.php');
 endif;
 
 ?>

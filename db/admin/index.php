@@ -1,7 +1,7 @@
 <?php
 /**
  */
-header("Content-Type: text/html; charset=utf-8");
+header('Content-Type: text/html; charset=utf-8');
 require 'config.inc.php';
 require 'functions.php';
 global $link;
@@ -13,10 +13,10 @@ session_set_cookie_params(2 * 7 * 24 * 60 * 60);
 session_start();
 
 if (isset($_GET['logoff'])) {
-    log_action("logoff", "tz_members", "");
+    log_action('logoff', 'tz_members', '');
     $_SESSION = array();
     session_destroy();
-    header("Location: index.php");
+    header('Location: index.php');
     exit;
 }
 
@@ -24,7 +24,7 @@ if (isset($_GET['logoff'])) {
 if ($_SESSION['access'] && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']) {
     // Если вы вошли в систему, но куки tzRemember (рестарт браузера) отсутствует
     // и вы не отметили чекбокс 'Запомнить меня':
-    log_action("logoff", "tz_members", "");
+    log_action('logoff', 'tz_members', '');
     $_SESSION = array();
     session_destroy();
 
@@ -36,8 +36,9 @@ if (isset($_POST['submit'])) {
     //Да
     $err = array();
     // Запоминаем ошибки
-    if (!$_POST['username'] || !$_POST['password'])
+    if (!$_POST['username'] || !$_POST['password']) {
         $err[] = 'Все поля должны быть заполнены!';
+    }
     // Проверяем заполненные поля.Поля заполнены?
     if (!count($err)) {
         //Да?
@@ -49,7 +50,7 @@ if (isset($_POST['submit'])) {
         $query = "SELECT id,usr\n"
             . "FROM tz_members WHERE usr='" . $_POST['username'] . "' AND pass='" . md5($_POST['password']) . "'";
         $result = mysqli_query($link, $query)
-        or die("Невірний запрос до бази данних: " . mysqli_error($link));
+        or die('Невірний запрос до бази данних: ' . mysqli_error($link));
 
         $row = mysqli_fetch_array($result);
 
@@ -58,28 +59,30 @@ if (isset($_POST['submit'])) {
 
             $_SESSION['usr'] = $row['usr'];
             $_SESSION['id'] = $row['id'];
-            log_action("login", "tz_members", "");
+            log_action('login', 'tz_members', '');
             $_SESSION['rememberMe'] = $_POST['rememberMe'];
-            $_SESSION['access'] = "YES";
+            $_SESSION['access'] = 'YES';
             // Сохраняем некоторые данные сессии
             setcookie('tzRemember', $_POST['rememberMe']);
 
-            header("Location: action.php");
+            header('Location: action.php');
             exit;
-        } else
+        } else {
             $err[] = 'Ошибочный пароль или/и имя пользователя!';
+        }
     }
-    if ($err)
+    if ($err) {
         $_SESSION['msg']['login-err'] = implode('<br />', $err);
+    }
     // Сохраняем сообщение об ошибке сессии
-    header("Location: index.php");
+    header('Location: index.php');
     exit;
 }//if
 //Прочитать настройки с БД
 read_settings();
 ?>
 <!DOCTYPE html >
-<html>
+<html lang="ua">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <!--<link href="../css/style.css" type="text/css" rel="stylesheet">-->

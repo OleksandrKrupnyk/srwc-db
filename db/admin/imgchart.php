@@ -11,7 +11,7 @@ $countReview = array_sum($_GET['a']);
 $c = array();
 foreach ($_GET['a'] as $count){
     //echo $count."<br>";
-    array_push($c,(int)($count*360/$countReview));
+    $c[] = (int)($count * 360 / $countReview);
 }
 //print_r($c);
 

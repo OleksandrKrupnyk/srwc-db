@@ -6,28 +6,27 @@
  * Time: 22:22
  */
 //header("Content-Type: text/html; charset=utf-8");
-require "./../admin/config.inc.php";
-require "./../admin/functions.php";
+require './../admin/config.inc.php';
+require './../admin/functions.php';
 global $link;
 global $settings;
 //Прочитать настройки с БД
 read_settings();
 //Работать если стоит настройка о дотупе и показе приглашений
-if ("1" == $settings['INVITATION']):
+if ('1' == $settings['INVITATION']):
 ?>
 <!DOCTYPE html>
-<html>
-
+<html lang="ua">
 <?php
 //Если не задан номер ВУЗа то отображать страничку выбора
 if (!isset($_GET['id_u'])): ?>
 
     <head>
-        <?php include_once("analyticstracking.php"); ?>
+        <?php include_once 'analyticstracking.php'; ?>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <script language="javascript" type="text/javascript" src="../js/jquery.js"></script>
+        <script type="text/javascript" src="../js/jquery.js"></script>
         <link href="../css/userstyle.css" type="text/css" rel="stylesheet">
-        <script language="javascript" type="text/javascript" src="../js/user.js"></script>
+        <script type="text/javascript" src="../js/user.js"></script>
         <title>Запрошення &quot;СНР 2018&quot;&copy;</title>
     </head>
     <body>
@@ -95,7 +94,7 @@ where `univers`.`id` <> 1 AND count_invitation > 0 AND v_take_part.id_u='{$id_u}
     echo "<div class=\"v_invitation_1\">\n";
     while ($row = mysqli_fetch_array($result)) {
         //var_dump($row['rector_r']);echo "<br>";
-        $rector = ($row['rector_r'] != "") ? $row['rector_r'] : "<mark><a href=\"action.php?action=univer_edit&id_u=" . $row['id_u'] . "&FROM={$FROM}\">ЗАПОВНІТЬ ТАБЛИЦЮ</a></mark>";
+        $rector = ($row['rector_r'] != '') ? $row['rector_r'] : "<mark><a href=\"action.php?action=univer_edit&id_u=" . $row['id_u'] . "&FROM={$FROM}\">ЗАПОВНІТЬ ТАБЛИЦЮ</a></mark>";
         $invitatotion = ($row['count_invitation'] != "") ? $row['count_invitation'] : "<mark><a href=\"action.php?action=view#id_u" . $row['id_u'] . "\">ЗАПРОСИТИ?</a></mark>";
         echo "<div id=\"dstuheader\" title=\"Відсканована верхівка офіційного листа\"></div>";
         $blk_rectory = "<div id=\"rectory\">{$row['posada']} "
@@ -181,7 +180,7 @@ where `univers`.`id` <> 1 AND count_invitation > 0 AND v_take_part.id_u='{$id_u}
     echo "</div>\n";
 }
 endif;
-else:Go_page("./");
+else:Go_page('./');
 endif;
 ?>
 

@@ -15,14 +15,14 @@ global $FROM;
 //Если есть доступ к странице
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ua">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="../css/print.css" type="text/css" rel="stylesheet">
     <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet">
-    <script language="javascript" type="text/javascript" src="../js/jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
-    <script language="javascript" type="text/javascript" src="../js/admin.js"></script>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
+    <script type="text/javascript" src="../js/admin.js"></script>
     <title>ДРУКУВАТИ &quot;СНР 2018&quot;&copy;</title>
 </head>
 <body>

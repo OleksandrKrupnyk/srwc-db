@@ -1,22 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sasha
- * Date: 11.11.17
- * Time: 0:53
- */
 $query = "SELECT `reviews`.*, works.title,
           SUM(`actual`+`original`+`methods`+`theoretical`+`practical`+`literature`+`selfcontained`+`design`+`publication`+`government`+`tendentious`) AS sumball
           FROM `reviews`
           JOIN `works` ON `works`.`id` = `reviews`.`id_w` 
           WHERE `reviews`.`id` ='{$_GET['id']}'";
-//print_r($query);
 mysqli_query($link, "SET NAMES 'utf8'");
 mysqli_query($link, "SET CHARACTER SET 'utf8'");
-$result = mysqli_query($link, $query) or die("Invalid query in function list_reviews_for_one_work : " . mysqli_error($link));
+$result = mysqli_query($link, $query) or die('Invalid query in function list_reviews_for_one_work : ' . mysqli_error($link));
 $row = mysqli_fetch_array($result);
-echo "<h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт<br>&quot;Електротехніка та електромеханіка&quot;</h1>";
-echo "<h2>Рецензія на студентську наукову роботу</h2>";
+echo '<h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт<br>&quot;Електротехніка та електромеханіка&quot;</h1>';
+echo '<h2>Рецензія на студентську наукову роботу</h2>';
 echo "<h3>&laquo;{$row['title']}&raquo;</h3>";
 ?>
 
@@ -76,7 +69,7 @@ echo "<h3>&laquo;{$row['title']}&raquo;</h3>";
         <?php echo(htmlspecialchars($row['defects'])); ?>
     </p>
     </fieldset>
-    <?php   $conclusion = ($row['conclusion'] == 0) ?"Не рекомендується ":"Рекомендується"; ?>
+    <?php   $conclusion = ($row['conclusion'] == 0) ? 'Не рекомендується ' : 'Рекомендується'; ?>
     <p>Загальний висновок : <?= $conclusion?> для захисту на науково-практичній конференції</p>
 
 

@@ -1,6 +1,6 @@
 <?php
-require "./../admin/config.inc.php";
-require "./../admin/functions.php";
+require './../admin/config.inc.php';
+require './../admin/functions.php';
 global $link;
 global $settings;
 //Прочитать настройки с БД
@@ -77,35 +77,38 @@ if(!isset($_GET['action'])){
         $s['date'] = $row['date'];
 
         $s['title'] = (
-            "1" == $settings['SHOW_FILES_LINK'] // Настройка активна
+            '1' == $settings['SHOW_FILES_LINK'] // Настройка активна
             &&
             (
                 ("D" != $row['place1'] && !is_null($row['place1']))
                 ||
                 ("D" != $row['place2'] && !is_null($row['place2']))
-            ) 
+            )
             &&
-            !is_null($row['path']) // Запись о файле есть в системе
+            $row['path'] !== null // Запись о файле есть в системе
         ) ? "<a href='{$row['path']}' title='{$row['title']}'>{$row['title']}</a>" : $row['title'];
 
 
         $s['univer'] = $row['univer'];
-        $s['invitation'] = ($row['invitation']) ? "<span class='invite2018'>&nbsp; Авторів роботи запрошено до участі у конференції&nbsp;</span>" : "";
+        $s['invitation'] = ($row['invitation']) ? "<span class='invite2018'>&nbsp; Авторів роботи запрошено до участі у конференції&nbsp;</span>" : '';
 
         // Дипломы
-        if ("D" != $row['place1'] && !is_null($row['place1']))
+        if ('D' != $row['place1'] && !is_null($row['place1'])) {
             $diplomas [] = "<span class='invite2018'>&nbsp;Диплом&nbsp;{$row['place1']}-го&nbsp;ступеня</span>";
+        }
 
-        if("D" != $row['place2'] && !is_null($row['place2']))
+        if('D' != $row['place2'] && !is_null($row['place2'])) {
             $diplomas [] = "<span class='invite2018'>&nbsp;Диплом&nbsp;{$row['place2']}-го&nbsp;ступеня</span>";
+        }
 
-        if(count($diplomas)>0)
-            $s['diploma'] = "<br>". implode(", ", $diplomas);
+        if(count($diplomas)>0) {
+            $s['diploma'] = "<br>" . implode(", ", $diplomas);
+        }
 
-        $s['review'] = (!is_null($row['reviewer1'])) ? "<a class='viewReview' href='index.php?action=review_view&id={$row['reviewer1']}'></a>" : "";
-        $s['review'] .= (!is_null($row['reviewer2'])) ? "<a class='viewReview' href='index.php?action=review_view&id={$row['reviewer2']}'></a>" : "";
-        $s['review'] .= (!is_null($row['balls'])) ? "/{$row['balls']}" : "";
-        $s['review'] .= ($row['tesis'] == 1) ? "/<br>Отримано" : "";
+        $s['review'] = ($row['reviewer1'] !== null) ? "<a class='viewReview' href='index.php?action=review_view&id={$row['reviewer1']}'></a>" : '';
+        $s['review'] .= ($row['reviewer2'] !== null) ? "<a class='viewReview' href='index.php?action=review_view&id={$row['reviewer2']}'></a>" : '';
+        $s['review'] .= ($row['balls'] !== null) ? "/{$row['balls']}" : '';
+        $s['review'] .= ($row['tesis'] == 1) ? "/<br>Отримано" : '';
         $s['section'] = $row['section'];
         $data [] = $s;
     }
@@ -117,7 +120,7 @@ if(!isset($_GET['action'])){
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <meta content="Конкурс,СНР,Електротехніка,електромеханіка,ДДТУ,ЕЛМ,студентських,науових,робіт,конференція" name="keywords">
     <meta content="Електротехніка та електромеханіка - реєстр робіт Всеукраїнського конкурсу студентських наукових робіт" name="description">
-    <?php include_once("analyticstracking.php"); ?>
+    <?php include_once 'analyticstracking.php'; ?>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="../css/userstyle.css" type="text/css" rel="stylesheet">
     <title>Реєст &quot;СНР 2018&quot;&copy;</title>
@@ -138,11 +141,11 @@ if(!isset($_GET['action'])){
     </h4>
     <h4><a href='http://elm-dstu-edu.org.ua/konkurs/index.php/digest/32-zbirnik-tez-2018'
            title='Збірник тез доповідей 2017-2018 н.р.'>Збірник тез доповідей 2018</a>&#8658;</h4>
-    <?php if("1" == $settings['SHOW_PROGRAMA']):?>
+    <?php if('1' == $settings['SHOW_PROGRAMA']):?>
         <h4><a href='./programa.php'>Макет програми конференції&#8658;</a></h4>
     <?php endif;?>
 
-    <?php if("1" == $settings['INVITATION']):?>
+    <?php if('1' == $settings['INVITATION']):?>
         <h4><a href='./invitation.php'>Сторінка завантажень запрошень учасників конференції</a>&#8658;</h4>
     <?php endif;?>
 
@@ -150,7 +153,7 @@ if(!isset($_GET['action'])){
     //echo "<h4><a href='http://elm-dstu-edu.org.ua/db/document3.pdf' title='МАКЕТ Збірника тез доповідей 2017-2018 н.р.'>Збірник тез доповідей 2018 [МАКЕТ від 13.04.18] &#8658;</a></h4>";
     //echo "<p>Просимо авторів тез первірити наявність публікації в МАКЕТІ збірника. У випадку, якшо вами були надіслані тези у форматі ТЕХ, але вони відсутні в МАКЕТІ збірника просимо повдомити про це на поштову скриньку <span class='invite2018'><a href=\"mailto:conkstudrabot@gmail.com\">conkstudrabot@gmail.com</span></a> до 14 квітня 2018р вказавши в тексті листа номер роботи та дату відправлення електронного листа з тезами.</p>";
     ?>
-    <?php if ("1" == $settings['SHOW_DB_TABLE']):?>
+    <?php if ('1' == $settings['SHOW_DB_TABLE']):?>
         <h3>Роботи авторів та відомості про їх рецензування, а також наявність тез доповідей. Розподіл за секціями.</h3>
         <table style="border-collapse: collapse">
             <thead>

@@ -5,16 +5,16 @@ require 'functions.php';
 global $link;
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ua">
 <?php if (!isset($_GET['id_u'])): ?>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="../css/style.css" type="text/css" rel="stylesheet">
     <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet">
-    <script language="javascript" type="text/javascript" src="../js/jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
-    <script language="javascript" type="text/javascript" src="../js/admin.js"></script>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
+    <script type="text/javascript" src="../js/admin.js"></script>
     <title>Запрошення &quot;СНР 2018&quot;&copy;</title>
 </head>
 <body>
@@ -24,7 +24,7 @@ global $link;
     яких запрошено до участі в конференції.</p>
 <p>У кожному конверті 3 аркуші:
     <ul>
-    <li>лист на офіційному бланку університету зі списком журі;</li> 
+    <li>лист на офіційному бланку університету зі списком журі;</li>
     <li>додаток 1 зі списком студентів;</li>
     <li>додаток 2 з інформацією про конференцію.</li>
 </ul>
