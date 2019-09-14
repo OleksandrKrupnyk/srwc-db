@@ -1,0 +1,21 @@
+{
+  "name": "zukr/srwc-db",
+  "description": "All-Ukrainian competition of scientific research works",
+  "authors": [
+    {
+      "name": "Alex Krupnik",
+      "email": "krupnik_a@ukr.net"
+    }
+  ],
+  "require": {
+    "joshcam/mysqli-database-class": "^2.9",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "vlucas/phpdotenv": "^3.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "zukr\\": "src/zukr/"
+    }
+  }
+}

@@ -1,10 +1,12 @@
 $(document).ready(function(){
+
     $('.tabs li a').click(function () {
       $('.tabs li').removeClass('active');
       $(this).parent().addClass('active');
 
       $('.nav').hide();
       var index = $('.tabs li a').index(this);
+      console.log(index);
       $('.nav').eq(index).show();
       return false;
     });
@@ -14,4 +16,5 @@ $(document).ready(function(){
     }, function() {
         $(this).removeClass('current').children('ul').hide();
     });
+
 });

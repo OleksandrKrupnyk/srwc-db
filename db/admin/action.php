@@ -1,7 +1,17 @@
 <?php
 require 'config.inc.php';
 require 'functions.php';
+require  '../vendor/autoload.php';
+use zukr\base\Base;
+use zukr\menu\Menu;
+
+Base::init();
 read_settings();
+$menuData = include 'menu.php';
+$menu = new Menu($menuData);
+
+
+
 header('Content-Type: text/html; charset=utf-8');
 session_name('tzLogin');
 session_start();
@@ -128,127 +138,7 @@ $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI
 
 <?php else: ?>
     <header>Меню</header>
-    <!-- ========================================= -->
-    <div id="tabs-container">
-        <ul class="tabs">
-            <li><a href="#">Основна</a></li>
-            <li><a href="#"
-                   title="Занятие ерундой на рабочем месте хорошо развивает боковое зрение, слух, а также бдительность в целом!">Наповнення
-                    БД</a></li>
-            <li><a href="#">І повідомлення</a></li>
-            <li><a href="#">IІ повідомлення</a></li>
-            <li class="active"><a href="#">Конференція</a></li>
-            <li><a href="#">Завершення</a></li>
-            <li><a href="#">Службове</a></li>
-        </ul>
-    </div>
-    <!-- Верхнее меню -->
-    <div id="nav-container">
-        <ul class="nav" id="1" style="display:none;">
-            <li><a href="action.php?action=all_view" title="Таблиця з данними про роботи">Усі роботи</a></li>
-            <li><a href="#">Списки</a>
-                <ul class="sub">
-                    <li><a href="action.php?action=autor_list" title="Редагування данних, видалення">Автори</a></li>
-                    <li><a href="action.php?action=leader_list" title="Редагування данних, видалення">Керівники</a>
-                    <li><a href="action.php?action=reviewer_list" title="Редагування данних, видалення">Рецензенти</a>
-
-                    </li>
-                </ul>
-            </li>
-            <li><a href="action.php?action=tesis_list" title="Таблиця з данними про тезиси">Тезиси</a></li>
-            <li><a href="action.php?action=review_update" title="Оновлення рейтингу робіт">Оновити бали рейтингу</a>
-            </li>
-
-        </ul>
-        <ul class="nav" id="2" style="display:none;">
-            <!-- Элементы верхнего меню -->
-
-            <li><a href="action.php?action=autor_add&FROM=<?= $FROM ?>" title="Внесення в базу даних автора">Данні
-                    автора</a></li>
-            <li><a href="action.php?action=leader_add&FROM=<?= $FROM ?>"
-                   title="Внесення в базу даних керівника/рецензента">Данні
-                    керівника/рецензента</a></li>
-            <li><a href="action.php?action=work_add&FROM=<?= $FROM ?>" title="Внесення в базу даних роботи">Данні
-                    роботи</a></li>
-            <li><a href="action.php?action=work_link&FROM=<?= $FROM ?>"
-                   title="Встановлення зв'язків робота-&gt;автор, робота-&gt;керівник">Зв'язати роботу</a></li>
-            <li><a href="action.php?action=all_add" title="Встановлення зв'язків робота-&gt;автор, робота-&gt;керівник">Ввести
-                    усі данні про роботу</a></li>
-        </ul>
-
-        <ul class="nav" id="3" style="display:none;">
-            <li><a href="action.php?action=univer_invite" title="Друкуєтья у 2-х примірниках (пошта, канцелярія)">Список
-                    I</a></li>
-            <li><a href="lists.php?list=envelope" title="Формат паперу DL. Перевір налаштування принтеру">Конверти I</a>
-            </li>
-        </ul>
-        <ul class="nav" id="4" style="display:none;">
-            <li><a href="action.php?action=section_invite" title="Відмітки про запрошення та розподіл за секціями">Запрошення
-                    та секції</a></li>
-            <li><a href="#" title="Опрацювати запрощення для жюрі">Запрошення журі</a>
-                <ul class="sub">
-                    <li><a href="uploadinvitation.php" title="Завантаження сканувань">Завантаження</a></li>
-                    <li><a href="action.php?action=leader_invit" title="Відмітити та роздрукувати">Список відмітити</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a href="#"> Друкувати документи</a>
-                <ul class="sub">
-                    <li><a href="lists.php?list=adress2" title="Друкуєтья у 2-х примірниках (пошта, канцелярія)">Список
-                            II</a></li>
-                    <li><a href="lists.php?list=envelope2" title="Формат паперу DL. Перевір налаштування принтеру">Конверти
-                            II</a></li>
-                    <li><a href="lists.php?list=invitation_1"
-                           title="Листи друкуються на оффіційному аркуші університету">Листи ректорам</a></li>
-                    <li><a href="lists.php?list=invitation_2" title="Формат А4. Список студентів яких запросили">
-                            Додаток 1</a></li>
-                </ul>
-            </li>
-
-        </ul>
-        <ul class="nav" id="5">
-            <li><a href="#"> Друкувати до початку конференціх</a>
-                <ul class="sub">
-                    <li><a href="lists.php?list=ahostel">Список авторів для поселення в гуртожитку</a></li>
-                    <li><a href="lists.php?list=lhostel">Список керівників для поселення</a></li>
-                    <li><a href="lists.php?list=badge_autors">Бейджики Авторів</a></li>
-                    <li><a href="lists.php?list=badge_leaders">Бейджики Керівників</a></li>
-                </ul>
-            </li>
-            <li><a href="programa.php">Скелет программи</a></li>
-            <li><a href="action.php?action=rooms_edit">Розподіл секцій за аудиторіями</a></li>
-            <li><a href="action.php?action=reception_edit" title="Торжественно клянусь, что замышляю только шалость!">Реєстрація
-                    учасників конференції</a></li>
-        </ul>
-        <ul class="nav" id="6" style="display:none;">
-            <li><a href="action.php?action=place_edit">Призначення місць</a></li>
-            <li><a href="action.php?action=place_view">Розподіл результат</a></li>
-            <li><a href="#">Друкувати</a>
-                <ul class="sub">
-                    <li><a href="lists.php?list=diploms">Дипломи</a></li>
-                    <li><a href="lists.php?list=charters">Грамоты</a></li>
-                    <li><a href="lists.php?list=gratitudes">Подяки</a></li>
-                </ul>
-            </li>
-            <li><a href="action.php?action=protocol">Протокол по місцях</a></li>
-            <li><a href="action.php?action=statistic">Статистична довідка</a></li>
-        </ul>
-        <ul class="nav" id="7" style="display:none;">
-            <li><a href="invitation.php" title="Сторіка користувачів (попередній перегля)">Сторінка завантежень
-                    запрошень</a></li>
-            <li><a href="settings.php">Налаштування</a></li>
-            <li><a href="log.php" class="special">Журнал дій</a></li>
-            <li><a href="#">Розсилка</a>
-                <ul class="sub">
-                    <li><a href="action.php?action=sentemail" class="special"
-                           title="Редагувати тектс листа та надіслати запрошення">Електронні запрошення</a></li>
-                    <li><a href="action.php?action=test" class="special"
-                           title="Тестова сторінка нічого не недасилається">Тестова сторінка</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <div style="clear:both"></div>
+    <?=$menu->getMenu();?>
 <?php endif; ?>
 <footer><a href="index.php?logoff">Вийти</a></footer>
 <div id="test"><?php echo $error_message; ?></div>
