@@ -94,7 +94,7 @@ where `univers`.`id` <> 1 AND count_invitation > 0 AND v_take_part.id_u='{$id_u}
             while ($row = mysqli_fetch_array($result)) {
                 //var_dump($row['rector_r']);echo "<br>";
                 $rector = ($row['rector_r'] != "") ? $row['rector_r'] : "<mark><a href=\"action.php?action=univer_edit&id_u=" . $row['id_u'] . "&FROM={$FROM}\">ЗАПОВНІТЬ ТАБЛИЦЮ</a></mark>";
-                $invitatotion = ($row['count_invitation'] != "") ? $row['count_invitation'] : "<mark><a href=\"action.php?action=view#id_u" . $row['id_u'] . "\">ЗАПРОСИТИ?</a></mark>";
+                $invitatotion = ($row['count_invitation'] != "") ? $row['count_invitation'] : "<mark><a href=\"action.php?action=all_view#id_u" . $row['id_u'] . "\">ЗАПРОСИТИ?</a></mark>";
                 echo "<div id=\"dstuheader\"></div>";
                 $blk_rectory = "<div id=\"rectory\">{$row['posada']} "
                     . $row['univerrod'] . "<br>"

@@ -9,53 +9,43 @@ session_start();
 if ($_SESSION['access']) {
     //Сообщение об ошибке. Если оно пусто то на экран ничего не выводиться.
     $error_message = '';
-    switch ($_POST['action']) {
-        /*Добавление автора работы*/
-        case 'autor_add' : { include 'a_autor_add.php'; }break;
-        /*Добавление руководителя работы*/
-        case 'leader_add': { include 'a_leader_add.php';}break;
-        /*Добавление данных работы*/
-        case 'work_add': { include 'a_work_add.php'; } break;
-        /*Добавление всех ведомостей*/
-        case 'all_add': { include 'a_all_add.php';}break;
-        /*Завершение обработки связывния таблиц*/
-        case 'work_link': {include 'a_work_link.php';}break;
-        /*Изменение данных автора*/
-        case 'autor_edit': {include 'a_autor_edit.php';} break;
-        /*Редактирование руководителя*/
-        case 'leader_edit': {include 'a_leader_edit.php';}break;
-        /*Редактирование работы*/
-        case 'work_edit': {include 'a_work_edit.php';} break;
-        /*редактирование данных вуза*/
-        case 'univer_edit': {include 'a_univer_edit.php';} break;
-        /* Загрузка файла для работы*/
-        case 'work_edit_add_file': { include 'a_work_edit_add_file.php';} break;
-        /* Добавление рецензии */
-        case 'review_add':{ include 'a_review_add.php';}break;
-        /* Редактирование рецензии */
-        case 'review_edit':{ include 'a_review_edit.php';}break;
-        /*Рассылка сообщений*/
-        case 'sentemail_begin':{  }break;
-    }// Завершение Обработка switch POST
-    /***********************************************************************
-     * комманды переданные по GET Для обработки перед формирванием страницы
-     * /***********************************************************************/
-    /*Обработка запросов на удаление связей между работой и руководителем или автором*/
-    switch ($_GET['action']) {
-        /* отвязывание*/
-        case 'unlink': {include 'ag_unlink.php';} break;
-        /* удаление работы*/
-        case 'delete_work': { include 'ag_delete_work.php';} break;
-        /*удаление файла работы*/
-        case 'delete_file': { include 'ag_delete_file.php';} break;
-        /*удаление рецензии*/
-        case 'delete_review': { include 'ag_delete_review.php';} break;
-        /*обновление балов в таблице works*/
-        case 'works_update_balls': { include 'ag_works_update_balls.php';} break;
-    }
+    /**
+     * Команды переданные по POST запросу
+     */
+    $actionPost = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
+    if (in_array($actionPost, [
+        'autor_add',
+        'autor_edit',
+        'leader_add',
+        'leader_edit',
+        'work_add',
+        'work_edit',
+        'work_link',
+        'all_add',
+        'univer_edit',
+        'file_add',
+        'review_add',
+        'review_edit',
 
-} else
-    /*Перенаправление на страничку обычных пользователей*/ {
+    ])) {
+        execute_post_action($actionPost);
+    }
+    /**
+     * комманды переданные по GET Для обработки перед формирванием страницы
+     * После каждой команды идет перенаправление на страницу
+     */
+    $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
+    if (in_array($action, [
+        'work_unlink',
+        'work_delete',
+        'file_delete',
+        'review_delete',
+        'review_update'
+    ])) {
+        execute_get_action($action);
+        // каждое действие заканчивается  header(...)
+    };
+} else /*Перенаправление на страничку обычных пользователей*/ {
     header('Location: index.php');
 }
 ?>
@@ -78,98 +68,63 @@ if ($_SESSION['access']) {
 $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
 //print_r($FROM);
 ?>
-    <!-- Форма добавления работы-->
-<?php     if ($_GET['action'] == 'work_add'):  include 'ag_form_add_work.php'; ?>
+<!-- Форма добавления работы-->
+<?php if ($_GET['action'] === 'work_add'): include 'work/form_add.php'; ?>
     <!-- Форма добавления автора-->
-<?php elseif ($_GET['action'] == 'autor_add'): include 'ag_form_add_autor.php'; ?>
+<?php elseif ($_GET['action'] === 'autor_add'): include 'autor/form_add.php'; ?>
     <!-- Форма добавления керівника-->
-<?php elseif ($_GET['action'] == 'leader_add'): include 'ag_form_add_leader.php'; ?>
+<?php elseif ($_GET['action'] === 'leader_add'): include 'leader/form_add.php'; ?>
     <!-- Форма добавления всех сведений-->
-<?php elseif ($_GET['action'] == 'add_all'):   include 'ag_form_add_all.php'; ?>
+<?php elseif ($_GET['action'] === 'all_add'): include 'all/form_add.php'; ?>
     <!-- Связывание работы -->
-<?php elseif ($_GET['action'] == 'work_link'):  include 'ag_work_link.php';?>
+<?php elseif ($_GET['action'] === 'work_link'): include 'work/form_link.php'; ?>
     <!--Добавление рецензии -->
-<?php elseif ($_GET['action'] == 'add_review'):   include 'ag_form_add_review.php';?>
+<?php elseif ($_GET['action'] === 'add_review'): include 'review/form_add.php'; ?>
     <!--Редактирование рецензии -->
-<?php elseif ($_GET['action'] == 'review_edit'):  include 'ag_form_edit_review.php';?>
+<?php elseif ($_GET['action'] === 'review_edit'): include 'review/form_edit.php'; ?>
     <!--Просмотр рецензии -->
-<?php elseif ($_GET['action'] == 'review_view'):  include 'ag_form_view_review.php';?>
+<?php elseif ($_GET['action'] === 'review_view'): include 'review/form_view.php'; ?>
     <!-- Редактирование автора -->
-<?php elseif ($_GET['action'] == 'autor_edit'): include 'ag_form_edit_autor.php'; ?>
+<?php elseif ($_GET['action'] === 'autor_edit'): include 'autor/form_edit.php'; ?>
     <!-- Редактирование руководителя -->
-<?php elseif ($_GET['action'] == 'leader_edit'): include 'ag_form_edit_leaders.php'; ?>
+<?php elseif ($_GET['action'] === 'leader_edit'): include 'leader/form_edit.php'; ?>
     <!-- Редактирование работы -->
-<?php elseif ($_GET['action'] == 'work_edit'): include 'ag_form_edit_work.php'; ?>
+<?php elseif ($_GET['action'] === 'work_edit'): include 'work/form_edit.php'; ?>
     <!-- Редактирование данных университета -->
-<?php elseif ($_GET['action'] == 'univer_edit'): include 'ag_form_edit_univer.php'; ?>
+<?php elseif ($_GET['action'] === 'univer_edit'): include 'univer/form_edit.php'; ?>
     <!-- Редактирование списка университетов в которые следует направить первое информационное сообщение -->
-<?php elseif ($_GET['action'] == 'univer_invite'): include 'ag_univer_invite.php';?>
+<?php elseif ($_GET['action'] === 'univer_invite'): include 'univer/form_invite.php'; ?>
     <!-- Просмотр  таблици работ -->
-<?php elseif ($_GET['action'] == 'view'): include 'ag_view.php';?>
+<?php elseif ($_GET['action'] === 'all_view'): include 'all/form_view.php'; ?>
     <!--Формування списку запрошень журі-->
-<?php elseif ($_GET['action'] == 'invit_leaders'): include 'ag_invit_leaders.php';?>
+<?php elseif ($_GET['action'] === 'leader_invit'): include 'leader/form_invit.php'; ?>
     <!--Запрошення робіт-->
-<?php elseif ($_GET['action'] == 'invit_section'): include 'invit_section.php';?>
+<?php elseif ($_GET['action'] === 'section_invite'): include 'section/form_invite.php'; ?>
     <!-- Отметки на регистрации в 3-м корпусе -->
-<?php elseif ($_GET['action'] == 'reception'): ?>
     <!-- Отметки о прибытии на конкурс  -->
-    <div class="layout">
-        <header><a href="action.php">Меню</a></header>
-        <header id="update_arrival_works" title="Подвійне клацання для оновлення відміток у таблиці робіт">Реестрація
-            учасників конференції
-        </header>
-        <?php list_univers_reseption(10); ?>
-        <div id="columnAutors"><label>Автори (тільки запрошені)</label><ol id="selectAutors"></ol></div>
-        <div id="columnLeaders"><label>Супроводжуючі (усі)</label><ol id="selectLeaders"></ol></div>
-    </div>
-    <!-- Окончание Отметки о прибытии на конкурс  -->
-
-<?php elseif ($_GET['action'] == 'list_autors'): ?>
+<?php elseif ($_GET['action'] === 'reception_edit'): include 'reception/form_edit.php'; ?>
     <!-- Список авторов работ -->
-    <header><a href="action.php">Меню</a></header>
-    <header>Список авторів робіт <a href="action.php?action=list_leaders">Список керівників робіт</a></header>
-    <header><a href="action.php?action=autor_add&FROM=<?= $FROM ?>">[ + автор]</a></header>
-    <form method="POST" action="lists.php?list=badge_autors">
-        <?php list_autors_or_leaders('autors', true, true, false); ?>
-        <input type="submit" value="Print">
-    </form>
-    <!-- Окончание Список авторов работ -->
-
-<?php elseif ($_GET['action'] == 'list_leaders'): ?>
+<?php elseif ($_GET['action'] === 'autor_list'): include 'autor/form_list.php'; ?>
     <!-- Список руководителей работ -->
-    <header><a href="action.php">Меню</a></header>
-    <header><a href="action.php?action=list_autors">Список авторів робіт</a> Список керівників робіт</header>
-    <header><a href="action.php?action=leader_add&FROM=<?= $FROM ?>">[+ керівник]</a></header>
-    <form method="POST" action="lists.php?list=badge_leaders">
-        <?php list_autors_or_leaders('leaders', true, true, false); ?>
-        <input type="submit" value="Print"/>
-    </form>
-    <!-- Окончание Список руководителей работ -->
-<?php elseif ($_GET['action'] == 'list_reviewers'): ?>
+<?php elseif ($_GET['action'] === 'leader_list'): include 'leader/form_list.php' ?>
     <!-- Список Рецензентов работ -->
-    <header><a href="action.php">Меню</a></header>
-    <header>Список рецензентів робіт</header>
-    <header><a href="action.php?action=list_leaders">Керівники</a></header>
-    <?php list_autors_or_leaders('leaders', true, true, false,true); ?>
-    <!-- Окончание списока рецензентов работ -->
-
-
+<?php elseif ($_GET['action'] === 'reviewer_list'): include 'reviewer/form_list.php' ?>
     <!-- Список тезисов по секциям -->
-<?php elseif ($_GET['action'] == 'tesis'): include 'tesis.php';?>
+<?php elseif ($_GET['action'] === 'tesis_list'): include 'tesis/form_list.php'; ?>
     <!-- Роспеределение секций по аудиториям-->
-<?php elseif ($_GET['action'] == 'rooms'): include 'rooms.php';?>
+<?php elseif ($_GET['action'] === 'rooms_edit'): include 'rooms/form_edit.php'; ?>
     <!-- Распределение мест стреди студентов которые приехали на конференцию-->
-<?php elseif ($_GET['action'] == 'setplace'): include 'setplace.php';?>
+<?php elseif ($_GET['action'] === 'place_edit'): include 'place/form_edit.php'; ?>
     <!-- просмотр результата распределения мест -->
-<?php elseif ($_GET['action'] == 'viewplace'): include 'viewplace.php';?>
+<?php elseif ($_GET['action'] === 'place_view'): include 'place/form_view.php'; ?>
     <!-- Протокол засідання -->
-<?php elseif ($_GET['action'] == 'protocol'): include 'protocol.php';?>
+<?php elseif ($_GET['action'] === 'protocol'): include 'protocol.php'; ?>
     <!-- Статистична довідка -->
-<?php elseif ($_GET['action'] == 'statistic'): include 'statistic.php';?>
+<?php elseif ($_GET['action'] === 'statistic'): include 'statistic.php'; ?>
     <!-- Список на отправку писем-->
-<?php elseif ($_GET['action'] == 'sentemail'): include 'ag_sentmail.php';?>
+<?php elseif ($_GET['action'] === 'sentemail'): include 'ag_sentmail.php'; ?>
     <!-- Список на отправку Тестовая разработка -->
-<?php elseif ($_GET['action'] == 'test'): include 'ag_test.php';?>
+<?php elseif ($_GET['action'] === 'test'): include 'ag_test.php'; ?>
 
 <?php else: ?>
     <header>Меню</header>
@@ -177,7 +132,9 @@ $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI
     <div id="tabs-container">
         <ul class="tabs">
             <li><a href="#">Основна</a></li>
-            <li><a href="#" title="Занятие ерундой на рабочем месте хорошо развивает боковое зрение, слух, а также бдительность в целом!" >Наповнення БД</a></li>
+            <li><a href="#"
+                   title="Занятие ерундой на рабочем месте хорошо развивает боковое зрение, слух, а также бдительность в целом!">Наповнення
+                    БД</a></li>
             <li><a href="#">І повідомлення</a></li>
             <li><a href="#">IІ повідомлення</a></li>
             <li class="active"><a href="#">Конференція</a></li>
@@ -188,32 +145,34 @@ $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI
     <!-- Верхнее меню -->
     <div id="nav-container">
         <ul class="nav" id="1" style="display:none;">
-            <li><a href="action.php?action=view" title="Таблиця з данними про роботи">Усі роботи</a></li>
+            <li><a href="action.php?action=all_view" title="Таблиця з данними про роботи">Усі роботи</a></li>
             <li><a href="#">Списки</a>
                 <ul class="sub">
-                    <li><a href="action.php?action=list_autors" title="Редагування данних, видалення">Автори</a></li>
-                    <li><a href="action.php?action=list_leaders" title="Редагування данних, видалення">Керівники</a>
-                    <li><a href="action.php?action=list_reviewers" title="Редагування данних, видалення">Рецензенти</a>
+                    <li><a href="action.php?action=autor_list" title="Редагування данних, видалення">Автори</a></li>
+                    <li><a href="action.php?action=leader_list" title="Редагування данних, видалення">Керівники</a>
+                    <li><a href="action.php?action=reviewer_list" title="Редагування данних, видалення">Рецензенти</a>
 
                     </li>
                 </ul>
             </li>
-            <li><a href="action.php?action=tesis" title="Таблиця з данними про тезиси">Тезиси</a></li>
-            <li><a href="action.php?action=works_update_balls" title="Оновлення рейтингу робіт">Оновити бали рейтингу</a></li>
+            <li><a href="action.php?action=tesis_list" title="Таблиця з данними про тезиси">Тезиси</a></li>
+            <li><a href="action.php?action=review_update" title="Оновлення рейтингу робіт">Оновити бали рейтингу</a>
+            </li>
 
         </ul>
         <ul class="nav" id="2" style="display:none;">
-        <!-- Элементы верхнего меню -->
+            <!-- Элементы верхнего меню -->
 
             <li><a href="action.php?action=autor_add&FROM=<?= $FROM ?>" title="Внесення в базу даних автора">Данні
                     автора</a></li>
-            <li><a href="action.php?action=leader_add&FROM=<?= $FROM ?>" title="Внесення в базу даних керівника/рецензента">Данні
+            <li><a href="action.php?action=leader_add&FROM=<?= $FROM ?>"
+                   title="Внесення в базу даних керівника/рецензента">Данні
                     керівника/рецензента</a></li>
             <li><a href="action.php?action=work_add&FROM=<?= $FROM ?>" title="Внесення в базу даних роботи">Данні
                     роботи</a></li>
             <li><a href="action.php?action=work_link&FROM=<?= $FROM ?>"
                    title="Встановлення зв'язків робота-&gt;автор, робота-&gt;керівник">Зв'язати роботу</a></li>
-            <li><a href="action.php?action=add_all" title="Встановлення зв'язків робота-&gt;автор, робота-&gt;керівник">Ввести
+            <li><a href="action.php?action=all_add" title="Встановлення зв'язків робота-&gt;автор, робота-&gt;керівник">Ввести
                     усі данні про роботу</a></li>
         </ul>
 
@@ -224,12 +183,12 @@ $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI
             </li>
         </ul>
         <ul class="nav" id="4" style="display:none;">
-            <li><a href="action.php?action=invit_section" title="Відмітки про запрошення та розподіл за секціями">Запрошення
+            <li><a href="action.php?action=section_invite" title="Відмітки про запрошення та розподіл за секціями">Запрошення
                     та секції</a></li>
             <li><a href="#" title="Опрацювати запрощення для жюрі">Запрошення журі</a>
                 <ul class="sub">
                     <li><a href="uploadinvitation.php" title="Завантаження сканувань">Завантаження</a></li>
-                    <li><a href="action.php?action=invit_leaders" title="Відмітити та роздрукувати">Список відмітити</a>
+                    <li><a href="action.php?action=leader_invit" title="Відмітити та роздрукувати">Список відмітити</a>
                     </li>
                 </ul>
             </li>
@@ -247,7 +206,7 @@ $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI
             </li>
 
         </ul>
-        <ul class="nav" id="5" >
+        <ul class="nav" id="5">
             <li><a href="#"> Друкувати до початку конференціх</a>
                 <ul class="sub">
                     <li><a href="lists.php?list=ahostel">Список авторів для поселення в гуртожитку</a></li>
@@ -257,12 +216,13 @@ $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI
                 </ul>
             </li>
             <li><a href="programa.php">Скелет программи</a></li>
-            <li><a href="action.php?action=rooms">Розподіл секцій за аудиторіями</a></li>
-            <li><a href="action.php?action=reception" title="Торжественно клянусь, что замышляю только шалость!">Реєстрація учасників конференції</a></li>
+            <li><a href="action.php?action=rooms_edit">Розподіл секцій за аудиторіями</a></li>
+            <li><a href="action.php?action=reception_edit" title="Торжественно клянусь, что замышляю только шалость!">Реєстрація
+                    учасників конференції</a></li>
         </ul>
         <ul class="nav" id="6" style="display:none;">
-            <li><a href="action.php?action=setplace">Призначення місць</a></li>
-            <li><a href="action.php?action=viewplace">Розподіл результат</a></li>
+            <li><a href="action.php?action=place_edit">Призначення місць</a></li>
+            <li><a href="action.php?action=place_view">Розподіл результат</a></li>
             <li><a href="#">Друкувати</a>
                 <ul class="sub">
                     <li><a href="lists.php?list=diploms">Дипломи</a></li>
@@ -280,8 +240,10 @@ $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI
             <li><a href="log.php" class="special">Журнал дій</a></li>
             <li><a href="#">Розсилка</a>
                 <ul class="sub">
-                <li><a href="action.php?action=sentemail" class="special" title="Редагувати тектс листа та надіслати запрошення">Електронні запрошення</a></li>
-                <li><a href="action.php?action=test"  class="special" title="Тестова сторінка нічого не недасилається">Тестова сторінка</a></li>
+                    <li><a href="action.php?action=sentemail" class="special"
+                           title="Редагувати тектс листа та надіслати запрошення">Електронні запрошення</a></li>
+                    <li><a href="action.php?action=test" class="special"
+                           title="Тестова сторінка нічого не недасилається">Тестова сторінка</a></li>
                 </ul>
             </li>
         </ul>

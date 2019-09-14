@@ -72,7 +72,7 @@ function log_action($action, $table, $action_id = 0, $tz_id = 888)
     $query = "INSERT INTO `log` (`tz_id`,`date`,`action`,`table`,`action_id`,`tz_ip`)\n
         VALUES\n
         ('{$tz_id}',NOW(),'{$action}','{$table}','{$action_id}','{$_SERVER['REMOTE_ADDR']}')";
-    //echo( $query);        
+    //echo( $query);
     $result = mysqli_query($link, $query)
     or die("Помилка запису журналу: " . mysqli_error($link) . $action_id);
 }
@@ -195,7 +195,7 @@ function list_reviews_for_one_work($id_w,$href = false,$loginId="0")
         if(true == $href) {
             $str .= "<a href=\"action.php?action=review_edit&id={$row['id']}\" title=\"Ред. Рец.:{$row['fio']}\">&#9998;:[{$row['sumball']}]</a>\n";
             if ($loginId == $row['id_tzmember'] OR ($loginId=="1") OR ($loginId=="2")) {
-                $str .="<a href=\"action.php?action=delete_review&id={$row['id']}&id_w={$row['id_w']}\"  title=\"Видалити рецензію\"></a>\n";
+                $str .="<a href=\"action.php?action=review_delete&id={$row['id']}&id_w={$row['id_w']}\"  title=\"Видалити рецензію\"></a>\n";
             }
         }
             else {
@@ -319,9 +319,9 @@ function list_fio($table, $pole, $id_u, $size, $selecttag = true)
 {
     global $link;
     if ($id_u == "") {
-        $query = "SELECT * FROM `" . $table . "` ORDER BY  `suname` ASC";
+        $query = "SELECT * FROM `{$table}` ORDER BY  `suname` ASC";
     } else {
-        $query = "SELECT * FROM `" . $table . "` WHERE `id_u`='" . $id_u . "' ORDER BY  `suname` ASC";
+        $query = "SELECT * FROM `{$table}` WHERE `id_u`='{$id_u}' ORDER BY  `suname` ASC";
     }
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
@@ -455,7 +455,7 @@ function list_files($id_w, $typeoffile = "all")
                 $str2 = file_name_format($str_title, 30);
                 //
                 $str .= "<li><a href=\"{$row['file']}\" title=\"{$str_title}\" >{$str2}</a>&nbsp;"
-                    . "<a href=\"action.php?action=delete_file&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a></li>";
+                    . "<a href=\"action.php?action=file_delete&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a></li>";
                 unset($str2);
             }
             $str .= "</ol></details>";
@@ -542,7 +542,7 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
             }
         $sub_row_str .= ($href) ? "</a>" : "";
         if($sub_row['arrival'] <> 1) {
-            $sub_row_str .= ($href) ? " <a href=action.php?action=unlink&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&id_w=" . $id_w . " title=\"Відокремити від роботи\"><img src=\"../images/unlink.png\"></a>" : "";
+            $sub_row_str .= ($href) ? " <a href=action.php?action=work_unlink&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&id_w=" . $id_w . " title=\"Відокремити від роботи\"><img src=\"../images/unlink.png\"></a>" : "";
         }
         $sub_row_str .= "</li>\n";
     }
@@ -621,9 +621,9 @@ function list_autors_or_leaders($table, $phone = false, $email = false,  $hash=f
     global $link;
     global $FROM;
     $table = ($table == "") ? "autors" : $table;
-    $id = ($table == "autors") ? "id_a" : "id_l";
+    $id = ($table === "autors") ? "id_a" : "id_l";
 	//."JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`\n
-    if ($table == "autors") {$query = "SELECT autors.*, univers.univer FROM `autors` JOIN univers ON autors.id_u = univers.id ORDER BY `suname` ASC";}
+    if ($table === "autors") {$query = "SELECT autors.*, univers.univer FROM `autors` JOIN univers ON autors.id_u = univers.id ORDER BY `suname` ASC";}
     else{
         $query = "SELECT leaders.*, positions.position,degrees.degree,statuses.status,univers.univer FROM leaders 
 JOIN positions ON leaders.id_pos = positions.id
@@ -634,7 +634,7 @@ JOIN univers ON leaders.id_u = univers.id";
         $query .= " ORDER BY `suname` ASC";
     }
 
-	
+
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
@@ -650,7 +650,7 @@ JOIN univers ON leaders.id_u = univers.id";
             $sub_row_str .= "<a href=#remove title=\"Видалити\n з реестру\"></a>";
         }
         $sub_row_str .= ($row['arrival'] == 1) ? "<span title=\"Прибув на конференцію\">&nbsp;[&radic;]&nbsp;</span>" : "";
-	   
+
        $get_text = "&t=a"; // для GET запроса в хеш сторку
 	if($table == "leaders"){
 		$sub_row_str .= " ".$row['position'];
@@ -685,7 +685,7 @@ function list_persons($table)
 {
     global $link;
 
-    $query = "SELECT * FROM `" . $table . "` ORDER BY suname ASC ";
+    $query = "SELECT * FROM `{$table}` ORDER BY suname ASC ";
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
@@ -742,11 +742,11 @@ function cbo_place($id)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 function chk_box($name, $title, $value)
 {
-    $str = "<input type=\"checkbox\" name=\"" . $name . "\" title=\"" . $title . "\" ";
+    $str = "<input type='checkbox' name='{$name}' title='{$title}' ";
     if ($value != "")
-        $str .= ($value == 1) ? "checked" : "";
+        $str .= ($value == 1) ? 'checked' : '';
 
-    $str .= " >";
+    $str .= ' >';
     echo $str;
 }
 
@@ -809,7 +809,7 @@ function print_work_row($row, $href = false,$loginId = "0")
         $public = !($row['public'] == "") ? "<br/><strong>Публікації</strong> :{$row['public']}\n" : "";
         if(($loginId == "1") OR ($loginId == "2"))
         {
-        $delete_work = "&nbsp;&nbsp;<a href=action.php?action=delete_work&id_w={$row['id']} title=\"Видалити роботу з реестру (Зникнуть зв'язки, автори та керівникі будуть у базі)\"></a>\n";
+        $delete_work = "&nbsp;&nbsp;<a href=action.php?action=work_delete&id_w={$row['id']} title=\"Видалити роботу з реестру (Зникнуть зв'язки, автори та керівникі будуть у базі)\"></a>\n";
         }
         else {
             $delete_work = "&nbsp;&nbsp;<a href=\"#\" title=\"Вам заборонено видаляти роботу\"></a>\n";
@@ -1093,8 +1093,7 @@ function left($str, $num)
 function right($str, $num)
 {
     $len = strlen($str);
-    $strout = substr($str, $len - $num * 2, $len);
-    return $strout;
+    return substr($str, $len - $num * 2, $len);
 }
 
 /** * *********************************************************************************
@@ -1105,7 +1104,7 @@ function right($str, $num)
 function select_room($room)
 {
     $str = "<select size=\"1\" name=\"room\" title=\"Аудиторія\">\n";
-    $roomArray = array("7-43", "7-53", "7-54");
+    $roomArray = ['7-43', '7-53', '7-54'];
     for ($i = 0; $i < 3; $i++) {
         $str .= "<option value=" . $roomArray[$i];
         $str .= ($room == $roomArray[$i]) ? " selected " : "";
@@ -1121,12 +1120,19 @@ function select_room($room)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 function select_positionVNZ($posada)
 {
-    $str = "<select size=\"1\" name=\"posada\" title=\"Посада керівника ВНЗ\">\n";
-    $posadaArray = array("Ректору", "В.о.ректора", "Директору","Начальнику інституту", "Начальнику академії","Начальнику військового інституту");
-    for ($i = 0; $i < count($posadaArray); $i++) {
-        $str .= "<option value=\"" . $posadaArray[$i] . "\"";
-        $str .= ($posada == $posadaArray[$i]) ? " selected " : "";
-        $str .= ">" . $posadaArray[$i] . "</option>\n";
+    $str = "<select size='1' name='posada' title='Посада керівника ВНЗ'>\n";
+    $positions = [
+        'Ректору',
+        'В.о.ректора',
+        'Директору',
+        'Начальнику інституту',
+        'Начальнику академії',
+        'Начальнику військового інституту'
+    ];
+    foreach ($positions as $position) {
+        $str .= "<option value='{$position}'";
+        $str .= ($posada == $position) ? ' selected ' : '';
+        $str .= ">{$position}</option>\n";
     }
     $str .= "</select>\n";
     echo $str;
@@ -1139,18 +1145,18 @@ function select_positionVNZ($posada)
  */
 function diplom_place($place)
 {
-    $str = "ПУСТИЙ РЯДОК";
+    $str = 'ПУСТИЙ РЯДОК';
     switch ($place) {
         case "I": {
-            $str = "ПЕРШОГО СТУПЕНЯ";
+            $str = 'ПЕРШОГО СТУПЕНЯ';
         }
             break;
         case "II": {
-            $str = "ДРУГОГО СТУПЕНЯ";
+            $str = 'ДРУГОГО СТУПЕНЯ';
         }
             break;
         case "III": {
-            $str = "ТРЕТЬОГО СТУПЕНЯ";
+            $str = 'ТРЕТЬОГО СТУПЕНЯ';
         }
             break;
     }
@@ -1164,10 +1170,10 @@ function diplom_place($place)
  */
 function student_ka($O)
 {
-    if (right($O, 1) == 'ч')
-        $str = "студент";
+    if (right($O, 1) === 'ч')
+        $str = 'студент';
     else
-        $str = "студентка";
+        $str = 'студентка';
     return $str;
 }
 
@@ -1178,7 +1184,7 @@ function student_ka($O)
 function AnalizeMysqlError($str){
     $result = "";
     //Проверяем не пустая ли к нам пришла строка
-    if ('' == $str){ $result = "Пустая строка";}
+    if ('' === $str){ $result = "Пустая строка";}
     //Разбиваем строку на строки по разделителю
     $array_str = explode(' ',$str);
     switch($array_str[0]){
@@ -1192,7 +1198,7 @@ function AnalizeMysqlError($str){
  * @param string $page
  */
 function Go_page($page) {
-    header("location: " . $page);
+    header('location: ' . $page);
 }
 
 /**
@@ -1209,9 +1215,50 @@ function Go_page($page) {
     $MAIL = "<div class = \"hMAIL\">Е-mail: <span>science@dstu.dp.ua</span></div>\n";
     $DATA = (true == $empty)? "<div class = \"hDATA\">______________№____________________":"<div class = \"hDATA\"><span>&nbsp;&nbsp;XX/XX/2018&nbsp;&nbsp;</span>№<span>".TAB_SP."108-08/10-69".TAB_SP."</span>";
     $DATA .= TAB_SP."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;На&nbsp;№__________________від____________</div>\n";
-    
+
     $str .= $GERB.$MON.$DDTUfull.$DDTUshort.$ADRESS.$MAIL.$DATA;
     printf($str);
-    
+
  }
-?>
+
+/**
+ * @param $action_string
+ */
+function execute_get_action($action_string)
+{
+    if(is_string($action_string))
+    {
+         $action = \explode('_', $action_string);
+        if (count($action) === 2){
+            $directory = $action[0];
+            $path[] = $directory;
+            $fileName = "form_{$action[1]}.php";
+            $path[] = $fileName;
+            $file = implode(DIRECTORY_SEPARATOR, $path);
+            if(\is_file($file)){
+                include_once $file;
+            }
+        }
+    }
+}
+
+/**
+ * @param $action_string
+ */
+function execute_post_action($action_string)
+{
+    if(is_string($action_string))
+    {
+        $action = \explode('_', $action_string);
+        if (count($action) === 2){
+            $directory = $action[0];
+            $path[] = $directory;
+            $fileName = "{$action[1]}.php";
+            $path[] = $fileName;
+            $file = implode(DIRECTORY_SEPARATOR, $path);
+            if(\is_file($file)){
+                include_once $file;
+            }
+        }
+    }
+}
