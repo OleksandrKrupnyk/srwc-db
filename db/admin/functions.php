@@ -169,7 +169,7 @@ function cbo_reviewers_list($id = -1,$id_u,$id_w){
 
 /**
  * @param int $id_w ID of work in table works
- * @param bool $href TRUE if you neeb to show link for edit
+ * @param bool $href TRUE if you need to show link for edit
  * @return string Numeric list of reviews with links
  */
 function list_reviews_for_one_work($id_w,$href = false,$loginId="0")
@@ -799,7 +799,7 @@ function print_work_row($row, $href = false,$loginId = "0")
     $link_add_review = "";
     $reviews = list_reviews_for_one_work($row['id'],false);
     if ($href == true) {//если установлено показывать ссылки
-        $link_add_review = (count_review($row['id']) < 2) ? "<a href=\"action.php?action=add_review&id_w={$row['id']}&id_u={$row['id_u']}\">додати рецензію</a>" : "";
+        $link_add_review = (count_review($row['id']) < 2) ? "<a href=\"action.php?action=review_add&id_w={$row['id']}&id_u={$row['id_u']}\">додати рецензію</a>" : "";
 
         $reviews = list_reviews_for_one_work($row['id'], true, $loginId);
 
@@ -1096,22 +1096,21 @@ function right($str, $num)
     return substr($str, $len - $num * 2, $len);
 }
 
-/** * *********************************************************************************
- *
+/**
  * Функция выводит конструкцию <select></select> для выбора аудитории для списка оценивания
+ *
  * @param string $room
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function select_room($room)
+ * @param array  $rooms
+ * @return string
+ */
+function select_room($room, $rooms = ['7-43', '7-53', '7-54'])
 {
-    $str = "<select size=\"1\" name=\"room\" title=\"Аудиторія\">\n";
-    $roomArray = ['7-43', '7-53', '7-54'];
-    for ($i = 0; $i < 3; $i++) {
-        $str .= "<option value=" . $roomArray[$i];
-        $str .= ($room == $roomArray[$i]) ? " selected " : "";
-        $str .= ">" . $roomArray[$i] . "</option>\n";
+    $list = '';
+    foreach ($rooms as $item) {
+        $selected = $room === $item ? 'selected' : '';
+        $list     .= "<option value='{$item}' $selected >$item</option>" . PHP_EOL;
     }
-    $str .= "</select>\n";
-    echo $str;
+    return "<select size='1' name='room' title='Аудиторія'>\n{$list}</select>\n";
 }
 
 /**

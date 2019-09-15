@@ -6,6 +6,7 @@
  * Time: 20:14
  */
 ?>
+<!-- Форма добавления керівника-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні керівника</header>
 <form class="addleaderForm" method="post" action="action.php">

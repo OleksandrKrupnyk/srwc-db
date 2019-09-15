@@ -36,7 +36,7 @@ or die("Полка запису дія autor_add: " . mysqli_error($link));
 $id_a = mysqli_insert_id($link);
 log_action($_POST['action'], "autors", $id_a);
 $url2go = ($_POST['FROM']) ? $_POST['FROM'] : "action.php";
-/*Если известно скакой работой связать то связать и перейти на страничку указания на работу*/
+/*Если известно с какой работой связать то связать и перейти на страничку указания на работу*/
 if ($setId_w = true) {
     $query = "INSERT INTO `wa` (id_w,id_a,date) VALUE ('{$_POST['id_w']}','{$id_a}',NOW())";
     mysqli_query($link, "SET NAMES 'utf8'");

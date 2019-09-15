@@ -238,11 +238,11 @@ return [
             ],
             [
                 'value' => 'Протокол по місцях',
-                'href'  => 'action.php?action=protocol',
+                'href'  => 'action.php?action=protocol_view',
             ],
             [
                 'value' => 'Статистична довідка',
-                'href'  => 'action.php?action=statistic',
+                'href'  => 'action.php?action=statistic_view',
             ],
 
         ],
@@ -275,13 +275,13 @@ return [
                 'items'=>[
                     [
                         'value' => 'Електронні запрошення',
-                        'href'  => 'action.php?action=sentemail',
+                        'href'  => 'action.php?action=email_edit',
                         'title' => 'Редагувати тектс листа та надіслати запрошення',
                         'class' => 'special',
                     ],
                     [
                         'value' => 'Тестова сторінка',
-                        'href'  => 'action.php?action=test',
+                        'href'  => 'action.php?action=test_edit',
                         'title' => 'Тестова сторінка нічого не недасилається',
                         'class' => 'special',
                     ],

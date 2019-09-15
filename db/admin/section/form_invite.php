@@ -16,8 +16,8 @@ mysqli_query($link, "SET NAMES 'utf8'");
 mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query);
 $count = mysqli_num_rows($result);
-
 ?>
+<!--Запрошення робіт-->
 <!-- Разделение по секциям и приглашения -->
 <header><a href="action.php">Меню</a></header>
 <header>Запрошення (<?= $count ?> всього)</header>
@@ -46,7 +46,6 @@ echo "<table><tr><th>№</th><th>ВНЗ</th><th>Кількість<br>робіт
 while ($row = mysqli_fetch_array($result)) {
     echo "<tr><td>{$i}</td><td>{$row['univerfull']}</td><td>{$row['allworks']}</td><td>{$row['students']}</td><td>{$row['count_invitation']}</td></tr>";
     $i++;
-    //print_r($row);
 }
 echo "</table>";
 ?>

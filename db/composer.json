@@ -11,7 +11,10 @@
     "joshcam/mysqli-database-class": "^2.9",
     "ext-curl": "*",
     "ext-json": "*",
-    "vlucas/phpdotenv": "^3.6"
+    "vlucas/phpdotenv": "^3.6",
+    "ext-mysqli": "*",
+    "ext-mbstring": "*",
+    "ext-gd": "*"
   },
   "autoload": {
     "psr-4": {

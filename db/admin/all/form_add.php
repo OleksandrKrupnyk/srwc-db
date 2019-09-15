@@ -1,3 +1,4 @@
+<!-- Форма добавления всех сведений-->
 <header><a href="action.php">Меню</a></header>
 <header>Усі данні роботи</header>
 <form class="addAllForm" method="post" action="action.php">

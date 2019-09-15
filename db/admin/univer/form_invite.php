@@ -1,5 +1,14 @@
-<header>
-    <a href='action.php'>Меню</a></header>
+<?php
+global $link;
+$query = "SELECT id,univerfull, invite FROM  univers ORDER BY univerfull ASC ";
+mysqli_query($link, "SET NAMES 'utf8'");
+mysqli_query($link, "SET CHARACTER SET 'utf8'");
+//посылаем запрос
+$result = mysqli_query($link, $query)
+or die('Invalid query функція action=univer_invite: ' . mysqli_error($link));
+?>
+<!-- Редактирование списка университетов в которые следует направить первое информационное сообщение -->
+<header><a href='action.php'>Меню</a></header>
 <header>Список университетів</header>
 <table id='tableInviteUnivers'>
     <tr>
@@ -8,13 +17,6 @@
         <th>?</th>
     </tr>
     <?php
-    global $link;
-    $query = "SELECT id,univerfull, invite FROM  univers ORDER BY univerfull ASC ";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    //посылаем запрос
-    $result = mysqli_query($link, $query)
-    or die("Invalid query функція action=univer_invite: " . mysqli_error($link));
     //первый запрос
     $i = 1;
     while ($row = mysqli_fetch_array($result)) {

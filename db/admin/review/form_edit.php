@@ -15,6 +15,7 @@ $result = mysqli_query($link, $query) or die("Invalid query in function list_rev
 $row = mysqli_fetch_array($result);
 //print_r(array_slice($row,4,22));
 ?>
+<!--Редактирование рецензии -->
 <header><a href="action.php?action=all_view#id_w<?= $row['id_w']?>">Усі роботи</a></header>
 <header>Редагування рецензії</header>
 
@@ -43,13 +44,13 @@ $row = mysqli_fetch_array($result);
             $row2 = mysqli_fetch_array($result2);
             $strArray = array();
             if ($row2['introduction'] <> "") {
-                array_push($strArray, "<strong>Впровадженння:</strong>{$row2['introduction']}");
+                $strArray[] = "<strong>Впровадженння:</strong>{$row2['introduction']}";
             }
             if ($row2['public'] <> "") {
-                array_push($strArray, "<strong>Результати опубліковано:</strong>{$row2['public']}");
+                $strArray[] = "<strong>Результати опубліковано:</strong>{$row2['public']}";
             }
             if ($row2['comments'] <> "") {
-                array_push($strArray, "<strong>Коментар/зауваження до матеріалів:</strong>{$row2['comments']}");
+                $strArray[] = "<strong>Коментар/зауваження до матеріалів:</strong>{$row2['comments']}";
             }
             if (count($strArray) < 1) {
                 $str = "<strong>Увага! Без публікації та впровадження. Зауваження з боку офрмлення документів відсутні.</strong>";

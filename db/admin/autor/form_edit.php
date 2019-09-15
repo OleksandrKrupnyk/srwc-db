@@ -6,8 +6,9 @@
  * Time: 20:17
  *
  */
-$aInfo = fullinfo("autors", "id", $_GET['id_a']);
+$aInfo = fullinfo('autors', 'id', $_GET['id_a']);
 ?>
+<!-- Редактирование автора -->
 <header><a href="action.php">Меню</a></header>
 <header>Редагування данних автора</header>
 <form class="editAutor" method="post" action="action.php">
@@ -37,12 +38,12 @@ $aInfo = fullinfo("autors", "id", $_GET['id_a']);
         <input type="tel" pattern="\d{10}" size="10" maxlength="10" name="phone" title="Наприклад:0985622012"
                value="<?= $aInfo['phone'] ?>" placeholder="Номер телефону">
         <?php
-        $phone_number = ($aInfo['phone'] == "") ? "відсутній" : $aInfo['phone'];
-        echo "<span id=\"phone\">{$phone_number}</span>";
+        $phone_number = ($aInfo['phone'] == '') ? 'відсутній' : $aInfo['phone'];
+        echo "<span id='phone'>{$phone_number}</span>";
         ?>
         <br>
-        <label>Прибув?</label><?php chk_box("arrival", "Відмітка про прибуття на конференцію", $aInfo['arrival']); ?>
-        <label>Недрукувати бейджик</label><?php chk_box("bprint", "Заборона на друк бейджика", $aInfo['bprint']); ?>
+        <label>Прибув?</label><?php chk_box('arrival', 'Відмітка про прибуття на конференцію', $aInfo['arrival']); ?>
+        <label>Недрукувати бейджик</label><?php chk_box('bprint', 'Заборона на друк бейджика', $aInfo['bprint']); ?>
     </fieldset>
     <br>
 

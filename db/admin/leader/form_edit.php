@@ -7,6 +7,7 @@
  */
 global $link;
 ?>
+<!-- Редактирование руководителя -->
 <?php $lInfo = fullinfo("leaders", "id", $_GET['id_l']); /*получим все данные о руководителе*/ ?>
 <header><a href="action.php">Меню</a></header>
 <header>Редагування данних керівника</header>
@@ -18,7 +19,7 @@ global $link;
     <input type="text" name="lname" title="По-батькові" value="<?= $lInfo['lname'] ?>" required>
     <br><label>Рецензент:</label>
     <?php chk_box("reviewer", "Відмітити якщо рецензент", $lInfo['review']); ?>
-    <?php if($_SESSION['usr'] == "krupnik"){
+    <?php if($_SESSION['usr'] === 'krupnik'){
         printf("<label>Логін користувача у системі для рецензування:</label>");
         //printf("TODO");
         //printf("<label>Логін:%s</label>",$lInfo['id_tzmember']);

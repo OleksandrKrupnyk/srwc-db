@@ -17,6 +17,7 @@ $result = mysqli_query($link, $query) or die("Invalid query in function list_rev
 $row = mysqli_fetch_array($result);
 //print_r($row);
 ?>
+<!--Просмотр рецензии -->
 <header><a href="../index.php">Головна</a></header>
 <header>Перегляд рецензії</header>
     <h1><?= $row['title']?></h1>

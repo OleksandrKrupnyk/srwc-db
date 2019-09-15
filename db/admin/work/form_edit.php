@@ -6,6 +6,7 @@
  * Time: 20:20
  */?>
 <?php $wInfo = fullinfo("works", "id", $_GET['id_w']); ?>
+<!-- Редактирование работы -->
 <header><a href="action.php">Меню</a></header>
 <header>Редагування работы</header>
 <form class="editWork" method="post" action="action.php">

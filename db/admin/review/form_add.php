@@ -1,3 +1,4 @@
+<!--Добавление рецензии -->
 <header><a href="action.php?action=all_view#id_w<?= $_GET['id_w']?>">Усі роботи</a></header>
 <header>Додавання рецензії</header>
 <form class="addreviewForm" method="post" action="action.php"

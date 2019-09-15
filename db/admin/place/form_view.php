@@ -6,14 +6,21 @@
  * Time: 0:35
  */
 global $link;
-printf("<header><a href=\"action.php\">Меню</a></header>\n<header title=\"Розподіл призових місць серед вузів які прийняли участь у конференції\">Розподіл призових місць серед авторів</header>");
-printf("<menu class=\"viewTableMenu\"><li><a href=\"action.php?action=place_edit\">Редагувати</a></li></menu>");
 $query = SUPERSQL; //see file include
 //echo $query;
 mysqli_query($link, "SET NAMES 'utf8'");
 mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query)
 or die("Помилка запиту: " . mysqli_error($link));
+?>
+<!-- просмотр результата распределения мест -->
+<header>
+    <a href="action.php">Меню</a>
+</header>
+<header title="Розподіл призових місць серед вузів які прийняли участь у конференції">Розподіл призових місць серед авторів</header>
+<menu class='viewTableMenu'>
+    <li><a href='action.php?action=place_edit'>Редагувати</a></li></menu>
+<?php
 $i = 1;
 echo "<table>\n<tr><th>№</th><th>ВНЗ</th><th>I</th><th>II</th><th>III</th><th>Диплом(учасника)</th><th>Приїхали</th><th>Запросили</th><th>Подали роботи</th></tr>\n";
 while ($row = mysqli_fetch_array($result)) {
@@ -34,11 +41,10 @@ or die("Помилка запиту: " . mysqli_error($link));
 $row = mysqli_fetch_array($result);
 echo "<tr><th colspan=\"2\">РАЗОМ<br>авторів</th><th>{$row['first']}<br>".round($count2 * 0.20)."</th><th>{$row['second']}<br>".round($count2 * 0.30)."</th><th>{$row['third']}<br>".($count2 - round($count2 * 0.20) - round($count2 * 0.30))."</th><th>{$row['diplom']}</th><th>{$row['conf']}</th><th>{$row['count_invitation']}</th><th>{$row['count_takepart']}</th></tr>";
 echo "</table>";
-
-echo "<strong>Всьго студентів авторів</strong>: {$count1}. Нагородити 25% від загальної кількості авторів наукових робіт (Р.VI п.1 Положення про конкурс) це складає <strong>{$count2}</strong>. Дипломами 1-го ступеня <strong>" . round($count2 * 0.20)
-    . "</strong>, дипломами 2-го ступеня <strong>" . round($count2 * 0.30) . "</strong>, дипломами 3-го ступеня <strong>" . ($count2 - round($count2 * 0.20) - round($count2 * 0.30)) . "</strong>";
-echo "<p><a href=\"http://zakon.rada.gov.ua/laws/show/z0620-17\">Дивитись Положення про конкурс </a></p>";
 ?>
-
+<?="<b>Всьго студентів авторів</b>: {$count1}. Нагородити 25% від загальної кількості авторів наукових робіт (Р.VI п.1 Положення про конкурс) це складає <b>{$count2}</b>. Дипломами 1-го ступеня <b>" . round($count2 * 0.20)
+    . "</b>, дипломами 2-го ступеня <b>" . round($count2 * 0.30) . "</b>, дипломами 3-го ступеня <b>" . ($count2 - round($count2 * 0.20) - round($count2 * 0.30)) . "</b>";
+?>
+<p><a href="http://zakon.rada.gov.ua/laws/show/z0620-17">Дивитись Положення про конкурс </a></p>
 <!-- Окончание просмотра результата распределения мест -->
 

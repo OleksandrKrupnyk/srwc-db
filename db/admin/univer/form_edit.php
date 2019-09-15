@@ -8,7 +8,7 @@
 <?php
 $uInfo = fullinfo("univers", "id", $_GET['id_u']);
 ?>
-<!-- Редактирование сведений об университете -->
+<!-- Редактирование данных университета -->
 <header><a href="action.php">Меню</a></header>
 <header>Редагування данних університету</header>
 <form class="editUniver" method="post" action="action.php">

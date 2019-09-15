@@ -26,30 +26,38 @@ mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query)
 or die("Помилка запиту: " . mysqli_error($link));
 
-$row = mysqli_fetch_array($result);
-$title = mb_substr($row['title'],0,30,"utf-8")."...";
+$row     = mysqli_fetch_array($result);
+$title   = mb_substr($row['title'], 0, 30, "utf-8") . "...";
 $section = $row['section'];
-
-
-echo "<header><a href='action.php'>Меню</a></header>\n";
-echo "<header>Призначення місць.</header>";
-echo "Сума місць[<span id='summaryResult'></span>]\n";
-echo "<menu class='viewTableMenu'>\n<li><a href='action.php?action=place_view'>Деталі</a></li>\n</menu>\n";
-echo "<table id='tableSetPlace'>\n";
-echo "<tr><th>ID учас.</th><th>Учасник/Автор</th><th>ВНЗ</th><th>Місце</th><th>(шифр) &sum;реценз.; Робота</th></tr>\n";
-echo "<tr><th colspan='5'>{$section}</th></tr>\n";
-echo "<tr><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>";
-cbo_place($row['place']);
-echo "</td><td title=\"{$row['title']}\">({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
-while ($row = mysqli_fetch_array($result)) {
-    if ($section != $row['section']) {
-        $section = $row['section'];
-        echo "<tr><th colspan=\"5\">{$section}</th></tr>";
-    }
-    $title = mb_substr($row['title'],0,30,"utf-8")."...";
-    echo "<tr><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>\n";
+?>
+<!-- Распределение мест стреди студентов которые приехали на конференцию-->
+<header><a href='action.php'>Меню</a></header>
+<header>Призначення місць.</header>
+Сума місць[<span id='summaryResult'></span>]
+<menu class='viewTableMenu'>
+    <li><a href='action.php?action=place_view'>Деталі</a></li>
+</menu>
+<table id='tableSetPlace'>
+    <tr>
+        <th>ID учас.</th>
+        <th>Учасник/Автор</th>
+        <th>ВНЗ</th>
+        <th>Місце</th>
+        <th>(шифр) &sum;реценз.; Робота</th>
+    </tr>
+    <?php
+    echo "<tr><th colspan='5'>{$section}</th></tr><tr><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>";
     cbo_place($row['place']);
     echo "</td><td title=\"{$row['title']}\">({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
-}
-echo "</table>"; ?>
+    while ($row = mysqli_fetch_array($result)) {
+        if ($section !== $row['section']) {
+            $section = $row['section'];
+            echo "<tr><th colspan=\"5\">{$section}</th></tr>";
+        }
+        $title = mb_substr($row['title'], 0, 30, "utf-8") . "...";
+        echo "<tr><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>\n";
+        cbo_place($row['place']);
+        echo "</td><td title=\"{$row['title']}\">({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
+    } ?>
+</table>
 <!-- Распределение мест стреди студентов которые приехали на конференцию-->

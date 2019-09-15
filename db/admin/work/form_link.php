@@ -1,3 +1,4 @@
+<!-- Связывание работы -->
 <header><a href="action.php">Меню</a></header>
     <header>Зв'язування роботи</header>
     <form class="linkworkForm" method="post" action="action.php">

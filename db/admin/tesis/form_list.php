@@ -6,7 +6,6 @@
  * Date: 21.03.2018
  * Time: 0:39
  */
-printf("<header><a href=\"action.php\">Меню</a></header>\n<header>Тезиси</header>");
 //формируем запрос на получение данных
 $query = "SELECT works.title,works.id,sections.section,univers.town FROM works 
 LEFT JOIN sections ON works.id_sec=sections.id 
@@ -17,11 +16,17 @@ mysqli_query($link, "SET NAMES 'utf8'");
 mysqli_query($link, "SET CHARACTER SET 'utf8'");
 //посылаем запрос
 $result = mysqli_query($link, $query);
+
+?>
+<!-- Список тезисов по секциям -->
+<header><a href='action.php'>Меню</a></header>
+<header>Тезиси</header>
+<?php
 //первый запрос
 $row = mysqli_fetch_array($result);
 //Запомним секцию
 $section = $row['section'];
-echo "<div id=\"sectiontitle\">" . $row['section'] . "</div>";
+echo "<div id='sectiontitle'>{$row['section']}</div>";
 short_list_leader_or_autors_str($row['id'], "wa");
 echo(list_files($row['id'], 1));
 echo TAB_SP . "(" . $row['title'] . ")" . TAB_SP . "<strong><em>" . $row['town'] . "</em></strong><br>"; // Напишем название работы
@@ -37,13 +42,12 @@ while ($row = mysqli_fetch_array($result)) {
         //Запомним новую секцию
         $section = $row['section'];
         //Напишем название секции
-        echo "<div id=\"sectiontitle\">" . $row['section'] . "</div>";
+        echo "<div id='sectiontitle'>{$row['section']}</div>";
         //Запишем первую работу из новой секции
         short_list_leader_or_autors_str($row['id'], "wa");
         /*Вставить список файлов работы*/
         echo(list_files($row['id'], 1));
         echo TAB_SP . "(" . $row['title'] . ")" . TAB_SP . "<strong><em>" . $row['town'] . "</em></strong><br>"; // Напишем название работы
-
     }
 }
 ?>

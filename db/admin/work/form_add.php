@@ -6,6 +6,7 @@
  * Time: 20:16
  */
 ?>
+<!-- Форма добавления работы-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні роботи</header>
 <form class="addworkForm" method="post" action="action.php">

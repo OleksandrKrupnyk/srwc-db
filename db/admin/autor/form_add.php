@@ -5,6 +5,7 @@
  * Date: 14.02.2017
  * Time: 20:11
  */ ?>
+<!-- Форма добавления автора-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні автора</header>
 <form class="addautorForm" method="post" action="action.php">
@@ -38,7 +39,7 @@
     <?php
     if (isset($_GET['id_w'])) {
         $id_w = (int)filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
-        echo "<input type=\"hidden\" name=\"id_w\" value=\"{$id_w}\">";
+        echo "<input type='hidden' name='id_w' value='{$id_w}'>";
     }
     print_datalist_name("name");
     print_datalist_name("lname"); ?>
