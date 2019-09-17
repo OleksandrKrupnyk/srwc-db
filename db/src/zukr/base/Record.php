@@ -8,7 +8,7 @@ namespace zukr\base;
  *
  * @package zukr\base
  */
-class Record
+abstract class Record
 {
     /**
      * @var \MysqliDb
@@ -16,11 +16,19 @@ class Record
     private $_db;
     private $_table;
 
+    /**
+     * @return \MysqliDb
+     */
+    public function getDb()
+    {
+        return $this->_db;
+    }
+
 
     public function __construct()
     {
         $this->_db = Base::$app->db;
-        $this->_table = $this->getTableName();
+        $this->_table = self::getTableName();
     }
 
     /**
@@ -35,9 +43,9 @@ class Record
         }
     }
 
-    public function getTableName()
+    public static function getTableName()
     {
-        return \strtolower($this->getNameModel());
+        return \strtolower(basename(get_called_class()));
     }
 
 
@@ -64,8 +72,8 @@ class Record
     }
 
     /**
-     * @param $id
-     * @return \MysqliDb
+     * @param array|int $id
+     * @return \MysqliDb|array
      * @throws \Exception
      */
     public function findById($id)
@@ -75,17 +83,22 @@ class Record
             return $this->_db
                 ->where('id', $id, 'IN')
                 ->get($this->_table);
-        }elseif (filter_var($id,FILTER_VALIDATE_INT)){
-            return
-                $this->_db->where('id', $id)
-                    ->getOne($this->_table);
-
-        }else{
-            throw new \InvalidArgumentException('Array or Int');
         }
 
+        if (filter_var($id,FILTER_VALIDATE_INT)) {
+            return $this->_db->where('id', $id)
+                    ->getOne($this->_table);
 
+        }
 
+        throw new \InvalidArgumentException('Array or Int');
+
+    }
+
+    public static function find()
+    {
+        $className = get_called_class();
+        return (new $className())->getDb();
     }
 
 }

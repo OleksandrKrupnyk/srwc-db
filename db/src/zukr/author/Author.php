@@ -8,7 +8,7 @@ use zukr\base\Record;
 
 class Author extends Record
 {
-    public function getTableName()
+    public static function getTableName()
     {
         return 'autors';
     }

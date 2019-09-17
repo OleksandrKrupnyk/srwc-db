@@ -16,6 +16,7 @@ if (isset($_POST['id_w'])) {
 
 $_SESSION['id_u'] = $_POST['id_u'];
 //Добавить проверку почты
+var_dump($_POST);die();
 $_POST['suname'] = trim(addslashes($_POST['suname']));
 $_POST['name']   = trim(addslashes($_POST['name']));
 $_POST['lname']  = trim(addslashes($_POST['lname']));
