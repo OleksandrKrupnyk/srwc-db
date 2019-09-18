@@ -47,36 +47,68 @@ class Html
      * @var array list of void elements (element name => 1)
      * @see http://www.w3.org/TR/html-markup/syntax.html#void-element
      */
-    public static $voidElements = [
-        'area' => 1,
-        'base' => 1,
-        'br' => 1,
-        'col' => 1,
+    public static $voidElements   = [
+        'area'    => 1,
+        'base'    => 1,
+        'br'      => 1,
+        'col'     => 1,
         'command' => 1,
-        'embed' => 1,
-        'hr' => 1,
-        'img' => 1,
-        'input' => 1,
-        'keygen' => 1,
-        'link' => 1,
-        'meta' => 1,
-        'param' => 1,
-        'source' => 1,
-        'track' => 1,
-        'wbr' => 1,
+        'embed'   => 1,
+        'hr'      => 1,
+        'img'     => 1,
+        'input'   => 1,
+        'keygen'  => 1,
+        'link'    => 1,
+        'meta'    => 1,
+        'param'   => 1,
+        'source'  => 1,
+        'track'   => 1,
+        'wbr'     => 1,
     ];
     public static $dataAttributes = ['data', 'data-ng', 'ng'];
 
-    public static function select($name, $value, $options)
+    public static function select($name, $value = null, $items = [], $options = [])
     {
+        $options['name'] = $name;
+        $selectOptions   = [];
 
+        if (isset($options['prompt'])) {
+            $prompt = $options['prompt'];
+            unset($options['prompt']);
+        } else {
+            $prompt = false;
+        }
+
+        if (empty($value)) {
+
+            if ($prompt) {
+                $attrs           = ['selected' => true, 'disabled' => true, 'value' => ''];
+                $text            = $prompt;
+                $selectOptions[] = static::tag('option', $text, $attrs);
+            }
+        }
+
+
+        foreach ($items as $key => $text) {
+            $attrs          = [];
+            $attrs['value'] = (string)$key;
+            if (!\array_key_exists('selected', $attrs)) {
+                $attrs['selected'] = ($value !== null) && ((string)$value === (string)$key);
+
+            }
+            $selectOptions[] = static::tag('option', $text, $attrs);
+        }
+
+        return static::tag('select', "\n" . implode("\n", $selectOptions) . "\n", $options);
     }
 
 
-    public static function tag($name, $content, $options){
+    public static function tag($name, $content, $options)
+    {
         if ($name === null || $name === false) {
             return $content;
         }
+
         $html = "<$name" . static::renderTagAttributes($options) . '>';
         return isset(static::$voidElements[strtolower($name)]) ? $html : "$html$content</$name>";
     }
@@ -91,13 +123,13 @@ class Html
                     $sorted[$name] = $attributes[$name];
                 }
             }
-            $attributes = array_merge($sorted, $attributes);
+            $attributes = \array_merge($sorted, $attributes);
         }
         $html = '';
         foreach ($attributes as $name => $value) {
             if (is_bool($value)) {
                 if ($value) {
-                    $html .= " $name";
+                    $html .= " {$name}";
                 }
             } elseif (is_array($value)) {
                 if ($name === 'class') {
@@ -117,28 +149,28 @@ class Html
                 $html .= " $name=\"" . static::encode($value) . '"';
             }
         }
-
         return $html;
     }
 
     /**
      * Encodes special characters into HTML entities.
      *
-     * @param string $content the content to be encoded
-     * @param bool $doubleEncode whether to encode HTML entities in `$content`. If false,
-     * HTML entities in `$content` will not be further encoded.
+     * @param string $content      the content to be encoded
+     * @param bool   $doubleEncode whether to encode HTML entities in `$content`. If false,
+     *                             HTML entities in `$content` will not be further encoded.
      * @return string the encoded content
      * @see decode()
      * @see https://secure.php.net/manual/en/function.htmlspecialchars.php
      */
     public static function encode($content, $doubleEncode = true)
     {
-        return htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE,  'UTF-8', $doubleEncode);
+        return htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', $doubleEncode);
     }
 
     /**
      * Decodes special HTML entities back to the corresponding characters.
      * This is the opposite of [[encode()]].
+     *
      * @param string $content the content to be decoded
      * @return string the decoded content
      * @see encode()
@@ -160,7 +192,7 @@ class Html
      * ```
      *
      * @param array $style the CSS style array. The array keys are the CSS property names,
-     * and the array values are the corresponding CSS property values.
+     *                     and the array values are the corresponding CSS property values.
      * @return string the CSS style string. If the CSS style is empty, a null will be returned.
      */
     public static function cssStyleFromArray(array $style)

@@ -6,8 +6,11 @@
  * Time: 14:44
  */
 //Добавление автора работы
-global $link;
-$_POST['id_u'] = (int)$_POST['id_u'];
+
+
+use zukr\author\Author;
+
+
 $setId_w       = false;
 if (isset($_POST['id_w'])) {
     $_POST['id_w'] = (int)$_POST['id_w'];
@@ -16,12 +19,19 @@ if (isset($_POST['id_w'])) {
 
 $_SESSION['id_u'] = $_POST['id_u'];
 //Добавить проверку почты
-var_dump($_POST);die();
+$autor = new Author();
+$autor->load($_POST);
+$autor->save();
+Go_page('action.php');
+exit();
+//var_dump($autor);die();
+/**/
 $_POST['suname'] = trim(addslashes($_POST['suname']));
 $_POST['name']   = trim(addslashes($_POST['name']));
 $_POST['lname']  = trim(addslashes($_POST['lname']));
 $_POST['curse']  = (int)$_POST['curse'];
 $_POST['email']  = trim(addslashes($_POST['email']));
+
 if (isset($_POST['phone'])) {
     $_POST['phone'] = trim($_POST['phone']);
 } else {
