@@ -8,6 +8,7 @@
 
 use zukr\base\html\Html;
 use zukr\univer\UniverRepository;
+
 $id_u = \filter_input(INPUT_GET, 'id_u',FILTER_VALIDATE_INT);
 ?>
 <!-- Форма добавления автора-->
@@ -25,15 +26,7 @@ $id_u = \filter_input(INPUT_GET, 'id_u',FILTER_VALIDATE_INT);
     <br>
     <fieldset>
         <legend>Данні автора</legend>
-        <select size="1" name="Author[curse]" title="Курс навчання">
-            <option value="-1" disabled selected>Курс...</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-        </select>
+        <?=\zukr\base\html\HtmlHelper::course(['name'=>'Author[curse]'])?>
         <label>Електронна скринька:</label>
         <input type="email" name="Author[email]" title="Наприклад:user@mail.ru" placeholder="Электронна скринька">
         <label>Телефон:</label>
@@ -41,7 +34,8 @@ $id_u = \filter_input(INPUT_GET, 'id_u',FILTER_VALIDATE_INT);
                placeholder="Номер телефону">
     </fieldset>
     <br>
-    <input type="submit" value="Записати">
+    <input type="submit" value="Зберегти та вийти" name="save+exit">
+    <input type="submit" value="Зберегти" name="save">
     <input type="hidden" name="action" value="autor_add">
     <?php
     if (isset($_GET['id_w'])) {

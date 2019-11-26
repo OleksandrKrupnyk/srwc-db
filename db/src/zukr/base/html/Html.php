@@ -48,29 +48,29 @@ class Html
      * @see http://www.w3.org/TR/html-markup/syntax.html#void-element
      */
     public static $voidElements   = [
-        'area'    => 1,
-        'base'    => 1,
-        'br'      => 1,
-        'col'     => 1,
+        'area' => 1,
+        'base' => 1,
+        'br' => 1,
+        'col' => 1,
         'command' => 1,
-        'embed'   => 1,
-        'hr'      => 1,
-        'img'     => 1,
-        'input'   => 1,
-        'keygen'  => 1,
-        'link'    => 1,
-        'meta'    => 1,
-        'param'   => 1,
-        'source'  => 1,
-        'track'   => 1,
-        'wbr'     => 1,
+        'embed' => 1,
+        'hr' => 1,
+        'img' => 1,
+        'input' => 1,
+        'keygen' => 1,
+        'link' => 1,
+        'meta' => 1,
+        'param' => 1,
+        'source' => 1,
+        'track' => 1,
+        'wbr' => 1,
     ];
     public static $dataAttributes = ['data', 'data-ng', 'ng'];
 
     public static function select($name, $value = null, $items = [], $options = [])
     {
         $options['name'] = $name;
-        $selectOptions   = [];
+        $selectOptions = [];
 
         if (isset($options['prompt'])) {
             $prompt = $options['prompt'];
@@ -79,18 +79,14 @@ class Html
             $prompt = false;
         }
 
-        if (empty($value)) {
-
-            if ($prompt) {
-                $attrs           = ['selected' => true, 'disabled' => true, 'value' => ''];
-                $text            = $prompt;
-                $selectOptions[] = static::tag('option', $text, $attrs);
-            }
+        if ($prompt) {
+            $attrs = ['selected' => true, 'disabled' => true, 'value' => '-1'];
+            $text = $prompt;
+            $selectOptions[] = static::tag('option', $text, $attrs);
         }
 
-
         foreach ($items as $key => $text) {
-            $attrs          = [];
+            $attrs = [];
             $attrs['value'] = (string)$key;
             if (!\array_key_exists('selected', $attrs)) {
                 $attrs['selected'] = ($value !== null) && ((string)$value === (string)$key);

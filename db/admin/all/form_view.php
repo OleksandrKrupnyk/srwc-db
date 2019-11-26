@@ -57,7 +57,7 @@ if (isset($_GET['who'])) {
     }
 } else
     $query = "SELECT  works.*, univers.univerfull FROM  works JOIN  univers ON  univers.id = works.id_u GROUP BY  univerfull,title";
-
+global $link;
 mysqli_query($link, "SET NAMES 'utf8'");
 mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query);

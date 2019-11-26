@@ -33,7 +33,11 @@ abstract class Record implements RecordInterface
 
     public function afterSave()
     {
-
+        try {
+            $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     public static function getPrimaryKey()
@@ -52,7 +56,7 @@ abstract class Record implements RecordInterface
 
     public function __construct()
     {
-        $this->_db    = Base::$app->db;
+        $this->_db = Base::$app->db;
         $this->_table = static::getTableName();
     }
 
@@ -92,7 +96,7 @@ abstract class Record implements RecordInterface
 
         if (!empty($data)) {
             foreach ($data as $field => $value) {
-                $this->{$field} = $value;
+                $this->{$field} = trim(addslashes($value));
             }
         }
 
@@ -100,8 +104,7 @@ abstract class Record implements RecordInterface
 
     /**
      * @param array|int $id
-     * @return \MysqliDb|array
-     * @throws \Exception
+     * @return \MysqliDb|array|null
      */
     public function findById($id)
     {
@@ -118,7 +121,7 @@ abstract class Record implements RecordInterface
 
         }
 
-        throw new \InvalidArgumentException('Array or Int');
+        return null;
 
     }
 
@@ -127,12 +130,15 @@ abstract class Record implements RecordInterface
         if (!$this->beforeSave()) {
             return false;
         }
-        call_user_func([static::class, $this->_actionSave]);
+        $this->{$this->_actionSave}();
 
 
         $this->afterSave();
     }
 
+    /**
+     * @return \MysqliDb
+     */
     public static function find()
     {
         $className = get_called_class();
@@ -146,7 +152,7 @@ abstract class Record implements RecordInterface
     protected function update()
     {
         $arrayAttributes = $this->setAttributes();
-        $primaryKeyId    = static::getPrimaryKey();
+        $primaryKeyId = static::getPrimaryKey();
         $this->_db->where($primaryKeyId, $this->{$primaryKeyId});
         $this->_db->update(static::getTableName(), $arrayAttributes);
         if ($this->_db->count > 0) {
@@ -162,9 +168,9 @@ abstract class Record implements RecordInterface
     protected function insert()
     {
         $arrayAttributes = $this->setAttributes();
-        $id              = $this->_db->insert(static::getTableName(), $arrayAttributes);
+        $id = $this->_db->insert(static::getTableName(), $arrayAttributes);
         if ($id) {
-            $primaryKeyId          = static::getPrimaryKey();
+            $primaryKeyId = static::getPrimaryKey();
             $this->{$primaryKeyId} = $id;
             return true;
         }
@@ -175,7 +181,7 @@ abstract class Record implements RecordInterface
     {
         $attributes = [];
         foreach ($this as $field => $value) {
-            if ($value !== null && !is_object($value) && $field[0] !=='_') {
+            if ($value !== null && !is_object($value) && $field[0] !== '_') {
                 if (is_string($value) && \mb_strtolower($value) === 'now') {
                     $attributes[$field] = $this->_db->now();
                 } else {

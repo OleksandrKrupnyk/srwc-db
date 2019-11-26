@@ -5,55 +5,35 @@
  * Date: 10.11.17
  * Time: 14:44
  */
+
 //Добавление автора работы
 
 
 use zukr\author\Author;
-
-
-$setId_w       = false;
-if (isset($_POST['id_w'])) {
-    $_POST['id_w'] = (int)$_POST['id_w'];
-    $setId_w       = true;
-}
+use zukr\log\Log;
 
 $_SESSION['id_u'] = $_POST['id_u'];
-//Добавить проверку почты
 $autor = new Author();
 $autor->load($_POST);
 $autor->save();
-Go_page('action.php');
-exit();
-//var_dump($autor);die();
-/**/
-$_POST['suname'] = trim(addslashes($_POST['suname']));
-$_POST['name']   = trim(addslashes($_POST['name']));
-$_POST['lname']  = trim(addslashes($_POST['lname']));
-$_POST['curse']  = (int)$_POST['curse'];
-$_POST['email']  = trim(addslashes($_POST['email']));
-
-if (isset($_POST['phone'])) {
-    $_POST['phone'] = trim($_POST['phone']);
-} else {
-    $_POST['phone'] = '';
-}
-$hash  = md5($_POST['suname'] . $_POST['name'] . $_POST['lname']);
-$query = "INSERT INTO `autors` (`id_u`,`suname`,`name`,`lname`, `curse`,`email`,`active`,`arrival`,`phone`,`date`,`hash`)\n"
-    . "VALUES ('{$_POST['id_u']}','{$_POST['suname']}','{$_POST['name']}','{$_POST['lname']}','{$_POST['curse']}','{$_POST['email']}','0','0','{$_POST['phone']}',NOW(),'{$hash}')";
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
-$result = mysqli_query($link, $query)
-or die("Полка запису дія autor_add: " . mysqli_error($link));
-$id_a = mysqli_insert_id($link);
-log_action($_POST['action'], "autors", $id_a);
+//Go_page('action.php');
+$log = Log::getInstance();
+$log->logAction(null, $autor::getTableName(), $autor->id);
 $url2go = ($_POST['FROM']) ? $_POST['FROM'] : "action.php";
 /*Если известно с какой работой связать то связать и перейти на страничку указания на работу*/
-if ($setId_w = true) {
-    $query = "INSERT INTO `wa` (id_w,id_a,date) VALUE ('{$_POST['id_w']}','{$id_a}',NOW())";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query);
-    log_action($_POST['action'], "wa", $_POST['id_w']);
+$workId = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+if ($workId && $autor->id > 0) {
+    $workAuthor = new \zukr\workauthor\WorkAuthor();
+    $workAuthor->id_w = $workId;
+    $workAuthor->id_a = $autor->id;
+    $workAuthor->save();
+    $log->logAction(null, $workAuthor::getTableName(), $workAuthor->id_w);
     $url2go = "action.php?action=all_view#id_w" . $_POST['id_w'];
+}
+if (isset($_POST['save'])) {
+    $url2go = "action.php?action=autor_edit&id_a=" . $id_a;
+}
+if (isset($_POST['save+exit'])) {
+    $url2go = ($_POST['from']) ? $_POST['from'] : "action.php?action=all_view";
 }
 Go_page($url2go);

@@ -9,7 +9,7 @@ use zukr\menu\Menu;
 Base::init();
 read_settings();
 $menuData = include 'menu.php';
-$menu     = new Menu($menuData);
+$menu = new Menu($menuData);
 header('Content-Type: text/html; charset=utf-8');
 session_name('tzLogin');
 session_start();
@@ -56,65 +56,69 @@ if ($_SESSION['access']) {
 } else /*Перенаправление на страничку обычных пользователей*/ {
     header('Location: index.php');
 }
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="ua">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="../css/menustyle.css" type="text/css" rel="stylesheet"/>
-    <link href="../css/phone.css" type="text/css" rel="stylesheet"/>
-    <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
-    <link href="../css/style.css" type="text/css" rel="stylesheet"/>
-    <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
-    <script type="text/javascript" src="../js/admin.js"></script>
-    <script type="text/javascript" src="../js/menuscript.js"></script>
-    <title>&quot;СНР 2018&quot;&copy;</title>
-</head>
-<body>
-<?php //переменная для определения предка вызова сценария
-$FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
-//print_r($FROM);
-$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
-if (in_array($action, [
-    'work_add',
-    'autor_add',
-    'leader_add',
-    'all_add',
-    'work_link',
-    'review_add',
-    'review_edit',
-    'review_view',
-    'autor_edit',
-    'leader_edit',
-    'work_edit',
-    'univer_edit',
-    'univer_invite',
-    'all_view',
-    'leader_invit',
-    'section_invite',
-    'reception_edit',
-    'autor_list',
-    'leader_list',
-    'reviewer_list',
-    'tesis_list',
-    'rooms_edit',
-    'place_edit',
-    'place_view',
-    'protocol_view',
-    'statistic_view',
-    'email_edit',
-    'test_edit',
-])) {
-    execute_get_action($action);
-} else {
-    echo "<header>Меню</header>";
-    echo $menu->getMenu();
-}
-?>
-<footer><a href="index.php?logoff">Вийти</a></footer>
-<div id="test"><?= $error_message; ?></div>
-<div id="operator">Оператор :<span><?= $_SESSION['usr'] ?></span></div>
-<autor>Krupnik&copy;</autor>
-</body>
-</html>
+    <!DOCTYPE html>
+    <html lang="ua">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link href="../css/menustyle.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/phone.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/style.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="../js/jquery.js"></script>
+        <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
+        <script type="text/javascript" src="../js/admin.js"></script>
+        <script type="text/javascript" src="../js/menuscript.js"></script>
+        <title>&quot;СНР 2018&quot;&copy;</title>
+    </head>
+    <body>
+    <?php //переменная для определения предка вызова сценария
+    $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
+    //print_r($FROM);
+    $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
+    if (in_array($action, [
+        'work_add',
+        'autor_add',
+        'leader_add',
+        'all_add',
+        'work_link',
+        'review_add',
+        'review_edit',
+        'review_view',
+        'autor_edit',
+        'leader_edit',
+        'work_edit',
+        'univer_edit',
+        'univer_invite',
+        'all_view',
+        'leader_invit',
+        'section_invite',
+        'reception_edit',
+        'autor_list',
+        'leader_list',
+        'reviewer_list',
+        'tesis_list',
+        'rooms_edit',
+        'place_edit',
+        'place_view',
+        'protocol_view',
+        'statistic_view',
+        'email_edit',
+        'test_edit',
+        'error_list',
+    ])) {
+        execute_get_action($action);
+    } else {
+        echo "<header>Меню</header>";
+        echo $menu->getMenu();
+    }
+    ?>
+    <footer><a href="index.php?logoff">Вийти</a></footer>
+    <div id="test"><?= $error_message; ?></div>
+    <div id="operator">Оператор :<span><?= $_SESSION['usr'] ?></span></div>
+    <autor>Krupnik&copy;</autor>
+    </body>
+    </html>
+<?php
+ob_flush();

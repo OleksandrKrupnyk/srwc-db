@@ -3,7 +3,11 @@
 
 namespace zukr\base;
 
-
+/**
+ * Interface RecordInterface
+ *
+ * @package zukr\base
+ */
 interface RecordInterface
 {
 

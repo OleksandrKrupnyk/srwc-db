@@ -642,7 +642,7 @@ JOIN univers ON leaders.id_u = univers.id";
     $sub_row_str = "<ol name=" . $table . ">";
     while ($row = mysqli_fetch_array($result)) {
         //print_r($row);
-        $sub_row_str .= "<li id=" . $row['id'] . " title=\"Останні зміни :" . htmlspecialchars($row['date']) . "\" >";
+        $sub_row_str .= "<li data-index=" . $row['id'] . " id=" . $row['id'] . " title=\"Останні зміни :" . htmlspecialchars($row['date']) . "\" >";
         $sub_row_str .= "<a href=action.php?action=" . rtrim($table, "s") . "_edit&" . $id . "=" . $row['id'] . "&FROM={$FROM}  title=\"Ред.{$row['univer']}\">";
         $sub_row_str .= $row['suname'] . " " . $row['name'] . " " . $row['lname'];
         $sub_row_str .= "</a>  ";
