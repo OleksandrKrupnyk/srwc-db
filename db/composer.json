@@ -14,7 +14,11 @@
     "vlucas/phpdotenv": "^3.6",
     "ext-mysqli": "*",
     "ext-mbstring": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "tedivm/stash": "0.14.*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
   },
   "autoload": {
     "psr-4": {

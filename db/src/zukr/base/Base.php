@@ -2,7 +2,13 @@
 
 
 namespace zukr\base;
-
+/**
+ * Class Base
+ *
+ * @package      zukr\base
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class Base
 {
 
@@ -10,13 +16,18 @@ class Base
      * @var App
      */
     public static $app;
-
+    /**
+     * @var Params
+     */
     public static $param;
 
+    /**
+     *
+     */
     public static function init(){
 
-        self::$app = new App();
-        self::$param = new Params();
+        self::$app = App::getInstance();
+        self::$param = Params::getInstance();
     }
 
 }
