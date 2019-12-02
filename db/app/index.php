@@ -10,7 +10,6 @@ Base::init();
 $settings = Base::$param;
 global $link;
 
-$a = Base::$app->cache->getItem('table');
 
 $setData = function () use ($link,$settings){
     $query = "

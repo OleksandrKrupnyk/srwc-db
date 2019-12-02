@@ -3,7 +3,13 @@
 
 namespace zukr\univer;
 
-
+/**
+ * Class UniverRepository
+ *
+ * @package      zukr\univer
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class UniverRepository
 {
 
@@ -12,8 +18,7 @@ class UniverRepository
     {
         return Univer::find()
             ->map('id')
-            ->get(Univer::getTableName(),null,'id,univerfull')
-            ;
+            ->get(Univer::getTableName(), null, 'id,univerfull');
     }
 
     /**
@@ -24,9 +29,21 @@ class UniverRepository
     {
         return Univer::find()
             ->map('id')
-            ->where('invite',1)
-            ->get(Univer::getTableName(),null,['id',"concat('\(',univer,'\) ',univerfull) as univerfull"])
-            ;
+            ->where('invite', 1)
+            ->get(Univer::getTableName(), null, ['id', "concat('\(',univer,'\) ',univerfull) as univerfull"]);
+    }
+
+    /**
+     * @return array|\MysqliDb
+     * @throws \Exception
+     */
+    public function getAllInvitedAsArray()
+    {
+        return Univer::find()
+            ->map('id')
+            ->orWhere('id',1)
+            ->orWhere('invite', 1)
+            ->get(Univer::getTableName());
     }
 
 }

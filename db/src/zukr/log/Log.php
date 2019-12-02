@@ -57,6 +57,11 @@ class Log extends Record
     }
 
 
+    /**
+     * @param null $action
+     * @param null $table
+     * @param null $action_id
+     */
     public function logAction($action = null, $table = null, $action_id = null)
     {
         $this->action = $action ?? $_POST['action'];
@@ -67,6 +72,9 @@ class Log extends Record
     }
 
 
+    /**
+     * @return bool
+     */
     public function beforeSave()
     {
         $this->tz_ip = $_SERVER['REMOTE_ADDR'];

@@ -4,6 +4,13 @@
 namespace zukr\base\html;
 
 
+/**
+ * Class Html
+ *
+ * @package      zukr\base\html
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class Html
 {
 
@@ -67,6 +74,13 @@ class Html
     ];
     public static $dataAttributes = ['data', 'data-ng', 'ng'];
 
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $items
+     * @param array $options
+     * @return string
+     */
     public static function select($name, $value = null, $items = [], $options = [])
     {
         $options['name'] = $name;
@@ -99,6 +113,18 @@ class Html
     }
 
 
+    /**
+     * @param $name
+     * @param $content
+     * @param $options
+     * @return string
+     */
+    /**
+     * @param $name
+     * @param $content
+     * @param $options
+     * @return string
+     */
     public static function tag($name, $content, $options)
     {
         if ($name === null || $name === false) {
@@ -110,6 +136,14 @@ class Html
     }
 
 
+    /**
+     * @param $attributes
+     * @return string
+     */
+    /**
+     * @param $attributes
+     * @return string
+     */
     public static function renderTagAttributes($attributes)
     {
         if (count($attributes) > 1) {

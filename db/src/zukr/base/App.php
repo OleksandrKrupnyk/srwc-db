@@ -17,15 +17,16 @@ use Stash\Pool;
  */
 class App
 {
-
+    /** @var int  Час кешування */
     const TTL = 600;
+    /** @var App */
     private static $obj;
     /**
      * @var \MysqliDb
      */
     private $_db;
     /**
-     * @var
+     * @var Pool
      */
     private $_cache;
     public  $param;
@@ -36,6 +37,9 @@ class App
 
     private $isCached;
 
+    /**
+     * App constructor.
+     */
     private function __construct()
     {
         Dotenv::create(__DIR__ . '/../../../')->load();
@@ -52,6 +56,9 @@ class App
     }
 
 
+    /**
+     * @return App
+     */
     public static function getInstance()
     {
         if (self::$obj === null) {
@@ -60,6 +67,10 @@ class App
         return self::$obj;
     }
 
+    /**
+     * @param $name
+     * @return DB|Pool|null
+     */
     public function __get($name)
     {
         if ($name === 'db') {
@@ -135,7 +146,9 @@ class App
         return $item->get();
     }
 
-
+    /**
+     * Очищення кешу
+     */
     public function cacheFlush(): void
     {
         $this->_cache->clear();

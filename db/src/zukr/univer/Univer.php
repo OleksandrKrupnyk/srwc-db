@@ -6,6 +6,13 @@ namespace zukr\univer;
 
 use zukr\base\Record;
 
+/**
+ * Class Univer
+ *
+ * @package      zukr\univer
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class Univer extends Record
 {
 
@@ -21,7 +28,10 @@ class Univer extends Record
     public $invite;
 
 
-    public static function getTableName()
+    /**
+     * @return string
+     */
+    public static function getTableName():string
     {
         return 'univers';
     }

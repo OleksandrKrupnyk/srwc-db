@@ -767,7 +767,7 @@ function print_work_univer($univer_title, $id_u, $univer, $href = false)
     $row_univer .= $univer_title;
     $row_univer .= ($href) ? "</a>" : "";
     $row_univer .= "</td></tr>";
-    echo $row_univer;
+    return $row_univer;
 }
 
 /** * ********************************************************************************
@@ -848,7 +848,7 @@ function print_work_row($row, $href = false,$loginId = "0")
     $comments
     </tr>
 ROWTABLE;
-    echo $row_table;
+    return $row_table;
 }
 
 /** * ********************************************************************************

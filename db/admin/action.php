@@ -7,7 +7,7 @@ use zukr\base\Base;
 use zukr\menu\Menu;
 
 Base::init();
-read_settings();
+$settings = Base::$param;
 $menuData = include 'menu.php';
 $menu = new Menu($menuData);
 header('Content-Type: text/html; charset=utf-8');

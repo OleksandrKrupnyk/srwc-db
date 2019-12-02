@@ -10,6 +10,8 @@ namespace zukr\base;
  */
 abstract class Record implements RecordInterface
 {
+    const KEY_ON = 1;
+    const KEY_OFF = 0;
     /**
      * @var \MysqliDb
      */
@@ -40,6 +42,9 @@ abstract class Record implements RecordInterface
         }
     }
 
+    /**
+     * @return string
+     */
     public static function getPrimaryKey()
     {
         return 'id';
@@ -61,9 +66,9 @@ abstract class Record implements RecordInterface
     }
 
     /**
-     * @return string
+     * @return string Назва моделі
      */
-    public function getNameModel()
+    public function getNameModel() :string
     {
         try {
             return (new \ReflectionClass($this))->getShortName();
@@ -72,7 +77,12 @@ abstract class Record implements RecordInterface
         }
     }
 
-    public static function getTableName()
+    /**
+     * Повертаэ назву таблиці
+     *
+     * @return string  Назва таблиці
+     */
+    public static function getTableName() :string
     {
         return \strtolower(basename(get_called_class()));
     }
@@ -105,6 +115,7 @@ abstract class Record implements RecordInterface
     /**
      * @param array|int $id
      * @return \MysqliDb|array|null
+     * @throws \Exception
      */
     public function findById($id)
     {
@@ -125,7 +136,10 @@ abstract class Record implements RecordInterface
 
     }
 
-    public function save()
+    /**
+     * @return bool Результат виконання операції
+     */
+    public function save() :bool
     {
         if (!$this->beforeSave()) {
             return false;
@@ -177,6 +191,10 @@ abstract class Record implements RecordInterface
         return $this->_db->getLastError();
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     protected function setAttributes()
     {
         $attributes = [];

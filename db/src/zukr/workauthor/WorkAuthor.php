@@ -6,6 +6,13 @@ namespace zukr\workauthor;
 
 use zukr\base\Record;
 
+/**
+ * Class WorkAuthor
+ *
+ * @package      zukr\workauthor
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class WorkAuthor extends Record
 {
 
@@ -15,9 +22,9 @@ class WorkAuthor extends Record
     public $date='NOW';
 
     /**
-     * @return string
+     * @inheritDoc
      */
-    public static function getTableName()
+    public static function getTableName():string
     {
         return 'wa';
     }

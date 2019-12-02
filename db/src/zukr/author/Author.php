@@ -38,7 +38,7 @@ class Author extends Record
     /**
      * @return string
      */
-    public static function getTableName()
+    public static function getTableName():string
     {
         return 'autors';
     }

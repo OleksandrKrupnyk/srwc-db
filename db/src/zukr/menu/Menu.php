@@ -14,12 +14,20 @@ class Menu
      */
     protected $_menu;
 
+    /**
+     * Menu constructor.
+     *
+     * @param array $_menu
+     */
     public function __construct(array $_menu)
     {
         $this->_menu = $_menu;
     }
 
 
+    /**
+     * @return string
+     */
     public function getMenu()
     {
         $headMenu = $this->renderHeadMenu();
@@ -52,6 +60,9 @@ __HTML__;
         return $str;
     }
 
+    /**
+     * @return string
+     */
     private function renderSubMenu()
     {
         $subMenu = '';
@@ -76,6 +87,14 @@ __HTML__;
     }
 
 
+    /**
+     * @param array $items
+     * @return string
+     */
+    /**
+     * @param array $items
+     * @return string
+     */
     private function renderSubSubMenu(array $items)
     {
         $itemList = '';
@@ -86,7 +105,8 @@ __HTML__;
     }
 
     /**
-     * @param array $item
+     * @param array  $item
+     * @param string $content
      * @return string
      */
     private function item(array $item, $content = '')
