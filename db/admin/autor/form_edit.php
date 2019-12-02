@@ -1,5 +1,6 @@
 <?php
 
+use zukr\author\AuthorRepository;
 use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\univer\UniverRepository;
@@ -13,7 +14,7 @@ use zukr\univer\UniverRepository;
  */
 $id_a = filter_input(INPUT_GET, 'id_a', FILTER_VALIDATE_INT);
 
-$author = \zukr\author\AuthorRepository::getById($id_a);
+$author = (new AuthorRepository())->getById($id_a);
 if (empty($author)) {
     Go_page('action.php?action=error_list');
     exit();
@@ -21,7 +22,7 @@ if (empty($author)) {
 ?>
 <!-- Редактирование автора -->
 <header><a href="action.php">Меню</a></header>
-<header>Редагування данних автора</header>
+<header>Редагування даних автора</header>
 <form class="editAutor" method="post" action="action.php">
     <?= Html::select('Author[id_u]', $author['id_u'], (new UniverRepository())->getInvitedDropList(),
         ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...'])

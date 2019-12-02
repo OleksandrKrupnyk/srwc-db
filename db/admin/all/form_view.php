@@ -3,10 +3,10 @@
 use zukr\base\Base;
 use zukr\univer\UniverRepository;
 use zukr\work\WorkHelper;
+use zukr\workauthor\WorkAuthorRepository;
 
-Base::$app->cacheFlush();
 $wh = WorkHelper::getInstance();
-
+$wa = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
 $univerList = Base::$app->cacheGetOrSet(
     'univer_list',
     (new UniverRepository())->getAllInvitedAsArray(),

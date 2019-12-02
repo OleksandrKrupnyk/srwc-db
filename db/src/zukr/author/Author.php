@@ -38,7 +38,7 @@ class Author extends Record
     /**
      * @return string
      */
-    public static function getTableName():string
+    public static function getTableName(): string
     {
         return 'autors';
     }
@@ -48,10 +48,10 @@ class Author extends Record
      */
     public function beforeSave()
     {
-        $this->hash = md5($this->suname . $this->name . $this->lname);
-        $this->arrival = $this->arrival !== '0' ? '1' : '0';
-        $this->bprint = $this->bprint !== '0' ? '1' : '0';
-        $this->place = ($this->arrival === '1') ? $this->place : 'D';
+        $this->hash = \md5($this->suname . $this->name . $this->lname);
+        $this->arrival = (int)$this->arrival !== self::KEY_OFF ? self::KEY_ON : self::KEY_OFF;
+        $this->bprint = (int)$this->bprint !== self::KEY_OFF ? self::KEY_ON : self::KEY_OFF;
+        $this->place = ($this->arrival === self::KEY_ON) ? $this->place : 'D';
         return parent::beforeSave();
     }
 

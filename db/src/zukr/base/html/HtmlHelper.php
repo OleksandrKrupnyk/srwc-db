@@ -36,14 +36,10 @@ class HtmlHelper
     public static function checkbox($name, $title, $value): string
     {
 
-        $checkboxHidden = "<input type='hidden' name='{$name}' value='0'>";
+        $checked = ($value !== '' && ((int)$value === 1)) ? ' checked ' : '';
+        $checkbox = "<input type='hidden' name='{$name}' value='0'><input type='checkbox' name='{$name}' title='{$title}' {$checked} value='1' >";
 
-        if ($value !== '') {
-            $checked = ((int)$value === 1) ? ' checked value="1"' : '';
-        }
-        $checkbox = "<input type='checkbox' name='{$name}' title='{$title}' {$checked} >";
-
-        return $checkboxHidden . $checkbox;
+        return $checkbox;
     }
 
     /**

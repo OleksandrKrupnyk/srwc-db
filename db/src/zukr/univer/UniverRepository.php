@@ -29,7 +29,8 @@ class UniverRepository
     {
         return Univer::find()
             ->map('id')
-            ->where('invite', 1)
+            ->orWhere('id',1)
+            ->orWhere('invite', 1)
             ->get(Univer::getTableName(), null, ['id', "concat('\(',univer,'\) ',univerfull) as univerfull"]);
     }
 

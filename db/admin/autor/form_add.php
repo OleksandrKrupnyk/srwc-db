@@ -42,7 +42,7 @@ $id_u = \filter_input(INPUT_GET, 'id_u',FILTER_VALIDATE_INT);
         $id_w = (int)\filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
         echo "<input type='hidden' name='id_w' value='{$id_w}'>";
     }
-    print_datalist_name("name");
-    print_datalist_name("lname");
+    print_datalist_name('name');
+    print_datalist_name('lname');
     ?>
 </form>

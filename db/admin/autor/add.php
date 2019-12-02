@@ -31,7 +31,7 @@ if ($workId && $autor->id > 0) {
     $url2go = "action.php?action=all_view#id_w" . $_POST['id_w'];
 }
 if (isset($_POST['save'])) {
-    $url2go = "action.php?action=autor_edit&id_a=" . $id_a;
+    $url2go = "action.php?action=autor_edit&id_a=" . $autor->id;
 }
 if (isset($_POST['save+exit'])) {
     $url2go = ($_POST['from']) ? $_POST['from'] : "action.php?action=all_view";

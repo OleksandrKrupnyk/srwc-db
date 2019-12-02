@@ -5,6 +5,9 @@
  * @copyright 2014
  */
 
+use zukr\author\AuthorHelper;
+use zukr\work\WorkHelper;
+
 /**
  * Функция считытывания настроек програмы из таблици settings БД
  *
@@ -530,8 +533,12 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
     $sub_row_str = "<ol>";
     while ($row = mysqli_fetch_array($result)) {
         $sub_row = fullinfo($sub_table, "id", $row[2]);
-        $sub_row_str .= ($href) ? "<li title=\"Останні зміни: " . htmlspecialchars($sub_row['date']) . "\" >" : "<li title=\"{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">";
-        $sub_row_str .= ($href) ? "<a href=action.php?action=" . rtrim($sub_table, "s") . "_edit&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&FROM={$FROM} title=\"Ред.:{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">" : "";
+        $sub_row_str .= ($href)
+            ? "<li title=\"Останні зміни: " . htmlspecialchars($sub_row['date']) . "\" >"
+            : "<li title=\"{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">";
+        $sub_row_str .= ($href)
+            ? "<a href=action.php?action=" . rtrim($sub_table, "s") . "_edit&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&FROM={$FROM} title=\"Ред.:{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">"
+            : "";
         $sub_row_str .= $sub_row['suname'] . " " . mb_substr($sub_row['name'], 0, 1, 'UTF-8') . "." . mb_substr($sub_row['lname'], 0, 1, 'UTF-8') . ".";
         $sub_row_str .= ($showId) ? "<{$sub_row['id']}>":"";
         if($showPlace && ($sub_row['place'] <> 'D'))
@@ -777,15 +784,22 @@ function print_work_univer($univer_title, $id_u, $univer, $href = false)
   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 function print_work_row($row, $href = false,$loginId = "0")
 {
+    $wh = WorkHelper::getInstance();
+    $sections = $wh->getAllSections();
+    $section = $sections[$row['id_sec']]['section'] ?? '';
+
+    $ah = AuthorHelper::getInstance();
+    $autors = $ah->getAutorsByWorkId($row['id']);
 
     $title = ($href) ? "<a href=action.php?action=work_edit&id_w=" . $row['id'] . " title=\"Редагувати роботу\">" : "";
     $title .= ($row['arrival'] == '1') ? $row['title'] . "&nbsp;[&radic;]&nbsp;" : $row['title'];
     $title .= ($href) ? "</a>\n" : "";
     $invitationClass = ($row['invitation'] == 1) ? "class=\"invitateWork\"" : "";
-    $sec = fullinfo("sections", "id", $row[4]);
     $tesis = ($row['tesis'] == 0) ? "" : "<strong>З тезами</strong>\n";
-    $list_leaders = list_leader_or_autors_str($row['id'], "wl", $href,false,false);
-    $list_autors = list_leader_or_autors_str($row['id'], "wa", $href,true,true);
+    $list_leaders = list_leader_or_autors_str($row['id'], "wl", $href, false, false);
+
+    $list_autors = WorkHelper::authorList($autors,$href, true, true);
+
     $date = $row['date'];
 
     $delete_work = "";
@@ -803,7 +817,7 @@ function print_work_row($row, $href = false,$loginId = "0")
 
         $reviews = list_reviews_for_one_work($row['id'], true, $loginId);
 
-        $moto = "<br/><strong>Шифр</strong>:" . $row['motto'] . "\n";
+        $moto = '<br/><strong>Шифр</strong>:' . $row['motto'] . "\n";
         $link_work = "&nbsp;&nbsp;<a href=action.php?action=work_link&id_w=" . $row['id'] . " title=\"Звязати з роботою керівника/автора\">&laquo;</a>&nbsp;&nbsp;\n";
         $introduction = !($row['introduction'] == "") ? "<br/><strong>Впровадження</strong>:" . $row['introduction'] . "\n" : "";
         $public = !($row['public'] == "") ? "<br/><strong>Публікації</strong> :{$row['public']}\n" : "";
@@ -833,7 +847,7 @@ function print_work_row($row, $href = false,$loginId = "0")
 </tr>        
 <tr   $invitationClass>
             <td class="tdInfo">
-                <strong>Секція:</strong>{$sec['section']}
+                <strong>Секція:</strong>{$section}
                 $moto $tesis
                 $public
                 $introduction $link_add_review

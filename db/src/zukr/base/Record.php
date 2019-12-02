@@ -10,7 +10,7 @@ namespace zukr\base;
  */
 abstract class Record implements RecordInterface
 {
-    const KEY_ON = 1;
+    const KEY_ON  = 1;
     const KEY_OFF = 0;
     /**
      * @var \MysqliDb
@@ -68,7 +68,7 @@ abstract class Record implements RecordInterface
     /**
      * @return string Назва моделі
      */
-    public function getNameModel() :string
+    public function getNameModel(): string
     {
         try {
             return (new \ReflectionClass($this))->getShortName();
@@ -82,7 +82,7 @@ abstract class Record implements RecordInterface
      *
      * @return string  Назва таблиці
      */
-    public static function getTableName() :string
+    public static function getTableName(): string
     {
         return \strtolower(basename(get_called_class()));
     }
@@ -115,31 +115,33 @@ abstract class Record implements RecordInterface
     /**
      * @param array|int $id
      * @return \MysqliDb|array|null
-     * @throws \Exception
      */
     public function findById($id)
     {
+        try {
+            if (filter_var($id, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY)) {
+                return $this->_db
+                    ->where('id', $id, 'IN')
+                    ->get($this->_table);
+            }
 
-        if (filter_var($id, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY)) {
-            return $this->_db
-                ->where('id', $id, 'IN')
-                ->get($this->_table);
+            if (filter_var($id, FILTER_VALIDATE_INT)) {
+                return $this->_db->where('id', $id)
+                    ->getOne($this->_table);
+
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            return null;
         }
-
-        if (filter_var($id, FILTER_VALIDATE_INT)) {
-            return $this->_db->where('id', $id)
-                ->getOne($this->_table);
-
-        }
-
-        return null;
-
     }
 
     /**
      * @return bool Результат виконання операції
      */
-    public function save() :bool
+    public function save(): bool
     {
         if (!$this->beforeSave()) {
             return false;
@@ -148,6 +150,7 @@ abstract class Record implements RecordInterface
 
 
         $this->afterSave();
+        return true;
     }
 
     /**

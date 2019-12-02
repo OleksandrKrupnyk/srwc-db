@@ -26,15 +26,20 @@ class WorkRepository
 
     /**
      * @return array|\MysqliDb
-     * @throws \Exception
      */
     public function getAllWorksAsArray()
     {
-        $univerTable = Univer::getTableName();
-        return $this->findAllWorks()
-            ->join(Univer::getTableName(), Work::getTableName() . ".id_u={$univerTable}.id", 'LEFT')
-            ->orderBy('univerfull', 'ASC')
-            ->get(Work::getTableName(), null, Work::getTableName() . '.*, univerfull');
+        try {
+
+            $univerTable = Univer::getTableName();
+            return $this->findAllWorks()
+                ->join(Univer::getTableName(), Work::getTableName() . ".id_u={$univerTable}.id", 'LEFT')
+                ->orderBy('univerfull', 'ASC')
+                ->get(Work::getTableName(), null, Work::getTableName() . '.*, univerfull');
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            return [];
+        }
     }
 
 
