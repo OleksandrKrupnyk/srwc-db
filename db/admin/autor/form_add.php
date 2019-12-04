@@ -7,15 +7,17 @@
  */
 
 use zukr\base\html\Html;
+use zukr\base\html\HtmlHelper;
 use zukr\univer\UniverRepository;
 
-$id_u = \filter_input(INPUT_GET, 'id_u',FILTER_VALIDATE_INT);
+$id_u = \filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
+$univers = (new UniverRepository())->getInvitedDropList();
 ?>
 <!-- Форма добавления автора-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні автора</header>
-<form class="addautorForm" method="post" action="action.php" name='Autor' >
-    <?= Html::select('Author[id_u]', $id_u, (new UniverRepository())->getInvitedDropList(),
+<form class="addautorForm" method="post" action="action.php" name='Autor'>
+    <?= Html::select('Author[id_u]', $id_u, $univers,
         ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...'])
     ?>
     <br>
@@ -26,7 +28,7 @@ $id_u = \filter_input(INPUT_GET, 'id_u',FILTER_VALIDATE_INT);
     <br>
     <fieldset>
         <legend>Данні автора</legend>
-        <?=\zukr\base\html\HtmlHelper::course(['name'=>'Author[curse]'])?>
+        <?= HtmlHelper::course(['name' => 'Author[curse]']) ?>
         <label>Електронна скринька:</label>
         <input type="email" name="Author[email]" title="Наприклад:user@mail.ru" placeholder="Электронна скринька">
         <label>Телефон:</label>
@@ -42,7 +44,5 @@ $id_u = \filter_input(INPUT_GET, 'id_u',FILTER_VALIDATE_INT);
         $id_w = (int)\filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
         echo "<input type='hidden' name='id_w' value='{$id_w}'>";
     }
-    print_datalist_name('name');
-    print_datalist_name('lname');
     ?>
 </form>

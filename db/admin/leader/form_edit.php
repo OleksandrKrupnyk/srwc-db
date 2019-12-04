@@ -5,69 +5,81 @@
  * Date: 14.02.2017
  * Time: 20:19
  */
-global $link;
+
+
+use zukr\base\html\Html;
+use zukr\base\html\HtmlHelper;
+use zukr\degree\DegreeRepository;
+use zukr\leader\LeaderRepository;
+use zukr\position\PositionRepository;
+use zukr\status\StatusRepository;
+use zukr\univer\UniverRepository;
+use zukr\user\UserRepository;
+
+$id_l = filter_input(INPUT_GET, 'id_l', FILTER_VALIDATE_INT);
+/** @var array */
+$leader = (new LeaderRepository())->getById($id_l);
+if (empty($leader)) {
+    Go_page('action.php?action=error_list');
+    exit();
+}
+$univers = (new UniverRepository())->getInvitedDropList();
+$positions = (new PositionRepository())->getDropDownList();
+$statuses = (new StatusRepository())->getDropDownList();
+$degrees = (new DegreeRepository())->getDropDownList();
+$users = (new UserRepository())->getDropDownList();
 ?>
 <!-- Редактирование руководителя -->
-<?php $lInfo = fullinfo("leaders", "id", $_GET['id_l']); /*получим все данные о руководителе*/ ?>
 <header><a href="action.php">Меню</a></header>
 <header>Редагування данних керівника</header>
 <form class="editLeader" method="post" action="action.php">
-    <?php list_univers($lInfo['id_u'], 1); ?>
+    <?= Html::select('Leader[id_u]', $leader['id_u'], $univers,
+        ['class' => 'select-univer', 'required' => true, 'prompt' => 'Університет...'])
+    ?>
     <br><label>ПІБ</label>
-    <input type="text" name="suname" title="Прізвище" value="<?= $lInfo['suname'] ?>" required>
-    <input type="text" name="name" title="Ім'я" value="<?= $lInfo['name'] ?>" required>
-    <input type="text" name="lname" title="По-батькові" value="<?= $lInfo['lname'] ?>" required>
+    <input type="text" name="Leader[suname]" title="Прізвище" value="<?= $leader['suname'] ?>" required>
+    <input type="text" name="Leader[name]" title="Ім'я" value="<?= $leader['name'] ?>" required>
+    <input type="text" name="Leader[lname]" title="По-батькові" value="<?= $leader['lname'] ?>" required>
     <br><label>Рецензент:</label>
-    <?php chk_box("reviewer", "Відмітити якщо рецензент", $lInfo['review']); ?>
-    <?php if($_SESSION['usr'] === 'krupnik'){
-        printf("<label>Логін користувача у системі для рецензування:</label>");
-        //printf("TODO");
-        //printf("<label>Логін:%s</label>",$lInfo['id_tzmember']);
-        //Сформировать запрос
-        $query = "SELECT tz_members.* FROM tz_members WHERE usr <> 'AJAX' GROUP BY tz_members.id ASC ";
-        //Отправить запрос
-        mysqli_query($link, "SET NAMES 'utf8'");
-        mysqli_query($link, "SET CHARACTER SET 'utf8'");
-        $result = mysqli_query($link, $query)
-        or die("Invalid query: " . mysqli_error($link));
-        printf("<select name=\"tzmember\" id=\"tzmember\">\n");
-            printf("<option value=\"%s\">%s</option>", "0", "Відсутній");
-            while ($row = mysqli_fetch_array($result)) {
-                if ($lInfo['id_tzmember'] != '' AND !is_integer($lInfo['id_tzmember'])) {
-                    if($lInfo['id_tzmember'] == $row['id']){
-                        printf("<option value=\"%s\" selected>%s</option>", $row['id'], $row['usr']);
-                    }else
-                        printf("<option value=\"%s\">%s</option>", $row['id'], $row['usr']);
-                }
-                else{
-                    printf("<option value=\"%s\">%s</option>", $row['id'], $row['usr']);
-                }
-            }
+    <?= HtmlHelper::checkbox('Leader[review]', 'Відмітка про прибуття на конференцію', $leader['review']); ?>
 
-
-        printf("</select>\n");
-    }?>
+    <?php if ($_SESSION['usr'] === 'krupnik'): ?>
+        <label>Логін користувача у системі для рецензування:</label>
+        <?= Html::select('Leader[id_tzmember]', $leader['id_tzmember'], $users,
+            ['class' => 'select-tz_member', 'required' => false, 'prompt' => 'Відсутній'])
+        ?>
+    <?php endif; ?>
     <br>
     <fieldset>
         <legend>Данні про керівника</legend>
-        <?php list_("positions", "position", $lInfo['id_pos'], 1, "Посада...") ?>
-        <?php list_("statuses", "statusfull", $lInfo['id_sat'], 1, "Вчене звання...") ?>
-        <?php list_("degrees", "degree", $lInfo['id_deg'], 1, "Науковий ступінь...") ?>
-        <?php chk_box("arrival", "Відмітка про прибуття на конференцію", $lInfo['arrival']); ?>
-        <label>Електронна скринька:</label>
-        <input type="email" name="email" autocomplete="off" value="<?= $lInfo['email'] ?>" placeholder="user@mail.ru">
+        <?= Html::select('Leader[id_pos]', $leader['id_pos'], $positions,
+            ['required' => true, 'prompt' => 'Посада...'])
+        ?>
+        <?= Html::select('Leader[id_sat]', $leader['id_sat'], $statuses,
+            ['required' => true, 'prompt' => 'Вчене звання...'])
+        ?>
+        <?= Html::select('Leader[id_deg]', $leader['id_deg'], $degrees,
+            ['required' => true, 'prompt' => 'Науковий ступінь...'])
+        ?>
+        <?= HtmlHelper::checkbox('Leader[arrival]', 'Відмітка про прибуття на конференцію', $leader['arrival']); ?>
+        <label for="leader-email">Електронна скринька:</label>
+        <input id="leader-email" type="email" name="Leader[email]" autocomplete="off" value="<?= $leader['email'] ?>"
+               placeholder="user@mail.ru">
         <?php
-        $phone_number = ($lInfo['phone'] == "") ? "відсутній" : $lInfo['phone'];
+        $phone_number = ($leader['phone'] == "") ? "відсутній" : $leader['phone'];
         echo "<span id=\"phone\">{$phone_number}</span>";
         ?>
-        <label>Телефон:</label>
-        <input type="tel" pattern="\d{10}" size="10" maxlength="10" name="phone" value="<?= $lInfo['phone'] ?>"
+        <label for="leader-phone">Телефон:</label>
+        <input id="leader-phone" type="tel" pattern="\d{10}" size="10" maxlength="10" name="Leader[phone]"
+               value="<?= $leader['phone'] ?>"
                placeholder="Номер телефону">
         <br>
 
     </fieldset>
-    <input type="submit" value="Змінити">
+    <input type="submit" value="Зберегти та вийти" name="save+exit">
+    <input type="submit" value="Зберегти" name="save">
     <input type="hidden" name="action" value="leader_edit">
-    <input type="hidden" name="id_l" value="<?= $lInfo['id'] ?>">
+    <input type="hidden" name="Leader[id]" value="<?= $leader['id'] ?>">
+    <input type="hidden" name="id_l" value="<?= $id_l ?>">
     <input type="hidden" name="from" value="<?= $_GET['FROM'] ?>">
 </form>

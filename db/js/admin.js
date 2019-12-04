@@ -17,26 +17,21 @@ $(document).ready(function() {
     //Действия для кнопки отправить
     $(':submit').on('click', function (e) {
         //Выбираем все select
-        $(':selected').each(function () {
-            //Находим значения val
-            const  val = $(this).val();
-            //var name = $(this).attr
-            const id = $(this).parent().attr("name");
-            const pattern = new RegExp('(^leader|^autor)', 'ig');
-            patr = pattern.exec(id);
-            //console.log("Значение id равно:"+id+" patr равно: " + patr);
-            //если оно равно -1 значит не выбрано
-            if (val === "-1" && patr == null) {
-                //отменяем действие по умолчанию
-                e.preventDefault();
-                //сообщение пользователю
-                alert('Увага!\n Не всі поля заповнені!');
-                //Фокус на поле которое не заполнили
-                $(this).parent().focus();
-                //Преврвать выполнение проверки
-                return false;
+        $(':selected').each(function (index, obj) {
+            var required = $(this).parent().attr('required') || '';
+            if (required !== '') {
+                const value = obj.value;
+                //если оно равно -1 значит не выбрано
+                if (value === '-1' || value === null) {
+                    //отменяем действие по умолчанию
+                    e.preventDefault();
+                    //сообщение пользователю
+                    $(this).parent().notify('Поле не заповнене','error');
+                    //Фокус на поле которое не заполнили
+                    $(this).parent().focus();
+                }
             }
-            //console.log("Значение select"+val+' '+id);
+            // console.log("Значение select"+val+' '+id);
         });
     });
 
@@ -62,10 +57,10 @@ $(document).ready(function() {
                 data: {"action": "delete", "table": table, "id": id},
                 cache: false,
                 success: function (answer) {
-                    //console.log('Запрос выполненен успешно');
                     if (answer === "FALSE") {
-                        alert("Автор/Керівник\n з\'язаний з робот(ою/ами)!");
+                        $.notify('Автор/Керівник\n з\'язаний з робот(ою/ами)!', 'error');
                     } else {
+                        $.notify('Запис видалено',"success");
                         $this.remove();
                     }
                 }
@@ -454,7 +449,7 @@ removeWork.click(function(){
 
     //Запрос на редактирование данных университета
     var editUniver = $('a[href*="univer_edit"]');
-    editUniver.click(function () {
+    editUniver.on('click',function () {
         const message = 'Перейти до редагування данних університету?';
         return confirm(message);
 

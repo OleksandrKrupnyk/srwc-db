@@ -6,13 +6,19 @@ require '../vendor/autoload.php';
 use zukr\base\Base;
 use zukr\menu\Menu;
 
+session_name('tzLogin');
+session_start();
 Base::init();
 $settings = Base::$param;
 $menuData = include 'menu.php';
 $menu = new Menu($menuData);
-header('Content-Type: text/html; charset=utf-8');
-session_name('tzLogin');
-session_start();
+if (isset($_SESSION['notify']['msg'])) {
+    $_msg = $_SESSION['notify']['msg'] ?? '';
+    $_type = $_SESSION['notify']['type'] ?? '';
+    unset($_SESSION['notify']);
+}
+ob_start();
+
 //Если есть доступ к странице
 if ($_SESSION['access']) {
     //Сообщение об ошибке. Если оно пусто то на экран ничего не выводиться.
@@ -56,7 +62,7 @@ if ($_SESSION['access']) {
 } else /*Перенаправление на страничку обычных пользователей*/ {
     header('Location: index.php');
 }
-ob_start();
+
 ?>
     <!DOCTYPE html>
     <html lang="ua">
@@ -66,10 +72,7 @@ ob_start();
         <link href="../css/phone.css" type="text/css" rel="stylesheet"/>
         <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/style.css" type="text/css" rel="stylesheet"/>
-        <script type="text/javascript" src="../js/jquery.js"></script>
-        <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
-        <script type="text/javascript" src="../js/admin.js"></script>
-        <script type="text/javascript" src="../js/menuscript.js"></script>
+
         <title>&quot;СНР 2018&quot;&copy;</title>
     </head>
     <body>
@@ -119,6 +122,19 @@ ob_start();
     <div id="operator">Оператор :<span><?= $_SESSION['usr'] ?></span></div>
     <autor>Krupnik&copy;</autor>
     </body>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
+    <script type="text/javascript" src="../js/notify.js"></script>
+    <script type="text/javascript" src="../js/menuscript.js"></script>
+    <script type="text/javascript" src="../js/admin.js"></script>
+    <script>
+        $.notify.defaults({position: 'top center',elementPosition:'top center'});
+        var _type = '<?=$_type?>'.toString();
+        var _msg = '<?=$_msg?>'.toString();
+        if (_msg !== '') {
+            $.notify(_msg, _type);
+        }
+    </script>
     </html>
 <?php
 ob_flush();

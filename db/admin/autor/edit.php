@@ -18,7 +18,11 @@ if ($author === null) {
     exit();
 }
 $author->load($_POST);
-$author->save();
+$save = $author->save();
+if ($save) {
+    $_SESSION['notify']['msg'] = 'Запис було збережено';
+    $_SESSION['notify']['type'] = 'info';
+}
 $log = Log::getInstance();
 if ($autor->id > 0) {
     $log->logAction(null, $autor::getTableName(), $autor->id);

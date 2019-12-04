@@ -18,6 +18,7 @@ abstract class Record implements RecordInterface
     private $_db;
     private $_table;
     private $_actionSave;
+    public  $_isNewRecord;
 
     /**
      * @return bool
@@ -27,8 +28,10 @@ abstract class Record implements RecordInterface
         $primaryKeyId = static::getPrimaryKey();
         if ($this->{$primaryKeyId} === null) {
             $this->_actionSave = 'insert';
+            $this->_isNewRecord = true;
         } else {
             $this->_actionSave = 'update';
+            $this->_isNewRecord = false;
         }
         return true;
     }
@@ -36,7 +39,10 @@ abstract class Record implements RecordInterface
     public function afterSave()
     {
         try {
-            $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
+            if ($this->_isNewRecord) {
+                $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
+                $this->_isNewRecord = false;
+            }
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
@@ -147,8 +153,6 @@ abstract class Record implements RecordInterface
             return false;
         }
         $this->{$this->_actionSave}();
-
-
         $this->afterSave();
         return true;
     }
@@ -210,6 +214,20 @@ abstract class Record implements RecordInterface
                 }
             }
 
+        }
+        return $attributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        $attributes = [];
+        foreach ($this as $field => $value) {
+            if ($value !== null && !is_object($value) && $field[0] !== '_') {
+                $attributes[$field] = $value;
+            }
         }
         return $attributes;
     }

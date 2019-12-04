@@ -6,11 +6,11 @@
  * Time: 0:41
  */
 //Выберем только те работы котрые реально существуют
-$query = "SELECT works.*, sections.section,univers.univer, COUNT(reviews.id_w) AS countReview
+$query = 'SELECT works.*, sections.section,univers.univer, COUNT(reviews.id_w) AS countReview
 FROM sections, works
   JOIN univers ON works.id_u = univers.id
   JOIN reviews ON reviews.id_w = works.id
-WHERE works.id_sec=sections.id AND dead=0 GROUP BY works.id ORDER BY works.balls DESC ";
+WHERE works.id_sec=sections.id AND dead=0 GROUP BY works.id ORDER BY works.balls DESC ';
 global $link;
 mysqli_query($link, "SET NAMES 'utf8'");
 mysqli_query($link, "SET CHARACTER SET 'utf8'");
@@ -40,7 +40,7 @@ $query = SUPERSQL3;
 mysqli_query($link, "SET NAMES 'utf8'");
 mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query)
-or die("Помилка запиту: " . mysqli_error($link));
+or die('Помилка запиту: ' . mysqli_error($link));
 $i = 1;
 echo "<table><tr><th>№</th><th>ВНЗ</th><th>Кількість<br>робіт</th><th>Кількість<br>студентів</th><th>Зап.</th></tr>";
 while ($row = mysqli_fetch_array($result)) {

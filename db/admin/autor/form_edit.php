@@ -19,12 +19,13 @@ if (empty($author)) {
     Go_page('action.php?action=error_list');
     exit();
 }
+$univers = (new UniverRepository())->getInvitedDropList();
 ?>
 <!-- Редактирование автора -->
 <header><a href="action.php">Меню</a></header>
-<header>Редагування даних автора</header>
+<header>Редагування данних автора</header>
 <form class="editAutor" method="post" action="action.php">
-    <?= Html::select('Author[id_u]', $author['id_u'], (new UniverRepository())->getInvitedDropList(),
+    <?= Html::select('Author[id_u]', $author['id_u'], $univers,
         ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...'])
     ?>
     <br>
@@ -32,12 +33,10 @@ if (empty($author)) {
     <input type="text" name="Author[suname]" title="Прізвище" value="<?= $author['suname'] ?>" required>
     <input type="text" name="Author[name]" title="Ім'я" value="<?= $author['name'] ?>" required>
     <input type="text" name="Author[lname]" title="По-батькові" value="<?= $author['lname'] ?>">
-    <label>Місце:</label>
-    <?= ($author['arrival'] == 1)
+    <label>Місце:</label><?= ($author['arrival'] == 1)
         ? HtmlHelper::place(['name' => 'Author[place]', 'value' => $author['place']])
         : 'Не брав участі';
-    ?>
-    <br>
+    ?><br>
     <fieldset>
         <legend>Данні автора</legend>
         <?= HtmlHelper::course(['name' => 'Author[curse]', 'value' => $author['curse']]); ?>

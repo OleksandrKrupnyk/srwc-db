@@ -140,6 +140,7 @@ $row = mysqli_fetch_array($result);
         <option value="1" <?= $selected1?>>Рекомендувати</option>
         <option value="0" <?= $selected0?>>Не рекомендувати</option>
     </select><label>до участі у підсумковій конференції.</label><br>
+    <?php var_dump($row);die();?>
     <label>Рецензент :</label><?php cbo_reviewers_list($row['review1']);?>
 
     <br>

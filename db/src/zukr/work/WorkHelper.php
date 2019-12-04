@@ -188,7 +188,7 @@ class WorkHelper
             }
             $item .= ($href) ? '</a>' : '';
             if ($autor['arrival'] !== 1) {
-                $item .= ($href) ? ' <a href=action.php?action=work_unlink&id_id_a=' . $autor['id'] . "&id_w=" . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>' : '';
+                $item .= ($href) ? ' <a href=action.php?action=work_unlink&id_a=' . $autor['id'] . "&id_w=" . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>' : '';
             }
 
             $item .= '</li>';
