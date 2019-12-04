@@ -16,10 +16,6 @@ $_SESSION['id_u'] = $_POST['id_u'];
 $autor = new Author();
 $autor->load($_POST);
 $save = $autor->save();
-if ($save) {
-    $_SESSION['notify']['msg'] = "Запис було збережено";
-    $_SESSION['notify']['type'] = 'info';
-}
 $log = Log::getInstance();
 $log->logAction(null, $autor::getTableName(), $autor->id);
 $url2go = ($_POST['FROM']) ? $_POST['FROM'] : "action.php";

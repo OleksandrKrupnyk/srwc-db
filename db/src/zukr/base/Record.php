@@ -36,15 +36,20 @@ abstract class Record implements RecordInterface
         return true;
     }
 
-    public function afterSave()
+    /**
+     * @return bool
+     */
+    public function afterSave(): bool
     {
         try {
             if ($this->_isNewRecord) {
                 $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
                 $this->_isNewRecord = false;
             }
+            return true;
         } catch (\Exception $e) {
             echo $e->getMessage();
+            return false;
         }
     }
 
@@ -152,9 +157,15 @@ abstract class Record implements RecordInterface
         if (!$this->beforeSave()) {
             return false;
         }
-        $this->{$this->_actionSave}();
-        $this->afterSave();
-        return true;
+        $save = $this->{$this->_actionSave}() === '';
+
+        $save = $save && $this->afterSave();
+        if ($save) {
+            Base::$session->setFlash('recordSaveMsg', 'Запис був збережений');
+            Base::$session->setFlash('recordSaveType', 'info');
+        }
+
+        return $save;
     }
 
     /**

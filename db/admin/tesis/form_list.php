@@ -7,6 +7,7 @@
  * Time: 0:39
  */
 //формируем запрос на получение данных
+global $link;
 $query = "SELECT works.title,works.id,sections.section,univers.town FROM works 
 LEFT JOIN sections ON works.id_sec=sections.id 
 LEFT JOIN univers ON works.id_u=univers.id
