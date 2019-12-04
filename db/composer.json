@@ -15,10 +15,12 @@
     "ext-mysqli": "*",
     "ext-mbstring": "*",
     "ext-gd": "*",
-    "tedivm/stash": "0.14.*"
+    "tedivm/stash": "0.14.*",
+    "monolog/monolog": "2.0.1"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-master",
+    "php-console/php-console": "^3.1"
   },
   "autoload": {
     "psr-4": {

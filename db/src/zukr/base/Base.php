@@ -21,13 +21,22 @@ class Base
      */
     public static $param;
 
+    /** @var Session */
+    public static $session;
+    /** @var Logger */
+    public static $log;
+
+
     /**
      *
      */
-    public static function init(){
+    public static function init()
+    {
 
         self::$app = App::getInstance();
         self::$param = Params::getInstance();
+        self::$session = Session::getInstance();
+        self::$log = Logger::getInstance();
     }
 
 }
