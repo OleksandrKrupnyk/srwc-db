@@ -47,17 +47,17 @@ mysqli_query($link, "SET NAMES 'utf8'");
 mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query)
 or die("Invalid query : " . mysqli_error($link));
-echo "<select id=\"seluniverinv\" size=\"1\" name=\"id_u\" required>\n";
-echo "<option value =\"-1\" disabled>Оберіть ВНЗ та натисніть відповідну клавішу для перегляду документу</option>\n";
+echo "<select id='seluniverinv' size='1' name='id_u' required>\n";
+echo "<option value =''-1' disabled>Оберіть ВНЗ та натисніть відповідну клавішу для перегляду документу</option>\n";
 while ($row = mysqli_fetch_array($result)) {
-    echo "<option value=\"{$row['id']}\" >{$row['univerfull']}</option>\n";
+    echo "<option value=''{$row['id']}' >{$row['univerfull']}</option>\n";
 }
 echo "</select>\n";
 ?>
 
 <a href="#" id="letter1link"><input id="letter1button" type="button" value="Лист до ВНЗ"></a>
 <a href="#" id="letter2link"><input id="letter2button" type="button" value="Додаток 1"></a>
-<a href=<?php echo APENDEX2 ?>><input id="letter3button" type="button" value="Додаток 2"></a>
+<a href=<?=APENDEX2 ?>><input id="letter3button" type="button" value="Додаток 2"></a>
 <!--
 <p><em>Увага! Для корректного друкування листа запрошень (Лист до ВНЗ) та списку авторів (Додаток 1 увімкніть) у
         налаштуваннях вашого програмного забезпечення опцію друкуквання фонових зображень.</em></p>
@@ -70,9 +70,9 @@ echo "</select>\n";
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="../css/print.css" type="text/css" rel="stylesheet"/>
     <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
-    <script language="javascript" type="text/javascript" src="../js/jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
-    <script language="javascript" type="text/javascript" src="../js/admin.js"></script>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
+    <script type="text/javascript" src="../js/admin.js"></script>
     <title>Запрошення &quot;СНР 2018&quot;&copy;</title>
 </head>
 <body>
@@ -90,11 +90,11 @@ where `univers`.`id` <> 1 AND count_invitation > 0 AND v_take_part.id_u='{$id_u}
 	mysqli_query($link, "SET NAMES 'utf8'");
 	mysqli_query($link, "SET CHARACTER SET 'utf8'");
             $result = mysqli_query($link, $query);
-            echo "<div class=\"v_invitation_1\">\n";
+            echo "<div class='v_invitation_1'>\n";
             while ($row = mysqli_fetch_array($result)) {
                 //var_dump($row['rector_r']);echo "<br>";
                 $rector = ($row['rector_r'] != "") ? $row['rector_r'] : "<mark><a href=\"action.php?action=univer_edit&id_u=" . $row['id_u'] . "&FROM={$FROM}\">ЗАПОВНІТЬ ТАБЛИЦЮ</a></mark>";
-                $invitatotion = ($row['count_invitation'] != "") ? $row['count_invitation'] : "<mark><a href=\"action.php?action=view#id_u" . $row['id_u'] . "\">ЗАПРОСИТИ?</a></mark>";
+                $invitatotion = ($row['count_invitation'] != "") ? $row['count_invitation'] : "<mark><a href=\"action.php?action=all_view#id_u" . $row['id_u'] . "\">ЗАПРОСИТИ?</a></mark>";
                 echo "<div id=\"dstuheader\"></div>";
                 $blk_rectory = "<div id=\"rectory\">{$row['posada']} "
                     . $row['univerrod'] . "<br>"
@@ -145,8 +145,8 @@ where `univers`.`id` <> 1 AND count_invitation > 0 AND v_take_part.id_u='{$id_u}
     /* начало формирования списка документов */
     echo "<div class=\"v_invitation_2\">\n";
     /* Пишем первый раз */
-    echo "<div id=\"application1\">Додаток 1</div>\n";
-    echo "<div id=\"listsudents_title\"><strong>Список студентів</strong></div>\n";
+    echo "<div id='application1'>Додаток 1</div>\n";
+    echo "<div id='listsudents_title'><strong>Список студентів</strong></div>\n";
     //Запомним текущий универ чтобы не повторять
     $univer = $row['univer'];
     echo "<div id=\"univer_title\"><em>" . $row['univer'] . "</em></div>\n";
@@ -160,11 +160,11 @@ where `univers`.`id` <> 1 AND count_invitation > 0 AND v_take_part.id_u='{$id_u}
             echo "</ol>\n";
 
             echo $blk_podpis;
-            echo "<div id=\"podpis_image\"></div><hr>";
-            echo "<div id=\"application1\">Додаток 1</div>\n";
-            echo "<div id=\"listsudents_title\"><strong>Список студентів</strong></div>\n";
+            echo "<div id='podpis_image'></div><hr>";
+            echo "<div id='application1'>Додаток 1</div>\n";
+            echo "<div id='listsudents_title'><strong>Список студентів</strong></div>\n";
             $univer = $row['univer'];
-            echo "<div id=\"univer_title\"><em>" . $row['univer'] . "</em></div>\n";
+            echo "<div id='univer_title'><em>" . $row['univer'] . "</em></div>\n";
             echo $blk_message;
             echo "<ol>\n";
             echo "<li>" . $row['fio_a'] . "</li>\n";
@@ -172,7 +172,7 @@ where `univers`.`id` <> 1 AND count_invitation > 0 AND v_take_part.id_u='{$id_u}
     }
     echo "</ol>\n";
     //echo $blk_podpis;
-    echo "<div id=\"podpis_image4\"></div><hr>";
+    echo "<div id='podpis_image4'></div><hr>";
     echo "</div>\n";
 }
 endif;

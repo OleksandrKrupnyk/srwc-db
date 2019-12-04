@@ -147,7 +147,7 @@ where (univers.id <> '1') AND (count_invitation > 0) ORDER BY univerfull ASC ";
                     while ($row = mysqli_fetch_array($result)) {
                         //var_dump($row['rector_r']);echo "<br>";
                         $rector = ($row['rector_r'] != "") ? $row['rector_r'] : "<mark><a href=\"action.php?action=univer_edit&id_u={$row['id_u']}&FROM={$FROM}\">ЗАПОВНІТЬ ДАНІ ПРО ВНЗ</a></mark>";
-                        $invitation = ($row['count_invitation'] != "") ? $row['count_invitation'] : "<mark><a href=\"action.php?action=view#id_u{$row['id_u']}\">ЗАПРОСИТИ?</a></mark>";
+                        $invitation = ($row['count_invitation'] != "") ? $row['count_invitation'] : "<mark><a href=\"action.php?action=all_view#id_u{$row['id_u']}\">ЗАПРОСИТИ?</a></mark>";
                         $invitation = "";
                         // Печатать Шапку университета
                         PrintGerb($empty = true);//Печатет данные бланка Герб и т.д.

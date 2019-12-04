@@ -1,131 +1,115 @@
 //выполнять если документ полностью загрузился
 $(document).ready(function() {
 
-$('body').css("display", "none");
-$('body').fadeOut(200).fadeIn(200);
-$('#columnAutors').css("display", "none");
-$('#columnLeaders').css("display", "none");
+    const $body =  $('body');
+    $body.css("display", "none");
+    $body.fadeOut(200).fadeIn(200);
+    $('#columnAutors').css("display", "none");
+    $('#columnLeaders').css("display", "none");
 //$('.loginForm').css("display","none");
 
 
-
-var disableObject = $('li').find('.special').parent();
+    const disableObject = $('li').find('.special').parent();
     disableObject.hide();
 
 
-//Проверяем все select что бы не были равны -1
-//Действия для кнопки отправить
-$(':submit').on('click',function(eventobject){
-//Выбираем все select
-    $(':selected').each(function(){
-    //Находим значения val
-    var val = $(this).val();
-    //var name = $(this).attr
-    var id = $(this).parent().attr("name");
-    var pattern =  new RegExp('(^leader|^autor)','ig');
-    patr = pattern.exec(id);
-    //console.log("Значение id равно:"+id+" patr равно: " + patr);
-    //если оно равно -1 значит не выбрано
-        if(val == "-1" && patr == null){
-                //отменяем действие по умолчанию
-                eventobject.preventDefault();
-                //сообщение пользователю
-                alert('Увага!\n Не всі поля заповнені!');
-                //Фокус на поле которое не заполнили
-                $(this).parent().focus();
-                //Преврвать выполнение проверки
-                return false;        
+    //Проверяем все select что бы не были равны -1
+    //Действия для кнопки отправить
+    $(':submit').on('click', function (e) {
+        //Выбираем все select
+        $(':selected').each(function (index, obj) {
+            var required = $(this).parent().attr('required') || '';
+            if (required !== '') {
+                const value = obj.value;
+                //если оно равно -1 значит не выбрано
+                if (value === '-1' || value === null) {
+                    //отменяем действие по умолчанию
+                    e.preventDefault();
+                    //сообщение пользователю
+                    $(this).parent().notify('Поле не заповнене','error');
+                    //Фокус на поле которое не заполнили
+                    $(this).parent().focus();
                 }
-        //console.log("Значение select"+val+' '+id);
-        
+            }
+            // console.log("Значение select"+val+' '+id);
+        });
     });
-});
 
 
+    // Меню на главной странице
+    $(function () {
+        $("#menu").menu();
+    });
 
 
-
-// Меню на главной странице
-$(function() {
-    $( "#menu" ).menu();
-  });
-
-
-//Удаление автора или руководителя из реестра
-
-$('a[href^=#remove]').click(function(eventObject3){
-    eventObject3.preventDefault();
-    //var id_w = $(this).parents('tr').children('td:first').text();
-    var id = $(this).parent('li').attr('id');
-    var $this = $(this).parent('li');
-    var table = $(this).parent('li').parent('ol').attr('name');    
-    //console.log('Удалить запись id :'+id+' из таблицы :'+table);
-    var answer = confirm("Видалити\n запис?");
-    if (answer == true )
-    {
-    $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"action":"delete","table":table,"id":id},
-            cache: false,
-            success: function(answer){
-                //console.log('Запрос выполненен успешно');
-                if(answer == "FALSE"){
-                    alert("Автор/Керівник\n з\'язаний з робот(ою/ами)!");
+    //Удаление автора или руководителя из реестра
+    $('a[href^=#remove]').click(function (e) {
+        e.preventDefault();
+        //var id_w = $(this).parents('tr').children('td:first').text();
+        const $this = $(this).parent('li');
+        const id = $this.attr('id');
+        const table = $this.parent('ol').attr('name');
+        const answer = confirm("Видалити\n запис?");
+        if (answer) {
+            $.ajax({
+                type: "POST",
+                url: "ajax.php",
+                data: {"action": "delete", "table": table, "id": id},
+                cache: false,
+                success: function (answer) {
+                    if (answer === "FALSE") {
+                        $.notify('Автор/Керівник\n з\'язаний з робот(ою/ами)!', 'error');
+                    } else {
+                        $.notify('Запис видалено',"success");
+                        $this.remove();
                     }
-                else
-                {
-                    
-                    $this.remove();                
-                }    
-                
                 }
-            
+
             });
-     }       
-    
+        }
+
     });
 
 
-
-
-//Поиск опреатора на странице
-$(function(){
- var operator = $('#operator span').text();
-    if((operator == 'krupnik') || (operator == 'roman')){
-  //if((operator == 'krupnik') || (operator == 'marina') || (operator == 'roman')){
+    //Поиск опреатора на странице
+    $(function () {
+        const operator = $('#operator span').text();
+        if ((operator === 'krupnik') || (operator === 'roman')) {
+            //if((operator == 'krupnik') || (operator == 'marina') || (operator == 'roman')){
             disableObject.show();
         }
-});
+    });
 
 
+    /**
+     * Изменение ВНЗ при печати приглашений для
+     *
+     * */
+    const SelectUniverInvitation = $('#seluniverinv');
 
-/*Изменение ВНЗ при печати приглашений для*/
+    SelectUniverInvitation.on('change', function () {
 
-var SelectUniverInvitation = $('#seluniverinv');
+        const val = $(this).find("option:selected").val() || '';
+        // console.log(val);
+        if (val.toString() !== '-1') {
+            $('#letter1link').attr("href", "./invitation.php?id_u=" + val + "&letter=1");
+            $('#letter2link').attr("href", "./invitation.php?id_u=" + val + "&letter=2");
+        }
+    });
 
-SelectUniverInvitation.on('change',function(){
-
-var val = $(this).find("option:selected").val();
-console.log(val);
-if(val != '-1' ){
-$('#letter1link').attr("href","./invitation.php?id_u=" + val + "&letter=1");
-$('#letter2link').attr("href","./invitation.php?id_u=" + val + "&letter=2");
-}
-})
-
-$(function(){
-var val = SelectUniverInvitation.find("option:selected").val();
-//console.log(val);
-if(val != '-1'){
-$('#letter1link').attr("href","./invitation.php?id_u=" + val + "&letter=1");
-$('#letter2link').attr("href","./invitation.php?id_u=" + val + "&letter=2");
-}
-})
+    $(function () {
+        const val = SelectUniverInvitation.find("option:selected").val() || '';
+        //console.log(val);
+        if (val.toString() !== '-1') {
+            $('#letter1link').attr("href", "./invitation.php?id_u=" + val + "&letter=1");
+            $('#letter2link').attr("href", "./invitation.php?id_u=" + val + "&letter=2");
+        }
+    });
 
 
-/* Обработка события при добавлении всей информации по работе
-*/
+    /**
+     * Обработка события при добавлении всей информации по работе
+     */
 
 $("#selunivers").on('change',function(){
      var val = $(this).find("option:selected").val();
@@ -179,7 +163,7 @@ $("#univer_reseption").on('change',function(){
     $('#columnLeaders').slideUp(100);
       $('#columnAutors').slideUp(100);
     var val = $(this).find("option:selected").val();
-    
+
     $.ajax({
             type: "POST",
             url: "ajax.php",
@@ -211,7 +195,7 @@ $('#update_arrival_works').on('dblclick',function(){
             //console.log('Запрос обработан! Оновлено:'+txt+' запис(ів)');
             alert('Оновлення записів виконано! Оновлено:'+txt+' запис(ів)');
             }
-            }); 
+            });
 });
 
 //обработка запроса на назначение призового места
@@ -227,15 +211,15 @@ myPlace.on('change',function(){
    for(i=0;i<myPlace.length;i++){
     if(place2[i].value =='I') p1++;
     else if(place2[i].value =='II') p2++;
-    else if(place2[i].value =='III') 
+    else if(place2[i].value =='III')
         p3++
     else
         pd++;
-    
+
    }
    //console.log(p1+' '+p2+' '+p3+' '+pd);
    $('#summaryResult').text('I('+p1+') II('+p2+') III('+p3+') D('+pd+')');
-    $.ajax({   
+    $.ajax({
         type:"POST",
         url:"ajax.php",data:{"action":"setplace","place":place,"id_a":id_a},
         success: function(txt){
@@ -258,12 +242,12 @@ this.blur();
 var val = $(this).attr("alt");
 
 //Какая клавиша нажата
-if (eventObject.ctrlKey) 
+if (eventObject.ctrlKey)
     {//Нажата Shift значит удалить из приглашенных
     var action = "rem_arrival";
     var answer = confirm('Виправити помилку?\n\tВи впевнені?');
     if(answer != true) return false;
-    $(this).removeClass(); 
+    $(this).removeClass();
     }
 else
     {//Без Shift добавить приглашение
@@ -293,12 +277,12 @@ this.blur();
 var val = $(this).attr("alt");
 
 //Какая клавиша нажата
-if (eventObject.ctrlKey) 
+if (eventObject.ctrlKey)
     {//Нажата Shift значит удалить из проглашенных
     var action = "rem_arrival";
     var answer = confirm('Виправити помилку?\n\tВи впевнені?');
     if(answer != true) return false;
-    $(this).removeClass(); 
+    $(this).removeClass();
     }
 else
     {//Без Shift добавить приглашение
@@ -374,8 +358,8 @@ else
 
 $("#selunivers").on('change',function(){
     var val = $(this).find("option:selected").val();
-    
-    $("#table_la").hide();  
+
+    $("#table_la").hide();
     $.ajax({
             type: "POST",
             url: "ajax.php",
@@ -383,15 +367,15 @@ $("#selunivers").on('change',function(){
             cache: false,
             success: function(txt){
                 $("#work").hide().html(txt).slideDown(400);
-                
+
                 }
         });
-        
+
 });//$("#selunivers").change
 
 
 
-     
+
 $("#table_la").hide();
 
 
@@ -399,7 +383,7 @@ $("#work").on('change','#selwork',function(){
         var id_w = $(this).find("option:selected").val();
         var id_u = $("#selunivers").find("option:selected").val();
         //console.log('Work:'+id_w+' Univer:'+id_u);
-        
+
         $.ajax({
             type: "POST",
             url: "ajax.php",
@@ -416,13 +400,13 @@ $("#work").on('change','#selwork',function(){
                 },
            error: function(){
                 console.log('Что-то не то');
-                }     
-        });        
+                }
+        });
 });
 
 
 
-//Запрос на удаление работы из реестра    
+//Запрос на удаление работы из реестра
 var removeWork = $('a[href*="delete_work"]');
 removeWork.click(function(){
         var operator = $('#operator span').text();
@@ -438,7 +422,7 @@ removeWork.click(function(){
         alert('Дія заборонена!');
         return false;
         }
-});    
+});
 
 
 
@@ -458,45 +442,39 @@ removeWork.click(function(){
         alert('Дія заборонена!');
         return false;
         }
-});    
-
-
-
-
-//Запрос на редактирование данных университета
-var editUniver = $('a[href*="univer_edit"]');
-editUniver.click(function(){
-        message='Перейти до редагування данних університету?'
-        answer=confirm(message);
-        if( answer ==true){return true;}
-        else {return false;}
 });
 
 
-//Запрос на отсоедиение автора или руководителя от работы
-//var unlink = $();
-    $('body').on('click','a[href*="unlink"]',function(){
-        var operator = $('#operator span').text();
-        //console.log(operator);
-        message=operator + '\n Відокремити автора/керівника від роботи?'
-        
-        answer= confirm(message);
-        
-        if( answer == true){return true;}
-        else {return false;}
-        
-});
+
+
+    //Запрос на редактирование данных университета
+    var editUniver = $('a[href*="univer_edit"]');
+    editUniver.on('click',function () {
+        const message = 'Перейти до редагування данних університету?';
+        return confirm(message);
+
+    });
+
+
+    /**
+     * Запрос на отсоедиение автора или руководителя от работы
+     */
+    $body.on('click', 'a[href*="work_unlink"]', function () {
+        const operator = $('#operator span').text();
+        const message = operator + '\n Відокремити автора/керівника від роботи?';
+        return confirm(message);
+    });
 
 
 
 
 
 //Приглашение ВНЗ для 1-го информационного приглашения
-var myChange = $('#tableInviteUnivers :checkbox[name=invitation]'); 
+var myChange = $('#tableInviteUnivers :checkbox[name=invitation]');
 myChange.click(
 function(){
-    var id_u = $(this).next('input').attr("value"); 
-    var invite = ($(this).is(':checked'))?"1":"0";   
+    var id_u = $(this).next('input').attr("value");
+    var invite = ($(this).is(':checked'))?"1":"0";
     console.log('Установлено '+ invite);
     $.ajax({
         type: "POST",
@@ -507,7 +485,7 @@ function(){
                 //console.log('Изменено приглашение вуза!\n'+txt);
             }
         });
-        
+
 });
 
 //Изменение в Области textarea
@@ -532,14 +510,14 @@ var textAC2 = $('#letter2leaders');
 
 
 //Приглашение работы
-var myChange = $('#tableInvitationSection :checkbox[name=invitation]'); 
+var myChange = $('#tableInvitationSection :checkbox[name=invitation]');
 myChange.click(
     function(){
     var id_w = $(this).parents('tr').children('td:first').text();
     var invit = ($(this).is(':checked'))?"1":"0";
     //console.log('Установлено'+ invit);
 
-    
+
     $.ajax({
             type: "POST",
             url: "ajax.php",
@@ -547,7 +525,7 @@ myChange.click(
             cache: false,
             success: function(txt){
                 //console.log('Изменено приглашение работы!\n'+txt);
-                               
+
                 }
         });
 });
@@ -564,7 +542,7 @@ myChangeSection.change(function(){
         cache: false,
         success: function(txt){
                 //console.log('Изменена секция работы!\n'+txt);
-                               
+
                 }
         });
 });//Окончание Изменение секции
@@ -584,7 +562,7 @@ myChangeRoom.change(function(){
         cache: false,
         success: function(txt){
                 //console.log('Изменена аудитория для секции работы!\n'+txt);
-                               
+
                 }
         });
 });//Окончание Изменение аудитории
@@ -615,7 +593,7 @@ myChangeRoom.change(function(){
 
             });//end ajax
                 //Зміна кнопки повернутися
-            $('input:button[name="return"]').attr('onclick',"window.location='action.php?action=view#id_w"+id_w+'\'');
+            $('input:button[name="return"]').attr('onclick',"window.location='action.php?action=all_view#id_w"+id_w+'\'');
             }
         });
 
@@ -639,20 +617,20 @@ var chkBoxDead = $('.editWork :checkbox[name=dead]');
 $(function(){
 if(chkBoxDead.is(':checked'))
         {
-          chkBoxInvitation.attr("disabled",true);  
+          chkBoxInvitation.attr("disabled",true);
         }
         else chkBoxInvitation.removeAttr("disabled");
 if(chkBoxInvitation.is(':checked'))
         {
-          chkBoxDead.attr("disabled",true);  
+          chkBoxDead.attr("disabled",true);
         }
-        else chkBoxDead.removeAttr("disabled");        
+        else chkBoxDead.removeAttr("disabled");
 });
 //Обработка по клику
 chkBoxDead.click(function(){
         if($(this).is(':checked'))
         {
-          chkBoxInvitation.attr("disabled",true);  
+          chkBoxInvitation.attr("disabled",true);
         }
         else chkBoxInvitation.removeAttr("disabled");
         console.log('Нашлась!');
@@ -660,12 +638,12 @@ chkBoxDead.click(function(){
 chkBoxInvitation.click(function(){
         if($(this).is(':checked'))
         {
-          chkBoxDead.attr("disabled",true);  
+          chkBoxDead.attr("disabled",true);
         }
         else chkBoxDead.removeAttr("disabled");
         //console.log('Нашлась!');
         });
-//Окончание Обработка переключателей на форме редактирования сведений о работе        
+//Окончание Обработка переключателей на форме редактирования сведений о работе
 
 //$('td').on('dblclick','a[name*="id_w"]',function(){
 //alert('1');location.href="http://siteaddress"
@@ -675,14 +653,15 @@ chkBoxInvitation.click(function(){
 //
 //
 
-var list_short = $('a[name^="id_u"]');
-$(function(){
-list_short.each(function(){
-//console.log($(this).text());
-var object =$(this).text();
-var id_u = $(this).attr("name");
-$('#barUnivers').append("<li><a href=#"+id_u+">"+object+"</a></li>");
-})
+    var list_short = $('a[name^="id_u"]');
+    $(function () {
+        const $barUnivers = $('#barUnivers');
+        list_short.each(function () {
+            //console.log($(this).text());
+            let object = $(this).text();
+            let id_u = $(this).attr("name");
+            $barUnivers.append("<li><a href=#" + id_u + ">" + object + "</a></li>");
+        })
 
 //$('#barUnivers').html("<ul>"+list_short.each(){function(){this.text().wrapInner("<li></li>");}}+"</ul>");
 //$('#barUnivers').append(list_short.wrapInner("<li></li>"));
@@ -696,7 +675,7 @@ $(function(){
     phone_list.each(function(){
         var phone = $(this).text();
         var operator =(phone !='відсутній')?phone[0]+phone[1]+phone[2]:"000";
-        
+
         switch(operator){/*МТС*/
             case '050':
             case '066':
@@ -706,13 +685,13 @@ $(function(){
             case '068':
             case '097':
             case '098':{$(this).addClass("mobo-kyivstar-16");}break;
-                  
+
             case '091':{
                     $(this).addClass("mobo-utel-16");
                   }break;
             case '092':{
                     $(this).addClass("mobo-peoplenet-16");
-                  }break;                  
+                  }break;
             case '093':
             case '063':{/*Лайф*/
                     $(this).addClass("mobo-life-16");
@@ -720,21 +699,21 @@ $(function(){
              case '094':{
                     $(this).addClass("mobo-intertelecom-16");
                   }break;
-                       
+
              case '096':{
                     $(this).addClass("mobo-kyivstar-16");
                   }break;
 
-             case '031': case '059':  case '061': case '062':  
-             case '032': case '033':  case '034': case '035':  case '036': 
+             case '031': case '059':  case '061': case '062':
+             case '032': case '033':  case '034': case '035':  case '036':
              case '037': case '038':  case '039': case '041':  case '042':
              case '043': case '044':  case '045': case '046':  case '047':
              case '048': case '049':  case '051': case '052':  case '053':
              case '054': case '055':  case '056': case '057':  case '058':
              case '064': case '065':  case '069':{$(this).addClass("mobo-home-16");}break;
-            default:{$(this).addClass("mobo-default-16");}break;      
+            default:{$(this).addClass("mobo-default-16");}break;
         }
-    
+
     }
     );
     }
@@ -742,7 +721,7 @@ $(function(){
 
 
 
-    
+
 }); // окончание загрузки документа
 
 
@@ -758,7 +737,7 @@ function selectWork(id_u,id_w){
             cache: false,
             success: function(txt){$("#work").html(txt);}
         });
-        
+
         $.ajax({
             type: "POST",
             url: "ajax.php",
@@ -767,16 +746,15 @@ function selectWork(id_u,id_w){
             success: function(txt){
                 //console.log('Получено \n'+txt);
                 txt = txt.split("!");
-               
+
                 $("#table_la").fadeIn(400);
                 $("#leader").html(txt[0]).fadeIn(400);
                 $("#leaders").html(txt[1]).fadeIn(400);
                 $("#autor").html(txt[2]).fadeIn(400);
                 $("#autors").html(txt[3]).fadeIn(400);
-                
+
                 }
-        });      
+        });
 }//function selectWork(id_u,id_w)*/
 
-/*-------------- Окончание файла ----------------------------*/          
-   
+/*-------------- Окончание файла ----------------------------*/
