@@ -457,7 +457,7 @@ function list_files($id_w, $typeoffile = "all")
                 //
                 $str2 = file_name_format($str_title, 30);
                 //
-                $str .= "<li><a href=\"{$row['file']}\" title=\"{$str_title}\" >{$str2}</a>&nbsp;"
+                $str .= "<li><a href=\"{$row['file']}\" class='link-file' title=\"{$str_title}\" >{$str2}</a>&nbsp;"
                     . "<a href=\"action.php?action=file_delete&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a></li>";
                 unset($str2);
             }
@@ -1212,6 +1212,7 @@ function AnalizeMysqlError($str){
  */
 function Go_page($page) {
     header('location: ' . $page);
+    exit();
 }
 
 /**

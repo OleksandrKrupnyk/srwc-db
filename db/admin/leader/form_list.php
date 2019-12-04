@@ -3,7 +3,8 @@
     <a href="action.php">Меню</a>
 </header>
 <header>
-    <a href="action.php?action=autor_list">Список авторів робіт</a> Список керівників робіт
+    <a href="action.php?action=autor_list">Список авторів</a>
+    <div>Список керівників</div>
 </header>
 <header>
     <a href="action.php?action=leader_add&FROM=<?= $FROM ?>">[+ керівник]</a>
