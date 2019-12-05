@@ -78,15 +78,6 @@ if ($session->get('access')) {
         <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
         <script type="text/javascript" src="../js/notify.js"></script>
         <script type="text/javascript" src="../js/menuscript.js"></script>
-        <script type="text/javascript" src="../js/admin.js" async></script>
-        <script>
-            $.notify.defaults({position: 'top center', elementPosition: 'top center'});
-            var _type = '<?=$_type?>'.toString();
-            var _msg = '<?=$_msg?>'.toString();
-            if (_msg !== '') {
-                $.notify(_msg, _type);
-            }
-        </script>
         <title>&quot;СНР 2018&quot;&copy;</title>
     </head>
     <body>
@@ -133,9 +124,18 @@ if ($session->get('access')) {
     ?>
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= $error_message; ?></div>
-    <div id="operator">Оператор :<span><?= $_SESSION['usr'] ?></span></div>
+    <div id="operator">Оператор :<span><?= $session->get('usr') ?></span></div>
     <autor>Krupnik&copy;</autor>
-
+    <script type="text/javascript" src="../js/admin.js" async></script>
+    <script>
+        $.notify.defaults({position: 'top center', elementPosition: 'top center'});
+        var _type = '<?=$_type?>'.toString();
+        var _msg = '<?=$_msg?>'.toString();
+        console.log(_type,_msg);
+        if (_msg !== '') {
+            $.notify(_msg, _type);
+        }
+    </script>
     </body>
 
     </html>

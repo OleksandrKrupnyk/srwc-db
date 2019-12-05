@@ -41,7 +41,7 @@ $users = (new UserRepository())->getDropDownList();
     <input type="text" name="Leader[name]" title="Ім'я" value="<?= $leader['name'] ?>" required>
     <input type="text" name="Leader[lname]" title="По-батькові" value="<?= $leader['lname'] ?>" required>
     <br><label>Рецензент:</label>
-    <?= HtmlHelper::checkbox('Leader[review]', 'Відмітка про прибуття на конференцію', $leader['review']); ?>
+    <?= HtmlHelper::checkbox('Leader[review]', 'Відмітка про прибуття на конференцію', $leader['review']) ?>
 
     <?php if ($_SESSION['usr'] === 'krupnik'): ?>
         <label>Логін користувача у системі для рецензування:</label>
@@ -61,12 +61,12 @@ $users = (new UserRepository())->getDropDownList();
         <?= Html::select('Leader[id_deg]', $leader['id_deg'], $degrees,
             ['required' => true, 'prompt' => 'Науковий ступінь...'])
         ?>
-        <?= HtmlHelper::checkbox('Leader[arrival]', 'Відмітка про прибуття на конференцію', $leader['arrival']); ?>
+        <?= HtmlHelper::checkbox('Leader[arrival]', 'Відмітка про прибуття на конференцію', $leader['arrival']) ?>
         <label for="leader-email">Електронна скринька:</label>
         <input id="leader-email" type="email" name="Leader[email]" autocomplete="off" value="<?= $leader['email'] ?>"
                placeholder="user@mail.ru">
         <?php
-        $phone_number = ($leader['phone'] == "") ? "відсутній" : $leader['phone'];
+        $phone_number = $leader['phone'] === '' ? 'відсутній' : $leader['phone'];
         echo "<span id=\"phone\">{$phone_number}</span>";
         ?>
         <label for="leader-phone">Телефон:</label>

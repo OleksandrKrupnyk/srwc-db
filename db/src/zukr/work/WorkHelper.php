@@ -168,16 +168,19 @@ class WorkHelper
     public static function authorList(array $autors, $href = false, $showPlace = false, $showId = false): string
     {
         $list = [];
+        $FROM = $_SESSION['from'] ?? '';
         foreach ($autors as $autor) {
             $item = '';
             $item .= ($href)
-                ? "<li title=\"Останні зміни: " . htmlspecialchars($autor['date']) . "\" >"
+                ? "<li title=\"Останні зміни: " . htmlspecialchars($autor['date']) . '" >'
                 : "<li title=" . PersonHelper::getFullName($autor) . '">';
             $item .= ($href)
-                ? '<a href=action.php?action=autor_edit&id_a=' . $autor['id'] . "&FROM={$FROM} title=\"Ред.:" . PersonHelper::getFullName($autor) . '">'
+                ? '<a href=action.php?action=autor_edit&id_a='
+                . $autor['id'] . '&FROM='
+                . $FROM . " title=\"Ред.:" . PersonHelper::getFullName($autor) . '">'
                 : '';
             $item .= PersonHelper::getShortName($autor);
-            $item .= ($showId) ? "<{$autor['id']}>" : '';
+            $item .= ($showId) ? '&lt;' . $autor['id'] . '&gt;' : '';
 
             if ($showPlace && ($autor['place'] !== 'D')) {
                 $item .= "(&nbsp;{$autor['place']}&nbsp;)";
@@ -188,7 +191,7 @@ class WorkHelper
             }
             $item .= ($href) ? '</a>' : '';
             if ($autor['arrival'] !== 1) {
-                $item .= ($href) ? ' <a href=action.php?action=work_unlink&id_a=' . $autor['id'] . "&id_w=" . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>' : '';
+                $item .= ($href) ? ' <a href=action.php?action=work_unlink&id_a=' . $autor['id'] . '&id_w=' . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>' : '';
             }
 
             $item .= '</li>';

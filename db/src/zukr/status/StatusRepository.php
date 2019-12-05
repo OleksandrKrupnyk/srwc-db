@@ -28,7 +28,6 @@ class StatusRepository extends AbstractRepository
 
     /**
      * @return array|\MysqliDb
-     * @throws \Exception
      */
     public function getDropDownList()
     {
@@ -39,11 +38,18 @@ class StatusRepository extends AbstractRepository
         return $this->statuses;
     }
 
-
+    /**
+     * @return array|\MysqliDb
+     */
     private function getStatusesFormDB()
     {
-        return Status::find()
-            ->map('id')
-            ->get(Status::getTableName(), null, ['id', 'statusfull']);
+        try {
+            return Status::find()
+                ->map('id')
+                ->get(Status::getTableName(), null, ['id', 'statusfull']);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
     }
 }

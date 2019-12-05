@@ -19,5 +19,13 @@ class ArrayHelper
         return $resultArray;
     }
 
+    /**
+     * @param $array
+     */
+    public static function asort(&$array)
+    {
+        $collator = new \Collator('uk_UA.UTF-8');
+        $collator->asort($array);
+    }
 
 }

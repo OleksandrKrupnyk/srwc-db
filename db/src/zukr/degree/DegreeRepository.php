@@ -25,7 +25,6 @@ class DegreeRepository extends AbstractRepository
 
     /**
      * @return array|\MysqliDb
-     * @throws \Exception
      */
     public function getDropDownList()
     {
@@ -36,11 +35,17 @@ class DegreeRepository extends AbstractRepository
         return $this->degrees;
     }
 
-
-    private function getDegreesFormDB()
+    /**
+     * @return array|\MysqliDb
+     */
+    private function getDegreesFormDB(): array
     {
-        return Degree::find()
-            ->map('id')
-            ->get(Degree::getTableName(), null, ['id', 'degreefull']);
+        try {
+            return Degree::find()
+                ->map('id')
+                ->get(Degree::getTableName(), null, ['id', 'degreefull']);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+        }
     }
 }

@@ -27,7 +27,6 @@ class UserRepository extends AbstractRepository
 
     /**
      * @return array|\MysqliDb
-     * @throws \Exception
      */
     public function getDropDownList()
     {
@@ -40,14 +39,17 @@ class UserRepository extends AbstractRepository
 
     /**
      * @return array|\MysqliDb
-     * @throws \Exception
      */
     private function getUsersFormDB()
     {
-        $users = User::find()
-            ->map('id')
-            ->where('usr', 'AJAX', '<>')
-            ->get(User::getTableName(), null, ['id', 'usr']);
+        try {
+            $users = User::find()
+                ->map('id')
+                ->where('usr', 'AJAX', '<>')
+                ->get(User::getTableName(), null, ['id', 'usr']);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+        }
 
         $users[0] = 'not set';
         ksort($users);

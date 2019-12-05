@@ -10,7 +10,7 @@ use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\univer\UniverRepository;
 
-$id_u = \filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
+$id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
 $univers = (new UniverRepository())->getInvitedDropList();
 ?>
 <!-- Форма добавления автора-->
@@ -41,7 +41,7 @@ $univers = (new UniverRepository())->getInvitedDropList();
     <input type="hidden" name="action" value="autor_add">
     <?php
     if (isset($_GET['id_w'])) {
-        $id_w = (int)\filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
+        $id_w = (int)filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
         echo "<input type='hidden' name='id_w' value='{$id_w}'>";
     }
     ?>

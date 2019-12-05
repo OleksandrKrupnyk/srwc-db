@@ -1,17 +1,13 @@
 <?php
 
-use zukr\base\Base;
+use zukr\base\helpers\ArrayHelper;
 use zukr\univer\UniverRepository;
 use zukr\work\WorkHelper;
 use zukr\workauthor\WorkAuthorRepository;
 
 $wh = WorkHelper::getInstance();
 $wa = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
-$univerList = Base::$app->cacheGetOrSet(
-    'univer_list',
-    (new UniverRepository())->getAllInvitedAsArray(),
-    600
-);
+$univerList = (new UniverRepository())->getDropList();
 $viewMenuitem = [
     0 => "<li class='active2'><a href='#'>Всі</a></li>\n",
     1 => "<li class='inactive'><a href='action.php?action=all_view&who=invitation'>Запрошені</a></li>\n",
@@ -75,7 +71,6 @@ if (isset($_GET['who'])) {
 }
 
 $count = count($allWorks);
-ob_start(); //включение буфера вывода
 ?>
 <!-- Просмотр  таблици работ -->
 <header><a href="action.php">Меню</a></header>
@@ -94,7 +89,7 @@ ob_start(); //включение буфера вывода
             <th class="title">Рецензія</th>
             <th>Керівникі</th>
             <th>Автори
-                <номер>(місце)[приїхав]
+                &lt;номер&gt;(місце)[приїхав]
             </th>
         </tr>
 
@@ -107,7 +102,7 @@ ob_start(); //включение буфера вывода
                 echo print_work_row($work, true, $_SESSION['id']);
             }
         } else {
-            $allWorks = \zukr\base\helpers\ArrayHelper::group($allWorks, 'id_u');
+            $allWorks = ArrayHelper::group($allWorks, 'id_u');
             foreach ($allWorks as $id_u => $works) {
                 $univer = $univerList[$id_u];
                 echo print_work_univer($univer['univerfull'], $univer['id'], $univer['univer'], true);
@@ -121,6 +116,4 @@ ob_start(); //включение буфера вывода
     </table>
 </div>
 <div id="barUnivers"></div>
-<?= ob_get_clean(); // вывод содержимого буффера на экран
-?>
 <!-- Окончание Просмотр базы -->

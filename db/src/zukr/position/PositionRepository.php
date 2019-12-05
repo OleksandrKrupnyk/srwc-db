@@ -25,7 +25,6 @@ class PositionRepository extends AbstractRepository
 
     /**
      * @return array|\MysqliDb
-     * @throws \Exception
      */
     public function getDropDownList()
     {
@@ -36,12 +35,18 @@ class PositionRepository extends AbstractRepository
         return $this->positions;
     }
 
-
+    /**
+     * @return array|\MysqliDb
+     */
     private function getPositionsFormDB()
     {
-
-        return Position::find()
-            ->map('id')
-            ->get(Position::getTableName(), null, ['id', "position"]);
+        try {
+            return Position::find()
+                ->map('id')
+                ->get(Position::getTableName(), null, ['id', "position"]);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
     }
 }

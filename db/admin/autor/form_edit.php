@@ -33,13 +33,13 @@ $univers = (new UniverRepository())->getInvitedDropList();
     <input type="text" name="Author[suname]" title="Прізвище" value="<?= $author['suname'] ?>" required>
     <input type="text" name="Author[name]" title="Ім'я" value="<?= $author['name'] ?>" required>
     <input type="text" name="Author[lname]" title="По-батькові" value="<?= $author['lname'] ?>">
-    <label>Місце:</label><?= ($author['arrival'] == 1)
+    <label>Місце:</label><?= $author['arrival'] === '1'
         ? HtmlHelper::place(['name' => 'Author[place]', 'value' => $author['place']])
-        : 'Не брав участі';
+        : 'Не брав участі'
     ?><br>
     <fieldset>
         <legend>Данні автора</legend>
-        <?= HtmlHelper::course(['name' => 'Author[curse]', 'value' => $author['curse']]); ?>
+        <?= HtmlHelper::course(['name' => 'Author[curse]', 'value' => $author['curse']]) ?>
         <label>Електронна скринька:</label>
         <input type="email" name="Author[email]" autocomplete="off" title="Наприклад:user@mail.ru"
                value="<?= $author['email'] ?>">
@@ -47,14 +47,14 @@ $univers = (new UniverRepository())->getInvitedDropList();
         <input type="tel" pattern="\d{10}" size="10" maxlength="10" name="Author[phone]" title="Наприклад:0985622012"
                value="<?= $author['phone'] ?>" placeholder="Номер телефону">
         <?php
-        $phone_number = ($author['phone'] == '') ? 'відсутній' : $author['phone'];
+        $phone_number = $author['phone'] === '' ? 'відсутній' : $author['phone'];
         echo "<span id='phone'>{$phone_number}</span>";
         ?>
         <br>
         <label>Прибув?</label>
-        <?= HtmlHelper::checkbox('Author[arrival]', 'Відмітка про прибуття на конференцію', $author['arrival']); ?>
+        <?= HtmlHelper::checkbox('Author[arrival]', 'Відмітка про прибуття на конференцію', $author['arrival']) ?>
         <label>Не друкувати
-            бейджик</label><?= HtmlHelper::checkbox('Author[bprint]', 'Заборона на друк бейджика', $author['bprint']); ?>
+            бейджик</label><?= HtmlHelper::checkbox('Author[bprint]', 'Заборона на друк бейджика', $author['bprint']) ?>
     </fieldset>
     <br>
 
