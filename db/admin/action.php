@@ -125,7 +125,7 @@ if ($session->get('access')) {
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= $error_message; ?></div>
     <div id="operator">Оператор :<span><?= $session->get('usr') ?></span></div>
-    <autor>Krupnik&copy;</autor>
+    <autor class="autor">Krupnik&copy;</autor>
     <script type="text/javascript" src="../js/admin.js" async></script>
     <script>
         $.notify.defaults({position: 'top center', elementPosition: 'top center'});

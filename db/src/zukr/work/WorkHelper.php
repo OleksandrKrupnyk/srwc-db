@@ -6,6 +6,7 @@ namespace zukr\work;
 
 use zukr\base\Base;
 use zukr\base\helpers\PersonHelper;
+use zukr\base\html\Html;
 use zukr\section\SectionRepository;
 
 /**
@@ -171,30 +172,76 @@ class WorkHelper
         $FROM = $_SESSION['from'] ?? '';
         foreach ($autors as $autor) {
             $item = '';
-            $item .= ($href)
-                ? "<li title=\"Останні зміни: " . htmlspecialchars($autor['date']) . '" >'
-                : "<li title=" . PersonHelper::getFullName($autor) . '">';
-            $item .= ($href)
+            $item .= $href
+                ? '<li title="Останні зміни: ' . htmlspecialchars($autor['date']) . '" >'
+                : '<li title=' . PersonHelper::getFullName($autor) . '">';
+            $item .= $href
                 ? '<a href=action.php?action=autor_edit&id_a='
                 . $autor['id'] . '&FROM='
                 . $FROM . " title=\"Ред.:" . PersonHelper::getFullName($autor) . '">'
                 : '';
             $item .= PersonHelper::getShortName($autor);
-            $item .= ($showId) ? '&lt;' . $autor['id'] . '&gt;' : '';
+            $item .= $showId ? '&lt;' . $autor['id'] . '&gt;' : '';
 
             if ($showPlace && ($autor['place'] !== 'D')) {
-                $item .= "(&nbsp;{$autor['place']}&nbsp;)";
+                $item .= '(&nbsp;' . $autor['place'] . '&nbsp;)';
             }
 
             if ($autor['arrival'] == 1) {
                 $item .= '<span title="Прибув на конференцію">&nbsp;[&radic;]&nbsp;</span>';
             }
-            $item .= ($href) ? '</a>' : '';
+            $item .= $href ? '</a>' : '';
             if ($autor['arrival'] !== 1) {
-                $item .= ($href) ? ' <a href=action.php?action=work_unlink&id_a=' . $autor['id'] . '&id_w=' . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>' : '';
+                $item .= $href ? ' <a href=action.php?action=work_unlink&id_a=' . $autor['id'] . '&id_w=' . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>' : '';
             }
 
             $item .= '</li>';
+            $list [] = $item;
+        }
+        return '<ol>' . implode('', $list) . '</ol>';
+    }
+
+    /**
+     * @param array $leaders
+     * @param bool  $href
+     * @param bool  $showPlace
+     * @param bool  $showId
+     * @return string
+     */
+    public static function leaderList(array $leaders, bool $href = false, bool $showId = false): string
+    {
+        $list = [];
+        $FROM = $_SESSION['from'] ?? '';
+
+        foreach ($leaders as $leader) {
+            $item = '';
+            $item .= $href
+                ? '<li title="Останні зміни: ' . htmlspecialchars($leader['date']) . '" >'
+                : '<li title="' . PersonHelper::getFullName($leader) . '">';
+
+            $item .= $href
+                ? '<a href=action.php?action=leader_edit&id_l=' . $leader['id'] . '&FROM=' . $FROM . ' title="Ред.:' . PersonHelper::getFullName($leader) . '">'
+                : '';
+            $item .= PersonHelper::getShortName($leader);
+            $item .= $showId ? '<' . $leader['id'] . '>' : '';
+
+
+            if ($leader['arrival'] === '1') {
+                $item .= '<span title="Прибув на конференцію">&nbsp;[&radic;]&nbsp;</span>';
+            }
+            $item .= $href ? '</a>' : '';
+
+            if ($leader['arrival'] !== '1') {
+                $item .= $href
+                    ? Html::tag('a', '<img src="../images/unlink.png" alt="unlink">',
+                        [
+                            'href' => 'action.php?action=work_unlink&id_l=' . $leader['id'] . "&id_w=" . $leader['id_w'],
+                            'title' => 'Відокремити від роботи',
+                            'class' => 'unlink_person'
+                        ])
+                    : '';
+            }
+            $item .= "</li>\n";
             $list [] = $item;
         }
         return '<ol>' . implode('', $list) . '</ol>';

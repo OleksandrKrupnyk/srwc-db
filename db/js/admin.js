@@ -2,8 +2,6 @@
 $(document).ready(function() {
 
     const $body =  $('body');
-    $body.css("display", "none");
-    $body.fadeOut(200).fadeIn(200);
     $('#columnAutors').css("display", "none");
     $('#columnLeaders').css("display", "none");
 //$('.loginForm').css("display","none");
@@ -275,20 +273,20 @@ $('#selectLeaders').on('dblclick','li',function(eventObject){
 eventObject.preventDefault();
 this.blur();
 var val = $(this).attr("alt");
-
+    var action, answer;
 //Какая клавиша нажата
 if (eventObject.ctrlKey)
     {//Нажата Shift значит удалить из проглашенных
-    var action = "rem_arrival";
-    var answer = confirm('Виправити помилку?\n\tВи впевнені?');
-    if(answer != true) return false;
+    action = "rem_arrival";
+    answer = confirm('Виправити помилку?\n\tВи впевнені?');
+    if(answer !== true) return false;
     $(this).removeClass();
     }
 else
     {//Без Shift добавить приглашение
-     var answer = confirm('Відмитити приїзд на конференцію?\n\tВи впевнені?');
-    if(answer != true) return false;
-    var action = "add_arrival";
+     answer = confirm('Відмитити приїзд на конференцію?\n\tВи впевнені?');
+    if(answer !== true) return false;
+    action = "add_arrival";
     $(this).addClass("option-arrival");
     }
     $.ajax({
@@ -405,44 +403,33 @@ $("#work").on('change','#selwork',function(){
 });
 
 
-
-//Запрос на удаление работы из реестра
-var removeWork = $('a[href*="delete_work"]');
-removeWork.click(function(){
-        var operator = $('#operator span').text();
-        //console.log(operator);
-        if(operator == 'krupnik'){
-        message=operator + '\n Ви впевнені що хочете видалити роботу?';
-        answerWork=confirm(message);
-        if( answerWork ==true){return true;}
-        else {return false;}
+    //Запрос на удаление работы из реестра
+    var removeWork = $('a[href*="delete_work"]');
+    removeWork.on('click',function () {
+        if ($('#operator span').text().toString() == 'krupnik') {
+            answerWork = confirm('Ви впевнені що хочете видалити роботу?');
+            if (answerWork == true) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            alert('Дія заборонена!');
+            return false;
         }
-        else
-        {
-        alert('Дія заборонена!');
-        return false;
-        }
-});
+    });
 
 
-
-//удаление файла работы
-var removeWork = $('a[href*="delete_file"]');
-removeWork.click(function(){
-        var operator = $('#operator span').text();
-        //console.log(operator);
-        if(operator == 'krupnik'){
-        message=operator + '\n Ви впевнені що хочете видалити файл роботи?';
-        answerWork=confirm(message);
-        if( answerWork ==true){return true;}
-        else {return false;}
+    //удаление файла работы
+    const delete_file = $('a[href*="delete_file"]');
+    delete_file.on('click',function () {
+        if ($('#operator span').text().toString() === 'krupnik') {
+            return confirm('Ви впевнені що хочете видалити файл роботи?');
+        } else {
+            alert('Дія заборонена!');
+            return false;
         }
-        else
-        {
-        alert('Дія заборонена!');
-        return false;
-        }
-});
+    });
 
 
 

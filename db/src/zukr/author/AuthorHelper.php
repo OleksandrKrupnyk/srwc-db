@@ -7,6 +7,13 @@ namespace zukr\author;
 use zukr\base\helpers\ArrayHelper;
 use zukr\workauthor\WorkAuthorRepository;
 
+/**
+ * Class AuthorHelper
+ *
+ * @package      zukr\author
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class AuthorHelper
 {
     /** @var AuthorHelper */
@@ -38,6 +45,10 @@ class AuthorHelper
 
     }
 
+    /**
+     * @param $workId
+     * @return array|mixed
+     */
     public function getAutorsByWorkId($workId)
     {
         if ($this->autorsOfWork == null) {
@@ -47,6 +58,9 @@ class AuthorHelper
         return $this->autorsOfWork[$workId] ?? [];
     }
 
+    /**
+     * @return array|\MysqliDb
+     */
     protected function getWorksAutors()
     {
         if ($this->worksAutors === null) {

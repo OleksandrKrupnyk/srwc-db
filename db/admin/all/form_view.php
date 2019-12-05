@@ -3,10 +3,9 @@
 use zukr\base\helpers\ArrayHelper;
 use zukr\univer\UniverRepository;
 use zukr\work\WorkHelper;
-use zukr\workauthor\WorkAuthorRepository;
 
 $wh = WorkHelper::getInstance();
-$wa = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
+//$wa = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
 $univerList = (new UniverRepository())->getDropList();
 $viewMenuitem = [
     0 => "<li class='active2'><a href='#'>Всі</a></li>\n",

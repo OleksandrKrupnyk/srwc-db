@@ -6,6 +6,7 @@
  */
 
 use zukr\author\AuthorHelper;
+use zukr\leader\LeaderHelper;
 use zukr\work\WorkHelper;
 
 /**
@@ -350,6 +351,7 @@ function list_fio($table, $pole, $id_u, $size, $selecttag = true)
 }
 /**
  * Возвращает список руководителей с выбором включать в лист приглашения
+ *
  * @param Integer $id_u
  * @param Boolean $check
  */
@@ -385,56 +387,53 @@ function list_leaders_invite($id_u, $check = true)
 }
 
 
-/** * ********************************************************************************
-  * Данные все данные по 1 полю в таблице
+/**
+ * Данные все данные по 1 полю в таблице
+ *
  * @param string $table
  * @param string $field
  * @param string $value
- * @param bool $u Bool
+ * @param bool   $u Bool
  * @return array
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function fullinfo($table, $field, $value, $u = false)
+ */
+function fullinfo($table, $field, $value)
 {
     global $link;
     $query = "SELECT * FROM `{$table}` WHERE `{$field }`='{$value}'";
-    $query .= ($u) ? ' ORDER BY  `univerfull` ASC' : '';
-    //echo $query."<br>";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
     or die("Помилка запиту функція fullinfo: " . mysqli_error($link));
-    $row = mysqli_fetch_array($result);
-    return $row;
+    return mysqli_fetch_array($result);
 }
 
-/** * ********************************************************************************
+/**
  * список файлов работы
+ *
  * @param int $id_w
  * @param string $typeoffile
  * @return String
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function list_files($id_w, $typeoffile = "all")
+ */
+function list_files($id_w, $typeoffile = 'all')
 {
     global $link;
-    if ($id_w != "") {
+    if ($id_w != '') {
         $query = "SELECT * FROM `files` WHERE `id_w`='{$id_w}'";
         switch ($typeoffile) {
-            case "0":
+            case '0':
                 {
                     $query .= " AND `typeoffile` = '0'";
                 }
                 break;
-            case "1":
+            case '1':
                 {
                     $query .= " AND `typeoffile` = '1'";
                 }
                 break;
-            case "2":
+            case '2':
                 {
                     $query .= " AND `typeoffile` = '2'";
                 }
                 break;
-            case "all" :
+            case 'all' :
             default:
                 {
                 }
@@ -470,20 +469,20 @@ function list_files($id_w, $typeoffile = "all")
     return $str;
 }
 
-/** * ********************************************************************************
- *
+/**
  * Выдает количество авторов (руководителей) у работы
+ *
  * @param string $table Table in MySQL
- * @param int $id_w id Work
+ * @param int    $id_w  id Work
  * @return Integer
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 function count_la($table, $id_w)
 {
     global $link;
-    $query = "SELECT Count(id_w) " . "FROM `" . $table . "`\n"
+    $query = "SELECT Count(id_w) FROM `" . $table . "`\n"
         . "WHERE `id_w`='" . $id_w . "'";
     $result = mysqli_query($link, $query)
-    or die("Помилка запиту функція count_la: " . mysqli_error($link));
+    or die('Помилка запиту функція count_la: ' . mysqli_error($link));
     $row = mysqli_fetch_array($result);
     return $row[0];
 }
@@ -502,70 +501,15 @@ function count_review($id_w){
     return $row[0];
 }
 
-
-/** * ********************************************************************************
- *
- * Возвращает строку htm список руководителей или авторов разделенных знаком переноса
- * $href == true выделяет ссылками на редактирование
- * @param int $id_w Number of id
- * @param string $table Char "l" or "a"
- * @param bool $href Bool If "true" See links
- * @param bool $showPlace If "true" See place
- * @param bool $showId If "true" See id of person
- * @return String
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = false,$showId = false)
-{
-    global $link;
-    global $FROM;
-
-    $query = ($id_w != "") ? "SELECT * FROM `{$table}` WHERE id_w='{$id_w}'" : "SELECT * FROM `{$table}` ORDER BY `suname` ASC";
-    //echo $query;
-    //"SELECT * FROM `".$table."` ORDER BY `suname` ASC"
-    $sub_table = ($table == "wl") ? "leaders" : "autors";
-
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die("Invalid query функція list_leader_or_autors_str: " . mysqli_error($link));
-    // Попытка обработки строки ошибки когда база пуста
-    //if('order clause'==mysqli_error($link)) return 0;
-    $sub_row_str = "<ol>";
-    while ($row = mysqli_fetch_array($result)) {
-        $sub_row = fullinfo($sub_table, "id", $row[2]);
-        $sub_row_str .= ($href)
-            ? "<li title=\"Останні зміни: " . htmlspecialchars($sub_row['date']) . "\" >"
-            : "<li title=\"{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">";
-        $sub_row_str .= ($href)
-            ? "<a href=action.php?action=" . rtrim($sub_table, "s") . "_edit&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&FROM={$FROM} title=\"Ред.:{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">"
-            : "";
-        $sub_row_str .= $sub_row['suname'] . " " . mb_substr($sub_row['name'], 0, 1, 'UTF-8') . "." . mb_substr($sub_row['lname'], 0, 1, 'UTF-8') . ".";
-        $sub_row_str .= ($showId) ? "<{$sub_row['id']}>":"";
-        if($showPlace && ($sub_row['place'] <> 'D'))
-            $sub_row_str .= "(&nbsp;{$sub_row['place']}&nbsp;)";
-
-        if($sub_row['arrival'] == 1) {
-            $sub_row_str .= "<span title=\"Прибув на конференцію\">&nbsp;[&radic;]&nbsp;</span>";
-            }
-        $sub_row_str .= ($href) ? "</a>" : "";
-        if($sub_row['arrival'] <> 1) {
-            $sub_row_str .= ($href) ? " <a href=action.php?action=work_unlink&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&id_w=" . $id_w . " title=\"Відокремити від роботи\"><img src=\"../images/unlink.png\"></a>" : "";
-        }
-        $sub_row_str .= "</li>\n";
-    }
-    $sub_row_str .= "</ol>\n";
-    return $sub_row_str;
- }
-
 /**
 * @param string $table
 */
 function list_emails($table){
     global $link;
-    $query = "";
-    $get_text = "";
+    $query = '';
+    $get_text = '';
     //Формируем запрос на получение таблицы
-    if($table == "autors"){//авторы работ
+    if($table === 'autors'){//авторы работ
         $query= "SELECT works.title,autors.id, autors.suname, autors.name,autors.lname,autors.hash,autors.email,autors.email_recive,autors.email_date
                  FROM works
                  LEFT JOIN wa ON wa.id_w = works.id
@@ -791,26 +735,30 @@ function print_work_row($row, $href = false,$loginId = "0")
     $ah = AuthorHelper::getInstance();
     $autors = $ah->getAutorsByWorkId($row['id']);
 
-    $title = ($href) ? "<a href=action.php?action=work_edit&id_w=" . $row['id'] . " title=\"Редагувати роботу\">" : "";
-    $title .= ($row['arrival'] == '1') ? $row['title'] . "&nbsp;[&radic;]&nbsp;" : $row['title'];
-    $title .= ($href) ? "</a>\n" : "";
-    $invitationClass = ($row['invitation'] == 1) ? "class=\"invitateWork\"" : "";
-    $tesis = ($row['tesis'] == 0) ? "" : "<strong>З тезами</strong>\n";
-    $list_leaders = list_leader_or_autors_str($row['id'], "wl", $href, false, false);
+    $lh = LeaderHelper::getInstance();
+    $leaders = $lh->getLeadersByWorkId($row['id']);
+
+    $title = $href ? '<a href=action.php?action=work_edit&id_w=' . $row['id'] . ' title="Редагувати роботу">' : '';
+    $title .= $row['arrival'] == '1' ? $row['title'] . "&nbsp;[&radic;]&nbsp;" : $row['title'];
+    $title .= !$href ? "</a>\n" : '';
+    $invitationClass = $row['invitation'] == 1 ? 'class="invitateWork"' : '';
+    $tesis = $row['tesis'] == 0 ? '' : "<strong>З тезами</strong>\n";
+
+    $list_leaders = WorkHelper::leaderList($leaders,$href,false);
 
     $list_autors = WorkHelper::authorList($autors,$href, true, true);
 
     $date = $row['date'];
 
-    $delete_work = "";
-    $introduction = "";
-    $link_work = "";
-    $moto = "";
-    $files = "";
-    $comments = "";
-    $public = "";
-    $rowspan = "2";
-    $link_add_review = "";
+    $delete_work = '';
+    $introduction = '';
+    $link_work = '';
+    $moto = '';
+    $files = '';
+    $comments = '';
+    $public = '';
+    $rowspan = '2';
+    $link_add_review = '';
     $reviews = list_reviews_for_one_work($row['id'],false);
     if ($href == true) {//если установлено показывать ссылки
         $link_add_review = (count_review($row['id']) < 2) ? "<a href=\"action.php?action=review_add&id_w={$row['id']}&id_u={$row['id_u']}\">додати рецензію</a>" : "";
@@ -877,64 +825,62 @@ function print_row_table_section_select($row, $href = false)
     $id_title .= $row['id'];
     $id_title .= ($href) ? "</a>\n" : "";
     echo "<tr><td>{$id_title}</td><td>{$row['title']} ({$row['univer']})<strong>[{$row['balls']}]</strong><{$row['countReview']}></td>";
-    echo "<td>";
-    chk_box("invitation", "Відмітити для запрошення", $row['invitation']);
+    echo '<td>';
+    chk_box('invitation', 'Відмітити для запрошення', $row['invitation']);
     echo "</td>";
     echo "<td>";
     list_("sections", "section", $row['id_sec'], 1, "Секція...");
-    echo "</td></tr>";
+    echo '</td></tr>';
 }
 
-/** * ********************************************************************************
+/**
+ * Строка таблици для списка рассылок
  *
- * cтрока таблици для списка рассылок
- * @param int $row_number
- * @param array$row
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function print_row_table_list_adress2($row_number, $row)
+ * @param int   $row_number
+ * @param array $row
+ */
+function table_row_list_adress2($row_number, array $row): string
 {
-    echo "<tr><td>" . $row_number . "</td>";
-    echo "<td>" . $row['univerfull'] . "</td>";
-    echo "<td>" . $row['adress'] . " " . $row['zipcode'] . "</td>";
-    echo "</tr>\n";
+    return '<tr><td>' . $row_number . '</td>'
+        . '<td>' . $row['univerfull'] . '</td>'
+        . '<td>' . $row['adress'] . ' ' . $row['zipcode'] . '</td>'
+        . "</tr>\n";
 }
 
-/** * ********************************************************************************
- *
+/**
  * Блок адресса на конверте
  *
  * @param array $row
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function print_adress2($row)
+ */
+function print_adress2(array $row): string
 {
-    echo "<strong><ins>" . $row['univerfull'] . "</ins></strong><br>\n<em>" . $row['adress'] . "</em><br>\n<strong>" . $row['zipcode'] . "</strong>";
+    return "<strong><ins>" . $row['univerfull'] . "</ins></strong><br>\n<em>" . $row['adress'] . "</em><br>\n<strong>" . $row['zipcode'] . '</strong>';
 }
 
-/** * ********************************************************************************
- *
+/**
  * Формирует окончание предложения для письма во 2-м инф. приглашении
  *  В зависомости от количества работ изменяет окончание предложения
-  * @param int $col_w
+ *
+ * @param int $col_w
  * @return string
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+*/
 function works_declension($col_w)
 {
-    if ($col_w == 1 || $col_w == 21 || $col_w == 31):
-        $str = "роботу";
-    elseif ($col_w == 2 || $col_w == 3 || $col_w == 4 || $col_w == 22 || $col_w == 23 || $col_w == 24 || $col_w == 32 || $col_w == 263):
-        $str = "роботи";
+    if (in_array($col_w, [1, 21, 31])):
+        $str = 'роботу';
+    elseif (in_array($col_w, [2, 3, 4, 22, 23, 24, 32, 263])):
+        $str = 'роботи';
     else:
-        $str = "робіт";
+        $str = 'робіт';
     endif;
 
-    return $col_w . "&nbsp;" . $str;
+    return $col_w . '&nbsp;' . $str;
 }
 
-/** * ********************************************************************************
- *
+/**
  * Список всех имен в базе включая авторов и руководителей
  * @param $pole_id
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 function print_datalist_name($pole_id)
 {
     global $link;
@@ -952,15 +898,17 @@ function print_datalist_name($pole_id)
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
-    or die("Помилка запиту функція print_datalist_name: " . mysqli_error($link));
+    or die('Помилка запиту функція print_datalist_name: ' . mysqli_error($link));
     echo "<datalist id=\"" . $pole_id . "\">\n";
     while ($row = mysqli_fetch_array($result)) {
         echo "<option>" . $row[$pole_id] . "</option>\n";
     }
     echo "</datalist>\n";
 }
-/*
- * */
+
+/**
+ * @param bool $showAllInfo
+ */
 function listLeadersWhoArrival($showAllInfo = false){
     global $link;
     $query = "SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as  fio FROM leaders WHERE arrival='1' ORDER BY fio ASC" ;
@@ -980,7 +928,7 @@ function listLeadersWhoArrival($showAllInfo = false){
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
-    or die("Помилка запиту функція listLeadersWhoArrival: " . mysqli_error($link));
+    or die('Помилка запиту функція listLeadersWhoArrival: ' . mysqli_error($link));
     echo "<h3> </h3>";
     echo "<details><summary>Список супроводжуючих/керівників, що прибули для участі у роботі журі {$text}</summary>";
     while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
@@ -989,16 +937,16 @@ function listLeadersWhoArrival($showAllInfo = false){
     }
     echo "</details>";
     }
-/** * ********************************************************************************
- *
+
+/**
  * Список руководителей или авторов без нумерации Используцется при формировании программы
  *  Фамилия и инициалы
  *
- * @param $id_w
- * @param $who
+ * @param      $id_w
+ * @param      $who
  * @param bool $showId
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function short_list_leader_or_autors_str($id_w, $who,$showId = false)
+ */
+function short_list_leader_or_autors_str($id_w, $who, $showId = false)
 {
     global $link;
     $query = ($who == 'wa') ?
@@ -1019,18 +967,18 @@ function short_list_leader_or_autors_str($id_w, $who,$showId = false)
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
 
     $result = mysqli_query($link, $query)
-    or die("Помилка запиту функція short_list_leader_or_autors_str: " . mysqli_error($link));
+    or die('Помилка запиту функція short_list_leader_or_autors_str: ' . mysqli_error($link));
     while ($row = mysqli_fetch_array($result)) {
         //print_r($row);
-        if ($who == 'wa') {
+        if ($who === 'wa') {
             $str = $row['fio'];
-            $str .= ($showId == true)?"<span id=\"id\" >(№".$row['id'].")</span>":"";
+            $str .= ($showId == true) ? "<span id=\"id\" >(№" . $row['id'] . ")</span>" : "";
         } else {
-            $str = "";
-            if ($row['degree'] != "-немає-") {
+            $str = '';
+            if ($row['degree'] !== '-немає-') {
                 $str .= $row['degree'];
-                if ($row['status'] != "-немає-") {
-                    $str .= ", " . $row['status'] . ",<br/> " . $row['fio'];
+                if ($row['status'] !== '-немає-') {
+                    $str .= ', ' . $row['status'] . ",<br/> " . $row['fio'];
                 } else {
                     $str .= ",<br/> " . $row['fio'];
                 }
@@ -1043,11 +991,11 @@ function short_list_leader_or_autors_str($id_w, $who,$showId = false)
     }
 }
 
-/** * ********************************************************************************
- *
+/**
  *  Список университетов которые приглашены на конкурс
+ *
  * @param int $size
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 function list_univers_reseption($size)
 {
     global $link;
@@ -1055,7 +1003,7 @@ function list_univers_reseption($size)
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
-    or die("Invalid query функція list_univers_reseption: " . mysqli_error($link));
+    or die('Invalid query функція list_univers_reseption: ' . mysqli_error($link));
     echo "<select id=\"univer_reseption\" name=\"id_u\" size=\"$size\"><option value=\"-1\" disabled selected>Університет...</option>\n";
     while ($row = mysqli_fetch_array($result)) {
         echo "<option value=" . $row['id'] . ">" . $row['univer'] . " (" . $row['univerfull'] . ")</option>\n";
@@ -1065,49 +1013,39 @@ function list_univers_reseption($size)
 
 /**
  * Функция выводит только первых $num букв названия файла если длинна имени файла больше
+ *
  * @param string $str
- * @param int $num
+ * @param int    $num
  * @return string
- * * */
+ * */
 function file_name_format($str, $num)
 {
-    //определяем длинну имени файла
-    $len = strlen($str);
-    if (($len - 4) < 15)
-        return substr($str, 0, $len - 4);
-    //строка без расширения
-    $str = substr($str, 0, $len - 8);
-    $len = $len - 8;
-    if ($len > $num) {
-        $str = substr($str, 0, $num * 2) . "...";
-    }
-    return $str;
+    return mb_substr($str, 0, $num) . '...';
 }
 
-/** * ********************************************************************************
- *
+/**
  *  Функция возвращает строку с левой стороны от строки
+ *
  * @param string $str
- * @param int $num
+ * @param int    $num
  * @return string
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 function left($str, $num)
 {
-    $strout = substr($str, 0, $num * 2);
-    return $strout;
+    return mb_substr($str, 0, $num);
 }
 
-/** * ********************************************************************************
- *
+/**
  *  Функция возвращает строку с правой стороны от строки
+ *
  * @param string $str
- * @param int $num
+ * @param int    $num
  * @return string
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 function right($str, $num)
 {
     $len = strlen($str);
-    return substr($str, $len - $num * 2, $len);
+    return mb_substr($str, $len - $num, $len);
 }
 
 /**
@@ -1130,7 +1068,7 @@ function select_room($room, $rooms = ['7-43', '7-53', '7-54'])
 /**
  * Функция выводит конструкцию <select></select> для выбора должности руководителя ВУЗ
  * @param String $posada
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 function select_positionVNZ($posada)
 {
     $str = "<select size='1' name='posada' title='Посада керівника ВНЗ'>\n";
@@ -1160,15 +1098,15 @@ function diplom_place($place)
 {
     $str = 'ПУСТИЙ РЯДОК';
     switch ($place) {
-        case "I": {
+        case 'I': {
             $str = 'ПЕРШОГО СТУПЕНЯ';
         }
             break;
-        case "II": {
+        case 'II': {
             $str = 'ДРУГОГО СТУПЕНЯ';
         }
             break;
-        case "III": {
+        case 'III': {
             $str = 'ТРЕТЬОГО СТУПЕНЯ';
         }
             break;
@@ -1178,16 +1116,15 @@ function diplom_place($place)
 
 /**
  *  Возвращает строку студент (студентка в звсисимости от окончания отчества)
+ *
  * @param string $O
  * @return string
  */
 function student_ka($O)
 {
-    if (right($O, 1) === 'ч')
-        $str = 'студент';
-    else
-        $str = 'студентка';
-    return $str;
+    return right($O, 1) === 'ч'
+        ? 'студент'
+        : 'студентка';
 }
 
 /**
@@ -1201,7 +1138,7 @@ function AnalizeMysqlError($str){
     //Разбиваем строку на строки по разделителю
     $array_str = explode(' ',$str);
     switch($array_str[0]){
-        case "Duplicate" : {$result="Ошибка! Дублирование данных :".$str."\n"; }break;
+        case 'Duplicate' : {$result="Ошибка! Дублирование данных :".$str."\n"; }break;
         default: {$result=$str."\n";} break;
     }
     return $result;
@@ -1242,14 +1179,14 @@ function execute_get_action($action_string)
 {
     if(is_string($action_string))
     {
-         $action = \explode('_', $action_string);
+         $action = explode('_', $action_string);
         if (count($action) === 2){
             $directory = $action[0];
             $path[] = $directory;
-            $fileName = "form_{$action[1]}.php";
+            $fileName = 'form_' . $action[1] . '.php';
             $path[] = $fileName;
             $file = implode(DIRECTORY_SEPARATOR, $path);
-            if(\is_file($file)){
+            if(is_file($file)){
                 include_once $file;
             }
         }
@@ -1263,14 +1200,14 @@ function execute_post_action($action_string)
 {
     if(is_string($action_string))
     {
-        $action = \explode('_', $action_string);
+        $action = explode('_', $action_string);
         if (count($action) === 2){
             $directory = $action[0];
             $path[] = $directory;
-            $fileName = "{$action[1]}.php";
+            $fileName = $action[1] . '.php';
             $path[] = $fileName;
             $file = implode(DIRECTORY_SEPARATOR, $path);
-            if(\is_file($file)){
+            if(is_file($file)){
                 include_once $file;
             }
         }
