@@ -3,6 +3,8 @@
 
 namespace zukr\base\html;
 
+use zukr\base\helpers\StringHelper;
+
 /**
  * Class HtmlHelper
  *
@@ -53,5 +55,25 @@ class HtmlHelper
         unset($options['name'], $options['value']);
         return Html::select($name, $value, ["D" => "D", "I" => "I", "II" => "II", "III" => "III"],
             ['title' => 'Призове місце:(D-Диплом за участь)', 'required' => true, 'prompt' => 'Місце...']);
+    }
+
+
+    public static function listFiles(array $files)
+    {
+        if (empty($files)) {
+            return '';
+        }
+        $list = [];
+        foreach ($files as $file) {
+            $title = StringHelper::basename($file['file']);
+            $fileName = StringHelper::truncate($title, 30);
+            //<a href=\"{$row['file']}\" class='link-file' title=\"{$str_title}\" >{$str2}</a>
+            $link1 = Html::a($title, $file['file'], ['title' => $fileName, 'class' => 'link-file']);
+            // <a href=\"action.php?action=file_delete&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a>
+            $link2 = Html::a('', "action.php?action=file_delete&id_w={$file['id_w']}&id_f={$file['id']}",
+                ['title' => 'Видалити файл', 'class' => 'link-delete-file']);
+            $list [] = Html::tag('li', $link1 . $link2, []);
+        }
+        return '<details><summary>Файли</summary><ol>' . implode(PHP_EOL, $list) . '</ol></details>';
     }
 }

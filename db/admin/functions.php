@@ -6,7 +6,10 @@
  */
 
 use zukr\author\AuthorHelper;
+use zukr\base\html\HtmlHelper;
+use zukr\file\FileHelper;
 use zukr\leader\LeaderHelper;
+use zukr\user\UserHelper;
 use zukr\work\WorkHelper;
 
 /**
@@ -703,97 +706,97 @@ function chk_box($name, $title, $value)
 
 
 
-/** * ********************************************************************************
+/**
  * Выводит заголовок  "название университета" в таблице посмотра данных о работах
+ *
  * @param string $univer_title
  * @param int $id_u
  * @param string $univer
- * @param bool $href
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function print_work_univer($univer_title, $id_u, $univer, $href = false)
+ * */
+function print_work_univer($univer_title, $id_u, $univer)
 {
-    global $FROM;
-    $row_univer = "<tr><td colspan=\"5\" class=\"univerTitle\"><a name=id_u" . $id_u . " >{$univer}</a> ";
-    $row_univer .= ($href) ? "<a href=\"action.php?action=univer_edit&id_u=" . $id_u . "&FROM={$FROM}\" title=\"Редагувати данні університету\">" : "";
-    $row_univer .= $univer_title;
-    $row_univer .= ($href) ? "</a>" : "";
-    $row_univer .= "</td></tr>";
+    $FROM = $_SESSION['from'] ?? '';
+    $row_univer = '
+<tr><td colspan="5" class="univerTitle">
+    <div id=id_u' . $id_u . ' style="display:inline;margin-right:5px">' . $univer . '</div><a href="action.php?action=univer_edit&id_u=' . $id_u
+        . '&FROM=' . $FROM . '" title="Редагувати данні університету">';
+    $row_univer .= $univer_title . '</a></td></tr>';
     return $row_univer;
 }
 
-/** * ********************************************************************************
- * * Выводит рядок в таблице просмотра данных о работе
- * @param array $row
- * @param bool $href
-  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function print_work_row($row, $href = false,$loginId = "0")
+/**
+ * Выводит рядок в таблице просмотра данных о работе
+ *
+ * @param array  $work
+ * @param string $loginId
+ **/
+function print_work_row($work, $loginId = '0')
 {
     $wh = WorkHelper::getInstance();
     $sections = $wh->getAllSections();
-    $section = $sections[$row['id_sec']]['section'] ?? '';
+    $section = $sections[$work['id_sec']]['section'] ?? '';
 
     $ah = AuthorHelper::getInstance();
-    $autors = $ah->getAutorsByWorkId($row['id']);
+    $autors = $ah->getAutorsByWorkId($work['id']);
 
     $lh = LeaderHelper::getInstance();
-    $leaders = $lh->getLeadersByWorkId($row['id']);
+    $leaders = $lh->getLeadersByWorkId($work['id']);
 
-    $title = $href ? '<a href=action.php?action=work_edit&id_w=' . $row['id'] . ' title="Редагувати роботу">' : '';
-    $title .= $row['arrival'] == '1' ? $row['title'] . "&nbsp;[&radic;]&nbsp;" : $row['title'];
-    $title .= !$href ? "</a>\n" : '';
-    $invitationClass = $row['invitation'] == 1 ? 'class="invitateWork"' : '';
-    $tesis = $row['tesis'] == 0 ? '' : "<strong>З тезами</strong>\n";
+    $fh = FileHelper::getInstance();
+    $filesOfWork = $fh->getFilesOneWork($work['id']);
 
-    $list_leaders = WorkHelper::leaderList($leaders,$href,false);
+    $uh = UserHelper::getInstance();
+    $userAdmins = $uh->getIsAdmin();
+    $title = '<a href=action.php?action=work_edit&id_w=' . $work['id'] . ' title="Редагувати роботу" class="">';
+    $title .= $work['arrival'] == '1'
+        ? $work['title'] . '&nbsp;[&radic;]&nbsp;'
+        : $work['title'];
+    $title .= "</a>\n";
 
-    $list_autors = WorkHelper::authorList($autors,$href, true, true);
+    $invitateClassWork = $work['invitation'] == 1
+        ? 'invitateWork'
+        : '';
 
-    $date = $row['date'];
+    $tesis = $work['tesis'] == 0 ? '' : "<strong>З тезами</strong>\n";
 
-    $delete_work = '';
-    $introduction = '';
-    $link_work = '';
-    $moto = '';
-    $files = '';
-    $comments = '';
-    $public = '';
-    $rowspan = '2';
-    $link_add_review = '';
-    $reviews = list_reviews_for_one_work($row['id'],false);
-    if ($href == true) {//если установлено показывать ссылки
-        $link_add_review = (count_review($row['id']) < 2) ? "<a href=\"action.php?action=review_add&id_w={$row['id']}&id_u={$row['id_u']}\">додати рецензію</a>" : "";
+    $list_leaders = WorkHelper::leaderList($leaders, false);
 
-        $reviews = list_reviews_for_one_work($row['id'], true, $loginId);
+    $list_autors = WorkHelper::authorList($autors, true, true);
 
-        $moto = '<br/><strong>Шифр</strong>:' . $row['motto'] . "\n";
-        $link_work = "&nbsp;&nbsp;<a href=action.php?action=work_link&id_w=" . $row['id'] . " title=\"Звязати з роботою керівника/автора\">&laquo;</a>&nbsp;&nbsp;\n";
-        $introduction = !($row['introduction'] == "") ? "<br/><strong>Впровадження</strong>:" . $row['introduction'] . "\n" : "";
-        $public = !($row['public'] == "") ? "<br/><strong>Публікації</strong> :{$row['public']}\n" : "";
-        if(($loginId == "1") OR ($loginId == "2"))
-        {
-        $delete_work = "&nbsp;&nbsp;<a href=action.php?action=work_delete&id_w={$row['id']} title=\"Видалити роботу з реестру (Зникнуть зв'язки, автори та керівникі будуть у базі)\"></a>\n";
-        }
-        else {
-            $delete_work = "&nbsp;&nbsp;<a href=\"#\" title=\"Вам заборонено видаляти роботу\"></a>\n";
-        }
-        $files = "<td colspan=\"1\">" . list_files($row['id']) . "</td>";
-        $comments = "<td colspan=\"4\" title=\"Коментарі та зауваження\" >{$row['comments']}</td>";
-        $rowspan = "3";
-    }
+    $date = $work['date'];
 
+    //если установлено показывать ссылки
+    $link_add_review = (count_review($work['id']) < 2)
+        ? '<a href="action.php?action=review_add&id_w=' . $work['id'] . '&id_u=' . $work['id_u'] . '">додати рецензію</a>'
+        : '';
 
-    /* Убираем данные об месте
-     * $place .= ($row['place'] == 'D') ? "" : "<strong>{$row['place']}</strong>";*/
+    $reviews = list_reviews_for_one_work($work['id'], true, $loginId);
 
+    $moto = '<br/><strong>Шифр</strong>:' . $work['motto'] . PHP_EOL;
+    $link_work = '<a href=action.php?action=work_link&id_w='
+        . $work['id']
+        . ' title="Звязати з роботою керівника/автора">&laquo;</a>&nbsp;&nbsp;' .PHP_EOL;
+    $introduction = !empty($work['introduction'])
+        ? '<br/><strong>Впровадження</strong>:' . $work['introduction'] . PHP_EOL
+        : '';
+    $public = !empty($work['public'])
+        ? "<br/><strong>Публікації</strong> :{$work['public']}".PHP_EOL
+        : '';
+    $delete_work = in_array($loginId,$userAdmins)
+        ? '<a href=action.php?action=work_delete&id_w=' . $work['id']
+            . ' title="Видалити роботу з реєстру (Зникнуть зв\'язки, автори та керівникі будуть у базі)"></a>'. PHP_EOL
+        : '<a href="#" title="Вам заборонено видаляти роботу"></a>' . PHP_EOL;
+    $files = HtmlHelper::listFiles($filesOfWork);
+    $rowspan = '3';
     $row_table = <<<ROWTABLE
-<tr $invitationClass>
-            <td rowspan="{$rowspan}" class="workID"><a name="id_w{$row['id']}">{$row['id']}</a></td>
+<tr class="{$invitateClassWork}">
+            <td rowspan="{$rowspan}" class="workID"><div id="id_w{$work['id']}">{$work['id']}</div></td>
             <td colspan="4" class="title" title="Останні зміни :$date">
             <!-- Действия над работой -->
-            $title $link_work $delete_work 
+            {$title}&nbsp;&nbsp;{$link_work}&nbsp;&nbsp;{$delete_work} 
             </td>
 </tr>        
-<tr   $invitationClass>
+<tr   class="{$invitateClassWork}">
             <td class="tdInfo">
                 <strong>Секція:</strong>{$section}
                 $moto $tesis
@@ -805,9 +808,9 @@ function print_work_row($row, $href = false,$loginId = "0")
             <td rowspan="1">$list_leaders</td>
             <td rowspan="1">$list_autors</td>
     </tr>
-    <tr $invitationClass>
-    $files
-    $comments
+    <tr class="{$invitateClassWork}">
+        <td colspan="1">$files</td>
+        <td colspan="4" title="Коментарі та зауваження" >{$work['comments']}</td>
     </tr>
 ROWTABLE;
     return $row_table;
@@ -839,7 +842,7 @@ function print_row_table_section_select($row, $href = false)
  * @param int   $row_number
  * @param array $row
  */
-function table_row_list_adress2($row_number, array $row): string
+function table_row_list_address2($row_number, array $row): string
 {
     return '<tr><td>' . $row_number . '</td>'
         . '<td>' . $row['univerfull'] . '</td>'
@@ -1017,10 +1020,12 @@ function list_univers_reseption($size)
  * @param string $str
  * @param int    $num
  * @return string
- * */
-function file_name_format($str, $num)
+ */
+function file_name_format(string $str, int $num):string
 {
-    return mb_substr($str, 0, $num) . '...';
+    return (mb_strlen($str) > $num)
+        ? mb_substr($str, 0, $num) . '...'
+        : $str;
 }
 
 /**

@@ -161,25 +161,19 @@ class WorkHelper
 
     /**
      * @param array $autors
-     * @param bool  $href
      * @param bool  $showPlace
      * @param bool  $showId
      * @return string
      */
-    public static function authorList(array $autors, $href = false, $showPlace = false, $showId = false): string
+    public static function authorList(array $autors, bool $showPlace = false, $showId = false): string
     {
         $list = [];
         $FROM = $_SESSION['from'] ?? '';
         foreach ($autors as $autor) {
             $item = '';
-            $item .= $href
-                ? '<li title="Останні зміни: ' . htmlspecialchars($autor['date']) . '" >'
-                : '<li title=' . PersonHelper::getFullName($autor) . '">';
-            $item .= $href
-                ? '<a href=action.php?action=autor_edit&id_a='
+            $item .= '<a href=action.php?action=autor_edit&id_a='
                 . $autor['id'] . '&FROM='
-                . $FROM . " title=\"Ред.:" . PersonHelper::getFullName($autor) . '">'
-                : '';
+                . $FROM . " title=\"Ред.:" . PersonHelper::getFullName($autor) . '">';
             $item .= PersonHelper::getShortName($autor);
             $item .= $showId ? '&lt;' . $autor['id'] . '&gt;' : '';
 
@@ -190,61 +184,49 @@ class WorkHelper
             if ($autor['arrival'] == 1) {
                 $item .= '<span title="Прибув на конференцію">&nbsp;[&radic;]&nbsp;</span>';
             }
-            $item .= $href ? '</a>' : '';
+            $item .= '</a>';
             if ($autor['arrival'] !== 1) {
-                $item .= $href ? ' <a href=action.php?action=work_unlink&id_a=' . $autor['id'] . '&id_w=' . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>' : '';
+                $item .= ' <a href=action.php?action=work_unlink&id_a=' . $autor['id'] . '&id_w=' . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>';
             }
 
-            $item .= '</li>';
-            $list [] = $item;
+            $list [] = '<li title="Останні зміни: ' . htmlspecialchars($autor['date']) . '" >' . $item . '</li>';
         }
         return '<ol>' . implode('', $list) . '</ol>';
     }
 
     /**
      * @param array $leaders
-     * @param bool  $href
      * @param bool  $showPlace
      * @param bool  $showId
      * @return string
      */
-    public static function leaderList(array $leaders, bool $href = false, bool $showId = false): string
+    public static function leaderList(array $leaders, bool $showId = false): string
     {
         $list = [];
         $FROM = $_SESSION['from'] ?? '';
 
         foreach ($leaders as $leader) {
             $item = '';
-            $item .= $href
-                ? '<li title="Останні зміни: ' . htmlspecialchars($leader['date']) . '" >'
-                : '<li title="' . PersonHelper::getFullName($leader) . '">';
-
-            $item .= $href
-                ? '<a href=action.php?action=leader_edit&id_l=' . $leader['id'] . '&FROM=' . $FROM . ' title="Ред.:' . PersonHelper::getFullName($leader) . '">'
-                : '';
+            $item .= '<a href=action.php?action=leader_edit&id_l=' . $leader['id'] . '&FROM=' . $FROM . ' title="Ред.:' . PersonHelper::getFullName($leader) . '">';
             $item .= PersonHelper::getShortName($leader);
             $item .= $showId ? '<' . $leader['id'] . '>' : '';
-
 
             if ($leader['arrival'] === '1') {
                 $item .= '<span title="Прибув на конференцію">&nbsp;[&radic;]&nbsp;</span>';
             }
-            $item .= $href ? '</a>' : '';
+            $item .= '</a>';
 
             if ($leader['arrival'] !== '1') {
-                $item .= $href
-                    ? Html::tag('a', '<img src="../images/unlink.png" alt="unlink">',
+                $item .= Html::tag('a', '<img src="../images/unlink.png" alt="unlink">',
                         [
                             'href' => 'action.php?action=work_unlink&id_l=' . $leader['id'] . "&id_w=" . $leader['id_w'],
                             'title' => 'Відокремити від роботи',
                             'class' => 'unlink_person'
-                        ])
-                    : '';
+                        ]);
             }
-            $item .= "</li>\n";
-            $list [] = $item;
+            $list [] = '<li title="Останні зміни: ' . htmlspecialchars($leader['date']) . '" >' . $item . '</li>' . PHP_EOL;
         }
-        return '<ol>' . implode('', $list) . '</ol>';
+        return '<ol>' . implode(PHP_EOL, $list) . '</ol>';
     }
 
 

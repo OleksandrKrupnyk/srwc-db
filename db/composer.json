@@ -17,7 +17,8 @@
     "ext-gd": "*",
     "tedivm/stash": "0.14.*",
     "monolog/monolog": "2.0.1",
-    "ext-intl": "*"
+    "ext-intl": "*",
+    "ext-iconv": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",

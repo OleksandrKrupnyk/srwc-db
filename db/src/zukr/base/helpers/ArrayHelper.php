@@ -3,13 +3,26 @@
 
 namespace zukr\base\helpers;
 
-
+/**
+ * Class ArrayHelper
+ *
+ * @package      zukr\base\helpers
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class ArrayHelper
 {
 
-
-    public static function group($array, $groupKey): array
+    /**
+     * @param array  $array
+     * @param string $groupKey
+     * @return array
+     */
+    public static function group(array $array, string $groupKey): array
     {
+        if (empty($array)) {
+            return [];
+        }
         $resultArray = [];
         foreach ($array as $item) {
             $key = $item[$groupKey];
@@ -22,7 +35,7 @@ class ArrayHelper
     /**
      * @param $array
      */
-    public static function asort(&$array)
+    public static function asort(&$array): void
     {
         $collator = new \Collator('uk_UA.UTF-8');
         $collator->asort($array);

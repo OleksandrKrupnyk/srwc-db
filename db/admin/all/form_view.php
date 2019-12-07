@@ -93,20 +93,19 @@ $count = count($allWorks);
         </tr>
 
         <?php
-        ob_start(); //включение буфера вывода
         if ($_GET['who'] === 'raiting') {
             foreach ($allWorks as $work) {
                 $univer = $univerList[$work['id_u']];
-                echo print_work_univer($univer['univerfull'], $univer['id'], $univer['univer'], true);
-                echo print_work_row($work, true, $_SESSION['id']);
+                echo print_work_univer($univer['univerfull'], $univer['id'], $univer['univer']);
+                echo print_work_row($work, $_SESSION['id']);
             }
         } else {
             $allWorks = ArrayHelper::group($allWorks, 'id_u');
             foreach ($allWorks as $id_u => $works) {
                 $univer = $univerList[$id_u];
-                echo print_work_univer($univer['univerfull'], $univer['id'], $univer['univer'], true);
+                echo print_work_univer($univer['univerfull'], $univer['id'], $univer['univer']);
                 foreach ($works as $work) {
-                    echo print_work_row($work, true, $_SESSION['id']);
+                    echo print_work_row($work, $_SESSION['id']);
                 }
             }
         }

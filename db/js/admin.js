@@ -597,114 +597,85 @@ myChangeRoom.change(function(){
 
 
 
-//Обработка переключателей на форме редактирования сведений о работе
-var chkBoxInvitation = $('.editWork :checkbox[name=invitation]');
-var chkBoxDead = $('.editWork :checkbox[name=dead]');
-//Обработка при загрузке формы
-$(function(){
-if(chkBoxDead.is(':checked'))
-        {
-          chkBoxInvitation.attr("disabled",true);
-        }
-        else chkBoxInvitation.removeAttr("disabled");
-if(chkBoxInvitation.is(':checked'))
-        {
-          chkBoxDead.attr("disabled",true);
-        }
-        else chkBoxDead.removeAttr("disabled");
-});
-//Обработка по клику
-chkBoxDead.click(function(){
-        if($(this).is(':checked'))
-        {
-          chkBoxInvitation.attr("disabled",true);
-        }
-        else chkBoxInvitation.removeAttr("disabled");
-        console.log('Нашлась!');
-        });
-chkBoxInvitation.click(function(){
-        if($(this).is(':checked'))
-        {
-          chkBoxDead.attr("disabled",true);
-        }
-        else chkBoxDead.removeAttr("disabled");
+    //Обработка переключателей на форме редактирования сведений о работе
+    var chkBoxInvitation = $('.editWork :checkbox[name=invitation]');
+    var chkBoxDead = $('.editWork :checkbox[name=dead]');
+    //Обработка при загрузке формы
+    $(function () {
+        if (chkBoxDead.is(':checked')) {
+            chkBoxInvitation.attr("disabled", true);
+        } else chkBoxInvitation.removeAttr("disabled");
+        if (chkBoxInvitation.is(':checked')) {
+            chkBoxDead.attr("disabled", true);
+        } else chkBoxDead.removeAttr("disabled");
+    });
+    //Обработка по клику
+    chkBoxDead.on('click',function () {
+        if ($(this).is(':checked')) {
+            chkBoxInvitation.attr("disabled", true);
+        } else chkBoxInvitation.removeAttr("disabled");
+
+    });
+    chkBoxInvitation.on('click',function () {
+        if ($(this).is(':checked')) {
+            chkBoxDead.attr("disabled", true);
+        } else chkBoxDead.removeAttr("disabled");
         //console.log('Нашлась!');
-        });
+    });
 //Окончание Обработка переключателей на форме редактирования сведений о работе
 
 //$('td').on('dblclick','a[name*="id_w"]',function(){
 //alert('1');location.href="http://siteaddress"
 //});
 
-//Формируем меню слевой части стороны при просмотре списка работ
-//
-//
-
-    var list_short = $('a[name^="id_u"]');
+    //Формируем меню слевой части стороны при просмотре списка работ
+    const list_short = $('div[id^="id_u"]');
     $(function () {
         const $barUnivers = $('#barUnivers');
         list_short.each(function () {
-            //console.log($(this).text());
             let object = $(this).text();
-            let id_u = $(this).attr("name");
+            let id_u = $(this).attr("id");
             $barUnivers.append("<li><a href=#" + id_u + ">" + object + "</a></li>");
         })
 
-//$('#barUnivers').html("<ul>"+list_short.each(){function(){this.text().wrapInner("<li></li>");}}+"</ul>");
-//$('#barUnivers').append(list_short.wrapInner("<li></li>"));
-//$('#barUnivers').insertAfter("</ul>")
-});
+    });
 
 
 // Телефонный номер
-var phone_list = $('span[id^="phone"]');
-$(function(){
-    phone_list.each(function(){
-        var phone = $(this).text();
-        var operator =(phone !='відсутній')?phone[0]+phone[1]+phone[2]:"000";
+    var phone_list = $('span[id^="phone"]');
+    $(function () {
+            phone_list.each(function () {
+                    var phone = $(this).text();
+                    var operator = (phone != 'відсутній') ? phone[0] + phone[1] + phone[2] : "000";
 
-        switch(operator){/*МТС*/
-            case '050':
-            case '066':
-            case '095':
-            case '099':{$(this).addClass("mobo-mts-16");}break;
-            case '067':/*Киевстар*/
-            case '068':
-            case '097':
-            case '098':{$(this).addClass("mobo-kyivstar-16");}break;
+                    switch (operator) {/*МТС*/
+                        case '050':
+                        case '066':
+                        case '095':
+                        case '099': {$(this).addClass("mobo-mts-16");}break;
+                        case '067':/*Киевстар*/
+                        case '068':
+                        case '097':
+                        case '098': {$(this).addClass("mobo-kyivstar-16");}break;
+                        case '091': {$(this).addClass("mobo-utel-16");}break;
+                        case '092': {$(this).addClass("mobo-peoplenet-16");}break;
+                        case '093':
+                        case '063': {/*Лайф*/$(this).addClass("mobo-life-16");}break;
+                        case '094': {$(this).addClass("mobo-intertelecom-16");}break;
+                        case '096': {$(this).addClass("mobo-kyivstar-16");}break;
+                        case '031':
+                            case '059':case '061':case '062':case '032':case '033':case '034':case '035':
+                            case '036':case '037':case '038':case '039':case '041':case '042':case '043':case '044':
+                            case '045':case '046':case '047':case '048':case '049':case '051':case '052':case '053':
+                            case '054':case '055':case '056':case '057':case '058':case '064':case '065':
+                        case '069': {$(this).addClass("mobo-home-16");}break;
+                        default: {$(this).addClass("mobo-default-16");}break;
+                    }
 
-            case '091':{
-                    $(this).addClass("mobo-utel-16");
-                  }break;
-            case '092':{
-                    $(this).addClass("mobo-peoplenet-16");
-                  }break;
-            case '093':
-            case '063':{/*Лайф*/
-                    $(this).addClass("mobo-life-16");
-                  }break;
-             case '094':{
-                    $(this).addClass("mobo-intertelecom-16");
-                  }break;
-
-             case '096':{
-                    $(this).addClass("mobo-kyivstar-16");
-                  }break;
-
-             case '031': case '059':  case '061': case '062':
-             case '032': case '033':  case '034': case '035':  case '036':
-             case '037': case '038':  case '039': case '041':  case '042':
-             case '043': case '044':  case '045': case '046':  case '047':
-             case '048': case '049':  case '051': case '052':  case '053':
-             case '054': case '055':  case '056': case '057':  case '058':
-             case '064': case '065':  case '069':{$(this).addClass("mobo-home-16");}break;
-            default:{$(this).addClass("mobo-default-16");}break;
+                }
+            );
         }
-
-    }
     );
-    }
-);
 
 
 

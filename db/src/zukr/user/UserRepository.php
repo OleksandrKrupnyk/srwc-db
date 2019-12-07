@@ -56,4 +56,19 @@ class UserRepository extends AbstractRepository
         return $users;
     }
 
+    /**
+     * @return array
+     */
+    public function getUserIdAsAdmin(): array
+    {
+        try {
+            return User::find()
+                ->where('is_admin', '1', '=')
+                ->getValue(User::getTableName(), 'id', null);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
+
 }

@@ -33,7 +33,5 @@ if (isset($_GET['id_w']) && isset($_GET['id_f'])) {
         $error_message .= "Файл відсутній\n";
     }
     //Закоментировать для отладки
-    header("Location: action.php?action=all_view#id_w" . $_GET['id_w']);
+    Go_page('action.php?action=all_view#id_w' . $_GET['id_w']);
 }
-
-?>

@@ -47,7 +47,7 @@ if ($_SESSION['access']) {
                 $i = 1;
                 while ($row = mysqli_fetch_array($result)) {
 
-                    echo table_row_list_adress2($i, $row);
+                    echo table_row_list_address2($i, $row);
                     $i++;
                     if (($i == 23) || ($i == 48)) {
                         echo "</table>\n"
@@ -81,7 +81,7 @@ if ($_SESSION['access']) {
                 $i = 1;
                 while ($row = mysqli_fetch_array($result)) {
 
-                    echo table_row_list_adress2($i, $row);
+                    echo table_row_list_address2($i, $row);
                     $i++;
                     if (($i == 21) || ($i == 47)) {
                         echo "</table>\n</div>\n"
