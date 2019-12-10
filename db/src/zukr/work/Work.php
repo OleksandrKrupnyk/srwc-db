@@ -19,10 +19,10 @@ class Work extends Record
     public $invitation;
     public $arrival;
     public $tesis;
-    public $dead;
-    public $comments;
+    public $dead     = 0;
+    public $comments = '';
     /** @var int */
-    public $balls;
+    public $balls = 0;
 
 
     public static function getTableName(): string
@@ -30,5 +30,16 @@ class Work extends Record
         return 'works';
     }
 
+    /**
+     * @return bool
+     */
+    public function beforeSave()
+    {
+        $this->arrival = (int)$this->arrival !== self::KEY_OFF ? self::KEY_ON : self::KEY_OFF;
+        $this->invitation = (int)$this->invitation !== self::KEY_OFF ? self::KEY_ON : self::KEY_OFF;
+        $this->dead = (int)$this->dead !== self::KEY_OFF ? self::KEY_ON : self::KEY_OFF;
+        $this->tesis = (int)$this->tesis !== self::KEY_OFF ? self::KEY_ON : self::KEY_OFF;
+        return parent::beforeSave();
+    }
 
 }

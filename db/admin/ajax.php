@@ -5,19 +5,9 @@ require 'config.inc.php';
 require 'functions.php';
 global $link;
 
-//Обработка Запроса на список работ в вузе
-if (
-    isset($_POST['id_u'])
-    && !isset($_POST['id_w'])
-    && $_POST['action'] === 'selunivers'
-) {
-    if (isset($_POST['select_id_w'])) {
-        list_works_of_univer($_POST['id_u'], "title", $_POST['select_id_w'], 5);
-    } else {
-        list_works_of_univer($_POST['id_u'], "title", '', 5);
-    }
-}
-
+$action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRIPPED);
+$id_u =  filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+$id_w =  filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
 // Запрос на измемение данных в работе
 if (isset($_POST['id_w']) && $_POST['action'] === 'invitation') {//Запрос на обновление данных по приглашению
     $query = "UPDATE `works` SET \n"
@@ -29,7 +19,7 @@ if (isset($_POST['id_w']) && $_POST['action'] === 'invitation') {//Запрос 
     log_action($_POST['action'], "works", $_POST['id_w']);
 }
 
-if (isset($_POST['id_w']) && $_POST['action'] == "id_sec") {
+if (isset($_POST['id_w']) && $_POST['action'] === "id_sec") {
     $query = "UPDATE `works` SET \n"
         . "`id_sec` ='" . $_POST['id_sec'] . "'\n"
         . "WHERE `id` = '" . $_POST['id_w'] . "'";
@@ -40,9 +30,18 @@ if (isset($_POST['id_w']) && $_POST['action'] == "id_sec") {
 }
 
 
-switch ($_POST['action']) {
+switch ($action) {
+    //Обработка Запроса на список работ в вузе
+    case 'selunivers':
+        {
+            if (!empty($id_u) && !isset($_POST['id_w'])) {
+                $select_id_w = $_POST['select_id_w'] ?? '';
+                echo list_works_of_univer($_POST['id_u'], 'title', $select_id_w, 5);
+            }
+        }
+        break;
     /* Обработка запроса на отметку в графе прибытие */
-    case "add_arrival":
+    case 'add_arrival':
         {
             if (isset($_POST['id_a'])) {
                 $query = "UPDATE `autors` SET `arrival` = '1' \n"
@@ -60,7 +59,7 @@ switch ($_POST['action']) {
         }
         break;
     /* Удаление автора или руководителя */
-    case "delete":
+    case 'delete':
         {
             //Проверим есть ли запись в таблице связей
             //Определим таблицу связей
@@ -171,7 +170,7 @@ switch ($_POST['action']) {
             list_leaders_invite($_POST['id_u']);
         }
         break;
-    case "list_all":
+    case 'list_all':
         {
             list_fio('autors', 'autor', $_POST['id_u'], 1, $selecttag = true);
             echo "!";
@@ -230,7 +229,7 @@ switch ($_POST['action']) {
         break;
 
     /** Запрос на изменение секции куда прислана работа */
-    case "id_sec":
+    case 'id_sec':
         {
             if (isset($_POST['id_w'])) {
                 $query = "UPDATE `works` SET `id_sec` ='{$_POST['id_sec']}' WHERE `id` = '{$_POST['id_w']}'";

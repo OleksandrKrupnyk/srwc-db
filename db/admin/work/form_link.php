@@ -1,16 +1,24 @@
-<!-- Связывание работы -->
-<header><a href="action.php">Меню</a></header>
+<?php
+
+use zukr\base\html\Html;
+use zukr\univer\UniverHelper;
+use zukr\work\WorkRepository;
+
+$id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
+if ($id_w) {
+    $work = (new WorkRepository())->getById($id_w);
+    $id_u = $work['id_u'];
+}
+$id_u = $id_u ?? null;
+$uh = UniverHelper::getInstance();
+$univers = $uh->getTakePartUniversDropDownList();
+?>
+    <!-- Связывание работы -->
+    <header><a href="action.php">Меню</a></header>
     <header>Зв'язування роботи</header>
     <form class="linkworkForm" method="post" action="action.php">
-        <?php
-        if (isset($_GET['id_w'])) {
-            $wInfo = fullinfo("works", "id", $_GET['id_w']);
-            list_univers($wInfo['id_u'], "10");
-            echo "<script language=\"javascript\" type=\"text/javascript\">selectWork(" . $wInfo['id_u'] . "," . $_GET['id_w'] . ");</script>";
-        } else {
-            list_univers("", "10");
-        }
-        ?>
+        <?php echo Html::select('Work[id_u]', $id_u, $univers,
+            ['id' => 'selunivers', 'prompt' => 'Оберіть', 'class' => 'w-100', 'size' => 10]) ?>
         <div id="work"></div>
         <table id="table_la">
             <tr>
@@ -30,3 +38,14 @@
         <input type="hidden" name="action" value="work_link">
     </form>
     <!-- Окончание Связывание работы -->
+<?php
+if (isset($id_u) && isset($work)) {
+    $JS = <<< SCRIPT
+<script type="text/javascript">
+$(function(){
+    selectWork({$id_u},{$work['id']});
+})
+</script>
+SCRIPT;
+    echo $JS;
+}

@@ -65,7 +65,7 @@ class Log extends Record
     public function logAction($action = null, $table = null, $action_id = null)
     {
         $this->action = $action ?? $_POST['action'];
-        $this->table = isset($table) ? $table : 'Unknown';
+        $this->table = $table ?? 'Unknown';
         $this->action_id = $action_id ?? '0';
 
         $this->save();

@@ -11,10 +11,12 @@ use zukr\base\html\HtmlHelper;
 use zukr\degree\DegreeRepository;
 use zukr\position\PositionRepository;
 use zukr\status\StatusRepository;
-use zukr\univer\UniverRepository;
+use zukr\univer\UniverHelper;
 
 $id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
-$univers = (new UniverRepository())->getInvitedDropList();
+$uh = UniverHelper::getInstance();
+$univers = $uh->getInvitedDropdownList();
+
 $positions = (new PositionRepository())->getDropDownList();
 $statuses = (new StatusRepository())->getDropDownList();
 $degrees = (new DegreeRepository())->getDropDownList();
@@ -24,7 +26,7 @@ $degrees = (new DegreeRepository())->getDropDownList();
 <header>Данні керівника</header>
 <form class="addleaderForm" method="post" action="action.php">
     <?= Html::select('Leader[id_u]', $id_u, $univers,
-        ['class' => 'select-univer', 'required' => true, 'prompt' => 'Університет...'])
+        ['class' => 'w-100', 'required' => true, 'prompt' => 'Університет...',])
     ?>
     <br>
     <label>ПІБ</label>

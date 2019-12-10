@@ -13,17 +13,18 @@ use zukr\degree\DegreeRepository;
 use zukr\leader\LeaderRepository;
 use zukr\position\PositionRepository;
 use zukr\status\StatusRepository;
-use zukr\univer\UniverRepository;
+use zukr\univer\UniverHelper;
 use zukr\user\UserRepository;
 
 $id_l = filter_input(INPUT_GET, 'id_l', FILTER_VALIDATE_INT);
 /** @var array */
 $leader = (new LeaderRepository())->getById($id_l);
-if (empty($leader)) {
-    Go_page('action.php?action=error_list');
-    exit();
+if (empty($leader) || !$id_l) {
+    Go_page('error');
 }
-$univers = (new UniverRepository())->getInvitedDropList();
+$uh = UniverHelper::getInstance();
+$univers = $uh->getInvitedDropdownList();
+
 $positions = (new PositionRepository())->getDropDownList();
 $statuses = (new StatusRepository())->getDropDownList();
 $degrees = (new DegreeRepository())->getDropDownList();
@@ -34,7 +35,7 @@ $users = (new UserRepository())->getDropDownList();
 <header>Редагування данних керівника</header>
 <form class="editLeader" method="post" action="action.php">
     <?= Html::select('Leader[id_u]', $leader['id_u'], $univers,
-        ['class' => 'select-univer', 'required' => true, 'prompt' => 'Університет...'])
+        ['class' => 'w-100', 'required' => true, 'prompt' => 'Університет...'])
     ?>
     <br><label>ПІБ</label>
     <input type="text" name="Leader[suname]" title="Прізвище" value="<?= $leader['suname'] ?>" required>

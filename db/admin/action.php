@@ -1,4 +1,5 @@
 <?php
+xdebug_time_index();
 require 'config.inc.php';
 require 'functions.php';
 require '../vendor/autoload.php';
@@ -70,14 +71,16 @@ if ($session->get('access')) {
         <link rel="icon" type="image/png" href="../images/favicon-96x96.png" sizes="96x96">
         <link rel="icon" type="image/png" href="../images/favicon-192x192.png" sizes="192x192">
         <link rel="manifest" href="manifest.json">
-        <link href="../css/menustyle.css" type="text/css" rel="stylesheet"/>
-        <link href="../css/phone.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/menustyle.min.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/phone.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
-        <link href="../css/style.css" type="text/css" rel="stylesheet"/>
-        <script type="text/javascript" src="../js/jquery.js"></script>
+        <link href="../css/style.min.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
         <script type="text/javascript" src="../js/notify.js"></script>
         <script type="text/javascript" src="../js/menuscript.js"></script>
+        <script type="text/javascript" src="../js/comon.js"></script>
+        <script type="text/javascript" src="../js/admin.js" async></script>
         <title>&quot;СНР 2018&quot;&copy;</title>
     </head>
     <body>
@@ -118,15 +121,14 @@ if ($session->get('access')) {
     ])) {
         execute_get_action($action);
     } else {
-        echo "<header>Меню</header>";
-        echo $menu->getMenu();
+        echo "<header>Меню</header>"
+            .$menu->getMenu();
     }
     ?>
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= $error_message; ?></div>
     <div id="operator">Оператор :<span><?= $session->get('usr') ?></span></div>
-    <autor class="autor">Krupnik&copy;</autor>
-    <script type="text/javascript" src="../js/admin.js" async></script>
+    <autor class="autor"><?='xdebug_time_index :'.xdebug_time_index().'sec| xdebug_peak_memory_usage :'.(xdebug_peak_memory_usage()/1024).'kb| xdebug_memory_usage :'.(xdebug_memory_usage()/1024).'kb'?> Krupnik&copy;</autor>
     <script>
         $.notify.defaults({position: 'top center', elementPosition: 'top center'});
         var _type = '<?=$_type?>'.toString();

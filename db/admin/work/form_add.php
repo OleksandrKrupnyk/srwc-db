@@ -5,36 +5,61 @@
  * Date: 14.02.2017
  * Time: 20:16
  */
+
+
+use zukr\base\html\Html;
+use zukr\base\html\HtmlHelper;
+use zukr\section\SectionHelper;
+use zukr\univer\UniverHelper;
+
+$id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
+
+$uh = UniverHelper::getInstance();
+$univers = $uh->getInvitedDropdownList();
+$sh = SectionHelper::getInstance();
+$sections = $sh->getDropdownList();
 ?>
 <!-- Форма добавления работы-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні роботи</header>
 <form class="addworkForm" method="post" action="action.php">
-    <?php list_univers("", 1); ?>
+    <label for="selunivers">Університет:</label>
+    <?= Html::select('Work[id_u]', $id_u, $univers,
+        ['id' => 'selunivers', 'required' => true, 'prompt' => 'Оберіть', 'class' => 'w-100'])
+    ?>
     <br>
     <label>Назва роботи:</label><br>
-    <textarea name="title" cols="50" rows="4" wrap="virtual" maxlength="255"
-              title="Назва роботи (заповнювати на укр.мові)" placeholder="Назва роботи (заповнювати на укр.мові)"
-              required></textarea>
+    <textarea name="Work[title]" cols="50" rows="4" maxlength="255" id="work-title"
+              title="Назва роботи (заповнювати на укр.мові)"
+              placeholder="Назва роботи (заповнювати на укр.мові)"
+              required class="w-100"></textarea>
     <br>
-    <?php list_("sections", "section", "", 1, "Секція..."); ?><br>
-    <label>Девіз(ШИФР):</label>
-    <input type="text" name="motto" title="Дивіз роботи." placeholder="Девіз..." required autocomplete="off"><br>
-    <label>Результати публікації:</label>
-    <input type="text" name="public" title="Наприклад: 1 патент, 2 статті"
-           placeholder="Наприклад: 1 патент, 2 статті"><br>
-    <label>Результати впровадження:</label>
-    <input type="text" name="introduction" title="Наприклад: навч.процес,НІП &quot;Дія&quot;"
-           placeholder="Наприклад: навч.процес,НИП &quot;Дія&quot;"><br/>
+    <label for="work-section">Секція:</label>
+    <?= Html::select('Work[id_sec]', null, $sections,
+        ['required' => true, 'prompt' => 'Оберіть', 'class' => 'w-100', 'id' => 'work-section'])
+    ?>
+
+    <label for="work-motto">Девіз(ШИФР):</label>
+    <input type="text" name="Work[motto]" id="work-motto" title="Дивіз роботи." placeholder="Девіз..." required
+           autocomplete="off" class="w-100"><br>
+    <label for="work-public">Результати публікації:</label>
+    <input type="text" name="Work[public]" id='work-public' title="Наприклад: 1 патент, 2 статті"
+           placeholder="Наприклад: 1 патент, 2 статті" class="w-100"><br>
+    <label for="work-introduction">Результати впровадження:</label>
+    <input type="text" name="Work[introduction]" id="work-introduction"
+           title="Наприклад: навч.процес,НІП &quot;Дія&quot;"
+           placeholder="Наприклад: навч.процес,НИП &quot;Дія&quot;" class="w-100"><br/>
     <fieldset>
         <legend>Службова інформація</legend>
-        <label>Тезиси:</label>
-        <input type="checkbox" name="tesis" title="Відмітити якщо є тезиси">
-        <label>Мертва душа:</label>
-        <input type="checkbox" name="dead" title="Відмітити якщо робота фіктивна"><br>
-        <textarea name="comments" wrap="virtual" rows="4" cols="80" maxlength="255"
-                  placeholder="Зауваження та коментарії"></textarea>
+        <label for="work-tesis">Тезиси:</label>
+        <?= HtmlHelper::checkbox('Work[tesis]', 'Відмітити якщо є тезиси', 0, 'work-tesis') ?>
+        <label for="work-dead">Мертва душа:</label>
+        <?= HtmlHelper::checkbox('Work[dead]', 'Відмітити якщо робота фіктивна', 0, 'work-dead') ?><br/>
+        <label for="work-comments">Зауваження та коментарії:</label>
+        <textarea name="Work[comments]" rows="4" cols="80" maxlength="255" id="work-comments"
+                  placeholder="Зауваження та коментарії" class="comments w-100"></textarea>
     </fieldset>
-    <input type="submit" value="Записати">
+    <input type="submit" value="Зберегти та вийти" name="save+exit">
+    <input type="submit" value="Зберегти" name="save">
     <input type="hidden" name="action" value="work_add">
 </form>

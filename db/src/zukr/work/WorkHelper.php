@@ -218,16 +218,30 @@ class WorkHelper
 
             if ($leader['arrival'] !== '1') {
                 $item .= Html::tag('a', '<img src="../images/unlink.png" alt="unlink">',
-                        [
-                            'href' => 'action.php?action=work_unlink&id_l=' . $leader['id'] . "&id_w=" . $leader['id_w'],
-                            'title' => 'Відокремити від роботи',
-                            'class' => 'unlink_person'
-                        ]);
+                    [
+                        'href' => 'action.php?action=work_unlink&id_l=' . $leader['id'] . "&id_w=" . $leader['id_w'],
+                        'title' => 'Відокремити від роботи',
+                        'class' => 'unlink_person'
+                    ]);
             }
             $list [] = '<li title="Останні зміни: ' . htmlspecialchars($leader['date']) . '" >' . $item . '</li>' . PHP_EOL;
         }
         return '<ol>' . implode(PHP_EOL, $list) . '</ol>';
     }
 
-
+    /**
+     * @return array
+     */
+    public function getTakePartUniversIds(): array
+    {
+        return
+            \array_values(
+                \array_unique(
+                    \array_map(static function ($value) {
+                        return $value['id_u'];
+                    }, $this->getWorks()
+                    )
+                )
+            );
+    }
 }

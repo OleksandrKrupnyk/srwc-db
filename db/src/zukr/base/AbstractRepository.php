@@ -48,7 +48,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
      * @param $id
      * @return array
      */
-    public function getById($id): array
+    public function getById($id): ?array
     {
         return $this->model->findById($id);
     }

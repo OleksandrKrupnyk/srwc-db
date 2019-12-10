@@ -14,7 +14,7 @@ $_SESSION['id_u'] = $_POST['id_u'];
 $id_a = filter_input(INPUT_POST, 'id_a', FILTER_VALIDATE_INT);
 $author = (new AuthorRepository())->findById($id_a);
 if ($author === null) {
-    Go_page('action.php?action=error_list');
+    Go_page('error');
 }
 $author->load($_POST);
 $save = $author->save();
