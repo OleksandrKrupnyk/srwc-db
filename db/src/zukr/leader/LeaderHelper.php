@@ -68,7 +68,21 @@ class LeaderHelper
             $worksLeaders = (new WorkLeaderRepository())->getAllLeadersOfWorks();
             $this->worksLeaders = $worksLeaders;
         }
-        return $worksLeaders;
+        return $this->worksLeaders;
     }
 
+    /**
+     * @param int $univerId
+     * @return array
+     */
+    public function getAllLeadersByUniverId(int $univerId): array
+    {
+        $authors = $this->getWorksLeaders();
+        if (!empty($authors)) {
+            return array_filter($this->getWorksLeaders(), function ($author) use ($univerId) {
+                return $author['id_u'] === $univerId;
+            });
+        }
+        return [];
+    }
 }

@@ -5,6 +5,7 @@ namespace zukr\section;
 
 
 use zukr\base\AbstractRepository;
+use zukr\base\Base;
 
 /**
  * Class SectionRepository
@@ -16,14 +17,23 @@ use zukr\base\AbstractRepository;
  */
 class SectionRepository extends AbstractRepository
 {
-
+    /**
+     * @var string
+     */
     protected $__className = Section::class;
 
-
-    public function getAllSectionsAsArray()
+    /**
+     * @return array|\MysqliDb
+     */
+    public function getAllSectionsAsArray(): array
     {
-        return $this->model::find()
-            ->map('id')
-            ->get($this->model::getTableName(), null, '*');
+        try {
+            return $this->model::find()
+                ->map('id')
+                ->get($this->model::getTableName());
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
     }
 }

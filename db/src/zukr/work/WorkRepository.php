@@ -4,6 +4,8 @@
 namespace zukr\work;
 
 
+use zukr\base\AbstractRepository;
+use zukr\base\Base;
 use zukr\univer\Univer;
 
 /**
@@ -13,8 +15,11 @@ use zukr\univer\Univer;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class WorkRepository
+class WorkRepository extends AbstractRepository
 {
+    /** @var string */
+    public $__className = Work::class;
+
     /**
      * @return \MysqliDb
      */
@@ -37,7 +42,7 @@ class WorkRepository
                 ->orderBy('univerfull', 'ASC')
                 ->get(Work::getTableName(), null, Work::getTableName() . '.*, univerfull');
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
+            Base::$log->error($e->getMessage());
             return [];
         }
     }

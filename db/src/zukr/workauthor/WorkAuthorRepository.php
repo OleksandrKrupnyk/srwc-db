@@ -39,7 +39,24 @@ class WorkAuthorRepository extends AbstractRepository
             Base::$log->error($e->getMessage());
             return [];
         }
+    }
 
-
+    /**
+     * @param int $workId
+     * @return array|\MysqliDb
+     */
+    public function getAllAuthorsOfWorkByWorkId(int $workId)
+    {
+        $table = $this->model::getTableName();
+        $joinTable = Author::getTableName();
+        try {
+            return $this->model::find()
+                ->join($joinTable, $table . '.id_a=' . $joinTable . '.id')
+                ->where('id_w', $workId)
+                ->get($table, null, $table . '.date,id_w, ' . $joinTable . '.*');
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
     }
 }

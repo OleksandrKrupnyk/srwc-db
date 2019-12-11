@@ -20,6 +20,12 @@ $result = mysqli_query($link, $query);
 
 ?>
 <!-- Список тезисов по секциям -->
+<style>
+    .sectiontitle {
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
 <header><a href='action.php'>Меню</a></header>
 <header>Тезиси</header>
 <?php
@@ -27,7 +33,7 @@ $result = mysqli_query($link, $query);
 $row = mysqli_fetch_array($result);
 //Запомним секцию
 $section = $row['section'];
-echo "<div id='sectiontitle'>{$row['section']}</div>";
+echo "<div id='sectiontitle' class='sectiontitle'>{$row['section']}</div>";
 short_list_leader_or_autors_str($row['id'], "wa");
 echo(list_files($row['id'], 1));
 echo TAB_SP . "(" . $row['title'] . ")" . TAB_SP . "<strong><em>" . $row['town'] . "</em></strong><br>"; // Напишем название работы
@@ -43,7 +49,7 @@ while ($row = mysqli_fetch_array($result)) {
         //Запомним новую секцию
         $section = $row['section'];
         //Напишем название секции
-        echo "<div id='sectiontitle'>{$row['section']}</div>";
+        echo "<div id='sectiontitle' class='sectiontitle'>{$row['section']}</div>";
         //Запишем первую работу из новой секции
         short_list_leader_or_autors_str($row['id'], "wa");
         /*Вставить список файлов работы*/

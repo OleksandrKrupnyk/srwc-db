@@ -21,7 +21,7 @@ function read_settings()
     global $link;
 //Доступ к переменным масива из вне
     global $settings;
-    $query = "SELECT * FROM `settings`";
+    $query = 'SELECT * FROM `settings`';
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
@@ -84,8 +84,7 @@ function log_action($action, $table, $action_id = 0, $tz_id = 888)
     or die("Помилка запису журналу: " . mysqli_error($link) . $action_id);
 }
 
-/** * ********************************************************************************
- *
+/**
  *  Список университетов всех которые есть
  *  Возвращает значение в переменной id_u (тип integer)
  * @param int $chk  номер вуза
@@ -94,7 +93,7 @@ function log_action($action, $table, $action_id = 0, $tz_id = 888)
  * @param bool $shortname
  * @param bool $checkin
  *  list_univers(<номер отмеченого вуза>,<размер списка>,<1-отображать только из 1ИнфСооб>)
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ * */
 function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=false)
 {
     global $link;
@@ -110,7 +109,7 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
     or die("Invalid query: " . mysqli_error($link));
     $idString = ($shortname == 0)? "selunivers":"shortlistunivers";
 
-    echo "<select id=\"{$idString}\" name=\"id_u\" size=\"{$size}\" required><option value=\"-1\" disabled selected>Університет...</option>\n";
+    echo "<select id=\"{$idString}\" name=\"id_u\" size=\"{$size}\" required class='w-100'><option value=\"-1\" disabled selected>Університет...</option>\n";
     while ($row = mysqli_fetch_array($result)) {
         $NameUniver  = ($shortname == 0)? "{$row['univer']}({$row['univerfull'] })" : "{$row['univer']}";
         if (isset($chk) && $chk != "" && $row['id'] == $chk) {
@@ -283,16 +282,15 @@ function list_($table, $pole, $chk, $size = 1, $caption = "Обрати...", $na
     echo "</select>\n";
 }
 
-/** * ********************************************************************************
- *
+/** *
  * Список работ по конкретному вузу
  * <select></select>
  * @param int $id_u
  * @param string $pole
- * @param int $select
+ * @param int selected
  * @param int $size Size of field
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function list_works_of_univer($id_u, $pole, $select, $size)
+  */
+function list_works_of_univer($id_u, $pole, $selected, $size)
 {
     global $link;
     //Формируем запрос на поле указанное как пареметр функции
@@ -300,16 +298,17 @@ function list_works_of_univer($id_u, $pole, $select, $size)
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
-    or die("Invalid query in function list_works_of_univer : " . mysqli_error($link));
-    echo "<select size=\"" . $size . "\" id=\"selwork\" name=\"id_w\">\n";
-    echo "<option value =\"-1\" disabled selected>Робота...</option>\n";
+    or die('Invalid query in function list_works_of_univer : ' . mysqli_error($link));
+    $select = '<select size="' . $size . '" id="selwork" name="id_w">' . PHP_EOL
+        . '<option value ="-1" disabled selected>Робота...</option>' . PHP_EOL;
     while ($row = mysqli_fetch_array($result)) {
         $str = "<option value=\"{$row['id']}\"";
-        $str .= ($select == $row['id']) ? " selected " : "";
+        $str .= ($selected == $row['id']) ? ' selected ' : '';
         $str .= ">{$row[$pole]}</option>\n";
-        echo $str;
+        $select .= $str;
     }
-    echo "</select>\n";
+    $select .= "</select>" . PHP_EOL;
+    return $select;
 }
 
 /** * ********************************************************************************
@@ -1152,7 +1151,9 @@ function AnalizeMysqlError($str){
 /**
  * @param string $page
  */
-function Go_page($page) {
+function Go_page($page)
+{
+    $page = $page !== 'error' ? $page : 'action.php?action=error_list';
     header('location: ' . $page);
     exit();
 }

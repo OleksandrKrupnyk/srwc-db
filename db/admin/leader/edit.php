@@ -18,7 +18,7 @@ $id_l = filter_input(INPUT_POST, 'id_l', FILTER_VALIDATE_INT);
 $leader = (new LeaderRepository())->findById($id_l);
 
 if ($leader === null) {
-    Go_page('action.php?action=error_list');
+    Go_page('error');
 }
 $leader->load($_POST);
 $save = $leader->save();

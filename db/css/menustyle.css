@@ -159,11 +159,12 @@
     -moz-border-radius:3px 3px 0 0;
     -moz-box-shadow:1px 1px 1px #333;
     }
-    
+
 /*.nav li ul li.strong-archive a {
     border-top:1px solid #e17979;
     font-weight:600
 }*/
+
 
 /* Класс добавляется с помощью jQuery */
 .nav li.current > a {

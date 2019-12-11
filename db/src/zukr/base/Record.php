@@ -3,6 +3,8 @@
 
 namespace zukr\base;
 
+use MysqliDb;
+
 /**
  * Class Record
  *
@@ -185,8 +187,8 @@ abstract class Record implements RecordInterface
     {
         $arrayAttributes = $this->setAttributes();
         $primaryKeyId = static::getPrimaryKey();
-        $this->_db->where($primaryKeyId, $this->{$primaryKeyId});
-        $this->_db->update(static::getTableName(), $arrayAttributes);
+        $this->_db->where($primaryKeyId, $this->{$primaryKeyId})
+            ->update(static::getTableName(), $arrayAttributes);
         if ($this->_db->count > 0) {
             return true;
         }
@@ -241,6 +243,18 @@ abstract class Record implements RecordInterface
             }
         }
         return $attributes;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function delete(MysqliDb $db)
+    {
+        $result = false;
+        if ($db instanceof MysqliDb) {
+            $result = $db->delete(static::getTableName());
+        }
+        return $result;
     }
 
 }

@@ -3,7 +3,7 @@
 use zukr\author\AuthorRepository;
 use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
-use zukr\univer\UniverRepository;
+use zukr\univer\UniverHelper;
 
 /**
  * Created by PhpStorm.
@@ -15,18 +15,18 @@ use zukr\univer\UniverRepository;
 $id_a = filter_input(INPUT_GET, 'id_a', FILTER_VALIDATE_INT);
 
 $author = (new AuthorRepository())->getById($id_a);
-if (empty($author)) {
-    Go_page('action.php?action=error_list');
-    exit();
+if (empty($author) || !$id_a) {
+    Go_page('error');
 }
-$univers = (new UniverRepository())->getInvitedDropList();
+$uh = UniverHelper::getInstance();
+$univers = $uh->getInvitedDropdownList();
 ?>
 <!-- Редактирование автора -->
 <header><a href="action.php">Меню</a></header>
 <header>Редагування данних автора</header>
 <form class="editAutor" method="post" action="action.php">
     <?= Html::select('Author[id_u]', $author['id_u'], $univers,
-        ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...'])
+        ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...', 'class' => 'w-100'])
     ?>
     <br>
     <label>ПІБ</label>

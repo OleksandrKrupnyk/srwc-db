@@ -5,26 +5,61 @@
  * Date: 10.11.17
  * Time: 15:08
  */
+
 // удаление работы
-global $link;
-if (isset($_GET['id_w'])) {//Задан ли вообще номер работы?
-    /*проверим связана работа с каким либо автором или нет
-    Для этого определим количество этих связей в таблицах их не должно быть. Подсчитаем их и
-    ровно удалим их */
-    $id = (int)filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
-    //Запрос на удаление с таблици связей работа-руководитель
-    $query = "DELETE FROM `wl` WHERE `id_w`='{$id}';";
+use zukr\base\Base;
+use zukr\base\exceptions\UnauthorizedAccessException;
+use zukr\log\Log;
+use zukr\user\UserRepository;
+use zukr\work\Work;
+use zukr\workauthor\WorkAuthor;
+use zukr\workleader\WorkLeader;
 
-    $result = mysqli_query($link, $query) or die('Видалення запису з таблиці зв\'язків робота-керівник: ' . mysqli_error($link));
-    log_action($_GET['action'], 'wl', $id);
-    //Запрос на удаление с таблици связей работа-автор
-    $query = "DELETE FROM `wa` WHERE `id_w`='{$id}';";
+try {
+    $log = Log::getInstance();
 
-    $result = mysqli_query($link, $query) or die('Видалення запису з таблиці зв\'язків робота-автор: ' . mysqli_error($link));
-    log_action($_GET['action'], 'wa', $id);
-    $query = "DELETE FROM `works` WHERE `id`='{$id}';";
+    $admins = (new UserRepository())->getUserIdAsAdmin();
+    $id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
+    $session = Base::$session;
+    $userId = (int)$session->get('id');
 
-    $result = mysqli_query($link, $query) or die('Видалення запису з таблиці реестру робіт: ' . mysqli_error($link));
-    log_action($_GET['action'], 'works', $id);
-    Go_page('action.php?action=all_view');
+    if (in_array($userId, $admins, true) && $id_w) {
+
+        $workLeader = new WorkLeader();
+        $queryLeader = $workLeader->getDb();
+        $queryLeader->startTransaction();
+        $queryLeader->where('id_w', $id_w);
+        $delete = $workLeader->delete($queryLeader);
+
+        if ($delete) {
+            $log->logAction(null, $workLeader::getTableName(), $id_w);
+            $workAuthor = new WorkAuthor();
+            $queryAuthor = $workAuthor->getDb();
+            $queryAuthor->where('id_w', $id_w);
+            $delete = $workAuthor->delete($queryAuthor);
+            if ($delete) {
+                $log->logAction(null, $workAuthor::getTableName(), $id_w);
+                $work = new Work();
+                $queryWork = $work->getDb();
+                $queryWork->where('id', $id_w);
+                $delete = $work->delete($queryWork);
+                if ($delete) {
+                    $log->logAction(null, $work::getTableName(), $id_w);
+                    Base::$app->cacheFlush();
+                }
+            }
+        }
+        ($delete) ? $queryLeader->commit() : $queryLeader->rollback();
+        $url2go = 'action.php?action=all_view';
+    } else {
+        throw new UnauthorizedAccessException(__CLASS__ . '::' . __METHOD__ . 'User with id: ' . $userId . ' try to make delete action');
+    }
+} catch (\Exception $e) {
+    if ($queryLeader !== null) {
+        $queryLeader->rollback();
+    }
+    $url2go = 'error';
+    Base::$log->error($e->getMessage());
+} finally {
+    Go_page($url2go);
 }

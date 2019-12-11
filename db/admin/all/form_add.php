@@ -86,7 +86,5 @@
     <br>
     <input type="submit" value="Записати">
     <input type="hidden" name="action" value="all_add">
-    <?php print_datalist_name("name");
-    print_datalist_name("lname"); ?>
 </form>
 <!-- Окончание Форма добавления всех сведений-->
