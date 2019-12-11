@@ -5,6 +5,7 @@ namespace zukr\base;
 /**
  * Class Base
  *
+ * @property $name
  * @package      zukr\base
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
@@ -12,6 +13,15 @@ namespace zukr\base;
 class Base
 {
 
+
+    private static $isInit = false;
+
+    const OBJ_SINGLE = [
+        'app' => App::class,
+        'logs' => Logger::class,
+        'param' => Params::class,
+        'session' => Session::class,
+    ];
     /**
      * @var App
      */
@@ -32,11 +42,13 @@ class Base
      */
     public static function init()
     {
-
-        self::$app = App::getInstance();
-        self::$param = Params::getInstance();
-        self::$session = Session::getInstance();
-        self::$log = Logger::getInstance();
+        if (!self::$isInit) {
+            self::$app = App::getInstance();
+            self::$param = Params::getInstance();
+            self::$session = Session::getInstance();
+            self::$log = Logger::getInstance();
+            self::$isInit = true;
+        }
     }
 
 }

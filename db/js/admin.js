@@ -345,29 +345,31 @@ else
 * Обработка отметки в списке приглашений для руководителей /представителей внз
 * */
 
-$("#selunivers").on('change',function(){
-    var val = $(this).find("option:selected").val();
 
-    $("#table_la").hide();
-    $.ajax({
+    /* Изменение выбора университета */
+    $("#selunivers").on('change', function () {
+        var id_u = $(this).find("option:selected").val();
+        var data = {
+            "id_u": id_u,
+            "action": "select-works"
+        };
+        $("#table_la").hide();
+        $.ajax({
             type: "POST",
             url: "ajax.php",
-            data: {"action":"selunivers","id_u":val},
+            data: data,
             cache: false,
-            success: function(txt){
+            success: function (txt) {
                 $("#work").hide().html(txt).slideDown(400);
 
-                }
+            }
         });
 
-});//$("#selunivers").change
-
+    });//$("#selunivers").change
 
 
 
 $("#table_la").hide();
-
-
 $("#work").on('change','#selwork',function(){
         var id_w = $(this).find("option:selected").val();
         var id_u = $("#selunivers").find("option:selected").val();
@@ -672,10 +674,4 @@ myChangeRoom.change(function(){
 
 
 }); // окончание загрузки документа
-
-
-
-
-
-
 /*-------------- Окончание файла ----------------------------*/

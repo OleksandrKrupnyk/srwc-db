@@ -110,12 +110,15 @@ table, td, th {
   border-spacing: 0;
 }
 
-table#table_la,
-table#table_la td,
-table#tableInvitationSection {
-  margin-left: 10px;
+#table_la,
+#table_la td,
+#tableInvitationSection {
   border: solid 1px #ff6666;
   border-spacing: 2px;
+}
+
+#table_la td {
+  max-width: 50%;
 }
 
 th {

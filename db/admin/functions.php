@@ -21,7 +21,7 @@ function read_settings()
     global $link;
 //Доступ к переменным масива из вне
     global $settings;
-    $query = "SELECT * FROM `settings`";
+    $query = 'SELECT * FROM `settings`';
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
@@ -109,7 +109,7 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
     or die("Invalid query: " . mysqli_error($link));
     $idString = ($shortname == 0)? "selunivers":"shortlistunivers";
 
-    echo "<select id=\"{$idString}\" name=\"id_u\" size=\"{$size}\" required><option value=\"-1\" disabled selected>Університет...</option>\n";
+    echo "<select id=\"{$idString}\" name=\"id_u\" size=\"{$size}\" required class='w-100'><option value=\"-1\" disabled selected>Університет...</option>\n";
     while ($row = mysqli_fetch_array($result)) {
         $NameUniver  = ($shortname == 0)? "{$row['univer']}({$row['univerfull'] })" : "{$row['univer']}";
         if (isset($chk) && $chk != "" && $row['id'] == $chk) {

@@ -23,7 +23,8 @@ class AuthorHelper
     private $worksAutors;
     /** @var array */
     private $autorsOfWork;
-
+    /** @var */
+    private $autors;
 
     /**
      * WorkHelper constructor.
@@ -67,8 +68,34 @@ class AuthorHelper
             $worksAutors = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
             $this->worksAutors = $worksAutors;
         }
-        return $worksAutors;
+        return $this->worksAutors;
     }
 
+    /**
+     * @return array|null
+     */
+    protected function getAutors(): ?array
+    {
+        if ($this->autors === null) {
+            $autors = (new AuthorRepository())->getAllAuthors();
+            $this->autors = $autors;
+        }
+        return $this->autors;
+    }
+
+    /**
+     * @param int $univerId
+     * @return array
+     */
+    public function getAllAuthorsByUniverId(int $univerId): array
+    {
+        $authors = $this->getAutors();
+        if (!empty($authors)) {
+            return array_filter($this->getAutors(), function ($author) use ($univerId) {
+                return $author['id_u'] === $univerId;
+            });
+        }
+        return [];
+    }
 
 }

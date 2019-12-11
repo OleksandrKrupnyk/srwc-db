@@ -119,12 +119,16 @@ table, td, th {
 }
 
 
-table#table_la,
-table#table_la td,
-table#tableInvitationSection {
-  margin-left: 10px;
+#table_la,
+#table_la td,
+#tableInvitationSection {
   border: solid 1px #ff6666;
   border-spacing: 2px;
+
+}
+
+#table_la td {
+  max-width: 50%;
 }
 
 th {
@@ -354,7 +358,7 @@ a {
   color: $color_red;
 
   &:hover {
-    color: #970000;
+    color: $color_red;
     background: #ff7979;
   }
 

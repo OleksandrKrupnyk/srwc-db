@@ -244,4 +244,18 @@ class WorkHelper
                 )
             );
     }
+
+
+    public function getWorksByUniverId(int $univerId): array
+    {
+        $array = $this->getWorks();
+        $array = array_filter($array, function ($work) use ($univerId) {
+            return $work['id_u'] === $univerId;
+        });
+
+
+
+
+        return $array;
+    }
 }

@@ -1,13 +1,17 @@
 <?php
 
+use zukr\api\actions\ApiActionsInterface;
+use zukr\api\ApiHelper;
+
 header("Content-Type: text/html; charset=utf-8");
 require 'config.inc.php';
 require 'functions.php';
+require '../vendor/autoload.php';
 global $link;
 
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRIPPED);
-$id_u =  filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
-$id_w =  filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+$id_u = filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+$id_w = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
 // Запрос на измемение данных в работе
 if (isset($_POST['id_w']) && $_POST['action'] === 'invitation') {//Запрос на обновление данных по приглашению
     $query = "UPDATE `works` SET \n"
@@ -29,6 +33,13 @@ if (isset($_POST['id_w']) && $_POST['action'] === "id_sec") {
     log_action($_POST['action'], "works", $_POST['id_w']);
 }
 
+$apih = ApiHelper::getInstance();
+/** ApiActionsInterface $classObj */
+$classObj = $apih->getActionByName($action);
+if ($classObj instanceof ApiActionsInterface) {
+    $classObj->init();
+    echo $classObj->execute();
+}
 
 switch ($action) {
     //Обработка Запроса на список работ в вузе

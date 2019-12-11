@@ -75,7 +75,9 @@ if ($session->get('access')) {
         <link href="../css/phone.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/style.min.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/chosen.min.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/chosen.jquery.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
         <script type="text/javascript" src="../js/notify.js"></script>
         <script type="text/javascript" src="../js/menuscript.js"></script>

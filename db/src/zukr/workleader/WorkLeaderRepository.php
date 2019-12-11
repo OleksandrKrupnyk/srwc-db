@@ -40,4 +40,34 @@ class WorkLeaderRepository extends AbstractRepository
         }
 
     }
+
+
+    /**
+     * @return array|\MysqliDb
+     */
+    public function getAllLeadersOfWorkByWorkId(int $workId)
+    {
+        $table = $this->model::getTableName();
+        $joinTable = Leader::getTableName();
+        try {
+            return $this->model::find()
+                ->join($joinTable, $table . '.id_l=' . $joinTable . '.id')
+                ->where('id_w', $workId)
+                ->get($table, null, $table . '.date,id_w, ' . $joinTable . '.*');
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+        }
+    }
+
+
+    public function getCountAuthorsByWorkId(int $workId)
+    {
+        try {
+            return $this->model::find()
+                ->where('id_w', $workId)
+                ->get($this->model::getTableName(), null, 'count(*) as count');
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+        }
+    }
 }

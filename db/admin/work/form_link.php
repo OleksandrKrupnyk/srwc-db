@@ -20,7 +20,7 @@ $univers = $uh->getTakePartUniversDropDownList();
         <?php echo Html::select('Work[id_u]', $id_u, $univers,
             ['id' => 'selunivers', 'prompt' => 'Оберіть', 'class' => 'w-100', 'size' => 10]) ?>
         <div id="work"></div>
-        <table id="table_la">
+        <table id="table_la" class="w-100">
             <tr>
                 <th>Керівники</th>
                 <th>Автори</th>
@@ -44,6 +44,7 @@ if (isset($id_u) && isset($work)) {
 <script type="text/javascript">
 $(function(){
     selectWork({$id_u},{$work['id']});
+    $(".select-link-author").chosen({disable_search_threshold: 10});
 })
 </script>
 SCRIPT;
