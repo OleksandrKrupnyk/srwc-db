@@ -24,7 +24,7 @@ if (count_review($_POST['id_w']) < 2) {
         log_action($_POST['action'], "reviews", $id);
         Go_page("action.php?action=all_view#id_w{$_POST['id_w']}");
     } else { // Выполнять если есть ошыбка
-        $error_message .= AnalizeMysqlError(mysqli_error($link));
+        $error_message .= AnaliseMysqlError(mysqli_error($link));
     }
 }else{
     $error_message .= "На роботу вже є 2 рецензії";

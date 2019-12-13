@@ -46,14 +46,14 @@ function print_page_settings()
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
     or die("Помилка зчитування налаштувань програми: " . mysqli_error($link));
-    echo "<form action=\"settings.php\" method=POST>\n<table>\n";
-    echo "<h2>Коротка інформація про систему</h2>";
-    echo "<h5>Обмеження розміру файлу на завантаження:". ini_get('upload_max_filesize')."</h5>";
-    echo "<h5>Кодування за замовчуванням:". ini_get('default_charset')."</h5>";
-    echo "<h5>Шляхи до підключення розширень dll/lib:". ini_get('extension_dir')."</h5>";
-    echo "<h5>Шляхи до файлів включення файлів php:". ini_get('include_path')."</h5>";
-    echo "<h5>Максимальний розмір POST запиту:". ini_get('post_max_size')."</h5>";
-    echo "<tr><th>Налаштування</th><th>Значення</th></tr>";
+    echo "<form action=\"settings.php\" method=POST>\n<table>\n"
+    . "<h2>Коротка інформація про систему</h2>"
+    . "<h5>Обмеження розміру файлу на завантаження:". ini_get('upload_max_filesize')."</h5>"
+    . "<h5>Кодування за замовчуванням:". ini_get('default_charset')."</h5>"
+    . "<h5>Шляхи до підключення розширень dll/lib:". ini_get('extension_dir')."</h5>"
+    . "<h5>Шляхи до файлів включення файлів php:". ini_get('include_path')."</h5>"
+    . "<h5>Максимальний розмір POST запиту:". ini_get('post_max_size')."</h5>"
+    . "<tr><th>Налаштування</th><th>Значення</th></tr>";
     while ($row = mysqli_fetch_array($result)) {
         echo "<tr><td>" . $row['description'] . "</td><td>";
         chk_box($row['parametr'], "", $row['value']);
@@ -94,10 +94,10 @@ function log_action($action, $table, $action_id = 0, $tz_id = 888)
  * @param bool $checkin
  *  list_univers(<номер отмеченого вуза>,<размер списка>,<1-отображать только из 1ИнфСооб>)
  * */
-function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=false)
+function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=false):string
 {
     global $link;
-    $query = "SELECT `univers`.* "."FROM univers ";
+    $query = "SELECT `univers`.*  FROM univers ";
     $query .= ($checkin ==1)?" RIGHT JOIN works ON works.id_u=univers.id ":"";
     $query .= ($invite == 1)?" WHERE `invite`= 1  OR `univers`.`id` = 1 " : ""; //`id` = 1 - это ВУЗ ДДТУ
     $query .= ($checkin ==1)?" GROUP BY univers.id ":"";
@@ -109,29 +109,31 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
     or die("Invalid query: " . mysqli_error($link));
     $idString = ($shortname == 0)? "selunivers":"shortlistunivers";
 
-    echo "<select id=\"{$idString}\" name=\"id_u\" size=\"{$size}\" required class='w-100'><option value=\"-1\" disabled selected>Університет...</option>\n";
+    $str =  "<select id=\"{$idString}\" name=\"id_u\" size=\"{$size}\" required class='w-100'><option value=\"-1\" disabled selected>Університет...</option>\n";
     while ($row = mysqli_fetch_array($result)) {
         $NameUniver  = ($shortname == 0)? "{$row['univer']}({$row['univerfull'] })" : "{$row['univer']}";
         if (isset($chk) && $chk != "" && $row['id'] == $chk) {
-            echo "<option value=\"{$row['id']}\" selected>{$NameUniver}</option>\n";
+            $str .= "<option value=\"{$row['id']}\" selected>{$NameUniver}</option>\n";
         } else {
             if (isset($_COOKIE['cid_u']) && $row['id'] == $_COOKIE['cid_u'] && $chk == "") {
-                echo "<option value=\"{$row['id']}\" selected>{$NameUniver}</option>\n";
+                $str.= "<option value=\"{$row['id']}\" selected>{$NameUniver}</option>\n";
             } else
-                echo "<option value=\"{$row['id'] }\">{$NameUniver}</option>\n";
+                $str.= "<option value=\"{$row['id'] }\">{$NameUniver}</option>\n";
         }
     }
-    echo "</select>\n";
+    $str .= "</select>\n";
+    return $str;
 }
 
 
 /**
  * Список для выбора рецензентов/Руководителей для внесения данных в таблицу рецензий
- * @param Integer $id Номер рецензии которая редактируется (-1 - если создается новая)
+ *
  * @param Integer $id_u Шифр университета из которого работа, чтобы исключить рецензентов не из этого ВУЗа (-1)
  * @param Integer $id_w Шифр работы, что бы исключить рецензии две рецензии от одного рецензента
+ * @param Integer $id   Номер рецензии которая редактируется (-1 - если создается новая)
  */
-function cbo_reviewers_list($id = -1,$id_u,$id_w){
+function cbo_reviewers_list($id_u, $id_w, $id = -1){
     global $link;
     if($id == -1) {
         $query = "SELECT leaders.id, leaders.suname, leaders.name, leaders. lname, positions.position, degrees.degree, statuses.status, univers.univer FROM leaders \n" .
@@ -562,112 +564,77 @@ function list_emails($table){
 }
 
 
-/** * ********************************************************************************
+/**
  * Список авторов или руководителей
  * @param string $table
  * @param bool $phone
  * @param bool $email
  * @param bool $hash
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function list_autors_or_leaders($table, $phone = false, $email = false,  $hash=false,$onlyReviwers = false)
+ */
+function list_autors_or_leaders(string $table,bool $phone = false,bool $email = false,bool  $hash=false,bool $onlyReviwers = false)
 {
     global $link;
-    global $FROM;
-    $table = ($table == "") ? "autors" : $table;
-    $id = ($table === "autors") ? "id_a" : "id_l";
+    $table = $table == '' ? 'autors' : $table;
+    $id = ($table === 'autors') ? 'id_a' : 'id_l';
 	//."JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`\n
-    if ($table === "autors") {$query = "SELECT autors.*, univers.univer FROM `autors` JOIN univers ON autors.id_u = univers.id ORDER BY `suname` ASC";}
+    if ($table === 'autors') {
+        $query = "SELECT autors.*, univers.univer FROM `autors` JOIN univers ON autors.id_u = univers.id ORDER BY `suname` ASC";}
     else{
         $query = "SELECT leaders.*, positions.position,degrees.degree,statuses.status,univers.univer FROM leaders 
 JOIN positions ON leaders.id_pos = positions.id
 JOIN degrees ON leaders.id_deg = degrees.id
 JOIN statuses ON leaders.id_sat = statuses.id
 JOIN univers ON leaders.id_u = univers.id";
-        $query .= ($onlyReviwers == true)? " WHERE leaders.review = '1' ":"";
+        $query .= $onlyReviwers == true ? " WHERE leaders.review = '1' ": '';
         $query .= " ORDER BY `suname` ASC";
     }
 
-
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
-    or die("Invalid query функція list_autors_or_leaders: " . mysqli_error($link));
-    $sub_row_str = "<ol name=" . $table . ">";
+    or die('Invalid query функція list_autors_or_leaders: ' . mysqli_error($link));
+    $sub_row_str = '<ol name=' . $table . '>';
     while ($row = mysqli_fetch_array($result)) {
         //print_r($row);
-        $sub_row_str .= "<li data-index=" . $row['id'] . " id=" . $row['id'] . " title=\"Останні зміни :" . htmlspecialchars($row['date']) . "\" >";
-        $sub_row_str .= "<a href=action.php?action=" . rtrim($table, "s") . "_edit&" . $id . "=" . $row['id'] . "&FROM={$FROM}  title=\"Ред.{$row['univer']}\">";
+        $sub_row_str .= '<li data-index=' . $row['id'] . ' id=' . $row['id'] . ' title="Останні зміни :' . htmlspecialchars($row['date']) . '">';
+        $sub_row_str .= "<a href=action.php?action=" . rtrim($table, "s") . '_edit&' . $id . '=' . $row['id'] . "  title=\"Ред.{$row['univer']}\">";
         $sub_row_str .= $row['suname'] . " " . $row['name'] . " " . $row['lname'];
         $sub_row_str .= "</a>  ";
-        if($onlyReviwers == false) {
-            $sub_row_str .= "<a href=#remove title=\"Видалити\n з реестру\"></a>";
+        if(!$onlyReviwers) {
+            $sub_row_str .= "<a href='#remove' title='Видалити з реестру'></a>";
         }
         $sub_row_str .= ($row['arrival'] == 1) ? "<span title=\"Прибув на конференцію\">&nbsp;[&radic;]&nbsp;</span>" : "";
 
        $get_text = "&t=a"; // для GET запроса в хеш сторку
-	if($table == "leaders"){
-		$sub_row_str .= " ".$row['position'];
-		$sub_row_str .= " ".$row['degree'];
-		$sub_row_str .= " ".$row['status'];
-        $get_text = "&t=l"; // для GET запроса в хеш сторку
+	if($table === 'leaders'){
+		$sub_row_str .= ' ' . $row['position'];
+		$sub_row_str .= ' ' . $row['degree'];
+		$sub_row_str .= ' ' . $row['status'];
+        $get_text = '&t=l'; // для GET запроса в хеш сторку
 	}
 
-	if($onlyReviwers == false) {
-        $phone_number = (($row['phone'] <> "") && ($phone == true)) ? $row['phone'] : "відсутній";
-        $email_text = (($row['email'] <> "") && ($email == true)) ? "<strong>e-mail:</strong><a href=\"mailto:" . $row['email'] . "\">" . $row['email'] . "</a>" : "";
-        $sub_row_str .= ($phone == true) ? "<span id=\"phone\">" . $phone_number . "</span>" : "";
-        $sub_row_str .= "" . $email_text;
+	if(!$onlyReviwers) {
+        $phone_number = ($row['phone'] !== '') && $phone ? $row['phone'] : 'відсутній';
+        $email_text = ($row['email'] !== '') && $email
+            ? '<strong>e-mail:</strong><a href="mailto:' . $row['email'] . '">' . $row['email'] . '</a>'
+        : '';
+        $sub_row_str .= $phone ? '<span id="phone">' . $phone_number . '</span>' : '';
+        $sub_row_str .= '' . $email_text;
 
 
-        $sub_row_str .= ($hash==true)? "<a href=\"getmails.php?hash=".$row['hash'].$get_text."\">Получить письмо!</a>":"";
-        if (($row['email_recive'] == 1) && ($hash==true)){$sub_row_str .= " [The email have recived and read.".$row['email_date']." ] ";}
+        $sub_row_str .= $hash
+            ? '<a href="getmails.php?hash=' . $row['hash'].$get_text. '">Получить письмо!</a>'
+            : '';
+        if ($row['email_recive'] == 1 && $hash){
+            $sub_row_str .= ' [The email have recived and read.' . $row['email_date']. ' ] ';
+        }
         $sub_row_str .= "<a href=\"lists.php?list=badge_{$table}&badge={$row['id']}\" title=\"Друкувати посвідчення\"></a>";
         $sub_row_str .= "<input type=\"checkbox\" name=\"works_id[]\" value=\"{$row['id']}\">";
         $sub_row_str .= "</li>\n";
     }
     }
     $sub_row_str .= "</ol>\n";
-    echo $sub_row_str;
+    return $sub_row_str;
 }
 
-/**
- * Cписок авторов или руководителей по ВУЗУ
- * * @param string $table
- */
-function list_persons($table)
-{
-    global $link;
-
-    $query = "SELECT * FROM `{$table}` ORDER BY suname ASC ";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die("Invalid query функція list_persons: " . mysqli_error($link));
-    while ($row = mysqli_fetch_array($result)) {
-        echo $row['name'];
-        echo '<br>';
-    }
-}
-
-/** * ********************************************************************************
- *
- * Список курса обучения Курс обучения выделяет выбраный
- * <select></selct>
- * @param int $id
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function cbo_curse($id)
-{
-    $str = "<select size=\"1\" name=\"curse\" title=\"Курс навчання\">\n";
-    $str .= "<option disabled selected>Курс...</option>\n";
-    for ($i = 1; $i < 7; $i++) {
-        $str .= "<option value=" . $i;
-        $str .= ($id == $i) ? " selected " : "";
-        $str .= ">" . $i . "</option>\n";
-    }
-
-    $str .= "</select>\n";
-    echo $str;
-}
 
 /** * ********************************************************************************
  *
@@ -1008,7 +975,7 @@ function list_univers_reseption($size)
     or die('Invalid query функція list_univers_reseption: ' . mysqli_error($link));
     echo "<select id=\"univer_reseption\" name=\"id_u\" size=\"$size\"><option value=\"-1\" disabled selected>Університет...</option>\n";
     while ($row = mysqli_fetch_array($result)) {
-        echo "<option value=" . $row['id'] . ">" . $row['univer'] . " (" . $row['univerfull'] . ")</option>\n";
+        echo '<option value=' . $row['id'] . '>' . $row['univer'] . ' (' . $row['univerfull'] . ")</option>\n";
     }
     echo "</select>\n";
 }
@@ -1135,15 +1102,21 @@ function student_ka($O)
  * @param string $str
  * @return string
  */
-function AnalizeMysqlError($str){
-    $result = "";
-    //Проверяем не пустая ли к нам пришла строка
-    if ('' === $str){ $result = "Пустая строка";}
+function AnaliseMysqlError($str): string
+{
     //Разбиваем строку на строки по разделителю
-    $array_str = explode(' ',$str);
-    switch($array_str[0]){
-        case 'Duplicate' : {$result="Ошибка! Дублирование данных :".$str."\n"; }break;
-        default: {$result=$str."\n";} break;
+    $array_str = explode(' ', $str);
+    switch ($array_str[0]) {
+        case 'Duplicate' :
+            {
+                $result = 'Ошибка! Дублирование данных :' . $str . "\n";
+            }
+            break;
+        default:
+            {
+                $result = $str . "\n";
+            }
+            break;
     }
     return $result;
 }
@@ -1154,7 +1127,7 @@ function AnalizeMysqlError($str){
 function Go_page($page)
 {
     $page = $page !== 'error' ? $page : 'action.php?action=error_list';
-    header('location: ' . $page);
+    header('location: ' . urldecode($page));
     exit();
 }
 

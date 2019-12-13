@@ -35,8 +35,7 @@ if (isset($_POST['id_w'])) {
         }
     }
     //перейдем к просмотру списка работ
-    header("Location: action.php?action=all_view");
+    Go_page('action.php?action=all_view');
 } else {
-    header("Location: action.php");
+    Go_page('action.php');
 }
-?>
