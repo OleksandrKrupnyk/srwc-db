@@ -6,20 +6,25 @@
  * Time: 20:11
  */
 
+use zukr\base\Base;
 use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\univer\UniverHelper;
 
+$session = Base::$session;
 $id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
 $uh = UniverHelper::getInstance();
 $univers = $uh->getInvitedDropdownList();
+
+// redirect_to -> session
+$session->setRedirectParam();
 ?>
 <!-- Форма добавления автора-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні автора</header>
 <form class="addautorForm" method="post" action="action.php" name='Autor'>
     <?= Html::select('Author[id_u]', $id_u, $univers,
-        ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...','class'=>'w-100'])
+        ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...', 'class' => 'w-100'])
     ?>
     <br>
     <label>ПІБ</label>

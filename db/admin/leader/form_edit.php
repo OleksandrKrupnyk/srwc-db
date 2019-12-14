@@ -29,6 +29,8 @@ $positions = (new PositionRepository())->getDropDownList();
 $statuses = (new StatusRepository())->getDropDownList();
 $degrees = (new DegreeRepository())->getDropDownList();
 $users = (new UserRepository())->getDropDownList();
+// redirect_to -> session
+$session->setRedirectParam();
 ?>
 <!-- Редактирование руководителя -->
 <header><a href="action.php">Меню</a></header>

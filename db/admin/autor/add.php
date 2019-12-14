@@ -10,6 +10,7 @@
 
 
 use zukr\author\Author;
+use zukr\base\Base;
 use zukr\log\Log;
 use zukr\workauthor\WorkAuthor;
 
@@ -19,7 +20,6 @@ $autor->load($_POST);
 $save = $autor->save();
 $log = Log::getInstance();
 $log->logAction(null, $autor::getTableName(), $autor->id);
-$url2go = $_POST['FROM'] ?: 'action.php';
 /*Если известно с какой работой связать то связать и перейти на страничку указания на работу*/
 $workId = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
 if ($workId && $autor->id > 0) {
@@ -34,6 +34,6 @@ if (isset($_POST['save'])) {
     $url2go = 'action.php?action=autor_edit&id_a=' . $autor->id;
 }
 if (isset($_POST['save+exit'])) {
-    $url2go = $_POST['from'] ?: 'action.php?action=all_view';
+    $url2go = Base::$session->get('redirect_to');
 }
 Go_page($url2go);

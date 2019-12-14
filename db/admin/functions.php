@@ -566,70 +566,78 @@ function list_emails($table){
 
 /**
  * Список авторов или руководителей
- * @param string $table
- * @param bool $phone
- * @param bool $email
- * @param bool $hash
+ *
+ * @param string $object 'author' or 'leader'
+ * @param bool   $phone
+ * @param bool   $email
+ * @param bool   $hash
+ * @param bool   $onlyReviwers
+ * @return string
  */
-function list_autors_or_leaders(string $table,bool $phone = false,bool $email = false,bool  $hash=false,bool $onlyReviwers = false)
+function getListOfObjects(string $object, bool $phone = false, bool $email = false, bool $hash = false, bool $onlyReviwers = false)
 {
     global $link;
-    $table = $table == '' ? 'autors' : $table;
-    $id = ($table === 'autors') ? 'id_a' : 'id_l';
-	//."JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`\n
-    if ($table === 'autors') {
-        $query = "SELECT autors.*, univers.univer FROM `autors` JOIN univers ON autors.id_u = univers.id ORDER BY `suname` ASC";}
-    else{
+    if (empty($object) || !in_array($object, ['author', 'leader'])) {
+        return '';
+    }
+
+    $id = ($object === 'author') ? 'id_a' : 'id_l';
+    //."JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`\n
+    if ($object === 'author') {
+        $query = "SELECT autors.*, univers.univer 
+                  FROM `autors` 
+                      JOIN univers ON autors.id_u = univers.id 
+                  ORDER BY `suname` ASC";
+    } else {
         $query = "SELECT leaders.*, positions.position,degrees.degree,statuses.status,univers.univer FROM leaders 
 JOIN positions ON leaders.id_pos = positions.id
 JOIN degrees ON leaders.id_deg = degrees.id
 JOIN statuses ON leaders.id_sat = statuses.id
 JOIN univers ON leaders.id_u = univers.id";
-        $query .= $onlyReviwers == true ? " WHERE leaders.review = '1' ": '';
+        $query .= $onlyReviwers == true ? " WHERE leaders.review = '1' " : '';
         $query .= " ORDER BY `suname` ASC";
     }
 
     $result = mysqli_query($link, $query)
     or die('Invalid query функція list_autors_or_leaders: ' . mysqli_error($link));
-    $sub_row_str = '<ol name=' . $table . '>';
+    $sub_row_str = '<ol data-object-name=' . $object . '>';
     while ($row = mysqli_fetch_array($result)) {
         //print_r($row);
-        $sub_row_str .= '<li data-index=' . $row['id'] . ' id=' . $row['id'] . ' title="Останні зміни :' . htmlspecialchars($row['date']) . '">';
-        $sub_row_str .= "<a href=action.php?action=" . rtrim($table, "s") . '_edit&' . $id . '=' . $row['id'] . "  title=\"Ред.{$row['univer']}\">";
-        $sub_row_str .= $row['suname'] . " " . $row['name'] . " " . $row['lname'];
-        $sub_row_str .= "</a>  ";
-        if(!$onlyReviwers) {
-            $sub_row_str .= "<a href='#remove' title='Видалити з реестру'></a>";
+        $sub_row_str .= '<li data-index=' . $row['id'] . ' title="Останні зміни :' . htmlspecialchars($row['date']) . '">'
+            . "<a href=action.php?action=" . rtrim($object, "s") . '_edit&' . $id . '=' . $row['id'] . "  title=\"Ред.{$row['univer']}\">"
+            . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . '</a>  ';
+        if (!$onlyReviwers) {
+            $sub_row_str .= '<a href=\'#\' title=\'Видалити з реестру\' class=\'delete-author\'></a>';
         }
-        $sub_row_str .= ($row['arrival'] == 1) ? "<span title=\"Прибув на конференцію\">&nbsp;[&radic;]&nbsp;</span>" : "";
+        $sub_row_str .= (int)$row['arrival'] === 1 ? '<span title="Прибув на конференцію">&nbsp;[&radic;]&nbsp;</span>' : '';
 
-       $get_text = "&t=a"; // для GET запроса в хеш сторку
-	if($table === 'leaders'){
-		$sub_row_str .= ' ' . $row['position'];
-		$sub_row_str .= ' ' . $row['degree'];
-		$sub_row_str .= ' ' . $row['status'];
-        $get_text = '&t=l'; // для GET запроса в хеш сторку
-	}
-
-	if(!$onlyReviwers) {
-        $phone_number = ($row['phone'] !== '') && $phone ? $row['phone'] : 'відсутній';
-        $email_text = ($row['email'] !== '') && $email
-            ? '<strong>e-mail:</strong><a href="mailto:' . $row['email'] . '">' . $row['email'] . '</a>'
-        : '';
-        $sub_row_str .= $phone ? '<span id="phone">' . $phone_number . '</span>' : '';
-        $sub_row_str .= '' . $email_text;
-
-
-        $sub_row_str .= $hash
-            ? '<a href="getmails.php?hash=' . $row['hash'].$get_text. '">Получить письмо!</a>'
-            : '';
-        if ($row['email_recive'] == 1 && $hash){
-            $sub_row_str .= ' [The email have recived and read.' . $row['email_date']. ' ] ';
+        $get_text = '&t=a'; // для GET запроса в хеш сторку
+        if ($object === 'leaders') {
+            $sub_row_str .= ' ' . $row['position'];
+            $sub_row_str .= ' ' . $row['degree'];
+            $sub_row_str .= ' ' . $row['status'];
+            $get_text = '&t=l'; // для GET запроса в хеш сторку
         }
-        $sub_row_str .= "<a href=\"lists.php?list=badge_{$table}&badge={$row['id']}\" title=\"Друкувати посвідчення\"></a>";
-        $sub_row_str .= "<input type=\"checkbox\" name=\"works_id[]\" value=\"{$row['id']}\">";
-        $sub_row_str .= "</li>\n";
-    }
+
+        if (!$onlyReviwers) {
+            $phone_number = ($row['phone'] !== '') && $phone ? $row['phone'] : 'відсутній';
+            $email_text = ($row['email'] !== '') && $email
+                ? '<strong>e-mail:</strong><a href="mailto:' . $row['email'] . '">' . $row['email'] . '</a>'
+                : '';
+            $sub_row_str .= $phone ? '<span id="phone">' . $phone_number . '</span>' : '';
+            $sub_row_str .= '' . $email_text;
+
+
+            $sub_row_str .= $hash
+                ? '<a href="getmails.php?hash=' . $row['hash'] . $get_text . '">Получить письмо!</a>'
+                : '';
+            if ($row['email_recive'] == 1 && $hash) {
+                $sub_row_str .= ' [The email have received and read.' . $row['email_date'] . ' ] ';
+            }
+            $sub_row_str .= "<a href=\"lists.php?list=badge_{$object}&badge={$row['id']}\" title=\"Друкувати посвідчення\"></a>";
+            $sub_row_str .= "<input type=\"checkbox\" name=\"works_id[]\" value=\"{$row['id']}\">";
+            $sub_row_str .= "</li>\n";
+        }
     }
     $sub_row_str .= "</ol>\n";
     return $sub_row_str;

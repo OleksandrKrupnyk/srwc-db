@@ -50,7 +50,7 @@ try {
             }
         }
         ($delete) ? $queryLeader->commit() : $queryLeader->rollback();
-        $url2go = 'action.php?action=all_view';
+        $url2go = Base::$session->get('redirect_to');
     } else {
         throw new UnauthorizedAccessException(__CLASS__ . '::' . __METHOD__ . 'User with id: ' . $userId . ' try to make delete action');
     }

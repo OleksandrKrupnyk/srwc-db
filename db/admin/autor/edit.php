@@ -8,6 +8,7 @@
 
 //Изменение данных автора
 use zukr\author\AuthorRepository;
+use zukr\base\Base;
 use zukr\log\Log;
 
 $_SESSION['id_u'] = $_POST['id_u'];
@@ -27,6 +28,6 @@ if (isset($_POST['save'])) {
     $url2go = 'action.php?action=autor_edit&id_a=' . $id_a;
 }
 if (isset($_POST['save+exit'])) {
-    $url2go = $_POST['from'] ?: 'action.php?action=all_view';
+    $url2go = Base::$session->get('redirect_to');
 }
 Go_page($url2go);

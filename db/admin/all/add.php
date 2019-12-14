@@ -34,7 +34,7 @@ if (mysqli_error($link)==''){
     $id_w = mysqli_insert_id($link);
     log_action($_POST['action'], "works", $id_w);
 }else{ // Выполнять если есть ошыбка
-    $error_message .= AnalizeMysqlError(mysqli_error($link));
+    $error_message .= AnaliseMysqlError(mysqli_error($link));
 }
 
 
@@ -62,7 +62,7 @@ if( 888 == $_POST['id_a']){
         $id_a = mysqli_insert_id($link);
         log_action($_POST['action'], "autors", $id_a);
     }else{ // Выполнять если есть ошыбка
-        $error_message .= AnalizeMysqlError(mysqli_error($link));
+        $error_message .= AnaliseMysqlError(mysqli_error($link));
     }
 }else{
     $id_a = $_POST['id_a'];
@@ -95,7 +95,7 @@ if( 888 == $_POST['id_l']){
         $id_l = mysqli_insert_id($link);
         log_action($_POST['action'], "leaders", $id_l);
     }else{ // Выполнять если есть ошыбка
-        $error_message .= AnalizeMysqlError(mysqli_error($link));
+        $error_message .= AnaliseMysqlError(mysqli_error($link));
     }
 }else{
     //присвоить если не равен 888

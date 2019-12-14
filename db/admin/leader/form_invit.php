@@ -1,3 +1,9 @@
+<?php
+
+use zukr\base\Base;
+
+Base::$session->setFromParam();
+?>
 <!--Формування списку запрошень журі-->
 <header><a href="action.php">Меню</a></header>
 <header>Запрошення (<?= $count ?> всього)</header>
@@ -10,7 +16,7 @@
         <th>Представники / Керівники</th>
     </tr>
     <tr>
-        <td><?= list_univers('', 10, true, true,true) ?></td>
+        <td><?= list_univers('', 10, true, true, true) ?></td>
         <td>
             <div id="listleaders"></div>
         </td>

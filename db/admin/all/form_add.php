@@ -2,7 +2,11 @@
 <header><a href="action.php">Меню</a></header>
 <header>Усі данні роботи</header>
 <form class="addAllForm" method="post" action="action.php">
-    <?php (isset($_GET['id_u'])) ? list_univers($_GET['id_u'], 1) : list_univers("", 1); ?>
+    <?php $list = (isset($_GET['id_u']))
+        ? list_univers($_GET['id_u'], 1)
+        : list_univers("", 1);
+    echo $list;
+    ?>
     <br>
     <div class="listsaotursleaders">
     <select id="listautors" size="10" name="id_a">

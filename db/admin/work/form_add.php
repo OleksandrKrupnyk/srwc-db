@@ -18,6 +18,8 @@ $uh = UniverHelper::getInstance();
 $univers = $uh->getInvitedDropdownList();
 $sh = SectionHelper::getInstance();
 $sections = $sh->getDropdownList();
+// redirect_to -> session
+$session->setRedirectParam();
 ?>
 <!-- Форма добавления работы-->
 <header><a href="action.php">Меню</a></header>
