@@ -69,36 +69,6 @@ switch ($action) {
             or die("Помилка запиту: " . mysqli_error($link));
         }
         break;
-    /* Удаление автора или руководителя */
-    case 'delete':
-        {
-            //Проверим есть ли запись в таблице связей
-            //Определим таблицу связей
-            $link_table = $_POST['table'] == 'autors' ? 'wa' : 'wl';
-            $link_id = ($_POST['table'] == "autors") ? 'id_a' : 'id_l';
-            $query = "SELECT `{$link_id}` FROM `{$link_table}` WHERE `{$link_id}`='{$_POST['id']}'";
-            mysqli_query($link, "SET NAMES 'utf8'");
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
-            $result = mysqli_query($link, $query)
-            or die('Помилка запиту: ' . mysqli_error($link));
-            //Количество строк в запросе
-            $row_cnt = mysqli_num_rows($result);
-            //Если количество работ рано нулю, т.е. автор или руководитель не скем не связан
-            if ($row_cnt == 0) {
-                //Формируем запрос на удаление автора или руководителя
-                $query = "DELETE FROM `{$_POST['table']}` WHERE `id`={$_POST['id']}";
-                //Удаление записи из таблицы
-                $result = mysqli_query($link, $query)
-                or die("Помилка запиту: " . mysqli_error($link));
-                log_action($_POST['action'], $_POST['table'], $_POST['id']);
-                //Сообщаем что все прошло успешно
-                echo 'TRUE';
-            } else {
-                //Связи ещё есть в таблице
-                echo 'FALSE';
-            }
-        }
-        break;
     /* Убирает отметку о прибитии на конференцию автора или руководителя */
     case 'rem_arrival':
         {

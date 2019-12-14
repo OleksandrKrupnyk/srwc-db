@@ -126,11 +126,15 @@ $_type = $session->getFlash('recordSaveType', '');
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= 'from :' . urldecode($_SESSION['from']) ?><?= $error_message; ?></div>
     <div id="operator">Оператор :<span><?= $session->get('usr') ?></span></div>
-    <autor class="autor"><?= 'xdebug_time_index :' . number_format(xdebug_time_index(),3) . 'sec| xdebug_peak_memory_usage :' . number_format(xdebug_peak_memory_usage() / 1024/1024,3) . 'MB| xdebug_memory_usage :' . number_format(xdebug_memory_usage() / 1024/1024,3) . 'MB' ?>
+    <autor class="autor"><?= 'xdebug_time_index :' . number_format(xdebug_time_index(), 3) . 'sec| xdebug_peak_memory_usage :' . number_format(xdebug_peak_memory_usage() / 1024 / 1024, 3) . 'MB| xdebug_memory_usage :' . number_format(xdebug_memory_usage() / 1024 / 1024, 3) . 'MB' ?>
         Krupnik&copy;
     </autor>
     <script>
-        $.notify.defaults({position: 'top center', elementPosition: 'top center'});
+        $.notify.defaults({
+            position: 'top center',
+            globalPosition: 'top center',
+            gap: 8
+        });
         var _type = '<?=$_type?>'.toString();
         var _msg = '<?=$_msg?>'.toString();
         console.log(_type, _msg);

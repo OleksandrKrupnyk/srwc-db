@@ -41,7 +41,7 @@ class DeleteAuthorAction implements ApiActionsInterface
 
             $delete = $author->delete($authorQuery);
             $log = Log::getInstance();
-            $log->logAction('Delete-Author-Action', 'wa', '0');
+            $log->logAction('Delete-Author-Action', 'authors', $this->id);
             ($delete) ? $authorQuery->commit() : $authorQuery->rollback();
             $response = ['msg' => 'Запис автора видалено', 'code' => 0];
         } catch (\Exception $e) {

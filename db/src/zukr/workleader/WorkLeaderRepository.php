@@ -70,4 +70,21 @@ class WorkLeaderRepository extends AbstractRepository
             Base::$log->error($e->getMessage());
         }
     }
+
+    /**
+     * @param int $id
+     * @return array|\MysqliDb
+     */
+    public function getByLeaderId(int $id)
+    {
+        $table = $this->model::getTableName();
+        try {
+            return $this->model::find()
+                ->where('id_l', $id)
+                ->get($table);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
 }
