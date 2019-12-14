@@ -45,6 +45,25 @@ class Session
         return self::$obj;
     }
 
+    /**
+     * set param 'from' in session
+     */
+    public function setFromParam()
+    {
+        $FROM = trim(urlencode($_SERVER['REQUEST_URI']));
+        $this->set('from', $FROM);
+    }
+
+    /**
+     * set param redirect_to
+     */
+    public function setRedirectParam()
+    {
+        $redirect_to = $this->get('from', '');
+        $redirect_to === '' ?:
+            $this->set('redirect_to', $redirect_to);
+    }
+
 
     /**
      * Initializes the application component.

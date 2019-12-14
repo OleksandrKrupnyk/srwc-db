@@ -123,7 +123,7 @@
         <option value="1">Рекомендувати</option>
         <option value="0">Не рекомендувати</option>
     </select><label>до участі у підсумковій конференції.</label><br>
-    <label>Рецензент :</label><?php cbo_reviewers_list($id = -1, $_GET['id_u'], $_GET['id_w']); ?>
+    <label>Рецензент :</label><?php cbo_reviewers_list($_GET['id_u'], $_GET['id_w'], $id = -1); ?>
     <input type="submit" value="Записати"><input type="button" value="Повернутися" name="return"
                                                  onclick="window.location='action.php?action=all_view#id_w'+<?= $_GET['id_w'] ?>">
     <input type="hidden" name="action" value="review_add">

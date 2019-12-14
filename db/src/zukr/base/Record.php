@@ -248,11 +248,11 @@ abstract class Record implements RecordInterface
     /**
      * @throws \Exception
      */
-    public function delete(MysqliDb $db)
+    public function delete(MysqliDb $db): bool
     {
         $result = false;
         if ($db instanceof MysqliDb) {
-            $result = $db->delete(static::getTableName());
+            $result = (bool)$db->delete(static::getTableName());
         }
         return $result;
     }

@@ -139,7 +139,7 @@ switch ($_GET['action']) {
 <form class="addScanFiles" enctype="multipart/form-data" method="post" action="uploadinvitation.php">
     <fieldset>
         <legend>Завантаження сканованих запрошень</legend>
-        <label>ВНЗ:</label> <?php list_univers(1, 1, 1) ?>
+        <label>ВНЗ:</label> <?= list_univers(1, 1, 1) ?>
         <label>Файл:</label>
         <input type="file" name="file" size="20">
         <input type="submit" value="Завантажити">

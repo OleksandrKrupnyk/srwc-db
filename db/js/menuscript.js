@@ -1,20 +1,28 @@
-$(document).ready(function(){
+function setActiveTable(tabs_id) {
+    $('.tabs li').removeClass('active');
+    let $li = $('#' + tabs_id);
+    $li.addClass('active');
+    $('.nav')
+        .hide()
+        .eq(parseInt($li.index())).show();
+    return false;
+}
 
-    $('.tabs li a').click(function () {
-      $('.tabs li').removeClass('active');
-      $(this).parent().addClass('active');
+$(document).ready(function () {
+    let $tabs_id = localStorage.getItem('tabs_id');
+    if ($tabs_id !== null) {
+        setActiveTable($tabs_id.toString());
+    }
 
-      $('.nav').hide();
-      var index = $('.tabs li a').index(this);
-      console.log(index);
-      $('.nav').eq(index).show();
-      return false;
+    $('.tabs li a').on('click', function () {
+        let $tabs_id = $(this).parent().prop('id');
+        setActiveTable($tabs_id);
+        localStorage.setItem('tabs_id', $tabs_id);
     });
 
-    $('.nav li').has('ul').hover(function(){
+    $('.nav li').has('ul').hover(function () {
         $(this).addClass('current').children('ul').fadeIn();
-    }, function() {
+    }, function () {
         $(this).removeClass('current').children('ul').hide();
     });
-
 });

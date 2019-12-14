@@ -1,11 +1,18 @@
+<?php
+
+use zukr\base\Base;
+
+Base::$session->setFromParam();
+?>
 <!-- Список авторов работ -->
 <header><a href="action.php">Меню</a></header>
 <header>
-    <div>Список авторів</div><a href="action.php?action=leader_list">Список керівників</a>
+    <div>Список авторів</div>
+    <a href="action.php?action=leader_list">Список керівників</a>
 </header>
-<header><a href="action.php?action=autor_add&FROM=<?= $FROM ?>">[ + автор]</a></header>
+<header><a href="action.php?action=autor_add">[ + автор]</a></header>
 <form method="POST" action="lists.php?list=badge_autors">
-    <?php list_autors_or_leaders('autors', true, true, false); ?>
+    <?=getListOfObjects('author', true, true, false); ?>
     <input type="submit" value="Print">
 </form>
 <!-- Окончание Список авторов работ -->

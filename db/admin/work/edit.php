@@ -7,6 +7,7 @@
  */
 
 //Редактирование работы
+use zukr\base\Base;
 use zukr\log\Log;
 use zukr\work\WorkRepository;
 
@@ -24,6 +25,6 @@ if (isset($_POST['save'])) {
     $url2go = 'action.php?action=work_edit&id_w=' . $work->id;
 }
 if (isset($_POST['save+exit'])) {
-    $url2go = $_POST['from'] ?: 'action.php?action=all_view#id_w' . $work->id;
+    $url2go =  Base::$session->get('redirect_to');
 }
 Go_page($url2go);

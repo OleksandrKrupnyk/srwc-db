@@ -31,8 +31,8 @@ class Menu
     public function getMenu()
     {
         $headMenu = $this->renderHeadMenu();
-        $subMenu  = $this->renderSubMenu();
-        $__menu   = <<< __HTML__
+        $subMenu = $this->renderSubMenu();
+        $__menu = <<< __HTML__
  <div id="tabs-container">
         <ul class="tabs">
             {$headMenu}
@@ -54,8 +54,8 @@ __HTML__;
     private function renderHeadMenu()
     {
         $str = '';
-        foreach ($this->_menu as $item) {
-            $str .= $this->item($item);
+        foreach ($this->_menu as $id => $item) {
+            $str .= $this->item($item, '', ($id+1));
         }
         return $str;
     }
@@ -80,8 +80,8 @@ __HTML__;
                     }
                 }
             }
-            $style   = isset($_subMenu['active']) ? '' : "style='display:none'";
-            $subMenu .= "<ul class='nav' id='" . ($id + 1) . "' {$style}>{$_subMenu_}</ul>" . PHP_EOL;
+            $style = isset($_subMenu['active']) ? '' : "style='display:none'";
+            $subMenu .= "<ul class='nav' id='nav-item_" . ($id + 1) . "' {$style}>{$_subMenu_}</ul>" . PHP_EOL;
         }
         return $subMenu;
     }
@@ -109,13 +109,14 @@ __HTML__;
      * @param string $content
      * @return string
      */
-    private function item(array $item, $content = '')
+    private function item(array $item, $content = '', $id = '')
     {
-        $href   = isset($item['href']) ? $item['href'] : '#';
-        $title  = isset($item['title']) ? " title='{$item['title']}' " : '';
-        $class  = isset($item['class']) ? " class='{$item['class']}' " : '';
+        $href = $item['href'] ?? '#';
+        $title = isset($item['title']) ? " title='{$item['title']}' " : '';
+        $class = isset($item['class']) ? " class='{$item['class']}' " : '';
         $active = isset($item['active']) ? "class='active' " : '';
-        return "<li $active><a  href='{$href}' $title  $class >{$item['value']}</a>$content</li>" . PHP_EOL;
+        $id = $id ?? '';
+        return "<li $active id='tab-nav_{$id}'><a  href='{$href}' $title  $class >{$item['value']}</a>$content</li>" . PHP_EOL;
     }
 
 

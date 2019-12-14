@@ -168,12 +168,10 @@ class WorkHelper
     public static function authorList(array $autors, bool $showPlace = false, $showId = false): string
     {
         $list = [];
-        $FROM = $_SESSION['from'] ?? '';
         foreach ($autors as $autor) {
             $item = '';
             $item .= '<a href=action.php?action=autor_edit&id_a='
-                . $autor['id'] . '&FROM='
-                . $FROM . " title=\"Ред.:" . PersonHelper::getFullName($autor) . '">';
+                . $autor['id'] . " title=\"Ред.:" . PersonHelper::getFullName($autor) . '">';
             $item .= PersonHelper::getShortName($autor);
             $item .= $showId ? '&lt;' . $autor['id'] . '&gt;' : '';
 
@@ -203,11 +201,9 @@ class WorkHelper
     public static function leaderList(array $leaders, bool $showId = false): string
     {
         $list = [];
-        $FROM = $_SESSION['from'] ?? '';
-
         foreach ($leaders as $leader) {
             $item = '';
-            $item .= '<a href=action.php?action=leader_edit&id_l=' . $leader['id'] . '&FROM=' . $FROM . ' title="Ред.:' . PersonHelper::getFullName($leader) . '">';
+            $item .= '<a href=action.php?action=leader_edit&id_l=' . $leader['id'] .' title="Ред.:' . PersonHelper::getFullName($leader) . '">';
             $item .= PersonHelper::getShortName($leader);
             $item .= $showId ? '<' . $leader['id'] . '>' : '';
 

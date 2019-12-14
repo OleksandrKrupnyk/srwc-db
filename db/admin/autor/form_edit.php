@@ -1,6 +1,7 @@
 <?php
 
 use zukr\author\AuthorRepository;
+use zukr\base\Base;
 use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\univer\UniverHelper;
@@ -20,6 +21,9 @@ if (empty($author) || !$id_a) {
 }
 $uh = UniverHelper::getInstance();
 $univers = $uh->getInvitedDropdownList();
+
+// redirect_to -> session
+Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование автора -->
 <header><a href="action.php">Меню</a></header>
@@ -63,5 +67,4 @@ $univers = $uh->getInvitedDropdownList();
     <input type="hidden" name="action" value="autor_edit">
     <input type="hidden" name="Author[id]" value="<?= $author['id'] ?>">
     <input type="hidden" name="id_a" value="<?= $id_a ?>">
-    <input type="hidden" name="from" value="<?= $_GET['FROM'] ?>">
 </form>

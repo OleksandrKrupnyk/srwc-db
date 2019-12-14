@@ -8,6 +8,7 @@
 
 //Добавление руководителя работы
 
+use zukr\base\Base;
 use zukr\leader\Leader;
 use zukr\log\Log;
 
@@ -21,6 +22,6 @@ if (isset($_POST['save'])) {
     $url2go = 'action.php?action=leader_edit&id_l=' . $leader->id;
 }
 if (isset($_POST['save+exit'])) {
-    $url2go = ($_POST['from']) ?: 'action.php?action=all_view';
+    $url2go = $url2go = Base::$session->get('redirect_to');
 }
 Go_page($url2go);

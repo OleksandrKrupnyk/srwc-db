@@ -169,7 +169,6 @@ switch ($action) {
      */
     case 'getlists':
         {
-            //list_persons("autors");
             list_fio('autors', 'autor', $_POST['id_u'], 1, $selecttag = false);
             echo '!';
             list_fio('leaders', 'leaders', $_POST['id_u'], 1, $selecttag = false);

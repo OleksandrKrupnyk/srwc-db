@@ -20,6 +20,8 @@ $univers = $uh->getInvitedDropdownList();
 $positions = (new PositionRepository())->getDropDownList();
 $statuses = (new StatusRepository())->getDropDownList();
 $degrees = (new DegreeRepository())->getDropDownList();
+// redirect_to -> session
+$session->setRedirectParam();
 ?>
 <!-- Форма добавления керівника-->
 <header><a href="action.php">Меню</a></header>

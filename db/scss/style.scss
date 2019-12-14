@@ -592,16 +592,16 @@ a[href$=".ppt"], a[href$=".pptx"] {
   padding: 5px 0 5px 24px;
 }
 
+.delete-author,
 a[href*="_delete"],
 a[href^="#remove"] {
   background: url(../images/del.png) no-repeat;
   padding: 0 0 0 16px;
   margin: 0;
-}
-
-a:hover[href*="_delete"],
-a:hover[href^="#remove"] {
-  background: url(../images/del2.png) no-repeat center;
+  &:hover
+  {
+    background: url(../images/del2.png) no-repeat center;
+  }
 }
 
 a[href*="&badge="] {

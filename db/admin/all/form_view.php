@@ -1,5 +1,6 @@
 <?php
 
+use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\univer\UniverHelper;
 use zukr\work\WorkHelper;
@@ -8,6 +9,10 @@ $wh = WorkHelper::getInstance();
 //$wa = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
 $uh = UniverHelper::getInstance();
 $univerList = $uh->getAllUniversFromDB();
+
+$session = Base::$session;
+$session->setFromParam();
+print_r($_GET);
 $viewMenuitem = [
     0 => "<li class='active2'><a href='#'>Всі</a></li>\n",
     1 => "<li class='inactive'><a href='action.php?action=all_view&who=invitation'>Запрошені</a></li>\n",
