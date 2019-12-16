@@ -69,36 +69,6 @@ switch ($action) {
             or die("Помилка запиту: " . mysqli_error($link));
         }
         break;
-    /* Удаление автора или руководителя */
-    case 'delete':
-        {
-            //Проверим есть ли запись в таблице связей
-            //Определим таблицу связей
-            $link_table = $_POST['table'] == 'autors' ? 'wa' : 'wl';
-            $link_id = ($_POST['table'] == "autors") ? 'id_a' : 'id_l';
-            $query = "SELECT `{$link_id}` FROM `{$link_table}` WHERE `{$link_id}`='{$_POST['id']}'";
-            mysqli_query($link, "SET NAMES 'utf8'");
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
-            $result = mysqli_query($link, $query)
-            or die('Помилка запиту: ' . mysqli_error($link));
-            //Количество строк в запросе
-            $row_cnt = mysqli_num_rows($result);
-            //Если количество работ рано нулю, т.е. автор или руководитель не скем не связан
-            if ($row_cnt == 0) {
-                //Формируем запрос на удаление автора или руководителя
-                $query = "DELETE FROM `{$_POST['table']}` WHERE `id`={$_POST['id']}";
-                //Удаление записи из таблицы
-                $result = mysqli_query($link, $query)
-                or die("Помилка запиту: " . mysqli_error($link));
-                log_action($_POST['action'], $_POST['table'], $_POST['id']);
-                //Сообщаем что все прошло успешно
-                echo 'TRUE';
-            } else {
-                //Связи ещё есть в таблице
-                echo 'FALSE';
-            }
-        }
-        break;
     /* Убирает отметку о прибитии на конференцию автора или руководителя */
     case 'rem_arrival':
         {
@@ -157,7 +127,7 @@ switch ($action) {
                         $col_a++;
                     }
 
-                    echo "<a href=\"action.php?action=autor_add&id_u=" . $_POST['id_u'] . "&id_w=" . $_POST['id_w'] . "\" title=\"Внесення в базу даних автора\">Створити</a>";
+                    echo "<a href=\"action.php?action=author_add&id_u=" . $_POST['id_u'] . "&id_w=" . $_POST['id_w'] . "\" title=\"Внесення в базу даних автора\">Створити</a>";
                 } else {
                     echo '<span class="info">Досить</span>';
                 }
@@ -392,7 +362,7 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
     //echo $query;
     //"SELECT * FROM `".$table."` ORDER BY `suname` ASC"
     $sub_table = ($table === 'wl') ? "leaders" : "autors";
-
+	$linkName = ($table === 'wl') ? "leaders" : "authors";
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
@@ -406,7 +376,7 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
             ? "<li title=\"Останні зміни: " . htmlspecialchars($sub_row['date']) . "\" >"
             : "<li title=\"{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">";
         $sub_row_str .= ($href)
-            ? "<a href=action.php?action=" . rtrim($sub_table, "s") . "_edit&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&FROM={$FROM} title=\"Ред.:{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">"
+            ? "<a href=action.php?action=" . rtrim($linkName, "s") . "_edit&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&FROM={$FROM} title=\"Ред.:{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">"
             : "";
         $sub_row_str .= $sub_row['suname'] . " " . mb_substr($sub_row['name'], 0, 1, 'UTF-8') . "." . mb_substr($sub_row['lname'], 0, 1, 'UTF-8') . ".";
         $sub_row_str .= ($showId) ? "<{$sub_row['id']}>" : "";

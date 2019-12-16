@@ -606,7 +606,7 @@ JOIN univers ON leaders.id_u = univers.id";
         $sub_row_str .= '<li data-index=' . $row['id'] . ' title="Останні зміни :' . htmlspecialchars($row['date']) . '">'
             . "<a href=action.php?action=" . rtrim($object, "s") . '_edit&' . $id . '=' . $row['id'] . "  title=\"Ред.{$row['univer']}\">"
             . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . '</a>  ';
-        if (!$onlyReviwers) {
+        if (!$onlyReviwers && (int)$row['arrival'] === 0) {
             $sub_row_str .= '<a href=\'#\' title=\'Видалити з реестру\' class=\'delete-author\'></a>';
         }
         $sub_row_str .= (int)$row['arrival'] === 1 ? '<span title="Прибув на конференцію">&nbsp;[&radic;]&nbsp;</span>' : '';

@@ -28,8 +28,8 @@ $error_message = '';
  * Команды переданные по POST запросу
  */
 if (in_array($actionPost, [
-    'autor_add',
-    'autor_edit',
+    'author_add',
+    'author_edit',
     'leader_add',
     'leader_edit',
     'work_add',
@@ -87,26 +87,27 @@ $_type = $session->getFlash('recordSaveType', '');
     <?php //переменная для определения предка вызова сценария
 
     $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
-    if (in_array($action, ['work_add',
-                           'autor_add',
-                           'leader_add',
-                           'all_add',
+    if (in_array($action, [
+							'work_add',
                            'work_link',
+                           'work_edit',
+                           'author_add',
+                           'author_edit',
+                           'author_list',
+                           'leader_add',
+                           'leader_edit',
+                           'leader_invit',
+                           'all_add',
+                           'all_view',
                            'review_add',
                            'review_edit',
                            'review_view',
-                           'autor_edit',
-                           'leader_edit',
-                           'work_edit',
+                           'reviewer_list',
                            'univer_edit',
                            'univer_invite',
-                           'all_view',
-                           'leader_invit',
                            'section_invite',
                            'reception_edit',
-                           'autor_list',
                            'leader_list',
-                           'reviewer_list',
                            'tesis_list',
                            'rooms_edit',
                            'place_edit',
@@ -126,11 +127,15 @@ $_type = $session->getFlash('recordSaveType', '');
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= 'from :' . urldecode($_SESSION['from']) ?><?= $error_message; ?></div>
     <div id="operator">Оператор :<span><?= $session->get('usr') ?></span></div>
-    <autor class="autor"><?= 'xdebug_time_index :' . number_format(xdebug_time_index(),3) . 'sec| xdebug_peak_memory_usage :' . number_format(xdebug_peak_memory_usage() / 1024/1024,3) . 'MB| xdebug_memory_usage :' . number_format(xdebug_memory_usage() / 1024/1024,3) . 'MB' ?>
+    <autor class="autor"><?= 'xdebug_time_index :' . number_format(xdebug_time_index(), 3) . 'sec| xdebug_peak_memory_usage :' . number_format(xdebug_peak_memory_usage() / 1024 / 1024, 3) . 'MB| xdebug_memory_usage :' . number_format(xdebug_memory_usage() / 1024 / 1024, 3) . 'MB' ?>
         Krupnik&copy;
     </autor>
     <script>
-        $.notify.defaults({position: 'top center', elementPosition: 'top center'});
+        $.notify.defaults({
+            position: 'top center',
+            globalPosition: 'top center',
+            gap: 8
+        });
         var _type = '<?=$_type?>'.toString();
         var _msg = '<?=$_msg?>'.toString();
         console.log(_type, _msg);
