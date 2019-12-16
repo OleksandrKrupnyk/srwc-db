@@ -17,7 +17,7 @@ return [
                 'items' => [
                     [
                         'value' => 'Автори',
-                        'href'  => 'action.php?action=autor_list',
+                        'href'  => 'action.php?action=author_list',
                         'title' => 'Редагування данних, видалення',
                     ],
                     [
@@ -53,7 +53,7 @@ return [
         'items' => [
             [
                 'value' => 'Данні автора',
-                'href'  => 'action.php?action=autor_add',
+                'href'  => 'action.php?action=author_add',
                 'title' => 'Внесення в базу даних автора',
             ],
             [

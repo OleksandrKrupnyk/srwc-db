@@ -170,7 +170,7 @@ class WorkHelper
         $list = [];
         foreach ($autors as $autor) {
             $item = '';
-            $item .= '<a href=action.php?action=autor_edit&id_a='
+            $item .= '<a href=action.php?action=author_edit&id_a='
                 . $autor['id'] . " title=\"Ред.:" . PersonHelper::getFullName($autor) . '">';
             $item .= PersonHelper::getShortName($autor);
             $item .= $showId ? '&lt;' . $autor['id'] . '&gt;' : '';

@@ -15,6 +15,7 @@ use zukr\position\PositionRepository;
 use zukr\status\StatusRepository;
 use zukr\univer\UniverHelper;
 use zukr\user\UserRepository;
+use zukr\base\Base;
 
 $id_l = filter_input(INPUT_GET, 'id_l', FILTER_VALIDATE_INT);
 /** @var array */
@@ -30,7 +31,8 @@ $statuses = (new StatusRepository())->getDropDownList();
 $degrees = (new DegreeRepository())->getDropDownList();
 $users = (new UserRepository())->getDropDownList();
 // redirect_to -> session
-$session->setRedirectParam();
+// redirect_to -> session
+Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование руководителя -->
 <header><a href="action.php">Меню</a></header>

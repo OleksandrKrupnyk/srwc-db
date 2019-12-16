@@ -127,7 +127,7 @@ switch ($action) {
                         $col_a++;
                     }
 
-                    echo "<a href=\"action.php?action=autor_add&id_u=" . $_POST['id_u'] . "&id_w=" . $_POST['id_w'] . "\" title=\"Внесення в базу даних автора\">Створити</a>";
+                    echo "<a href=\"action.php?action=author_add&id_u=" . $_POST['id_u'] . "&id_w=" . $_POST['id_w'] . "\" title=\"Внесення в базу даних автора\">Створити</a>";
                 } else {
                     echo '<span class="info">Досить</span>';
                 }
@@ -362,7 +362,7 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
     //echo $query;
     //"SELECT * FROM `".$table."` ORDER BY `suname` ASC"
     $sub_table = ($table === 'wl') ? "leaders" : "autors";
-
+	$linkName = ($table === 'wl') ? "leaders" : "authors";
     mysqli_query($link, "SET NAMES 'utf8'");
     mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
@@ -376,7 +376,7 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
             ? "<li title=\"Останні зміни: " . htmlspecialchars($sub_row['date']) . "\" >"
             : "<li title=\"{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">";
         $sub_row_str .= ($href)
-            ? "<a href=action.php?action=" . rtrim($sub_table, "s") . "_edit&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&FROM={$FROM} title=\"Ред.:{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">"
+            ? "<a href=action.php?action=" . rtrim($linkName, "s") . "_edit&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&FROM={$FROM} title=\"Ред.:{$sub_row['suname']} {$sub_row['name']} {$sub_row['lname']}\">"
             : "";
         $sub_row_str .= $sub_row['suname'] . " " . mb_substr($sub_row['name'], 0, 1, 'UTF-8') . "." . mb_substr($sub_row['lname'], 0, 1, 'UTF-8') . ".";
         $sub_row_str .= ($showId) ? "<{$sub_row['id']}>" : "";
