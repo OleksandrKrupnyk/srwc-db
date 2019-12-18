@@ -11,6 +11,13 @@ use Monolog\Logger as MonologLogger;
 use Monolog\Processor\IntrospectionProcessor;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class Logger
+ *
+ * @package      zukr\base
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class Logger implements LoggerInterface
 {
 

@@ -66,6 +66,7 @@ $_type = $session->getFlash('recordSaveType', '');
     <html lang="ua">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>&quot;СНР 2018&quot;&copy;</title>
         <link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16">
         <link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32">
         <link rel="icon" type="image/png" href="../images/favicon-96x96.png" sizes="96x96">
@@ -74,14 +75,21 @@ $_type = $session->getFlash('recordSaveType', '');
         <link href="../css/menustyle.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/phone.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/jquery-confirm.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/style.min.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="../js/jquery.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
         <script type="text/javascript" src="../js/notify.js"></script>
+        <script type="text/javascript" src="../js/jquery-confirm.min.js"></script>
         <script type="text/javascript" src="../js/menuscript.js"></script>
         <script type="text/javascript" src="../js/comon.js"></script>
         <script type="text/javascript" src="../js/admin.js" async></script>
-        <title>&quot;СНР 2018&quot;&copy;</title>
+        <script>
+            jconfirm.defaults = {
+                useBootstrap: false,
+                theme: 'supervan',
+            };
+        </script>
     </head>
     <body>
     <?php //переменная для определения предка вызова сценария
@@ -131,6 +139,10 @@ $_type = $session->getFlash('recordSaveType', '');
         Krupnik&copy;
     </autor>
     <script>
+        jconfirm.defaults = {
+            useBootstrap: false,
+            theme: 'supervan',
+        };
         $.notify.defaults({
             position: 'top center',
             globalPosition: 'top center',

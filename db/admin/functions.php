@@ -221,32 +221,6 @@ function list_reviews_for_one_work($id_w,$href = false,$loginId="0")
     return $str;
 }
 
-
-
-
-/** Выводит список всех работ для задания рецензии
- * @param int $id_w ID in table works wihch must be selected
- */
-function list_works($id_w=-1){
-    global $link;
-    $query = "SELECT works.id, works.title, works.id_u FROM works ORDER BY  works.title ASC";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die("Invalid query in function list_works : " . mysqli_error($link));
-    echo "<select size=\"1\" name=\"id_w\" required>\n";
-    while ($row = mysqli_fetch_array($result)) {
-        $selected = ($id_w == $row['id'])? "selected":"";
-        if(count_review($row['id'])<2) {
-            $row['title'] = left($row['title'],70)."...";
-            echo "<option title=\"{$row['id_u']}\" value=\"{$row['id']}\"  $selected >{$row['title']}</option>\n";
-
-        }
-    }
-    echo "</select>\n";
-
-}
-
 /** * ********************************************************************************
  *
  * Список из таблицы, по полю, выделить да/нет, размер списка=1,Подсказка

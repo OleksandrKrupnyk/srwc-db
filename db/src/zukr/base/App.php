@@ -7,6 +7,7 @@ namespace zukr\base;
 use Dotenv\Dotenv;
 use MysqliDb as DB;
 use Stash\Driver\FileSystem;
+use Stash\Driver\Redis;
 use Stash\Pool;
 
 /**
@@ -46,12 +47,15 @@ class App
         $this->isCached = getenv('CACHE');
         $this->isCached = $this->isCached ?? false;
 
-        $this->_ttl = (int) getenv('CACHE_TTL');
+        $this->_ttl = (int)getenv('CACHE_TTL');
         $this->_ttl = $this->_ttl ?? self::TTL;
         $driver = new FileSystem([
             'path' => 'c:\\temp1'
         ]);
-        $this->_cache = new Pool($driver);
+        $driverRedis = new Redis([
+            'servers'=>[['server' => '127.0.0.1', 'port' => '6379', 'ttl' => $this->_ttl]]
+        ]);
+        $this->_cache = new Pool($driverRedis);
         $this->initDB();
     }
 

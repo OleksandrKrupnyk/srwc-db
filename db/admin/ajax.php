@@ -278,49 +278,25 @@ switch ($action) {
         }
         break;
 
-    case 'getDescriptionWork':
-        {
-            $query = "SELECT works.introduction,works.public,works.comments FROM works WHERE id={$_POST['id_w']}";
-            mysqli_query($link, "SET NAMES 'utf8'");
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
-            $result = mysqli_query($link, $query)
-            or die("Помилка запиту отримання інформації по роботі. : " . mysqli_error($link));
-            $row = mysqli_fetch_array($result);
-
-            $strArray = [];
-            if ($row['introduction'] <> '') {
-                $strArray[] = "<strong>Впровадженння:</strong>{$row['introduction']}.";
-            }
-            if ($row['public'] <> '') {
-                $strArray[] = "<strong>Результати опубліковано:</strong>{$row['public']}.";
-            }
-            if ($row['comments'] <> '') {
-                $strArray[] = "<strong>Коментар/зауваження до матеріалів:</strong>{$row['comments']}.";
-            }
-            if (count($strArray) < 1) {
-                $str = "<strong>Увага! Без публікації та впровадження. Зауваження з боку офрмлення документів відсутні.</strong>";
-            } elseif (count($strArray) == 1) {
-                $str = $strArray[0];
-            } else {
-                $str = implode("<br>", $strArray);
-            }
-            //print_r($strArray);
-            echo $str;
-            //print_r($row);
-        }
-        break;
     case 'getListReviewers':
         {
-            $query = "SELECT leaders.id, leaders.suname, leaders.name, leaders. lname, positions.position, degrees.degree, statuses.status, univers.univer FROM leaders \n" .
-                "JOIN positions ON leaders.id_pos = positions.id \n" .
-                "JOIN degrees ON leaders.id_deg = degrees.id \n" .
-                "JOIN statuses ON leaders.id_sat = statuses.id \n" .
-                "JOIN univers ON leaders.id_u=univers.id \n" .
-                "WHERE (leaders.review=TRUE AND leaders.id_u <> {$_POST['id_u']}) \n" .
-                "AND (leaders.id <> (SELECT reviews.review1 FROM reviews WHERE reviews.id_w={$_POST['id_w']}) \n" .
-                "OR (SELECT reviews.review1 FROM reviews WHERE reviews.id_w={$_POST['id_w']}) IS NULL) \n" .
-                "ORDER BY suname ASC";
-            //echo "<pre>{$query}</pre>";
+            $query = "
+SELECT l.id, 
+       l.suname, l.name, l.lname,p.position, degrees.degree, 
+       statuses.status, u.univer 
+FROM leaders as l  
+    JOIN positions as p ON l.id_pos =p.id  
+    JOIN degrees ON l.id_deg = degrees.id  
+    JOIN statuses ON l.id_sat = statuses.id  
+    JOIN univers as u ON l.id_u=u.id  
+WHERE (l.review=TRUE AND l.id_u <> {$_POST['id_u']})  
+  AND (
+      l.id <> (SELECT r.review1 FROM reviews as r WHERE r.id_w={$_POST['id_w']})  
+      OR 
+      (SELECT r.review1 FROM reviews as r WHERE r.id_w={$_POST['id_w']}) IS NULL
+      )  
+ORDER BY suname";
+            echo "<pre>{$query}</pre>";
             mysqli_query($link, "SET NAMES 'utf8'");
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
             $result = mysqli_query($link, $query)

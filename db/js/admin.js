@@ -535,44 +535,6 @@ $(document).ready(function () {
         });
     });//Окончание Изменение аудитории
 
-
-//Изменение описания работы при добавлении рецензии
-    var myCangeWorkReviewer = $('select[name="id_w"]');
-    myCangeWorkReviewer.change(function () {
-        var id_w = $(this).find("option:selected").val();
-        var id_u = $(this).find("option:selected").attr('title');
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"id_w": id_w, "action": "getDescriptionWork"},
-            cache: false,
-            success: function (txt) {
-                $('#descriptionWorks').children('p').html(txt);
-                //Заміна списку резензентів при зміні назви роботи
-                $.ajax({
-                    type: "POST",
-                    url: "ajax.php",
-                    data: {"action": "getListReviewers", "id_u": id_u, "id_w": id_w},
-                    cache: false,
-                    success: function (txt2) {
-                        $('select[name="reviewer"]').empty().append(txt2);
-                        //console.log(txt2);
-                    }
-
-                });//end ajax
-                //Зміна кнопки повернутися
-                $('input:button[name="return"]').attr('onclick', "window.location='action.php?action=all_view#id_w" + id_w + '\'');
-            }
-        });
-
-        //$('select[name="reviewer"]').empty().append('<option value="1">'+id_w+'</option>');
-        //console.log(id_w+' '+id_u);
-        //Действия
-        //console.log(workId);
-    });
-// Окончание "Изменение описания работы при добавлении рецензии"
-
-
     //Обработка переключателей на форме редактирования сведений о работе
     var chkBoxInvitation = $('.editWork :checkbox[name=invitation]');
     var chkBoxDead = $('.editWork :checkbox[name=dead]');

@@ -7,8 +7,12 @@
  */
 // Добавление рецензии
 global $link;
+$id_w = filter_input(INPUT_POST, 'id_w',FILTER_VALIDATE_INT);
+
+var_dump($_POST);die();
+
 /* Если рецензий в БД менше 2 то вводить*/
-if (count_review($_POST['id_w']) < 2) {
+if (count_review($id_w) < 2) {
     $_POST['defects'] = trim(addslashes($_POST['defects']));
     $query = "INSERT INTO `reviews` 
          (`id_w`,`actual`,`original`,`methods`,`theoretical`,`practical`,`literature`,`selfcontained`,`design`,`publication`,`government`,`tendentious`,`defects`,`conclusion`,`review1`,`date`)
