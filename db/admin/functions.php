@@ -896,20 +896,7 @@ function short_list_leader_or_autors_str($id_w, $who, $showId = false)
  *
  * @param int $size
  */
-function list_univers_reseption($size)
-{
-    global $link;
-    $query = "SELECT `univers`.`id`,`univers`.`univer`,`univers`.`univerfull` FROM `univers` RIGHT OUTER JOIN `works` ON  `works`.`id_u` = `univers`.`id` GROUP BY univer ORDER BY univer";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die('Invalid query функція list_univers_reseption: ' . mysqli_error($link));
-    echo "<select id=\"univer_reseption\" name=\"id_u\" size=\"$size\"><option value=\"-1\" disabled selected>Університет...</option>\n";
-    while ($row = mysqli_fetch_array($result)) {
-        echo '<option value=' . $row['id'] . '>' . $row['univer'] . ' (' . $row['univerfull'] . ")</option>\n";
-    }
-    echo "</select>\n";
-}
+
 
 /**
  * Функция выводит только первых $num букв названия файла если длинна имени файла больше

@@ -6,6 +6,101 @@
  * Time: 0:35
  */
 global $link;
+
+define('SUPERSQL',"select univer, t1.first,t2.second,t3.third,t4.diplom,t44.conf,t5.count_invitation,t6.count_takepart  
+FROM `autors` 
+LEFT JOIN 
+	(select id_u, count(place) as first
+     from autors  
+     where place = 'I' 
+     group by id_u) as t1 
+ON autors.id_u = t1.id_u
+LEFT JOIN
+	(select id_u, count(place)as second from autors  
+     where place = 'II' 
+     group by id_u)as t2 
+ON autors.id_u = t2.id_u
+LEFT JOIN 
+	(select id_u, count(place)as third 
+     from autors  
+     where place = 'III' group by id_u)as t3 
+ON autors.id_u = t3.id_u
+LEFT JOIN 
+	(select id_u, count(place) as diplom 
+    from autors  where place = 'D' and autors.arrival = '1' group by id_u) as t4 
+ON autors.id_u = t4.id_u
+LEFT JOIN 
+	(select id_u, count(place) as conf 
+    from autors  where autors.arrival = '1' group by id_u)as t44 
+ON autors.id_u = t44.id_u
+LEFT JOIN 
+	(select autors.id_u, count(autors.place) as count_invitation
+    from autors
+    left join wa on wa.id_a = autors.id
+    left JOIN works on wa.id_w = works.id
+    where works.invitation = '1' group by id_u)as t5
+ON autors.id_u = t5.id_u
+LEFT JOIN 
+	(select autors.id_u, count(autors.place) as count_takepart
+    from autors
+    left join wa on wa.id_a = autors.id
+    left JOIN works on wa.id_w = works.id
+    group by id_u)as t6 
+ON autors.id_u = t6.id_u
+LEFT JOIN univers ON univers.id=autors.id_u
+GROUP BY autors.id_u ORDER BY univer");
+define('SUPERSQL2',"select ' ' as `univer`, 
+sum(t.first) as `first`,
+sum(t.second) as `second`,
+sum(t.third) as `third`,
+sum(t.diplom) as `diplom`,
+sum(t.conf) as `conf`,
+sum(t.count_invitation) as `count_invitation`,
+sum(t.count_takepart) as `count_takepart`
+FROM(
+select univer, t1.first,t2.second,t3.third,t4.diplom,t44.conf,t5.count_invitation,t6.count_takepart  
+FROM autors 
+LEFT JOIN 
+	(select id_u, count(place) as first
+     from autors  
+     where place = 'I' 
+     group by id_u) as t1 
+ON autors.id_u = t1.id_u
+LEFT JOIN
+	(select id_u, count(place)as second from autors  
+     where place = 'II' 
+     group by id_u)as t2 
+ON autors.id_u = t2.id_u
+LEFT JOIN 
+	(select id_u, count(place)as third 
+     from autors  
+     where place = 'III' group by id_u)as t3 
+ON autors.id_u = t3.id_u
+LEFT JOIN 
+	(select id_u, count(place) as diplom 
+    from autors  where place = 'D' and autors.arrival = '1' group by id_u) as t4 
+ON autors.id_u = t4.id_u
+LEFT JOIN 
+	(select id_u, count(place) as conf 
+    from autors  where autors.arrival = '1' group by id_u)as t44 
+ON autors.id_u = t44.id_u
+LEFT JOIN 
+	(select autors.id_u, count(autors.place) as count_invitation
+    from autors
+    left join wa on wa.id_a = autors.id
+    left JOIN works on wa.id_w = works.id
+    where works.invitation = '1' group by id_u)as t5
+ON autors.id_u = t5.id_u
+LEFT JOIN 
+	(select autors.id_u, count(autors.place) as count_takepart
+    from autors
+    left join wa on wa.id_a = autors.id
+    left JOIN works on wa.id_w = works.id
+    group by id_u)as t6 
+ON autors.id_u = t6.id_u
+LEFT JOIN univers ON univers.id=autors.id_u
+GROUP BY autors.id_u ORDER BY univer
+) as t ");
 $query = SUPERSQL; //see file include
 //echo $query;
 mysqli_query($link, "SET NAMES 'utf8'");
@@ -47,4 +142,3 @@ echo "</table>";
 ?>
 <p><a href="http://zakon.rada.gov.ua/laws/show/z0620-17">Дивитись Положення про конкурс </a></p>
 <!-- Окончание просмотра результата распределения мест -->
-

@@ -34,7 +34,7 @@ class User extends Record implements AuthInterface
 
     public final function isGuest(): bool
     {
-        false;
+        return false;
     }
 
 

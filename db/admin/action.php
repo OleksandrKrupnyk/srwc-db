@@ -16,10 +16,8 @@ $menuData = include 'menu.php';
 $menu = new Menu($menuData);
 $actionPost = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
 ob_start();
-
 //Если есть доступ к странице
-if (!$session->get('access')) {
-    /*Перенаправление на страничку обычных пользователей*/
+if (Base::$user->getUser()->isGuest()) {
     Go_page('index.php');
 }
 //Сообщение об ошибке. Если оно пусто то на экран ничего не выводиться.
@@ -66,7 +64,7 @@ $_type = $session->getFlash('recordSaveType', '');
     <html lang="ua">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title>&quot;СНР 2018&quot;&copy;</title>
+        <title><?= Base::$app->app_name ?></title>
         <link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16">
         <link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32">
         <link rel="icon" type="image/png" href="../images/favicon-96x96.png" sizes="96x96">

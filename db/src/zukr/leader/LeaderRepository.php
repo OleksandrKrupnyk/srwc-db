@@ -43,11 +43,11 @@ class LeaderRepository extends AbstractRepository
      * @param int $univerId
      * @return array
      */
-    public function getListAmiableReviewersForWork(int $workId, int $univerId): array
+    public function getListAvailableReviewersForWork(int $workId, int $univerId): array
     {
         try {
             return $this->model::find()
-                ->rawQuery("
+                ->rawQuery('
 SELECT l.id,
        l.suname, l.name, l.lname,p.position, deg.degree,
        statuses.status, u.univer
@@ -63,7 +63,7 @@ WHERE l.review = TRUE
         AND
             (SELECT r.review1 FROM reviews as r WHERE r.id_w= ?) IS NOT NULL
     )
-ORDER BY suname;", [$univerId, $workId, $workId]);
+ORDER BY suname;', [$univerId, $workId, $workId]);
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];
@@ -72,5 +72,20 @@ ORDER BY suname;", [$univerId, $workId, $workId]);
 
     }
 
+    /**
+     * @return int
+     */
+    public function getCountInvitedLeaders(): int
+    {
+        try {
+            $this->model::find()->withTotalCount()
+                ->where('invitation', Leader::KEY_ON)
+                ->get($this->model::getTableName(), null, 'id');
+            return $this->model::find()->totalCount;
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return 0;
+        }
 
+    }
 }

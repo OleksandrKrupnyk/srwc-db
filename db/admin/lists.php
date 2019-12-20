@@ -3,16 +3,26 @@
  * @author studyjquery
  * @copyright 2015
  */
+
+use zukr\base\Base;
+
 require 'config.inc.php';
 require 'functions.php';
+require '../vendor/autoload.php';
 header("Content-Type: text/html; charset=utf-8");
 session_name('tzLogin');
 session_start();
 global $link;
 global $FROM;
-//var_dump($_POST);
-//var_dump($_GET);
-//Если есть доступ к странице
+//переменная для определения предка вызова сценария
+$FROM = trim(urlencode("http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
+// Прочитать насторйки программы из БД
+read_settings();
+Base::init();
+
+if (Base::$user->getUser()->isGuest()) {
+    Go_page('index.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="ua">
@@ -23,55 +33,42 @@ global $FROM;
     <script type="text/javascript" src="../js/jquery.js"></script>
     <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
     <script type="text/javascript" src="../js/admin.js"></script>
-    <title>ДРУКУВАТИ &quot;СНР 2018&quot;&copy;</title>
+    <title>ДРУКУВАТИ <?= Base::$app->app_name ?></title>
 </head>
 <body>
-<?php //переменная для определения предка вызова сценария
-$FROM = trim(urlencode("http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
-// Прочитать насторйки программы из БД
-read_settings();
-
-if ($_SESSION['access']) {
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
+<?php
     switch (filter_input(INPUT_GET, 'list')) {
         case 'adress':
             {
                 $query = "SELECT univers.univerfull, univers.adress, univers.zipcode 
                       FROM univers WHERE univers.invite = '1' GROUP BY univerfull ASC";
                 $result = mysqli_query($link, $query);
-                echo "<div class=\"adress2\">\n"
-                    ."<header>Список розсилки 1-го інформаційного повідомлення <br>Всеукраїнського конкурсу студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</header>\n"
-                    ."<div id=\"table\"><table>\n"
-                    ."<tr><th>№</th><th>Кому</th><th>Адреса</th></tr>\n";
+                echo '<div class="adress2">
+                            <header>Список розсилки 1-го інформаційного повідомлення <br>
+                            Всеукраїнського конкурсу студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</header>
+                            <div id="table">
+                            <table><tr><th>№</th><th>Кому</th><th>Адреса</th></tr>';
                 $i = 1;
                 while ($row = mysqli_fetch_array($result)) {
 
                     echo table_row_list_address2($i, $row);
                     $i++;
                     if (($i == 23) || ($i == 48)) {
-                        echo "</table>\n"
-                            ."</div>\n"
-                            ."<div class = \"tableprotocol\"></div>\n"
-                            ."<div class=\"adress2\">\n"
-                            ."<div id=\"table\"><table>\n"
-                            ."<tr><th>№</th><th>Кому</th><th>Адреса</th></tr>\n";
+                        echo '</table></div><div class="tableprotocol"></div>
+<div class="adress2"><div id="table"><table><tr><th>№</th><th>Кому</th><th>Адреса</th></tr>';
                     }
                 }
-                echo "</table>\n"
-                    . "</div>\n"
-                    . "<div id=\"prorector\">Перший проректор ДДТУ<br></div>\n"
-                    . "<div id=\"prorectorNAME\">В.М. Гуляєв</div>\n" .
-                    '</div>';
+                echo '</table>
+</div><div id="prorector">Перший проректор ДДТУ<br></div><div id="prorectorNAME">В.М. Гуляєв</div></div>';
             }
             break;
         case 'adress2':
             {//ТОлько те работы у коротых есть приглашенные работы минус ДДТУ
-                $query = "SELECT univers.* 
+                $query = "SELECT univers.*
                       FROM univers
-                      LEFT JOIN works ON univers.id = works.id_u 
-                      WHERE works.invitation = '1' AND univers.id != '1' 
-                      GROUP BY univers.univer 
+                      LEFT JOIN works ON univers.id = works.id_u
+                      WHERE works.invitation = '1' AND univers.id != '1'
+                      GROUP BY univers.univer
                       ORDER BY univers.univer ASC";
                 $result = mysqli_query($link, $query);
                 echo "<div class=\"adress2\">\n"
@@ -540,7 +537,6 @@ where (univers.id <> '1') AND (count_invitation > 0) ORDER BY univerfull ASC ";
             break;
 
     }//switch
-}
 ?>
 </body>
 </html>

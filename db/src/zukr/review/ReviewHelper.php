@@ -166,7 +166,7 @@ class ReviewHelper
      */
     public function getListReviewers(int $workId, int $univerId): array
     {
-        $reviewers = $this->getLeaderRepository()->getListAmiableReviewersForWork($workId, $univerId);
+        $reviewers = $this->getLeaderRepository()->getListAvailableReviewersForWork($workId, $univerId);
         if (empty($reviewers)) {
             return [];
         }

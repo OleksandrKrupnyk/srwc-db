@@ -77,12 +77,20 @@ class LeaderHelper
      */
     public function getAllLeadersByUniverId(int $univerId): array
     {
-        $authors = $this->getWorksLeaders();
-        if (!empty($authors)) {
+        $leaders = $this->getWorksLeaders();
+        if (!empty($leaders)) {
             return array_filter($this->getWorksLeaders(), function ($author) use ($univerId) {
                 return $author['id_u'] === $univerId;
             });
         }
         return [];
     }
+
+
+    public function getCountInvitationLeaders():int
+    {
+        return (new LeaderRepository())->getCountInvitedLeaders();
+
+    }
+
 }

@@ -3,6 +3,7 @@
  */
 
 use zukr\base\Base;
+use zukr\log\Log;
 
 header('Content-Type: text/html; charset=utf-8');
 require 'config.inc.php';
@@ -10,7 +11,7 @@ require 'functions.php';
 require '../vendor/autoload.php';
 Base::init();
 global $link;
-
+$log = Log::getInstance();;
 
 session_name('tzLogin');
 session_set_cookie_params(2 * 7 * 24 * 60 * 60);
@@ -18,7 +19,7 @@ session_set_cookie_params(2 * 7 * 24 * 60 * 60);
 session_start();
 
 if (isset($_GET['logoff'])) {
-    log_action('logoff', 'tz_members', '');
+    $log->logAction('logoff', 'tz_members', '');
     $_SESSION = [];
     session_destroy();
     Go_page('index.php');
@@ -28,7 +29,7 @@ if (isset($_GET['logoff'])) {
 if ($_SESSION['access'] && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']) {
     // Если вы вошли в систему, но куки tzRemember (рестарт браузера) отсутствует
     // и вы не отметили чекбокс 'Запомнить меня':
-    log_action('logoff', 'tz_members', '');
+    $log->logAction('logoff', 'tz_members', '');
     $_SESSION = [];
     session_destroy();
 
@@ -44,7 +45,7 @@ if (isset($_POST['submit'])) {
         $err[] = 'Все поля должны быть заполнены!';
     }
     // Проверяем заполненные поля.Поля заполнены?
-    if (!count($err)) {
+    if (empty($err)) {
         //Да?
         $_POST['username'] = mysqli_real_escape_string($link, $_POST['username']);
         $_POST['password'] = mysqli_real_escape_string($link, $_POST['password']);
@@ -58,12 +59,11 @@ if (isset($_POST['submit'])) {
 
         $row = mysqli_fetch_array($result);
 
-        if ($row['usr']) {
+        if (!empty($row['usr'])) {
             // Если все в порядке - входим в систему
-
             $_SESSION['usr'] = $row['usr'];
             $_SESSION['id'] = $row['id'];
-            log_action('login', 'tz_members', '');
+            $log->logAction('login', 'tz_members', '');
             $_SESSION['rememberMe'] = $_POST['rememberMe'];
             $_SESSION['access'] = 'YES';
             $_SESSION['user_id'] = $row['id'];
@@ -78,8 +78,7 @@ if (isset($_POST['submit'])) {
         $_SESSION['msg']['login-err'] = implode('<br />', $err);
     }
     // Сохраняем сообщение об ошибке сессии
-    header('Location: index.php');
-    exit;
+    Go_page('index.php');
 }//if
 ?>
 <!DOCTYPE html >
@@ -89,13 +88,13 @@ if (isset($_POST['submit'])) {
     <link href="../css/login.css" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="../js/jquery.js"></script>
     <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
-    <title>Реєст <?=Base::$app->app_name?></title>
+    <title>Реєст <?= Base::$app->app_name ?></title>
 </head>
 <?php if (!$_SESSION['access']) : ?>
     <!-- Форма авторизации на страничке -->
     <body>
     <form method='post' action='' class="ui-form">
-        <h3>Вхід<br><?=Base::$app->app_name?></h3>
+        <h3>Вхід<br><?= Base::$app->app_name ?></h3>
         <?php
         if ($_SESSION['msg']['login-err']) {
             echo "<div class='err'>{$_SESSION['msg']['login-err']}</div>";

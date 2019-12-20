@@ -18,6 +18,23 @@ if (!$id) {
 $rh = \zukr\review\ReviewHelper::getInstance();
 $review = $rh->getReviewRepository()->getById($id);
 $work = $rh->getWorksRepository()->getById($review['id_w']);
+
+if ($work['introduction'] !== '') {
+    $strArray[] = '<strong>Впровадженння:</strong>' . $work['introduction'];
+}
+if ($work['public'] !== '') {
+    $strArray[] = '<strong>Результати опубліковано:</strong>' . $work['public'];
+}
+if ($work['comments'] !== '') {
+    $strArray[] = '<strong>Коментар/зауваження до матеріалів:</strong>' . $work['comments'];
+}
+if (count($strArray) < 1) {
+    $str = '<strong>Увага! Без публікації та впровадження. Зауваження з боку офрмлення документів відсутні.</strong>';
+} elseif (count($strArray) == 1) {
+    $str = $strArray[0];
+} else {
+    $str = implode('<br>', $strArray);
+}
 ?>
 <!--Редактирование рецензии -->
 <header><a href="action.php?action=all_view#id_w<?= $review['id_w'] ?>">Усі роботи</a></header>
@@ -27,28 +44,8 @@ $work = $rh->getWorksRepository()->getById($review['id_w']);
     <h1><?= $work['title'] ?></h1>
     <fieldset name="descriptionWorks" id="descriptionWorks">
         <legend>Данні з роботи(виключно для рецензента)</legend>
-        <p>
-            <?php
-            $strArray = [];
-            if ($work['introduction'] <> "") {
-                $strArray[] = "<strong>Впровадженння:</strong>{$work['introduction']}";
-            }
-            if ($work['public'] <> "") {
-                $strArray[] = "<strong>Результати опубліковано:</strong>{$work['public']}";
-            }
-            if ($work['comments'] <> "") {
-                $strArray[] = "<strong>Коментар/зауваження до матеріалів:</strong>{$work['comments']}";
-            }
-            if (count($strArray) < 1) {
-                $str = "<strong>Увага! Без публікації та впровадження. Зауваження з боку офрмлення документів відсутні.</strong>";
-            } elseif (count($strArray) == 1) {
-                $str = $strArray[0];
-            } else {
-                $str = implode("<br>", $strArray);
-            }
-            echo $str;
-            ?>
-        </p></fieldset>
+        <p><?= $str; ?></p>
+    </fieldset>
     <table>
         <tr>
             <th>#</th>
@@ -92,6 +89,7 @@ $work = $rh->getWorksRepository()->getById($review['id_w']);
         , ['id' => 'review-conclusion', 'required' => true]) ?><label>до участі у підсумковій конференції.</label><br>
     <label>Рецензент :</label>
     <br>
+    <?php ?>
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
     <input type="button" value="Повернутися"

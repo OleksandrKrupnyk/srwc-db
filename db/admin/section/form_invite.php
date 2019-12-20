@@ -1,4 +1,5 @@
 <?php
+include __DIR__ . '/../sqlquery.inc.php';
 /**
  * Created by PhpStorm.
  * User: sasha
@@ -49,7 +50,6 @@ while ($row = mysqli_fetch_array($result)) {
 }
 echo "</table>";
 ?>
-
 
 
 <!-- Окончание по секциям и приглашения -->
