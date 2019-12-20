@@ -38,5 +38,39 @@ class LeaderRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @param int $workId
+     * @param int $univerId
+     * @return array
+     */
+    public function getListAmiableReviewersForWork(int $workId, int $univerId): array
+    {
+        try {
+            return $this->model::find()
+                ->rawQuery("
+SELECT l.id,
+       l.suname, l.name, l.lname,p.position, deg.degree,
+       statuses.status, u.univer
+FROM leaders as l
+         JOIN positions as p ON l.id_pos =p.id
+         JOIN degrees as deg ON l.id_deg = deg.id
+         JOIN statuses ON l.id_sat = statuses.id
+         JOIN univers as u ON l.id_u=u.id
+WHERE l.review = TRUE
+  AND l.id_u <> ?
+  AND NOT(
+            l.id = (SELECT r.review1 FROM reviews as r WHERE r.id_w= ?)
+        AND
+            (SELECT r.review1 FROM reviews as r WHERE r.id_w= ?) IS NOT NULL
+    )
+ORDER BY suname;", [$univerId, $workId, $workId]);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+
+
+    }
+
 
 }

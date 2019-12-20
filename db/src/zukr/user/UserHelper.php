@@ -3,7 +3,13 @@
 
 namespace zukr\user;
 
-
+/**
+ * Class UserHelper
+ *
+ * @package      zukr\user
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class UserHelper
 {
 

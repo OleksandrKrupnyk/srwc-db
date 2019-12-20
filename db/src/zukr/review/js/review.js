@@ -1,4 +1,4 @@
-const form = $('#review-add-form');
+const form = $('#review-form');
 const outputSum = $('output.summ');
 form.submit(function (e) {
     // e.preventDefault();
@@ -29,17 +29,17 @@ if (selWork !== undefined) {
             success: function (response) {
                 $('#descriptionWorks').children('p').html(response);
                 //Заміна списку резензентів при зміні назви роботи
+                console.log(id_u,id_w);
                 $.ajax({
                     type: "POST",
                     url: "ajax.php",
-                    data: {"action": "getListReviewers", "id_u": id_u, "id_w": id_w},
+                    data: {"action": "list-reviewer", "id_u": id_u, "id_w": parseInt(id_w)},
                     cache: false,
-                    success: function (txt2) {
-                        $('select[name="reviewer"]').empty().append(txt2);
-                        //console.log(txt2);
+                    success: function (response) {
+                        $('#review-review1').html(response);
                     }
 
-                });//end ajax
+                });
                 //Зміна кнопки повернутися
                 $('input:button[name="return"]').attr('onclick', "window.location='action.php?action=all_view#id_w" + id_w + '\'');
             }

@@ -51,5 +51,22 @@ class ReviewRepository extends AbstractRepository
 
     }
 
+    /**
+     * @param int $workId
+     * @return int|null
+     */
+    public function getCountOfReviewByWorkId(int $workId): ?int
+    {
+        try {
+            $this->model::find()
+                ->where('id_w', $workId)->withTotalCount()
+                ->get($this->model::getTableName(), null, 'id_w');
+            return (int)$this->model::find()->totalCount;
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return null;
+        }
+    }
+
 
 }

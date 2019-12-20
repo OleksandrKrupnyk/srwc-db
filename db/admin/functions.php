@@ -124,57 +124,6 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
     $str .= "</select>\n";
     return $str;
 }
-
-
-/**
- * Список для выбора рецензентов/Руководителей для внесения данных в таблицу рецензий
- *
- * @param Integer $id_u Шифр университета из которого работа, чтобы исключить рецензентов не из этого ВУЗа (-1)
- * @param Integer $id_w Шифр работы, что бы исключить рецензии две рецензии от одного рецензента
- * @param Integer $id   Номер рецензии которая редактируется (-1 - если создается новая)
- */
-function cbo_reviewers_list($id_u, $id_w, $id = -1){
-    global $link;
-    if($id == -1) {
-        $query = "SELECT leaders.id, leaders.suname, leaders.name, leaders. lname, positions.position, degrees.degree, statuses.status, univers.univer FROM leaders \n" .
-            "JOIN positions ON leaders.id_pos = positions.id \n" .
-            "JOIN degrees ON leaders.id_deg = degrees.id \n" .
-            "JOIN statuses ON leaders.id_sat = statuses.id \n" .
-            "JOIN univers ON leaders.id_u=univers.id \n" .
-            "WHERE (leaders.review=TRUE AND leaders.id_u <> {$id_u}) \n" .
-            "AND (leaders.id <> (SELECT reviews.review1 FROM reviews WHERE reviews.id_w={$id_w}) \n" .
-            "OR (SELECT reviews.review1 FROM reviews WHERE reviews.id_w={$id_w}) IS NULL) \n" .
-            "ORDER BY suname ASC";
-    }else{
-        $query = "SELECT leaders.id, leaders.suname, leaders.name, leaders. lname, positions.position, degrees.degree, statuses.status, univers.univer FROM leaders \n" .
-            "JOIN positions ON leaders.id_pos = positions.id \n" .
-            "JOIN degrees ON leaders.id_deg = degrees.id \n" .
-            "JOIN statuses ON leaders.id_sat = statuses.id \n" .
-            "JOIN univers ON leaders.id_u=univers.id \n" .
-            "WHERE leaders.review=TRUE \n ".
-            "ORDER BY suname ASC";
-    }
-        //echo "<pre>{$query}</pre>";
-        mysqli_query($link, "SET NAMES 'utf8'");
-        mysqli_query($link, "SET CHARACTER SET 'utf8'");
-        $result = mysqli_query($link, $query)
-        or die("Invalid query in function cbo_reviewers_list : " . mysqli_error($link));
-        echo "<select size=\"1\" id=\"reviewer\" name=\"reviewer\"  required>\n";
-        if (mysqli_num_rows($result) > 0) {//выводить если есть хотябы одна строка
-
-            while ($row = mysqli_fetch_array($result)) {
-                $selected = ($row['id'] == $id) ? "selected" : "";
-                echo "<option value=\"{$row['id']}\" $selected>{$row['suname']} {$row['name']} {$row['lname']}, {$row['univer']}, {$row['position']}, {$row['degree']}</option>\n";
-                //print_r($row);
-            }
-
-        } else {
-            echo "<option value=\"-1\" disabled selected>Додайте ще одного рецензента з іншого ВНЗ</option>\n";
-            echo TAB_SP . TAB_SP . "<p></p>";
-        }
-        echo "</select>\n";
-}
-
 /**
  * @param int $id_w ID of work in table works
  * @param bool $href TRUE if you need to show link for edit
@@ -287,7 +236,7 @@ function list_works_of_univer($id_u, $pole, $selected, $size)
     return $select;
 }
 
-/** * ********************************************************************************
+/**
  *
  * Список [Фамилия Имя Отчество]
  *  <select></select>

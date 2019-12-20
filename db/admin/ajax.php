@@ -2,6 +2,7 @@
 
 use zukr\api\actions\ApiActionsInterface;
 use zukr\api\ApiHelper;
+use zukr\base\Base;
 
 header("Content-Type: text/html; charset=utf-8");
 require 'config.inc.php';
@@ -32,14 +33,18 @@ if (isset($_POST['id_w']) && $_POST['action'] === "id_sec") {
     or die("Помилка запиту: " . mysqli_error($link));
     log_action($_POST['action'], "works", $_POST['id_w']);
 }
-
-$apih = ApiHelper::getInstance();
-/** ApiActionsInterface $classObj */
-$classObj = $apih->getActionByName($action);
-if ($classObj instanceof ApiActionsInterface) {
-    $classObj->init();
-    echo $classObj->execute();
+try {
+    $apih = ApiHelper::getInstance();
+    /** ApiActionsInterface $classObj */
+    $classObj = $apih->getActionByName($action);
+    if ($classObj instanceof ApiActionsInterface) {
+        $classObj->init();
+        echo $classObj->execute();
+    }
+} catch (\Exception $e) {
+    Base::$log->error($e->getMessage());
 }
+
 
 switch ($action) {
     //Обработка Запроса на список работ в вузе
@@ -275,43 +280,6 @@ switch ($action) {
             $query = "UPDATE `leaders` SET `invitation` ='{$_POST['invitation']}' WHERE `id` = '{$_POST['id_l']}'";
             $result = mysqli_query($link, $query)
             or die('Помилка запиту на оновлення відмітки про надсилання 1-го ІП: ' . mysqli_error($link));
-        }
-        break;
-
-    case 'getListReviewers':
-        {
-            $query = "
-SELECT l.id, 
-       l.suname, l.name, l.lname,p.position, degrees.degree, 
-       statuses.status, u.univer 
-FROM leaders as l  
-    JOIN positions as p ON l.id_pos =p.id  
-    JOIN degrees ON l.id_deg = degrees.id  
-    JOIN statuses ON l.id_sat = statuses.id  
-    JOIN univers as u ON l.id_u=u.id  
-WHERE (l.review=TRUE AND l.id_u <> {$_POST['id_u']})  
-  AND (
-      l.id <> (SELECT r.review1 FROM reviews as r WHERE r.id_w={$_POST['id_w']})  
-      OR 
-      (SELECT r.review1 FROM reviews as r WHERE r.id_w={$_POST['id_w']}) IS NULL
-      )  
-ORDER BY suname";
-            echo "<pre>{$query}</pre>";
-            mysqli_query($link, "SET NAMES 'utf8'");
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
-            $result = mysqli_query($link, $query)
-            or die('Invalid query in function cbo_reviewers_list : ' . mysqli_error($link));
-            if (mysqli_num_rows($result) > 0) {//выводить если есть хотябы одна строка
-
-                while ($row = mysqli_fetch_array($result)) {
-                    $selected = ($row['id'] == $id) ? "selected" : "";
-                    echo "<option value=\"{$row['id']}\" $selected>{$row['suname']} {$row['name']} {$row['lname']}, {$row['univer']}, {$row['position']}, {$row['degree']}</option>\n";
-                    //print_r($row);
-                }
-
-            } else {
-                echo "<option value=\"-1\" disabled selected>Додайте ще одного рецензента з іншого ВНЗ</option>\n";
-            }
         }
         break;
 }//end switch

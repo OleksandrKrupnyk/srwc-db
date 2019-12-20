@@ -6,6 +6,7 @@ namespace zukr\review;
 
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\html\Html;
+use zukr\leader\LeaderRepository;
 use zukr\work\WorkRepository;
 
 /**
@@ -20,8 +21,23 @@ class ReviewHelper
 
     /** @var ReviewHelper */
     private static $obj;
-
+    /** @var WorkRepository */
     protected $workRepository;
+    /** @var LeaderRepository */
+    protected $leaderRepository;
+    /** @var ReviewRepository */
+    protected $reviewRepository;
+
+    /**
+     * @return LeaderRepository
+     */
+    public function getLeaderRepository(): LeaderRepository
+    {
+        if ($this->leaderRepository === null) {
+            $this->leaderRepository = new LeaderRepository();
+        }
+        return $this->leaderRepository;
+    }
 
     /**
      * LeaderHelper constructor.
@@ -137,10 +153,43 @@ class ReviewHelper
      */
     public function getWorksRepository(): WorkRepository
     {
-        if ($this->workRepository == null) {
+        if ($this->workRepository === null) {
             $this->workRepository = new WorkRepository();
         }
         return $this->workRepository;
     }
+
+    /**
+     * @param int $workId
+     * @param int $univerId
+     * @return array
+     */
+    public function getListReviewers(int $workId, int $univerId): array
+    {
+        $reviewers = $this->getLeaderRepository()->getListAmiableReviewersForWork($workId, $univerId);
+        if (empty($reviewers)) {
+            return [];
+        }
+        $list = [];
+        foreach ($reviewers as $r) {
+            $id = $r['id'];
+            unset($r['id']);
+            $list[$id] = implode(' ', $r);
+        }
+        return $list;
+
+    }
+
+    /**
+     * @return ReviewRepository
+     */
+    public function getReviewRepository(): ReviewRepository
+    {
+        if ($this->reviewRepository === null) {
+            $this->reviewRepository = new ReviewRepository();
+        }
+        return $this->reviewRepository;
+    }
+
 
 }

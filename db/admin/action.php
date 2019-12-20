@@ -96,35 +96,35 @@ $_type = $session->getFlash('recordSaveType', '');
 
     $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
     if (in_array($action, [
-							'work_add',
-                           'work_link',
-                           'work_edit',
-                           'author_add',
-                           'author_edit',
-                           'author_list',
-                           'leader_add',
-                           'leader_edit',
-                           'leader_invit',
-                           'all_add',
-                           'all_view',
-                           'review_add',
-                           'review_edit',
-                           'review_view',
-                           'reviewer_list',
-                           'univer_edit',
-                           'univer_invite',
-                           'section_invite',
-                           'reception_edit',
-                           'leader_list',
-                           'tesis_list',
-                           'rooms_edit',
-                           'place_edit',
-                           'place_view',
-                           'protocol_view',
-                           'statistic_view',
-                           'email_edit',
-                           'test_edit',
-                           'error_list',])) {
+        'work_add',
+        'work_link',
+        'work_edit',
+        'author_add',
+        'author_edit',
+        'author_list',
+        'leader_add',
+        'leader_edit',
+        'leader_invit',
+        'all_add',
+        'all_view',
+        'review_add',
+        'review_edit',
+        'review_view',
+        'reviewer_list',
+        'univer_edit',
+        'univer_invite',
+        'section_invite',
+        'reception_edit',
+        'leader_list',
+        'tesis_list',
+        'rooms_edit',
+        'place_edit',
+        'place_view',
+        'protocol_view',
+        'statistic_view',
+        'email_edit',
+        'test_edit',
+        'error_list',])) {
         execute_get_action($action);
     } else {
         $session->setFromParam();
@@ -134,7 +134,7 @@ $_type = $session->getFlash('recordSaveType', '');
     ?>
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= 'from :' . urldecode($_SESSION['from']) ?><?= $error_message; ?></div>
-    <div id="operator">Оператор :<span><?= $session->get('usr') ?></span></div>
+    <div id="operator">Оператор :<span><?= Base::$user->getUser()->getLogin() ?></span></div>
     <autor class="autor"><?= 'xdebug_time_index :' . number_format(xdebug_time_index(), 3) . 'sec| xdebug_peak_memory_usage :' . number_format(xdebug_peak_memory_usage() / 1024 / 1024, 3) . 'MB| xdebug_memory_usage :' . number_format(xdebug_memory_usage() / 1024 / 1024, 3) . 'MB' ?>
         Krupnik&copy;
     </autor>
