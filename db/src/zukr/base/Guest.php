@@ -36,4 +36,20 @@ class Guest implements AuthInterface
     {
         return 'guest';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProfile(): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isReview(): bool
+    {
+        return false;
+    }
 }

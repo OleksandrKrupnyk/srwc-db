@@ -86,10 +86,27 @@ class LeaderHelper
         return [];
     }
 
-
-    public function getCountInvitationLeaders():int
+    /**
+     * @return int Кількість запрощених керівників робіт
+     */
+    public function getCountInvitationLeaders(): int
     {
         return (new LeaderRepository())->getCountInvitedLeaders();
+    }
+
+    /**
+     * @param array $d
+     * @return string
+     */
+    public function getFullName(array $d): string
+    {
+        if (empty($d)) {
+            return '';
+        }
+        $items[] = $d['suname'] ?? '';
+        $items[] = $d['name'] ?? '';
+        $items[] = $d['lname'] ?? '';
+        return \trim(\implode(' ', $items));
 
     }
 

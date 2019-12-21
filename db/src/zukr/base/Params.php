@@ -18,12 +18,15 @@ use Serializable;
  * @property string $SHOW_FILES_LINK
  * @property string $SHOW_PROGRAMA
  * @property string $SHOW_RAITING
+ * @property string DENNY_EDIT_REVIEW
  *
  * @package zukr\base
  */
 class Params implements ArrayAccess, Countable, Iterator, Serializable
 {
 
+    const TURN_ON  = '1';
+    const TURN_OFF = '0';
     /**
      * @var Params
      */

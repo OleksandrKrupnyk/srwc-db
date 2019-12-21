@@ -13,7 +13,8 @@ namespace zukr\base;
 class Base
 {
 
-
+    public const KEY_ON  = 1;
+    public const KEY_OFF = 0;
     private static $isInit = false;
 
     const OBJ_SINGLE = [

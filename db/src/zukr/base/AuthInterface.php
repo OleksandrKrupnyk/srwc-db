@@ -24,4 +24,17 @@ interface AuthInterface
      *
      */
     public function getLogin(): string;
+
+    /**
+     *
+     */
+    public function getProfile(): array;
+
+    /**
+     * Чи є користувач рецензентом
+     *
+     * @return bool Результат перевірки
+     */
+    public function isReview(): bool;
+
 }

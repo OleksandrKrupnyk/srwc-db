@@ -12,8 +12,8 @@ use MysqliDb;
  */
 abstract class Record implements RecordInterface
 {
-    const KEY_ON  = 1;
-    const KEY_OFF = 0;
+    public const KEY_ON  = 1;
+    public const KEY_OFF = 0;
     /**
      * @var \MysqliDb
      */
@@ -86,7 +86,8 @@ abstract class Record implements RecordInterface
         try {
             return (new \ReflectionClass($this))->getShortName();
         } catch (\ReflectionException $e) {
-            var_dump($e->getMessage());
+            Base::$log->error($e->getMessage());
+            return 'noName';
         }
     }
 
@@ -146,7 +147,7 @@ abstract class Record implements RecordInterface
 
             return null;
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
+            Base::$log->error($e->getMessage());
             return null;
         }
     }

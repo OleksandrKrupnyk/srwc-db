@@ -2,6 +2,7 @@
 
 use zukr\base\Base;
 use zukr\base\html\Html;
+use zukr\base\Params;
 
 /**
  * Created by PhpStorm.
@@ -35,6 +36,8 @@ if (count($strArray) < 1) {
 } else {
     $str = implode('<br>', $strArray);
 }
+$isAdmin = Base::$user->getUser()->isAdmin();
+Base::$param->DENNY_EDIT_REVIEW;
 ?>
 <!--Редактирование рецензии -->
 <header><a href="action.php?action=all_view#id_w<?= $review['id_w'] ?>">Усі роботи</a></header>
@@ -53,10 +56,11 @@ if (count($strArray) < 1) {
             <th colspan="2">Бали</th>
         </tr>
         <?php
-        $i = 1; $summa=0;
+        $i = 1;
+        $summa = 0;
         foreach ($rh->getQualities() as $key => $item):
             $value = $review[$key] ?? $item['max'];
-            $summa +=$value;
+            $summa += $value;
             ?>
             <tr>
                 <td><?= ($i++) ?></td>
@@ -72,7 +76,7 @@ if (count($strArray) < 1) {
             <td>12</td>
             <td><strong>Сума</strong></td>
             <td colspan="2">
-                <output name="summa" class="balls summ"><?=$summa ?></output>
+                <output name="summa" class="balls summ"><?= $summa ?></output>
             </td>
         </tr>
     </table>
@@ -89,9 +93,13 @@ if (count($strArray) < 1) {
         , ['id' => 'review-conclusion', 'required' => true]) ?><label>до участі у підсумковій конференції.</label><br>
     <label>Рецензент :</label>
     <br>
-    <?php ?>
+    <?php if (Base::$param->DENNY_EDIT_REVIEW === Params::TURN_ON && !$isAdmin): ?>
+        <mark>Заборона редагування</mark>
+    <?php else: ?>
+        <div class="danger">Дозволено редагування</div>
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
+    <?php endif; ?>
     <input type="button" value="Повернутися"
            onclick="window.location='action.php?action=all_view#id_w'+<?= $review['id_w'] ?>">
     <input type="hidden" name="action" value="review_edit">

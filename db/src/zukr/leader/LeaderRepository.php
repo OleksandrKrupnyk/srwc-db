@@ -88,4 +88,21 @@ ORDER BY suname;', [$univerId, $workId, $workId]);
         }
 
     }
+
+    /**
+     * @param int $id ІД користувача в системі
+     * @return array Данні користувача
+     */
+    public function getByTzMemberId(int $id): array
+    {
+        try {
+            $r = $this->model::find()
+                ->where('id_tzmember', $id)
+                ->getOne($this->model::getTableName());
+            return $r ?? [];
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
 }

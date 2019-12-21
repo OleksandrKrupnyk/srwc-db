@@ -26,21 +26,44 @@ if ($countOfWorks > 1) {
 $work = (new WorkRepository())->getById($id_w);
 $wh = WorkHelper::getInstance();
 
-$listReviewers = $rh->getListReviewers($id_w, $id_w);
-[$items, $options] = $rh->getWorksWithoutFullReviews();
+if (Base::$user->getUser()->isAdmin()) {
+    $listReviewers = $rh->getListReviewers($id_w, $id_u);
+    [$items, $options] = $rh->getWorksWithoutFullReviews();
+} elseif ((int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF) {
+    if (Base::$user->getUser()->isReview()) {
+        $userData = Base::$user->getUser()->getProfile();
+        if ($userData['id_u'] === $work['id_u']) {
+            Base::$session->setFlash('recordSaveMsg', 'Ви представник ВНЗ з якого надіслана робота');
+            Base::$session->setFlash('recordSaveType', 'error');
+            Go_page('action.php?action=all_view');
+        }
+        $lh = \zukr\leader\LeaderHelper::getInstance();
+        $userFullName = $lh->getFullName($userData);
+    }
+} else {
+    Base::$session->setFlash('recordSaveMsg', 'Ви не маєте права на рецензію роботи');
+    Base::$session->setFlash('recordSaveType', 'error');
+    Go_page('action.php?action=all_view');
+}
 ?>
 <!--Добавление рецензии -->
 <header><a href="action.php?action=all_view#id_w<?= $id_w ?>">Усі роботи</a></header>
 <header>Додавання рецензії</header>
 <form class="addreviewForm" method="post" action="action.php" id="review-form">
-    <label>Оберіть роботу :</label>
-    <?= Html::select('Review[id_w]', $id_w, $items,
-        ArrayHelper::merge($options, [
-            'id' => 'review-id_w',
-            'class' => 'w-100',
-            'required' => true
-        ])
-    ) ?>
+    <?php if (Base::$user->getUser()->isAdmin()): ?>
+        <label>Оберіть роботу :</label>
+        <?= Html::select('Review[id_w]', $id_w, $items,
+            ArrayHelper::merge($options, [
+                'id' => 'review-id_w',
+                'class' => 'w-100',
+                'required' => true
+            ])
+        ) ?>
+    <?php else: ?>
+        <label>Робота :</label>
+        <h4><?= $work['title'] ?></h4>
+        <input type="hidden" name="Review[id_w]" value="<?= $id_w ?>">
+    <?php endif; ?>
     <fieldset name="descriptionWorks" id="descriptionWorks">
         <legend>Данні з роботи(виключно для рецензента)</legend>
         <p><?= $rh->getWorkDescription($work) ?></p></fieldset>
@@ -51,7 +74,8 @@ $listReviewers = $rh->getListReviewers($id_w, $id_w);
             <th colspan="2">Бали</th>
         </tr>
         <?php
-        $i = 1; $summa=0;
+        $i = 1;
+        $summa = 0;
         foreach ($rh->getQualities() as $key => $item):
             $value = $review[$key] ?? $item['max'];
             $summa += $value;
@@ -70,7 +94,7 @@ $listReviewers = $rh->getListReviewers($id_w, $id_w);
             <td><?= ($i++) ?></td>
             <td><strong>Сума</strong></td>
             <td colspan="2">
-                <output name="summa" class="balls summ"><?=$summa?></output>
+                <output name="summa" class="balls summ"><?= $summa ?></output>
             </td>
         </tr>
     </table>
@@ -86,9 +110,15 @@ $listReviewers = $rh->getListReviewers($id_w, $id_w);
         , ['id' => 'review-conclusion', 'required' => true]) ?>
     <label>до участі у підсумковій конференції.</label><br>
     <label>Рецензент :</label>
-    <?= Html::select('Review[review1]', null, $listReviewers, [
-        'required' => true, 'class' => 'w-100', 'id' => 'review-review1'
-    ]) ?>
+    <?php if (Base::$user->getUser()->isAdmin()): ?>
+        <?= Html::select('Review[review1]', null, $listReviewers, [
+            'required' => true, 'class' => 'w-100', 'id' => 'review-review1'
+        ]) ?>
+    <?php else:
+        ?>
+        <strong><?= $userFullName ?></strong>
+        <input type="hidden" value="<?= $userData['id'] ?>" name="Review[review1]">
+    <?php endif; ?>
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
     <input type="button" value="Повернутися" name="return"

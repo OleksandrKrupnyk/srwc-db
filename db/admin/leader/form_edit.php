@@ -7,6 +7,7 @@
  */
 
 
+use zukr\base\Base;
 use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\degree\DegreeRepository;
@@ -15,7 +16,6 @@ use zukr\position\PositionRepository;
 use zukr\status\StatusRepository;
 use zukr\univer\UniverHelper;
 use zukr\user\UserRepository;
-use zukr\base\Base;
 
 $id_l = filter_input(INPUT_GET, 'id_l', FILTER_VALIDATE_INT);
 /** @var array */
@@ -48,7 +48,7 @@ Base::$session->setRedirectParam();
     <br><label>Рецензент:</label>
     <?= HtmlHelper::checkbox('Leader[review]', 'Відмітка про прибуття на конференцію', $leader['review']) ?>
 
-    <?php if ($_SESSION['usr'] === 'krupnik'): ?>
+    <?php if (Base::$user->getUser()->isAdmin()): ?>
         <label>Логін користувача у системі для рецензування:</label>
         <?= Html::select('Leader[id_tzmember]', $leader['id_tzmember'], $users,
             ['class' => 'select-tz_member', 'required' => false, 'prompt' => 'Відсутній'])
