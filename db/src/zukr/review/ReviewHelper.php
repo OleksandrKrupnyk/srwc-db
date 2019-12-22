@@ -164,19 +164,24 @@ class ReviewHelper
      * @param int $univerId
      * @return array
      */
-    public function getListReviewers(int $workId, int $univerId): array
+    public function getListReviewers(int $workId, int $univerId, int $currentRevieverId = 0): array
     {
         $reviewers = $this->getLeaderRepository()->getListAvailableReviewersForWork($workId, $univerId);
-        if (empty($reviewers)) {
-            return [];
-        }
-        $list = [];
-        foreach ($reviewers as $r) {
-            $id = $r['id'];
-            unset($r['id']);
-            $list[$id] = implode(' ', $r);
-        }
-        return $list;
+
+        return $this->getListDropDown($reviewers);
+
+    }
+
+    /**
+     * @param int $workId
+     * @param int $univerId
+     * @return array
+     */
+    public function getListEditableReviewers(int $workId, int $univerId, int $currentRevieverId): array
+    {
+        $reviewers = $this->getLeaderRepository()->getListAvailableEditableReviewersForWork($workId, $univerId, $currentRevieverId);
+
+        return $this->getListDropDown($reviewers);
 
     }
 
@@ -191,5 +196,21 @@ class ReviewHelper
         return $this->reviewRepository;
     }
 
-
+    /**
+     * @param array $reviewers
+     * @return array
+     */
+    protected function getListDropDown(array $reviewers): array
+    {
+        if (empty($reviewers)) {
+            return [];
+        }
+        $list = [];
+        foreach ($reviewers as $r) {
+            $id = $r['id'];
+            unset($r['id']);
+            $list[$id] = implode(' ', $r);
+        }
+        return $list;
+    }
 }

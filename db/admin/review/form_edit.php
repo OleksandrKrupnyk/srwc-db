@@ -2,7 +2,6 @@
 
 use zukr\base\Base;
 use zukr\base\html\Html;
-use zukr\base\Params;
 
 /**
  * Created by PhpStorm.
@@ -19,6 +18,25 @@ if (!$id) {
 $rh = \zukr\review\ReviewHelper::getInstance();
 $review = $rh->getReviewRepository()->getById($id);
 $work = $rh->getWorksRepository()->getById($review['id_w']);
+
+if (Base::$user->getUser()->isAdmin()) {
+    $listReviewers = $rh->getListEditableReviewers($review['id_w'], $work['id_u'], $review['review1']);
+    [$items, $options] = $rh->getWorksWithoutFullReviews();
+} elseif ((int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF) {
+    if (Base::$user->getUser()->isReview()) {
+        $userData = Base::$user->getUser()->getProfile();
+        if ($userData['id_u'] !== $work['id_u']) {
+            Go_page('action.php?' . http_build_query(['action' => 'review_view', 'id' => $review['id']]));
+        }
+        $lh = \zukr\leader\LeaderHelper::getInstance();
+        $userFullName = $lh->getFullName($userData);
+    }
+} else {
+    Base::$session->setFlash('recordSaveMsg', 'Ви не маєте права на рецензію роботи');
+    Base::$session->setFlash('recordSaveType', 'error');
+    Go_page('action.php?action=all_view');
+}
+
 
 if ($work['introduction'] !== '') {
     $strArray[] = '<strong>Впровадженння:</strong>' . $work['introduction'];
@@ -93,13 +111,17 @@ Base::$param->DENNY_EDIT_REVIEW;
         , ['id' => 'review-conclusion', 'required' => true]) ?><label>до участі у підсумковій конференції.</label><br>
     <label>Рецензент :</label>
     <br>
-    <?php if (Base::$param->DENNY_EDIT_REVIEW === Params::TURN_ON && !$isAdmin): ?>
-        <mark>Заборона редагування</mark>
-    <?php else: ?>
-        <div class="danger">Дозволено редагування</div>
+    <?php if (Base::$user->getUser()->isAdmin()): ?>
+        <?= Html::select('Review[review1]', $review['review1'], $listReviewers, [
+            'required' => true, 'class' => 'w-100', 'id' => 'review-review1'
+        ]) ?>
+    <?php else:
+        ?>
+        <strong><?= $userFullName ?></strong>
+        <input type="hidden" value="<?= $userData['id'] ?>" name="Review[review1]">
+    <?php endif; ?>
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
-    <?php endif; ?>
     <input type="button" value="Повернутися"
            onclick="window.location='action.php?action=all_view#id_w'+<?= $review['id_w'] ?>">
     <input type="hidden" name="action" value="review_edit">

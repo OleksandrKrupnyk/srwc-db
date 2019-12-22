@@ -68,8 +68,36 @@ ORDER BY suname;', [$univerId, $workId, $workId]);
             Base::$log->error($e->getMessage());
             return [];
         }
+    }
 
-
+    /**
+     * @param int $workId
+     * @param int $univerId
+     * @param int $currentReviewerId
+     * @return array
+     */
+    public function getListAvailableEditableReviewersForWork(int $workId, int $univerId,int $currentReviewerId): array
+    {
+        try {
+            return $this->model::find()
+                ->rawQuery('
+SELECT l.id,
+       l.suname, l.name, l.lname,p.position, deg.degree,
+       statuses.status, u.univer
+FROM leaders as l
+         JOIN positions as p ON l.id_pos =p.id
+         JOIN degrees as deg ON l.id_deg = deg.id
+         JOIN statuses ON l.id_sat = statuses.id
+         JOIN univers as u ON l.id_u=u.id
+WHERE l.review = TRUE
+  AND l.id_u <> ?
+  AND 
+            l.id <> (SELECT r.review1 FROM reviews as r WHERE r.id_w= ? AND r.review1 <> ?)
+ORDER BY suname;', [$univerId, $workId, $currentReviewerId]);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
     }
 
     /**
