@@ -47,5 +47,25 @@ class WorkRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @return array|\MysqliDb
+     */
+    public function getWorksNotFullReviews(): array
+    {
+        try {
+
+            return Work::find()->rawQuery('
+            SELECT `works`.id, works.title, works.id_u
+FROM `works`
+         left join reviews on works.id = reviews.id_w
+GROUP by `works`.id, works.title
+having count(reviews.id_w) < ?
+ORDER BY `works`.title
+            ', [2]);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
 
 }

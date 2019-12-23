@@ -3,7 +3,13 @@
 
 namespace zukr\user;
 
-
+/**
+ * Class UserHelper
+ *
+ * @package      zukr\user
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class UserHelper
 {
 
@@ -35,9 +41,9 @@ class UserHelper
     }
 
     /**
-     * @return array
+     * @return array Сисок ІД користувачів зі статусом АДМІН
      */
-    public function getIsAdmin():array
+    public function getIdsAdmin():array
     {
         if($this->adminIds === null)
         {

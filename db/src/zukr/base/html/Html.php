@@ -99,25 +99,27 @@ class Html
             $selectOptions[] = static::tag('option', $text, $attrs);
         }
 
-        if(is_array($value)){
-            $options['multiple']=true;
+        if (is_array($value)) {
+            $options['multiple'] = true;
         }
         foreach ($items as $key => $text) {
             $attrs = [];
             $attrs['value'] = (string)$key;
 
             if (is_array($value) && !empty($value)) {
+                    $attrs['value'] = (string)$key;
                 if (!\array_key_exists('selected', $attrs)) {
                     $attrs['selected'] = in_array($key, $value, true);
-
                 }
             } else {
+                $attrs = $options[$key] ?? [];
+                unset($options[$key]);
+                $attrs['value'] = (string) $key;
                 if (!\array_key_exists('selected', $attrs)) {
                     $attrs['selected'] = ($value !== null) && ((string)$value === (string)$key);
 
                 }
             }
-
             $selectOptions[] = static::tag('option', $text, $attrs);
         }
 
@@ -137,7 +139,7 @@ class Html
      * @param $options
      * @return string
      */
-    public static function tag($name, $content, $options)
+    public static function tag($name, $content, $options = [])
     {
         if ($name === null || $name === false) {
             return $content;
@@ -277,6 +279,20 @@ class Html
         }
 
         return static::tag('a', $text, $options);
+    }
+
+    /**
+     * @param array $list
+     * @param array $options
+     * @return string
+     */
+    public static function ol(array $list, $options = [])
+    {
+        $items = [];
+        foreach ($list as $item) {
+            $items [] = self::tag('li', $item);
+        }
+        return self::tag('ol', implode('', $items), $options);
     }
 
 }

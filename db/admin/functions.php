@@ -6,10 +6,12 @@
  */
 
 use zukr\author\AuthorHelper;
+use zukr\base\Base;
 use zukr\base\html\HtmlHelper;
+use zukr\base\LoginUser;
 use zukr\file\FileHelper;
 use zukr\leader\LeaderHelper;
-use zukr\user\UserHelper;
+use zukr\review\ReviewHelper;
 use zukr\work\WorkHelper;
 
 /**
@@ -125,129 +127,51 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
     return $str;
 }
 
-
 /**
- * Список для выбора рецензентов/Руководителей для внесения данных в таблицу рецензий
- *
- * @param Integer $id_u Шифр университета из которого работа, чтобы исключить рецензентов не из этого ВУЗа (-1)
- * @param Integer $id_w Шифр работы, что бы исключить рецензии две рецензии от одного рецензента
- * @param Integer $id   Номер рецензии которая редактируется (-1 - если создается новая)
- */
-function cbo_reviewers_list($id_u, $id_w, $id = -1){
-    global $link;
-    if($id == -1) {
-        $query = "SELECT leaders.id, leaders.suname, leaders.name, leaders. lname, positions.position, degrees.degree, statuses.status, univers.univer FROM leaders \n" .
-            "JOIN positions ON leaders.id_pos = positions.id \n" .
-            "JOIN degrees ON leaders.id_deg = degrees.id \n" .
-            "JOIN statuses ON leaders.id_sat = statuses.id \n" .
-            "JOIN univers ON leaders.id_u=univers.id \n" .
-            "WHERE (leaders.review=TRUE AND leaders.id_u <> {$id_u}) \n" .
-            "AND (leaders.id <> (SELECT reviews.review1 FROM reviews WHERE reviews.id_w={$id_w}) \n" .
-            "OR (SELECT reviews.review1 FROM reviews WHERE reviews.id_w={$id_w}) IS NULL) \n" .
-            "ORDER BY suname ASC";
-    }else{
-        $query = "SELECT leaders.id, leaders.suname, leaders.name, leaders. lname, positions.position, degrees.degree, statuses.status, univers.univer FROM leaders \n" .
-            "JOIN positions ON leaders.id_pos = positions.id \n" .
-            "JOIN degrees ON leaders.id_deg = degrees.id \n" .
-            "JOIN statuses ON leaders.id_sat = statuses.id \n" .
-            "JOIN univers ON leaders.id_u=univers.id \n" .
-            "WHERE leaders.review=TRUE \n ".
-            "ORDER BY suname ASC";
-    }
-        //echo "<pre>{$query}</pre>";
-        mysqli_query($link, "SET NAMES 'utf8'");
-        mysqli_query($link, "SET CHARACTER SET 'utf8'");
-        $result = mysqli_query($link, $query)
-        or die("Invalid query in function cbo_reviewers_list : " . mysqli_error($link));
-        echo "<select size=\"1\" id=\"reviewer\" name=\"reviewer\"  required>\n";
-        if (mysqli_num_rows($result) > 0) {//выводить если есть хотябы одна строка
-
-            while ($row = mysqli_fetch_array($result)) {
-                $selected = ($row['id'] == $id) ? "selected" : "";
-                echo "<option value=\"{$row['id']}\" $selected>{$row['suname']} {$row['name']} {$row['lname']}, {$row['univer']}, {$row['position']}, {$row['degree']}</option>\n";
-                //print_r($row);
-            }
-
-        } else {
-            echo "<option value=\"-1\" disabled selected>Додайте ще одного рецензента з іншого ВНЗ</option>\n";
-            echo TAB_SP . TAB_SP . "<p></p>";
-        }
-        echo "</select>\n";
-}
-
-/**
- * @param int $id_w ID of work in table works
+ * @param int  $id_w ID of work in table works
  * @param bool $href TRUE if you need to show link for edit
+ * @param bool $isAdmin
+ * @param int  $userProfileId
  * @return string Numeric list of reviews with links
  */
-function list_reviews_for_one_work($id_w,$href = false,$loginId="0")
+function list_reviews_for_one_work($id_w, bool $href = false, $isAdmin = false,$loginId=0)
 {
     global $link;
-    $query = "SELECT `reviews`.`id`, `reviews`.`id_w`, leaders.id_tzmember, reviews.conclusion,  
+    $query = "SELECT `reviews`.`id`, `reviews`.`id_w`, leaders.id_tzmember, reviews.conclusion,
               CONCAT(`leaders`.`suname`,' ',`leaders`.`name`,' ',`leaders`.`lname`) AS fio,
               (`actual`+`original`+`methods`+`theoretical`+`practical`+`literature`+`selfcontained`+`design`+`publication`+`government`+`tendentious`) AS sumball 
               FROM `reviews` 
               JOIN `leaders` ON `leaders`.`id` = `reviews`.`review1` 
               WHERE id_w = {$id_w}";
 
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
-    or die("Invalid query in function list_reviews_for_one_work : " . mysqli_error($link));
-    $allsum = 0;
-    $allconclusion = "";
+    or die('Invalid query in function list_reviews_for_one_work : ' . mysqli_error($link));
+    $fullSum = 0;
+    $conclusions = '';
     $str = "<ol>";
     while ($row = mysqli_fetch_array($result)) {
-        $allsum +=$row['sumball'];
-        $str .= "<li>\n";
-        if(true == $href) {
-            $str .= "<a href=\"action.php?action=review_edit&id={$row['id']}\" title=\"Ред. Рец.:{$row['fio']}\">&#9998;:[{$row['sumball']}]</a>\n";
-            if ($loginId == $row['id_tzmember'] OR ($loginId=="1") OR ($loginId=="2")) {
-                $str .="<a href=\"action.php?action=review_delete&id={$row['id']}&id_w={$row['id_w']}\"  title=\"Видалити рецензію\"></a>\n";
+        $fullSum += $row['sumball'];
+        $item = '';
+        if ($href) {
+            $item .= "<a href=\"action.php?action=review_edit&id={$row['id']}\" title=\"Ред. Рец.:{$row['fio']}\">&#9998;:[{$row['sumball']}]</a>\n";
+            if ($loginId == $row['id_tzmember'] || $isAdmin) {
+                $item .= "<a href=\"action.php?action=review_delete&id={$row['id']}&id_w={$row['id_w']}\"  title=\"Видалити рецензію\"></a>\n";
             }
+        } else {
+            $item .= "<a href=\"action.php?action=review_view&id={$row['id']}\" title=\"[{$row['sumball']}]\">Реценз.</a>\n";
         }
-            else {
-                $str .= "<a href=\"index.php?action=review_view&id={$row['id']}\" title=\"[{$row['sumball']}]\">Реценз.</a>\n";
-            }
-            if($row['conclusion']==1){$allconclusion .= "ТАК&nbsp;";}
-            else {$allconclusion .= "НІ&nbsp;";}
+        $conclusions .= ($row['conclusion'] == 1) ? 'ТАК&nbsp;' : 'НІ&nbsp;';
 
-        $str .= "</li>";
+        $str .= '<li>' . $item . '</li>';
     }
 
     $str .= "</ol>";
 
-    $str .= "<p>&nbsp;&nbsp;&nbsp;<strong>&sum;:{$allsum}</strong>&nbsp;{$allconclusion}</p>";
+    $str .= "<p>&nbsp;&nbsp;&nbsp;<strong>&sum;:{$fullSum}</strong>&nbsp;{$conclusions}</p>";
     return $str;
 }
 
-
-
-
-/** Выводит список всех работ для задания рецензии
- * @param int $id_w ID in table works wihch must be selected
- */
-function list_works($id_w=-1){
-    global $link;
-    $query = "SELECT works.id, works.title, works.id_u FROM works ORDER BY  works.title ASC";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die("Invalid query in function list_works : " . mysqli_error($link));
-    echo "<select size=\"1\" name=\"id_w\" required>\n";
-    while ($row = mysqli_fetch_array($result)) {
-        $selected = ($id_w == $row['id'])? "selected":"";
-        if(count_review($row['id'])<2) {
-            $row['title'] = left($row['title'],70)."...";
-            echo "<option title=\"{$row['id_u']}\" value=\"{$row['id']}\"  $selected >{$row['title']}</option>\n";
-
-        }
-    }
-    echo "</select>\n";
-
-}
-
-/** * ********************************************************************************
+/**
  *
  * Список из таблицы, по полю, выделить да/нет, размер списка=1,Подсказка
  * <select></select>
@@ -313,7 +237,7 @@ function list_works_of_univer($id_u, $pole, $selected, $size)
     return $select;
 }
 
-/** * ********************************************************************************
+/**
  *
  * Список [Фамилия Имя Отчество]
  *  <select></select>
@@ -702,9 +626,9 @@ function print_work_univer($univer_title, $id_u, $univer)
  * Выводит рядок в таблице просмотра данных о работе
  *
  * @param array  $work
- * @param string $loginId
+ * @param LoginUser $userLogin
  **/
-function print_work_row($work, $loginId = '0')
+function print_work_row(array $work,LoginUser $userLogin)
 {
     $wh = WorkHelper::getInstance();
     $sections = $wh->getAllSections();
@@ -718,9 +642,10 @@ function print_work_row($work, $loginId = '0')
 
     $fh = FileHelper::getInstance();
     $filesOfWork = $fh->getFilesOneWork($work['id']);
+    $rh = ReviewHelper::getInstance();
+    /** @var \zukr\base\AuthInterface $user */
+    $user =$userLogin->getUser();
 
-    $uh = UserHelper::getInstance();
-    $userAdmins = $uh->getIsAdmin();
     $title = '<a href=action.php?action=work_edit&id_w=' . $work['id'] . ' title="Редагувати роботу" class="">';
     $title .= $work['arrival'] == '1'
         ? $work['title'] . '&nbsp;[&radic;]&nbsp;'
@@ -740,11 +665,21 @@ function print_work_row($work, $loginId = '0')
     $date = $work['date'];
 
     //если установлено показывать ссылки
-    $link_add_review = (count_review($work['id']) < 2)
+    $link_add_review = (
+        (
+            ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW===Base::KEY_OFF )
+            ||
+            $user->isAdmin()
+        )
+        && (int)$rh->getCountOfReviewByWorkId($work['id']) < 2
+    )
         ? '<a href="action.php?action=review_add&id_w=' . $work['id'] . '&id_u=' . $work['id_u'] . '">додати рецензію</a>'
         : '';
 
-    $reviews = list_reviews_for_one_work($work['id'], true, $loginId);
+    $reviews = list_reviews_for_one_work(
+        $work['id'], ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF) || $user->isAdmin(),
+        $user->isAdmin(),
+        $userLogin->getId());
 
     $moto = '<br/><strong>Шифр</strong>:' . $work['motto'] . PHP_EOL;
     $link_work = '<a href=action.php?action=work_link&id_w='
@@ -756,10 +691,10 @@ function print_work_row($work, $loginId = '0')
     $public = !empty($work['public'])
         ? "<br/><strong>Публікації</strong> :{$work['public']}".PHP_EOL
         : '';
-    $delete_work = in_array($loginId,$userAdmins)
+    $delete_work = Base::$user->getUser()->isAdmin()
         ? '<a href=action.php?action=work_delete&id_w=' . $work['id']
             . ' title="Видалити роботу з реєстру (Зникнуть зв\'язки, автори та керівникі будуть у базі)"></a>'. PHP_EOL
-        : '<a href="#" title="Вам заборонено видаляти роботу"></a>' . PHP_EOL;
+        : '' . PHP_EOL;
     $files = HtmlHelper::listFiles($filesOfWork);
     $rowspan = '3';
     $row_table = <<<ROWTABLE
@@ -973,20 +908,7 @@ function short_list_leader_or_autors_str($id_w, $who, $showId = false)
  *
  * @param int $size
  */
-function list_univers_reseption($size)
-{
-    global $link;
-    $query = "SELECT `univers`.`id`,`univers`.`univer`,`univers`.`univerfull` FROM `univers` RIGHT OUTER JOIN `works` ON  `works`.`id_u` = `univers`.`id` GROUP BY univer ORDER BY univer";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die('Invalid query функція list_univers_reseption: ' . mysqli_error($link));
-    echo "<select id=\"univer_reseption\" name=\"id_u\" size=\"$size\"><option value=\"-1\" disabled selected>Університет...</option>\n";
-    while ($row = mysqli_fetch_array($result)) {
-        echo '<option value=' . $row['id'] . '>' . $row['univer'] . ' (' . $row['univerfull'] . ")</option>\n";
-    }
-    echo "</select>\n";
-}
+
 
 /**
  * Функция выводит только первых $num букв названия файла если длинна имени файла больше
@@ -1134,7 +1056,7 @@ function AnaliseMysqlError($str): string
  */
 function Go_page($page)
 {
-    $page = $page !== 'error' ? $page : 'action.php?action=error_list';
+    $page = ($page === 'error' || $page === null) ? 'action.php?action=error_list' : $page;
     header('location: ' . urldecode($page));
     exit();
 }

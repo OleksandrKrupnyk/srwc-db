@@ -262,6 +262,7 @@ return [
                 'value' => 'Налаштування',
                 'href'  => 'settings.php',
                 'title' => '',
+                'class' => 'special',
             ],
             [
                 'value' => 'Журнал дій',

@@ -16,10 +16,8 @@ $menuData = include 'menu.php';
 $menu = new Menu($menuData);
 $actionPost = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
 ob_start();
-
 //Если есть доступ к странице
-if (!$session->get('access')) {
-    /*Перенаправление на страничку обычных пользователей*/
+if (Base::$user->getUser()->isGuest()) {
     Go_page('index.php');
 }
 //Сообщение об ошибке. Если оно пусто то на экран ничего не выводиться.
@@ -66,6 +64,7 @@ $_type = $session->getFlash('recordSaveType', '');
     <html lang="ua">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title><?= Base::$app->app_name ?></title>
         <link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16">
         <link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32">
         <link rel="icon" type="image/png" href="../images/favicon-96x96.png" sizes="96x96">
@@ -74,49 +73,56 @@ $_type = $session->getFlash('recordSaveType', '');
         <link href="../css/menustyle.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/phone.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/jquery-confirm.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/style.min.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="../js/jquery.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
         <script type="text/javascript" src="../js/notify.js"></script>
+        <script type="text/javascript" src="../js/jquery-confirm.min.js"></script>
         <script type="text/javascript" src="../js/menuscript.js"></script>
         <script type="text/javascript" src="../js/comon.js"></script>
         <script type="text/javascript" src="../js/admin.js" async></script>
-        <title>&quot;СНР 2018&quot;&copy;</title>
+        <script>
+            jconfirm.defaults = {
+                useBootstrap: false,
+                theme: 'supervan',
+            };
+        </script>
     </head>
     <body>
     <?php //переменная для определения предка вызова сценария
 
     $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
     if (in_array($action, [
-							'work_add',
-                           'work_link',
-                           'work_edit',
-                           'author_add',
-                           'author_edit',
-                           'author_list',
-                           'leader_add',
-                           'leader_edit',
-                           'leader_invit',
-                           'all_add',
-                           'all_view',
-                           'review_add',
-                           'review_edit',
-                           'review_view',
-                           'reviewer_list',
-                           'univer_edit',
-                           'univer_invite',
-                           'section_invite',
-                           'reception_edit',
-                           'leader_list',
-                           'tesis_list',
-                           'rooms_edit',
-                           'place_edit',
-                           'place_view',
-                           'protocol_view',
-                           'statistic_view',
-                           'email_edit',
-                           'test_edit',
-                           'error_list',])) {
+        'work_add',
+        'work_link',
+        'work_edit',
+        'author_add',
+        'author_edit',
+        'author_list',
+        'leader_add',
+        'leader_edit',
+        'leader_invit',
+        'all_add',
+        'all_view',
+        'review_add',
+        'review_edit',
+        'review_view',
+        'reviewer_list',
+        'univer_edit',
+        'univer_invite',
+        'section_invite',
+        'reception_edit',
+        'leader_list',
+        'tesis_list',
+        'rooms_edit',
+        'place_edit',
+        'place_view',
+        'protocol_view',
+        'statistic_view',
+        'email_edit',
+        'test_edit',
+        'error_list',])) {
         execute_get_action($action);
     } else {
         $session->setFromParam();
@@ -126,11 +132,18 @@ $_type = $session->getFlash('recordSaveType', '');
     ?>
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= 'from :' . urldecode($_SESSION['from']) ?><?= $error_message; ?></div>
-    <div id="operator">Оператор :<span><?= $session->get('usr') ?></span></div>
+    <div id="operator">Оператор :<span><?= Base::$user->getUser()->getLogin() ?></span>
+        <span><?= Base::$user->getUser()->isAdmin() ?'A':''?></span>
+        <span><?= Base::$user->getUser()->isReview()?'R':'' ?></span>
+    </div>
     <autor class="autor"><?= 'xdebug_time_index :' . number_format(xdebug_time_index(), 3) . 'sec| xdebug_peak_memory_usage :' . number_format(xdebug_peak_memory_usage() / 1024 / 1024, 3) . 'MB| xdebug_memory_usage :' . number_format(xdebug_memory_usage() / 1024 / 1024, 3) . 'MB' ?>
         Krupnik&copy;
     </autor>
     <script>
+        jconfirm.defaults = {
+            useBootstrap: false,
+            theme: 'supervan',
+        };
         $.notify.defaults({
             position: 'top center',
             globalPosition: 'top center',

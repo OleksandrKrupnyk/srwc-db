@@ -77,12 +77,37 @@ class LeaderHelper
      */
     public function getAllLeadersByUniverId(int $univerId): array
     {
-        $authors = $this->getWorksLeaders();
-        if (!empty($authors)) {
+        $leaders = $this->getWorksLeaders();
+        if (!empty($leaders)) {
             return array_filter($this->getWorksLeaders(), function ($author) use ($univerId) {
                 return $author['id_u'] === $univerId;
             });
         }
         return [];
     }
+
+    /**
+     * @return int Кількість запрощених керівників робіт
+     */
+    public function getCountInvitationLeaders(): int
+    {
+        return (new LeaderRepository())->getCountInvitedLeaders();
+    }
+
+    /**
+     * @param array $d
+     * @return string
+     */
+    public function getFullName(array $d): string
+    {
+        if (empty($d)) {
+            return '';
+        }
+        $items[] = $d['suname'] ?? '';
+        $items[] = $d['name'] ?? '';
+        $items[] = $d['lname'] ?? '';
+        return \trim(\implode(' ', $items));
+
+    }
+
 }

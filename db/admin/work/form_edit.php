@@ -7,6 +7,7 @@
  *
  */
 
+use zukr\base\Base;
 use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\section\SectionHelper;
@@ -18,14 +19,13 @@ $id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
 $work = (new WorkRepository())->getById($id_w);
 if (empty($work) || !$id_w) {
     Go_page('error');
-    exit();
 }
 $uh = UniverHelper::getInstance();
 $univers = $uh->getInvitedDropdownList();
 $sh = SectionHelper::getInstance();
 $sections = $sh->getDropdownList();
 // redirect_to -> session
-$session->setRedirectParam();
+Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование работы -->
 <header><a href="action.php">Меню</a></header>

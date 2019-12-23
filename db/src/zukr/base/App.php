@@ -7,11 +7,13 @@ namespace zukr\base;
 use Dotenv\Dotenv;
 use MysqliDb as DB;
 use Stash\Driver\FileSystem;
+use Stash\Driver\Redis;
 use Stash\Pool;
 
 /**
  * Class App
  *
+ * @property string    app_name
  * @property \MysqliDb $db
  * @package zukr\base
  */
@@ -29,6 +31,7 @@ class App
      * @var Pool
      */
     private $_cache;
+    private $_app_name;
     public  $param;
     public  $param2;
 
@@ -43,15 +46,19 @@ class App
     private function __construct()
     {
         Dotenv::create(__DIR__ . '/../../../')->load();
+        $this->setAppName(getenv('APP_NAME'));
         $this->isCached = getenv('CACHE');
         $this->isCached = $this->isCached ?? false;
 
-        $this->_ttl = (int) getenv('CACHE_TTL');
+        $this->_ttl = (int)getenv('CACHE_TTL');
         $this->_ttl = $this->_ttl ?? self::TTL;
         $driver = new FileSystem([
             'path' => 'c:\\temp1'
         ]);
-        $this->_cache = new Pool($driver);
+        $driverRedis = new Redis([
+            'servers' => [['server' => '127.0.0.1', 'port' => '6379', 'ttl' => $this->_ttl]]
+        ]);
+        $this->_cache = new Pool($driverRedis);
         $this->initDB();
     }
 
@@ -69,7 +76,7 @@ class App
 
     /**
      * @param $name
-     * @return DB|Pool|null
+     * @return mixed
      */
     public function __get($name)
     {
@@ -78,8 +85,14 @@ class App
                 $this->initDB();
             }
             return $this->_db;
-        } elseif ('cache' === $name) {
+        }
+
+        if ('cache' === $name) {
             return $this->_cache;
+        }
+
+        if ('app_name' === $name) {
+            return '&quot;' . $this->_app_name . '&quot;&copy;';
         }
     }
 
@@ -152,6 +165,16 @@ class App
     public function cacheFlush(): void
     {
         $this->_cache->clear();
+    }
+
+    /**
+     * @param array|false|string $app_name
+     */
+    private function setAppName($app_name): void
+    {
+        $this->_app_name = empty($app_name)
+            ? 'Zukr '. date('Y')
+            : $app_name;
     }
 
 

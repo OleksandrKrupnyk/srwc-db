@@ -2,6 +2,7 @@
 
 use zukr\api\actions\ApiActionsInterface;
 use zukr\api\ApiHelper;
+use zukr\base\Base;
 
 header("Content-Type: text/html; charset=utf-8");
 require 'config.inc.php';
@@ -32,14 +33,18 @@ if (isset($_POST['id_w']) && $_POST['action'] === "id_sec") {
     or die("Помилка запиту: " . mysqli_error($link));
     log_action($_POST['action'], "works", $_POST['id_w']);
 }
-
-$apih = ApiHelper::getInstance();
-/** ApiActionsInterface $classObj */
-$classObj = $apih->getActionByName($action);
-if ($classObj instanceof ApiActionsInterface) {
-    $classObj->init();
-    echo $classObj->execute();
+try {
+    $apih = ApiHelper::getInstance();
+    /** ApiActionsInterface $classObj */
+    $classObj = $apih->getActionByName($action);
+    if ($classObj instanceof ApiActionsInterface) {
+        $classObj->init();
+        echo $classObj->execute();
+    }
+} catch (\Exception $e) {
+    Base::$log->error($e->getMessage());
 }
+
 
 switch ($action) {
     //Обработка Запроса на список работ в вузе
@@ -275,67 +280,6 @@ switch ($action) {
             $query = "UPDATE `leaders` SET `invitation` ='{$_POST['invitation']}' WHERE `id` = '{$_POST['id_l']}'";
             $result = mysqli_query($link, $query)
             or die('Помилка запиту на оновлення відмітки про надсилання 1-го ІП: ' . mysqli_error($link));
-        }
-        break;
-
-    case 'getDescriptionWork':
-        {
-            $query = "SELECT works.introduction,works.public,works.comments FROM works WHERE id={$_POST['id_w']}";
-            mysqli_query($link, "SET NAMES 'utf8'");
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
-            $result = mysqli_query($link, $query)
-            or die("Помилка запиту отримання інформації по роботі. : " . mysqli_error($link));
-            $row = mysqli_fetch_array($result);
-
-            $strArray = [];
-            if ($row['introduction'] <> '') {
-                $strArray[] = "<strong>Впровадженння:</strong>{$row['introduction']}.";
-            }
-            if ($row['public'] <> '') {
-                $strArray[] = "<strong>Результати опубліковано:</strong>{$row['public']}.";
-            }
-            if ($row['comments'] <> '') {
-                $strArray[] = "<strong>Коментар/зауваження до матеріалів:</strong>{$row['comments']}.";
-            }
-            if (count($strArray) < 1) {
-                $str = "<strong>Увага! Без публікації та впровадження. Зауваження з боку офрмлення документів відсутні.</strong>";
-            } elseif (count($strArray) == 1) {
-                $str = $strArray[0];
-            } else {
-                $str = implode("<br>", $strArray);
-            }
-            //print_r($strArray);
-            echo $str;
-            //print_r($row);
-        }
-        break;
-    case 'getListReviewers':
-        {
-            $query = "SELECT leaders.id, leaders.suname, leaders.name, leaders. lname, positions.position, degrees.degree, statuses.status, univers.univer FROM leaders \n" .
-                "JOIN positions ON leaders.id_pos = positions.id \n" .
-                "JOIN degrees ON leaders.id_deg = degrees.id \n" .
-                "JOIN statuses ON leaders.id_sat = statuses.id \n" .
-                "JOIN univers ON leaders.id_u=univers.id \n" .
-                "WHERE (leaders.review=TRUE AND leaders.id_u <> {$_POST['id_u']}) \n" .
-                "AND (leaders.id <> (SELECT reviews.review1 FROM reviews WHERE reviews.id_w={$_POST['id_w']}) \n" .
-                "OR (SELECT reviews.review1 FROM reviews WHERE reviews.id_w={$_POST['id_w']}) IS NULL) \n" .
-                "ORDER BY suname ASC";
-            //echo "<pre>{$query}</pre>";
-            mysqli_query($link, "SET NAMES 'utf8'");
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
-            $result = mysqli_query($link, $query)
-            or die('Invalid query in function cbo_reviewers_list : ' . mysqli_error($link));
-            if (mysqli_num_rows($result) > 0) {//выводить если есть хотябы одна строка
-
-                while ($row = mysqli_fetch_array($result)) {
-                    $selected = ($row['id'] == $id) ? "selected" : "";
-                    echo "<option value=\"{$row['id']}\" $selected>{$row['suname']} {$row['name']} {$row['lname']}, {$row['univer']}, {$row['position']}, {$row['degree']}</option>\n";
-                    //print_r($row);
-                }
-
-            } else {
-                echo "<option value=\"-1\" disabled selected>Додайте ще одного рецензента з іншого ВНЗ</option>\n";
-            }
         }
         break;
 }//end switch

@@ -13,7 +13,8 @@ namespace zukr\base;
 class Base
 {
 
-
+    public const KEY_ON  = 1;
+    public const KEY_OFF = 0;
     private static $isInit = false;
 
     const OBJ_SINGLE = [
@@ -21,6 +22,7 @@ class Base
         'logs' => Logger::class,
         'param' => Params::class,
         'session' => Session::class,
+        'user' => LoginUser::class,
     ];
     /**
      * @var App
@@ -35,6 +37,10 @@ class Base
     public static $session;
     /** @var Logger */
     public static $log;
+    /**
+     * @var LoginUser
+     */
+    public static $user;
 
 
     /**
@@ -43,10 +49,11 @@ class Base
     public static function init()
     {
         if (!self::$isInit) {
+            self::$session = Session::getInstance();
             self::$app = App::getInstance();
             self::$param = Params::getInstance();
-            self::$session = Session::getInstance();
             self::$log = Logger::getInstance();
+            self::$user = LoginUser::getInstance();
             self::$isInit = true;
         }
     }

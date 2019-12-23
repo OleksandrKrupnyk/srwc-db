@@ -6,6 +6,7 @@
  * Time: 20:14
  */
 
+use zukr\base\Base;
 use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\degree\DegreeRepository;
@@ -21,7 +22,7 @@ $positions = (new PositionRepository())->getDropDownList();
 $statuses = (new StatusRepository())->getDropDownList();
 $degrees = (new DegreeRepository())->getDropDownList();
 // redirect_to -> session
-$session->setRedirectParam();
+Base::$session->setRedirectParam();
 ?>
 <!-- Форма добавления керівника-->
 <header><a href="action.php">Меню</a></header>

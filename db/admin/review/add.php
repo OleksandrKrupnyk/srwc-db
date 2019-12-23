@@ -5,28 +5,53 @@
  * Date: 10.11.17
  * Time: 15:39
  */
+
 // Добавление рецензии
-global $link;
-/* Если рецензий в БД менше 2 то вводить*/
-if (count_review($_POST['id_w']) < 2) {
-    $_POST['defects'] = trim(addslashes($_POST['defects']));
-    $query = "INSERT INTO `reviews` 
-         (`id_w`,`actual`,`original`,`methods`,`theoretical`,`practical`,`literature`,`selfcontained`,`design`,`publication`,`government`,`tendentious`,`defects`,`conclusion`,`review1`,`date`)
-         VALUES 
-         ('{$_POST['id_w']}','{$_POST['actual']}','{$_POST['original']}','{$_POST['methods']}','{$_POST['theoretical']}','{$_POST['practical']}','{$_POST['literature']}','{$_POST['selfcontained']}','{$_POST['design']}','{$_POST['publication']}','{$_POST['government']}','{$_POST['tendentious']}','{$_POST['defects']}','{$_POST['conclusion']}','{$_POST['reviewer']}',NOW())";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query);
-    //echo "<pre>";print_r($_POST);print_r($query);echo "</pre>";
-    echo mysqli_error($link);
-    if (mysqli_error($link) == '') {
-        $id = mysqli_insert_id($link);
-        log_action($_POST['action'], "reviews", $id);
-        Go_page("action.php?action=all_view#id_w{$_POST['id_w']}");
-    } else { // Выполнять если есть ошыбка
-        $error_message .= AnaliseMysqlError(mysqli_error($link));
+
+use zukr\base\Base;
+use zukr\log\Log;
+use zukr\review\Review;
+use zukr\review\ReviewRepository;
+
+try {
+
+
+    $id_u = filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+    $id_w = filter_input(INPUT_POST, 'Review', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY)['id_w'];
+
+    if (!$id_w || !$id_u) {
+        Base::$session->setFlash('recordSaveMsg', 'Не вказана робота або ВНЗ');
+        Base::$session->setFlash('recordSaveType', 'danger');
+        Go_page('action.php?action=all_view');
     }
-}else{
-    $error_message .= "На роботу вже є 2 рецензії";
+
+    $review = new Review();
+    $review->load($_POST);
+    if (isset($_POST['save+exit'])) {
+        $url2go = Base::$session->get('redirect_to', 'action.php?' . http_build_query(['action' => 'all_view']));
+    }
+
+    if ($review->id_w) {
+
+
+        $countOfReviews = (new ReviewRepository())->getCountOfReviewByWorkId($review->id_w);
+        if ($countOfReviews > 1) {
+            Base::$session->setFlash('recordSaveMsg', 'Достатьно рецензій для даної роботи');
+            Base::$session->setFlash('recordSaveType', 'error');
+            if (isset($_POST['save'])) {
+                $url2go = 'action.php?' . http_build_query(['action' => 'review_add', 'id_w' => $id_w, 'id_u' => $id_u]);
+            }
+        } else {
+            $review->save();
+            if (isset($_POST['save'])) {
+                $url2go = 'action.php?' . http_build_query(['action' => 'review_edit', 'id' => $review->id]);
+            }
+
+            $log = Log::getInstance();
+            $log->logAction(null, $review::getTableName(), $review->id);
+        }
+        Go_page($url2go);
+    }
+} catch (\Exception $e) {
+    Base::$log->error($e->getMessage());
 }
-?>

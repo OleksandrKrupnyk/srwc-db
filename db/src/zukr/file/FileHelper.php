@@ -47,10 +47,8 @@ class FileHelper
      */
     public function getFiles()
     {
-
         if ($this->files === null) {
-            $files = Base::$app->cacheGetOrSet(get_called_class(), $this->getFilesFromDB(), 300);
-            $this->files = $files;
+            $this->files = Base::$app->cacheGetOrSet(\get_called_class(), $this->getFilesFromDB(), 300);
         }
         return $this->files;
     }
@@ -75,11 +73,11 @@ class FileHelper
      */
     public function getFilesByType(int $type): array
     {
-        if (!in_array($type, File::getTypes())) {
+        if (!\in_array($type, File::getTypes())) {
             return [];
         }
         $files = $this->getFiles();
-        return array_filter($files, function ($file) use ($type) {
+        return \array_filter($files, static function ($file) use ($type) {
             return $file['typeoffile'] === $type;
         });
     }

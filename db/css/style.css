@@ -69,11 +69,6 @@ textarea :focus {
 select {
   margin: 5px 0;
 }
-select[id=univer_reseption] {
-  display: block;
-  width: 800px;
-  position: relative;
-}
 select :focus {
   border: dashed 1px #993333;
   background: #ffe;
@@ -166,11 +161,9 @@ h4 {
     border: 1px dotted #cccccc;
 }
 */
+
 #columnAutors, #columnLeaders {
   margin-top: 5px;
-  width: 50%;
-  position: absolute;
-  left: 0;
 }
 #columnAutors ol, #columnLeaders ol {
   margin-top: 0;
@@ -180,10 +173,6 @@ h4 {
 }
 #columnAutors ol li, #columnLeaders ol li {
   margin-left: -10px;
-}
-
-#columnLeaders {
-  left: 512px;
 }
 
 form {
