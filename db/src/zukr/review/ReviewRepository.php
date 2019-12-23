@@ -52,8 +52,10 @@ class ReviewRepository extends AbstractRepository
     }
 
     /**
-     * @param int $workId
-     * @return int|null
+     * Количество рецензий на работу
+     *
+     * @param int $workId ІД работи
+     * @return int|null Количестов рецензий на работу
      */
     public function getCountOfReviewByWorkId(int $workId): ?int
     {

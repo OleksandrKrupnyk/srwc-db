@@ -164,7 +164,7 @@ class ReviewHelper
      * @param int $univerId
      * @return array
      */
-    public function getListReviewers(int $workId, int $univerId, int $currentRevieverId = 0): array
+    public function getListReviewers(int $workId, int $univerId): array
     {
         $reviewers = $this->getLeaderRepository()->getListAvailableReviewersForWork($workId, $univerId);
 
@@ -179,8 +179,12 @@ class ReviewHelper
      */
     public function getListEditableReviewers(int $workId, int $univerId, int $currentRevieverId): array
     {
-        $reviewers = $this->getLeaderRepository()->getListAvailableEditableReviewersForWork($workId, $univerId, $currentRevieverId);
-
+        $count = $this->getReviewRepository()->getCountOfReviewByWorkId($workId);
+        if ($count !== null && $count === 1) {
+            $reviewers = $this->getLeaderRepository()->getListAvailableEditableReviewersForWorkFirstReview($workId, $univerId, $currentRevieverId);
+        } else {
+            $reviewers = $this->getLeaderRepository()->getListAvailableEditableReviewersForWorkOneReviewIsExist($workId, $univerId, $currentRevieverId);
+        }
         return $this->getListDropDown($reviewers);
 
     }
@@ -212,5 +216,14 @@ class ReviewHelper
             $list[$id] = implode(' ', $r);
         }
         return $list;
+    }
+
+    /**
+     * @param int $workId
+     * @return int|null
+     */
+    public function getCountOfReviewByWorkId(int $workId): ?int
+    {
+        return $this->getReviewRepository()->getCountOfReviewByWorkId($workId);
     }
 }

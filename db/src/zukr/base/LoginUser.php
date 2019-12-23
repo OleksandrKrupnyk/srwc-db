@@ -64,4 +64,12 @@ class LoginUser
         }
         return $this->user;
     }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->user_id;
+    }
 }

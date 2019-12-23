@@ -8,8 +8,10 @@
 use zukr\author\AuthorHelper;
 use zukr\base\Base;
 use zukr\base\html\HtmlHelper;
+use zukr\base\LoginUser;
 use zukr\file\FileHelper;
 use zukr\leader\LeaderHelper;
+use zukr\review\ReviewHelper;
 use zukr\work\WorkHelper;
 
 /**
@@ -128,12 +130,14 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
 /**
  * @param int  $id_w ID of work in table works
  * @param bool $href TRUE if you need to show link for edit
+ * @param bool $isAdmin
+ * @param int  $userProfileId
  * @return string Numeric list of reviews with links
  */
-function list_reviews_for_one_work($id_w, bool $href = false, $loginId = '0')
+function list_reviews_for_one_work($id_w, bool $href = false, $isAdmin = false,$loginId=0)
 {
     global $link;
-    $query = "SELECT `reviews`.`id`, `reviews`.`id_w`, leaders.id_tzmember, reviews.conclusion,  
+    $query = "SELECT `reviews`.`id`, `reviews`.`id_w`, leaders.id_tzmember, reviews.conclusion,
               CONCAT(`leaders`.`suname`,' ',`leaders`.`name`,' ',`leaders`.`lname`) AS fio,
               (`actual`+`original`+`methods`+`theoretical`+`practical`+`literature`+`selfcontained`+`design`+`publication`+`government`+`tendentious`) AS sumball 
               FROM `reviews` 
@@ -141,7 +145,7 @@ function list_reviews_for_one_work($id_w, bool $href = false, $loginId = '0')
               WHERE id_w = {$id_w}";
 
     $result = mysqli_query($link, $query)
-    or die("Invalid query in function list_reviews_for_one_work : " . mysqli_error($link));
+    or die('Invalid query in function list_reviews_for_one_work : ' . mysqli_error($link));
     $fullSum = 0;
     $conclusions = '';
     $str = "<ol>";
@@ -150,15 +154,15 @@ function list_reviews_for_one_work($id_w, bool $href = false, $loginId = '0')
         $item = '';
         if ($href) {
             $item .= "<a href=\"action.php?action=review_edit&id={$row['id']}\" title=\"Ред. Рец.:{$row['fio']}\">&#9998;:[{$row['sumball']}]</a>\n";
-            if ($loginId == $row['id_tzmember'] OR ($loginId == "1") OR ($loginId == "2")) {
+            if ($loginId == $row['id_tzmember'] || $isAdmin) {
                 $item .= "<a href=\"action.php?action=review_delete&id={$row['id']}&id_w={$row['id_w']}\"  title=\"Видалити рецензію\"></a>\n";
             }
         } else {
             $item .= "<a href=\"action.php?action=review_view&id={$row['id']}\" title=\"[{$row['sumball']}]\">Реценз.</a>\n";
         }
-            $conclusions .= ($row['conclusion'] == 1)? 'ТАК&nbsp;': 'НІ&nbsp;';
+        $conclusions .= ($row['conclusion'] == 1) ? 'ТАК&nbsp;' : 'НІ&nbsp;';
 
-        $str .= '<li>'.$item.'</li>';
+        $str .= '<li>' . $item . '</li>';
     }
 
     $str .= "</ol>";
@@ -167,7 +171,7 @@ function list_reviews_for_one_work($id_w, bool $href = false, $loginId = '0')
     return $str;
 }
 
-/** * ********************************************************************************
+/**
  *
  * Список из таблицы, по полю, выделить да/нет, размер списка=1,Подсказка
  * <select></select>
@@ -622,9 +626,9 @@ function print_work_univer($univer_title, $id_u, $univer)
  * Выводит рядок в таблице просмотра данных о работе
  *
  * @param array  $work
- * @param string $loginId
+ * @param LoginUser $userLogin
  **/
-function print_work_row($work, $loginId = '0')
+function print_work_row(array $work,LoginUser $userLogin)
 {
     $wh = WorkHelper::getInstance();
     $sections = $wh->getAllSections();
@@ -638,8 +642,10 @@ function print_work_row($work, $loginId = '0')
 
     $fh = FileHelper::getInstance();
     $filesOfWork = $fh->getFilesOneWork($work['id']);
+    $rh = ReviewHelper::getInstance();
     /** @var \zukr\base\AuthInterface $user */
-    $user = Base::$user->getUser();
+    $user =$userLogin->getUser();
+
     $title = '<a href=action.php?action=work_edit&id_w=' . $work['id'] . ' title="Редагувати роботу" class="">';
     $title .= $work['arrival'] == '1'
         ? $work['title'] . '&nbsp;[&radic;]&nbsp;'
@@ -659,11 +665,21 @@ function print_work_row($work, $loginId = '0')
     $date = $work['date'];
 
     //если установлено показывать ссылки
-    $link_add_review = ((($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW===Base::KEY_OFF ) || $user->isAdmin()) && count_review($work['id']) < 2)
+    $link_add_review = (
+        (
+            ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW===Base::KEY_OFF )
+            ||
+            $user->isAdmin()
+        )
+        && (int)$rh->getCountOfReviewByWorkId($work['id']) < 2
+    )
         ? '<a href="action.php?action=review_add&id_w=' . $work['id'] . '&id_u=' . $work['id_u'] . '">додати рецензію</a>'
         : '';
 
-    $reviews = list_reviews_for_one_work($work['id'], ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW===Base::KEY_OFF )|| $user->isAdmin(), $loginId);
+    $reviews = list_reviews_for_one_work(
+        $work['id'], ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF) || $user->isAdmin(),
+        $user->isAdmin(),
+        $userLogin->getId());
 
     $moto = '<br/><strong>Шифр</strong>:' . $work['motto'] . PHP_EOL;
     $link_work = '<a href=action.php?action=work_link&id_w='

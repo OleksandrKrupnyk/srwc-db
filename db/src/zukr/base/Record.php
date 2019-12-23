@@ -157,17 +157,22 @@ abstract class Record implements RecordInterface
      */
     public function save(): bool
     {
-        if (!$this->beforeSave()) {
-            return false;
-        }
-        $save = $this->{$this->_actionSave}() === '';
+        try {
+            if (!$this->beforeSave()) {
+                return false;
+            }
+            $this->_db->startTransaction();
+            $save = $this->{$this->_actionSave}();
 
-        $save = $save && $this->afterSave();
-        if ($save) {
-            Base::$session->setFlash('recordSaveMsg', 'Запис був збережений');
-            Base::$session->setFlash('recordSaveType', 'info');
+            $save = $save && $this->afterSave();
+            ($save) ? $this->_db->commit() : $this->_db->rollback();
+            if ($save) {
+                Base::$session->setFlash('recordSaveMsg', 'Запис був збережений');
+                Base::$session->setFlash('recordSaveType', 'info');
+            }
+        } catch (\Exception $e) {
+            Base::$log->critical($e->getMessage());
         }
-
         return $save;
     }
 
@@ -181,19 +186,15 @@ abstract class Record implements RecordInterface
     }
 
     /**
-     * @return bool|string
+     * @return bool
      * @throws \Exception
      */
-    protected function update()
+    protected function update(): bool
     {
         $arrayAttributes = $this->setAttributes();
         $primaryKeyId = static::getPrimaryKey();
-        $this->_db->where($primaryKeyId, $this->{$primaryKeyId})
+        return $this->_db->where($primaryKeyId, $this->{$primaryKeyId})
             ->update(static::getTableName(), $arrayAttributes);
-        if ($this->_db->count > 0) {
-            return true;
-        }
-        return $this->_db->getLastError();
     }
 
     /**
@@ -219,9 +220,10 @@ abstract class Record implements RecordInterface
     protected function setAttributes()
     {
         $attributes = [];
+        $dateTimeUpdate = $this->dateTimeUpdate();
         foreach ($this as $field => $value) {
             if ($value !== null && !is_object($value) && $field[0] !== '_') {
-                if (is_string($value) && \mb_strtolower($value) === 'now') {
+                if (\in_array($field, $dateTimeUpdate, true)) {
                     $attributes[$field] = $this->_db->now();
                 } else {
                     $attributes[$field] = $value;
@@ -256,6 +258,14 @@ abstract class Record implements RecordInterface
             $result = (bool)$db->delete(static::getTableName());
         }
         return $result;
+    }
+
+    /**
+     * @return array Список полів, в яких необхідно оновити дату створення/редагування
+     */
+    public function dateTimeUpdate(): array
+    {
+        return ['date'];
     }
 
 }

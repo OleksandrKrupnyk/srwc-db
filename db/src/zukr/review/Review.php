@@ -9,7 +9,7 @@ use zukr\base\Record;
 /**
  * Class Review
  *
- * Модель заявки
+ * Модель рецензії
  *
  * @package      zukr\review
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
@@ -17,8 +17,9 @@ use zukr\base\Record;
  */
 class Review extends Record
 {
+    /** @var int ІД запису */
     public $id;
-    /** @var int */
+    /** @var int ІД роботи*/
     public $id_w;
     /** @var int int Показник актуальності */
     public $actual = 0;
@@ -62,6 +63,10 @@ class Review extends Record
         return 'reviews';
     }
 
+    public function dateTimeUpdate() :array
+    {
+        return ['date'];
+    }
 
 
 }

@@ -2,6 +2,8 @@
 
 use zukr\base\Base;
 use zukr\base\html\Html;
+use zukr\leader\LeaderHelper;
+use zukr\review\ReviewHelper;
 
 /**
  * Created by PhpStorm.
@@ -15,7 +17,7 @@ if (!$id) {
     Base::$session->setFlash('recordSaveType', 'error');
     Go_page('error');
 }
-$rh = \zukr\review\ReviewHelper::getInstance();
+$rh = ReviewHelper::getInstance();
 $review = $rh->getReviewRepository()->getById($id);
 $work = $rh->getWorksRepository()->getById($review['id_w']);
 
@@ -25,34 +27,16 @@ if (Base::$user->getUser()->isAdmin()) {
 } elseif ((int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF) {
     if (Base::$user->getUser()->isReview()) {
         $userData = Base::$user->getUser()->getProfile();
-        if ($userData['id_u'] !== $work['id_u']) {
+        if ($userData['id_u'] === $work['id_u'] || $review['review1'] !== $userData['id']) {
             Go_page('action.php?' . http_build_query(['action' => 'review_view', 'id' => $review['id']]));
         }
-        $lh = \zukr\leader\LeaderHelper::getInstance();
+        $lh = LeaderHelper::getInstance();
         $userFullName = $lh->getFullName($userData);
     }
 } else {
     Base::$session->setFlash('recordSaveMsg', 'Ви не маєте права на рецензію роботи');
     Base::$session->setFlash('recordSaveType', 'error');
     Go_page('action.php?action=all_view');
-}
-
-
-if ($work['introduction'] !== '') {
-    $strArray[] = '<strong>Впровадженння:</strong>' . $work['introduction'];
-}
-if ($work['public'] !== '') {
-    $strArray[] = '<strong>Результати опубліковано:</strong>' . $work['public'];
-}
-if ($work['comments'] !== '') {
-    $strArray[] = '<strong>Коментар/зауваження до матеріалів:</strong>' . $work['comments'];
-}
-if (count($strArray) < 1) {
-    $str = '<strong>Увага! Без публікації та впровадження. Зауваження з боку офрмлення документів відсутні.</strong>';
-} elseif (count($strArray) == 1) {
-    $str = $strArray[0];
-} else {
-    $str = implode('<br>', $strArray);
 }
 $isAdmin = Base::$user->getUser()->isAdmin();
 Base::$param->DENNY_EDIT_REVIEW;
@@ -65,7 +49,7 @@ Base::$param->DENNY_EDIT_REVIEW;
     <h1><?= $work['title'] ?></h1>
     <fieldset name="descriptionWorks" id="descriptionWorks">
         <legend>Данні з роботи(виключно для рецензента)</legend>
-        <p><?= $str; ?></p>
+        <p><?= $rh->getWorkDescription($work) ?></p>
     </fieldset>
     <table>
         <tr>
@@ -120,6 +104,8 @@ Base::$param->DENNY_EDIT_REVIEW;
         <strong><?= $userFullName ?></strong>
         <input type="hidden" value="<?= $userData['id'] ?>" name="Review[review1]">
     <?php endif; ?>
+    <input type="hidden" value="<?= $review['id'] ?>" name="Review[id]">
+    <input type="hidden" value="<?= $review['id'] ?>" name="id">
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
     <input type="button" value="Повернутися"
