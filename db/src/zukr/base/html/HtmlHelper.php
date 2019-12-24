@@ -24,8 +24,9 @@ class HtmlHelper
         $value = $options['value'] ?? null;
         $items = [1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 6 => '6'];
         unset($options['name'], $options['value']);
-        $options['title'] = "Курс навчання";
-        $options['prompt'] = "Курс...";
+        $options['title'] = 'Курс навчання';
+        $options['id'] = 'author-curse';
+        $options['prompt'] = 'Курс...';
         return Html::select($name, $value, $items, $options);
     }
 
@@ -33,6 +34,7 @@ class HtmlHelper
      * @param string     $name
      * @param string     $title
      * @param string|int $value
+     * @param null       $id
      * @return string
      */
     public static function checkbox($name, $title, $value, $id = null): string

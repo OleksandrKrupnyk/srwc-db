@@ -50,7 +50,7 @@ class DeleteAuthorAction implements ApiActionsInterface
             }
             $response = ['msg' => $e->getMessage(), 'code' => $e->getCode()];
         }
-        echo json_encode($response);
+        echo \json_encode($response);
 
     }
 
@@ -59,6 +59,6 @@ class DeleteAuthorAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        $this->id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $this->id = \filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     }
 }

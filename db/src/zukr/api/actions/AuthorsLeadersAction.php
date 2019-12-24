@@ -30,8 +30,8 @@ class AuthorsLeadersAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        $this->id_u = filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
-        $this->id_w = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+        $this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
     }
 
     /**
@@ -41,10 +41,12 @@ class AuthorsLeadersAction implements ApiActionsInterface
     {
         $authors = $this->getAuthors();
         $leaders = $this->getLeaders();
-        return json_encode(compact('authors', 'leaders'), JSON_UNESCAPED_UNICODE);
+        return \json_encode(\compact('authors', 'leaders'), JSON_UNESCAPED_UNICODE);
     }
 
-
+    /**
+     * @return string
+     */
     private function getAuthors()
     {
 

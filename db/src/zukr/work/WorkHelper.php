@@ -187,14 +187,13 @@ class WorkHelper
                 $item .= ' <a href=action.php?action=work_unlink&id_a=' . $autor['id'] . '&id_w=' . $autor['id_w'] . ' title="Відокремити від роботи"><img src="../images/unlink.png" alt="unlink"></a>';
             }
 
-            $list [] = '<li title="Останні зміни: ' . htmlspecialchars($autor['date']) . '" >' . $item . '</li>';
+            $list [] = '<li title="Останні зміни: ' . \htmlspecialchars($autor['date']) . '" >' . $item . '</li>';
         }
-        return '<ol>' . implode('', $list) . '</ol>';
+        return '<ol>' . \implode('', $list) . '</ol>';
     }
 
     /**
      * @param array $leaders
-     * @param bool  $showPlace
      * @param bool  $showId
      * @return string
      */
@@ -220,9 +219,9 @@ class WorkHelper
                         'class' => 'unlink_person'
                     ]);
             }
-            $list [] = '<li title="Останні зміни: ' . htmlspecialchars($leader['date']) . '" >' . $item . '</li>' . PHP_EOL;
+            $list [] = '<li title="Останні зміни: ' . \htmlspecialchars($leader['date']) . '" >' . $item . '</li>' . PHP_EOL;
         }
-        return '<ol>' . implode(PHP_EOL, $list) . '</ol>';
+        return '<ol>' . \implode(PHP_EOL, $list) . '</ol>';
     }
 
     /**
@@ -248,10 +247,21 @@ class WorkHelper
     public function getWorksByUniverId(int $univerId): array
     {
         $array = $this->getWorks();
-        $array = array_filter($array, function ($work) use ($univerId) {
+        $array = \array_filter($array, static function ($work) use ($univerId) {
             return $work['id_u'] === $univerId;
         });
 
         return $array;
+    }
+    /**
+     * @return string
+     */
+    public function registerJS():string
+    {
+        $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'work.js';
+        $fileContent = \is_file($filename)
+            ? \file_get_contents($filename)
+            : '';
+        return '<script>' . $fileContent . '</script>';
     }
 }

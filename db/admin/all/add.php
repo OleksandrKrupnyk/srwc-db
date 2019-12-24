@@ -6,12 +6,13 @@
  * Time: 14:52
  */
 //Добавление всех ведомостей
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';die();
+global $link;
 $page = "action.php?action=work_link";
 $_POST['id_u'] = (int)$_POST['id_u'];
 $_SESSION['id_u'] = $_POST['id_u'];
-/*echo '<pre>';
-print_r($_POST);
-echo '</pre>';*/
 
 // Добавление в таблицу данных работы
 $_POST['title'] = trim(addslashes($_POST['title']));
@@ -25,9 +26,7 @@ $dead = ($_POST['dead'] == "") ? 0 : 1;
 $_POST['comments'] = trim(addslashes($_POST['comments']));
 $query = "INSERT INTO `works` (`id_u`,`title`,`motto`,`id_sec`,`public`,`introduction`,`tesis`,`dead`,`date`,`comments`)
                     VALUES ('{$_POST['id_u']}','{$_POST['title']}','{$_POST['motto']}','{$_POST['section']}','{$_POST['public']}','{$_POST['introduction']}','{$tesis}','{$dead}',NOW(),'{$_POST['comments']}')";
-global $link;
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
+
 $result = mysqli_query($link, $query);
 // or die("Полка запису дія work_add: " . mysqli_error($link));
 if (mysqli_error($link)==''){
@@ -115,6 +114,4 @@ if('' == $error_message){
     // Перейдем и поспотрим результаты связывания
     $page = "action.php?action=all_view#id_w".$id_w;
 }
-
 Go_page($page);
-?>

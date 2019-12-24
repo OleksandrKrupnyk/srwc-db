@@ -161,7 +161,6 @@ h4 {
     border: 1px dotted #cccccc;
 }
 */
-
 #columnAutors, #columnLeaders {
   margin-top: 5px;
 }
@@ -570,19 +569,26 @@ td[title*=Комен] {
 }
 
 .listsaotursleaders {
-  margin-left: 40px;
-  width: 90%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin: 0 2rem;
   border: 1px solid black;
 }
-.listsaotursleaders #listautors {
-  /*display: inline-block;   */
-  padding: 2px;
-  width: 50%;
+.listsaotursleaders .col-select {
+  width: 48%;
+  padding: 5px;
 }
-.listsaotursleaders #listleaders {
-  /*display: inline-block;*/
-  padding: 2px;
-  width: 49%;
+.listsaotursleaders #select-authors, .listsaotursleaders #select-leaders {
+  width: 100%;
+}
+
+.form-input {
+  display: block;
+}
+.form-input input, .form-input select {
+  width: 100%;
+  font-size: 14px;
 }
 
 td > output.balls {

@@ -34,7 +34,7 @@ class ReviewRepository extends AbstractRepository
 
     /**
      * @param int $reviewerId
-     * @return
+     * @return array|null
      */
     public function getOneReviewByReviewerId(int $reviewerId): ?array
     {

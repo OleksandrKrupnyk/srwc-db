@@ -42,7 +42,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     /**
      * @var array
      */
-    private $_container = [];
+    private $_container;
 
     /**
      * Params constructor.
@@ -51,7 +51,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     {
         $this->db = Base::$app->db;
         $params = $this->db->get(self::tableName());
-        $keys = \array_map(function ($array) {
+        $keys = \array_map(static function ($array) {
             return $array['parametr'];
         }, $params);
         $this->_container = \array_combine($keys, $params);
@@ -89,7 +89,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset):bool
     {
         return isset($this->_container[$offset]);
     }
@@ -150,7 +150,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     /**
      * @return bool
      */
-    public function valid()
+    public function valid():bool
     {
         return isset($this->_container[$this->_position]);
     }
@@ -158,7 +158,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     /**
      * @return int
      */
-    public function count()
+    public function count():int
     {
         return count($this->_container);
     }
@@ -166,9 +166,9 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     /**
      * @return string
      */
-    public function serialize()
+    public function serialize():string
     {
-        return serialize($this->_container);
+        return \serialize($this->_container);
     }
 
     /**
@@ -176,7 +176,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
      */
     public function unserialize($data)
     {
-        $this->_container = unserialize($data);
+        $this->_container = \unserialize($data);
     }
 
     /**

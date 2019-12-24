@@ -24,7 +24,9 @@ class Work extends Record
     /** @var int */
     public $balls = 0;
 
-
+    /**
+     * @return string
+     */
     public static function getTableName(): string
     {
         return 'works';
@@ -33,7 +35,7 @@ class Work extends Record
     /**
      * @return bool
      */
-    public function beforeSave()
+    public function beforeSave(): bool
     {
         $this->arrival = (int)$this->arrival !== self::KEY_OFF ? self::KEY_ON : self::KEY_OFF;
         $this->invitation = (int)$this->invitation !== self::KEY_OFF ? self::KEY_ON : self::KEY_OFF;

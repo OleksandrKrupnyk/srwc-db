@@ -106,7 +106,11 @@ ORDER BY suname;', [$univerId, $workId, $currentReviewerId, $workId, $currentRev
         }
     }
 
-    public function getListAvailableEditableReviewersForWorkFirstReview(int $workId, int $univerId, int $currentReviewerId): array
+    /**
+     * @param int $univerId
+     * @return array
+     */
+    public function getListAvailableEditableReviewersForWorkFirstReview(int $univerId): array
     {
         try {
             return $this->model::find()
@@ -127,6 +131,7 @@ ORDER BY suname;', [$univerId]);
             return [];
         }
     }
+
     /**
      * @return int
      */
@@ -154,6 +159,23 @@ ORDER BY suname;', [$univerId]);
             $r = $this->model::find()
                 ->where('id_tzmember', $id)
                 ->getOne($this->model::getTableName());
+            return $r ?? [];
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * @param int $univerId ІД запису університету
+     * @return array Список керівників робоіт
+     */
+    public function getAllByUniverId(int $univerId): array
+    {
+        try {
+            $r = $this->model::find()
+                ->where('id_u', $univerId)
+                ->get($this->model::getTableName(), null, 'id,suname,lname,name');
             return $r ?? [];
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());

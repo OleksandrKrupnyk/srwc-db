@@ -74,7 +74,7 @@ class UniverHelper
     protected function getUnivers(): array
     {
         if ($this->univers === null) {
-            $univers = Base::$app->cacheGetOrSet(get_called_class(), $this->getAllUniversFromDB(), 360);
+            $univers = Base::$app->cacheGetOrSet(static::class, $this->getAllUniversFromDB(), 360);
             $this->univers = $univers;
         }
         return $this->univers;
@@ -85,7 +85,7 @@ class UniverHelper
      */
     public function getInvitedUnivers(): array
     {
-        return array_filter($this->getUnivers(),
+        return \array_filter($this->getUnivers(),
             static function ($univer) {
                 return (int)$univer['invite'] === 1 || $univer['id'] === 1;
             });
@@ -103,9 +103,9 @@ class UniverHelper
     }
 
     /**
-     *
+     * @return array
      */
-    public function getTakePartUniversDropDownList()
+    public function getTakePartUniversDropDownList():array
     {
         $wh = WorkHelper::getInstance();
         $univerIds = $wh->getTakePartUniversIds();

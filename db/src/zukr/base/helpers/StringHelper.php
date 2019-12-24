@@ -20,9 +20,9 @@ class StringHelper
      * @param string $string the string being measured for length
      * @return int the number of bytes in the given string.
      */
-    public static function byteLength($string)
+    public static function byteLength($string):string
     {
-        return mb_strlen($string, '8bit');
+        return \mb_strlen($string, '8bit');
     }
 
     /**
@@ -197,7 +197,7 @@ class StringHelper
             if ($trim === true) {
                 $trim = 'trim';
             } elseif (!is_callable($trim)) {
-                $trim = function ($v) use ($trim) {
+                $trim = static function ($v) use ($trim) {
                     return trim($v, $trim);
                 };
             }
@@ -205,7 +205,7 @@ class StringHelper
         }
         if ($skipEmpty) {
             // Wrapped with array_values to make array keys sequential after empty values removing
-            $result = array_values(array_filter($result, function ($value) {
+            $result = array_values(array_filter($result, static function ($value) {
                 return $value !== '';
             }));
         }
@@ -375,7 +375,7 @@ class StringHelper
     {
         $words = preg_split("/\s/u", $string, -1, PREG_SPLIT_NO_EMPTY);
 
-        $titelized = array_map(function ($word) use ($encoding) {
+        $titelized = array_map(static function ($word) use ($encoding) {
             return static::mb_ucfirst($word, $encoding);
         }, $words);
 
@@ -396,10 +396,10 @@ class StringHelper
     {
         $regex = $strict ? '/\p{Lu}/u' : '/(?<!\p{Lu})\p{Lu}/u';
         if ($separator === '_') {
-            return mb_strtolower(trim(preg_replace($regex, '_\0', $name), '_'), self::encoding());
+            return \mb_strtolower(\trim(\preg_replace($regex, '_\0', $name), '_'), self::encoding());
         }
 
-        return mb_strtolower(trim(str_replace('_', $separator, preg_replace($regex, $separator . '\0', $name)), $separator), self::encoding());
+        return \mb_strtolower(\trim(\str_replace('_', $separator, \preg_replace($regex, $separator . '\0', $name)), $separator), self::encoding());
     }
 
     /**
@@ -411,7 +411,7 @@ class StringHelper
      * @param string $separator the character used to separate the words in the ID
      * @return string the resulting CamelCase name
      */
-    public static function id2camel($id, $separator = '-')
+    public static function id2camel($id, $separator = '-'):string
     {
         return str_replace(' ', '', StringHelper::mb_ucwords(str_replace($separator, ' ', $id), self::encoding()));
     }
@@ -425,7 +425,7 @@ class StringHelper
      * @param bool   $ucAll whether to set all words to uppercase
      * @return string
      */
-    public static function titleize($words, $ucAll = false)
+    public static function titleize($words, $ucAll = false):string
     {
         $words = static::humanize(static::underscore($words), $ucAll);
 
@@ -443,9 +443,9 @@ class StringHelper
      * @return string
      * @see variablize()
      */
-    public static function camelize($word)
+    public static function camelize($word):string
     {
-        return str_replace(' ', '', StringHelper::mb_ucwords(preg_replace('/[^\pL\pN]+/u', ' ', $word), self::encoding()));
+        return \str_replace(' ', '', StringHelper::mb_ucwords(preg_replace('/[^\pL\pN]+/u', ' ', $word), self::encoding()));
     }
 
     /**
@@ -456,7 +456,7 @@ class StringHelper
      * @param bool   $ucwords whether to capitalize the first letter in each word
      * @return string the resulting words
      */
-    public static function camel2words($name, $ucwords = true)
+    public static function camel2words($name, $ucwords = true):string
     {
         $label = mb_strtolower(trim(str_replace([
             '-',
@@ -470,7 +470,7 @@ class StringHelper
     /**
      * @return string
      */
-    private static function encoding()
+    private static function encoding():string
     {
         return 'UTF-8';
     }

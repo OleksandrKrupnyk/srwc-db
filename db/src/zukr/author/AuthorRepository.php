@@ -37,5 +37,21 @@ class AuthorRepository extends AbstractRepository
 
     }
 
+    /**
+     * @param int $univerId ІД запису університету
+     * @return array Список авторів робіт
+     */
+    public function getAllByUniverId(int $univerId): array
+    {
+        try {
+            $r = $this->model::find()
+                ->where('id_u', $univerId)
+                ->get($this->model::getTableName(), null, 'id,suname,lname,name');
+            return $r ?? [];
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
 
 }

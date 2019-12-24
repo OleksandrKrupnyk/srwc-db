@@ -24,14 +24,12 @@ function read_settings()
 //Доступ к переменным масива из вне
     global $settings;
     $query = 'SELECT * FROM `settings`';
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
-    or die("Помилка зчитування налаштувань програми: " . mysqli_error($link));
+    or die('Помилка зчитування налаштувань програми: ' . mysqli_error($link));
     while ($row = mysqli_fetch_array($result)) {
         $parametr = $row['parametr'];
-        if ("1" == $row['value'])
-            $settings[$parametr] = "1";
+        if ('1' === $row['value'])
+            $settings[$parametr] = '1';
     }
 }
 
@@ -49,17 +47,17 @@ function print_page_settings()
     $result = mysqli_query($link, $query)
     or die("Помилка зчитування налаштувань програми: " . mysqli_error($link));
     echo "<form action=\"settings.php\" method=POST>\n<table>\n"
-    . "<h2>Коротка інформація про систему</h2>"
-    . "<h5>Обмеження розміру файлу на завантаження:". ini_get('upload_max_filesize')."</h5>"
-    . "<h5>Кодування за замовчуванням:". ini_get('default_charset')."</h5>"
-    . "<h5>Шляхи до підключення розширень dll/lib:". ini_get('extension_dir')."</h5>"
-    . "<h5>Шляхи до файлів включення файлів php:". ini_get('include_path')."</h5>"
-    . "<h5>Максимальний розмір POST запиту:". ini_get('post_max_size')."</h5>"
-    . "<tr><th>Налаштування</th><th>Значення</th></tr>";
+    . '<h2>Коротка інформація про систему</h2>'
+    . '<h5>Обмеження розміру файлу на завантаження:' . ini_get('upload_max_filesize'). '</h5>'
+    . '<h5>Кодування за замовчуванням:' . ini_get('default_charset')."</h5>"
+    . '<h5>Шляхи до підключення розширень dll/lib:' . ini_get('extension_dir'). '</h5>'
+    . '<h5>Шляхи до файлів включення файлів php:' . ini_get('include_path'). '</h5>'
+    . '<h5>Максимальний розмір POST запиту:' . ini_get('post_max_size'). '</h5>'
+    . '<tr><th>Налаштування</th><th>Значення</th></tr>';
     while ($row = mysqli_fetch_array($result)) {
-        echo "<tr><td>" . $row['description'] . "</td><td>";
-        chk_box($row['parametr'], "", $row['value']);
-        echo "</td></tr>";
+        echo '<tr><td>' . $row['description'] . '</td><td>';
+        chk_box($row['parametr'], '', $row['value']);
+        echo '</td></tr>';
     }
     echo "</table>\n<input type=\"submit\" name=\"SAVE_SETTINGS\" value=\"Записати зміни\">\n</form>";
 }
@@ -148,7 +146,7 @@ function list_reviews_for_one_work($id_w, bool $href = false, $isAdmin = false,$
     or die('Invalid query in function list_reviews_for_one_work : ' . mysqli_error($link));
     $fullSum = 0;
     $conclusions = '';
-    $str = "<ol>";
+    $str = '<ol>';
     while ($row = mysqli_fetch_array($result)) {
         $fullSum += $row['sumball'];
         $item = '';
@@ -165,7 +163,7 @@ function list_reviews_for_one_work($id_w, bool $href = false, $isAdmin = false,$
         $str .= '<li>' . $item . '</li>';
     }
 
-    $str .= "</ol>";
+    $str .= '</ol>';
 
     $str .= "<p>&nbsp;&nbsp;&nbsp;<strong>&sum;:{$fullSum}</strong>&nbsp;{$conclusions}</p>";
     return $str;
@@ -246,7 +244,7 @@ function list_works_of_univer($id_u, $pole, $selected, $size)
  * @param int $id_u id of Univercity
  * @param int $size Size of list
  * @param bool $selecttag true or false
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 function list_fio($table, $pole, $id_u, $size, $selecttag = true)
 {
     global $link;
@@ -340,7 +338,7 @@ function fullinfo($table, $field, $value)
  * @param string $typeoffile
  * @return String
  */
-function list_files($id_w, $typeoffile = 'all')
+function list_files($id_w, string $typeoffile = 'all')
 {
     global $link;
     if ($id_w != '') {
@@ -368,9 +366,6 @@ function list_files($id_w, $typeoffile = 'all')
                 break;
         }
 
-
-        mysqli_query($link, "SET NAMES 'utf8'");
-        mysqli_query($link, "SET CHARACTER SET 'utf8'");
         $result = mysqli_query($link, $query)
         or die("Помилка запиту функція list_files: " . mysqli_error($link));
         $count = mysqli_num_rows($result);
@@ -446,7 +441,7 @@ function list_emails($table){
                  ORDER BY autors.suname";
         $get_text = "&t=a";
     }
-    elseif ($table == "leaders"){
+    elseif ($table === 'leaders'){
         $query= "SELECT works.title,leaders.id, leaders.suname, leaders.name,leaders.lname,leaders.hash,leaders.email,leaders.email_recive,leaders.email_date
                  FROM works
                  LEFT JOIN wl ON wl.id_w = works.id
@@ -456,8 +451,6 @@ function list_emails($table){
         $get_text = "&t=l";
     }
 
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     //echo $query."\n";
     $result = mysqli_query($link, $query)
     or die("Invalid query функція list_emails: " . mysqli_error($link));
@@ -519,7 +512,7 @@ JOIN degrees ON leaders.id_deg = degrees.id
 JOIN statuses ON leaders.id_sat = statuses.id
 JOIN univers ON leaders.id_u = univers.id";
         $query .= $onlyReviwers == true ? " WHERE leaders.review = '1' " : '';
-        $query .= " ORDER BY `suname` ASC";
+        $query .= ' ORDER BY `suname` ASC';
     }
 
     $result = mysqli_query($link, $query)
@@ -531,7 +524,7 @@ JOIN univers ON leaders.id_u = univers.id";
             . "<a href=action.php?action=" . rtrim($object, "s") . '_edit&' . $id . '=' . $row['id'] . "  title=\"Ред.{$row['univer']}\">"
             . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . '</a>  ';
         if (!$onlyReviwers && (int)$row['arrival'] === 0) {
-            $sub_row_str .= '<a href=\'#\' title=\'Видалити з реестру\' class=\'delete-author\'></a>';
+            $sub_row_str .= '<a href="#" title="Видалити з реестру" class="delete-author"></a>';
         }
         $sub_row_str .= (int)$row['arrival'] === 1 ? '<span title="Прибув на конференцію">&nbsp;[&radic;]&nbsp;</span>' : '';
 
@@ -568,16 +561,16 @@ JOIN univers ON leaders.id_u = univers.id";
 }
 
 
-/** * ********************************************************************************
+/**
  *
  * Список выбора места работы
  * @param String $id
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ */
 function cbo_place($id)
 {
     $str = "<select size=\"1\" name=\"place\" title=\"Призове місце:(D-Диплом за участь)\">\n";
     $str .= "<option disabled selected>Місце...</option>\n";
-    $placeArray = ["D", "I", "II", "III"];
+    $placeArray = ['D', 'I', 'II', 'III'];
     foreach ($placeArray as $i => $placeOption) {
         $selected = ($id == $placeOption) ? " selected " : "";
         $str .= "<option value='{$placeOption}' {$selected} >{$placeOption}</option>\n";
@@ -789,34 +782,6 @@ function works_declension($col_w)
     return $col_w . '&nbsp;' . $str;
 }
 
-/**
- * Список всех имен в базе включая авторов и руководителей
- * @param $pole_id
- */
-function print_datalist_name($pole_id)
-{
-    global $link;
-
-    $query = ($pole_id == "name") ?
-        "SELECT `autors`.`name` FROM `autors` Group by  `autors`.`name`  
-              UNION 
-              SELECT `leaders`.`name` FROM `leaders`  Group by  `leaders`.`name` 
-              ORDER BY `name`" :
-        "SELECT `autors`.`lname` FROM `autors` Group by  `autors`.`lname`  
-              UNION 
-              SELECT `leaders`.`lname` FROM `leaders`  Group by  `leaders`.`lname` 
-              ORDER BY `lname`";
-
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die('Помилка запиту функція print_datalist_name: ' . mysqli_error($link));
-    echo "<datalist id=\"" . $pole_id . "\">\n";
-    while ($row = mysqli_fetch_array($result)) {
-        echo "<option>" . $row[$pole_id] . "</option>\n";
-    }
-    echo "</datalist>\n";
-}
 
 /**
  * @param bool $showAllInfo
@@ -833,12 +798,10 @@ function listLeadersWhoArrival($showAllInfo = false){
                   LEFT JOIN degrees ON degrees.id = leaders.id_deg
                   LEFT JOIN statuses ON statuses.id = leaders.id_sat
                   WHERE arrival='1' ORDER BY fio ASC";
-        $text="(Розгорнутий)";
+        $text= '(Розгорнутий)';
         $rowTable = "%s, %s, %s, %s %s<br>";
 
     }
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
     or die('Помилка запиту функція listLeadersWhoArrival: ' . mysqli_error($link));
     echo "<h3> </h3>";
@@ -861,7 +824,7 @@ function listLeadersWhoArrival($showAllInfo = false){
 function short_list_leader_or_autors_str($id_w, $who, $showId = false)
 {
     global $link;
-    $query = ($who == 'wa') ?
+    $query = ($who === 'wa') ?
         "SELECT autors.id, 
         CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as fio\n 
         FROM `wa` left outer join `autors` ON `wa`.`id_a`=`autors`.`id`\n" :
@@ -875,8 +838,6 @@ function short_list_leader_or_autors_str($id_w, $who, $showId = false)
 
     $query .= "WHERE `id_w`='" . $id_w . "' ORDER BY `fio` ASC";
     //echo $query;
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
 
     $result = mysqli_query($link, $query)
     or die('Помилка запиту функція short_list_leader_or_autors_str: ' . mysqli_error($link));
@@ -902,13 +863,6 @@ function short_list_leader_or_autors_str($id_w, $who, $showId = false)
         echo $str;
     }
 }
-
-/**
- *  Список университетов которые приглашены на конкурс
- *
- * @param int $size
- */
-
 
 /**
  * Функция выводит только первых $num букв названия файла если длинна имени файла больше
@@ -992,27 +946,14 @@ function select_positionVNZ($posada)
 
 /**
  * Возращает строку с надписью в дипломе (I - першого ступеня)
- * @param  string $place
+ *
+ * @param string $place
  * @return string $str
  */
-function diplom_place($place)
+function diplom_place(string $place): string
 {
-    $str = 'ПУСТИЙ РЯДОК';
-    switch ($place) {
-        case 'I': {
-            $str = 'ПЕРШОГО СТУПЕНЯ';
-        }
-            break;
-        case 'II': {
-            $str = 'ДРУГОГО СТУПЕНЯ';
-        }
-            break;
-        case 'III': {
-            $str = 'ТРЕТЬОГО СТУПЕНЯ';
-        }
-            break;
-    }
-    return $str;
+    $text = ['I' => 'ПЕРШОГО СТУПЕНЯ', 'II' => 'ДРУГОГО СТУПЕНЯ', 'III' => 'ТРЕТЬОГО СТУПЕНЯ'];
+    return $text[$place] ?? 'ПУСТИЙ РЯДОК';
 }
 
 /**

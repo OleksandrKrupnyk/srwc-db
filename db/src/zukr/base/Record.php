@@ -15,7 +15,7 @@ abstract class Record implements RecordInterface
     public const KEY_ON  = 1;
     public const KEY_OFF = 0;
     /**
-     * @var \MysqliDb
+     * @var MysqliDb
      */
     private $_db;
     private $_table;
@@ -64,7 +64,7 @@ abstract class Record implements RecordInterface
     }
 
     /**
-     * @return \MysqliDb
+     * @return MysqliDb
      */
     public function getDb()
     {
@@ -98,7 +98,7 @@ abstract class Record implements RecordInterface
      */
     public static function getTableName(): string
     {
-        return \strtolower(basename(get_called_class()));
+        return \strtolower(\basename(static::class));
     }
 
 
@@ -128,7 +128,7 @@ abstract class Record implements RecordInterface
 
     /**
      * @param array|int $id
-     * @return \MysqliDb|array|null
+     * @return MysqliDb|array|null
      */
     public function findById($id)
     {
@@ -157,6 +157,7 @@ abstract class Record implements RecordInterface
      */
     public function save(): bool
     {
+        $save = false;
         try {
             if (!$this->beforeSave()) {
                 return false;
@@ -177,11 +178,11 @@ abstract class Record implements RecordInterface
     }
 
     /**
-     * @return \MysqliDb
+     * @return MysqliDb
      */
     public static function find()
     {
-        $className = get_called_class();
+        $className = static::class;
         return (new $className())->getDb();
     }
 
@@ -249,6 +250,8 @@ abstract class Record implements RecordInterface
     }
 
     /**
+     * @param MysqliDb $db
+     * @return bool
      * @throws \Exception
      */
     public function delete(MysqliDb $db): bool

@@ -42,10 +42,9 @@ class SectionHelper
     public function getAllSections()
     {
         if ($this->sections === null) {
-            $sections = $this->sectionRepository->getAllSectionsAsArray();
-            $this->sections = $sections;
+            $this->sections =$this->sectionRepository->getAllSectionsAsArray();
         }
-        return $sections;
+        return $this->sections;
     }
 
     /**

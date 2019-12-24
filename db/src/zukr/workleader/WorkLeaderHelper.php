@@ -15,9 +15,6 @@ class WorkLeaderHelper
     /** @var WorkLeaderHelper */
     private static $obj;
 
-    /** @var array */
-    private $worksAuthor = [];
-
     /**
      * WorkHelper constructor.
      */
@@ -45,7 +42,7 @@ class WorkLeaderHelper
     public function getIdsLeadersOfWorkByWorkId(int $workId)
     {
         $leaders = (new WorkLeaderRepository())->getAllLeadersOfWorkByWorkId($workId);
-        return array_map(function ($v) {
+        return array_map(static function ($v) {
             return $v['id'];
         }, $leaders);
     }

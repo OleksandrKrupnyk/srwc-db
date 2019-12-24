@@ -142,8 +142,8 @@ class ReviewHelper
     public function registerJS()
     {
         $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'review.js';
-        $fileContent = is_file($filename)
-            ? file_get_contents($filename)
+        $fileContent = \is_file($filename)
+            ? \file_get_contents($filename)
             : '';
         return '<script>' . $fileContent . '</script>';
     }
@@ -175,13 +175,14 @@ class ReviewHelper
     /**
      * @param int $workId
      * @param int $univerId
+     * @param int $currentRevieverId
      * @return array
      */
     public function getListEditableReviewers(int $workId, int $univerId, int $currentRevieverId): array
     {
         $count = $this->getReviewRepository()->getCountOfReviewByWorkId($workId);
         if ($count !== null && $count === 1) {
-            $reviewers = $this->getLeaderRepository()->getListAvailableEditableReviewersForWorkFirstReview($workId, $univerId, $currentRevieverId);
+            $reviewers = $this->getLeaderRepository()->getListAvailableEditableReviewersForWorkFirstReview($univerId);
         } else {
             $reviewers = $this->getLeaderRepository()->getListAvailableEditableReviewersForWorkOneReviewIsExist($workId, $univerId, $currentRevieverId);
         }

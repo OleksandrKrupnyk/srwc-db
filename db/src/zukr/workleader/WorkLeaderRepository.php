@@ -37,12 +37,14 @@ class WorkLeaderRepository extends AbstractRepository
                 ->get($table, null, $table . '.date,id_w, ' . $joinTable . '.*');
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
+            return [];
         }
 
     }
 
 
     /**
+     * @param int $workId
      * @return array|\MysqliDb
      */
     public function getAllLeadersOfWorkByWorkId(int $workId)
@@ -56,6 +58,7 @@ class WorkLeaderRepository extends AbstractRepository
                 ->get($table, null, $table . '.date,id_w, ' . $joinTable . '.*');
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
+            return [];
         }
     }
 
@@ -68,6 +71,7 @@ class WorkLeaderRepository extends AbstractRepository
                 ->get($this->model::getTableName(), null, 'count(*) as count');
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
+            return [];
         }
     }
 

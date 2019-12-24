@@ -1,6 +1,7 @@
 <?php
 
 use zukr\base\Base;
+use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
 use zukr\leader\LeaderHelper;
 use zukr\review\ReviewHelper;
@@ -31,7 +32,7 @@ if (Base::$user->getUser()->isAdmin()) {
             Go_page('action.php?' . http_build_query(['action' => 'review_view', 'id' => $review['id']]));
         }
         $lh = LeaderHelper::getInstance();
-        $userFullName = $lh->getFullName($userData);
+        $userFullName = PersonHelper::getFullName($userData);
     }
 } else {
     Base::$session->setFlash('recordSaveMsg', 'Ви не маєте права на рецензію роботи');

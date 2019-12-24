@@ -39,7 +39,7 @@ class WorkAuthorHelper
     public function getIdsAuthorsOfWorkByWorkId(int $workId)
     {
         $authors = (new WorkAuthorRepository())->getAllAuthorsOfWorkByWorkId($workId);
-        return array_map(function ($v) {
+        return array_map(static function ($v) {
             return $v['id'];
         }, $authors);
     }

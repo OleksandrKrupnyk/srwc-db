@@ -72,13 +72,13 @@ $_type = $session->getFlash('recordSaveType', '');
         <link rel="manifest" href="manifest.json">
         <link href="../css/menustyle.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/phone.min.css" type="text/css" rel="stylesheet"/>
-        <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
-        <link href="../css/jquery-confirm.min.css" type="text/css" rel="stylesheet"/>
-        <link href="../css/style.min.css" type="text/css" rel="stylesheet"/>
+<!--        <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>-->
+<!--        <link href="../css/jquery-confirm.min.css" type="text/css" rel="stylesheet"/>-->
+        <link href="../css/style.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="../js/jquery.min.js"></script>
-        <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
+<!--        <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>-->
         <script type="text/javascript" src="../js/notify.js"></script>
-        <script type="text/javascript" src="../js/jquery-confirm.min.js"></script>
+<!--        <script type="text/javascript" src="../js/jquery-confirm.min.js"></script>-->
         <script type="text/javascript" src="../js/menuscript.js"></script>
         <script type="text/javascript" src="../js/comon.js"></script>
         <script type="text/javascript" src="../js/admin.js" async></script>
