@@ -551,8 +551,8 @@ JOIN univers ON leaders.id_u = univers.id";
             if ($row['email_recive'] == 1 && $hash) {
                 $sub_row_str .= ' [The email have received and read.' . $row['email_date'] . ' ] ';
             }
-            $sub_row_str .= "<a href=\"lists.php?list=badge_{$object}&badge={$row['id']}\" title=\"Друкувати посвідчення\"></a>";
-            $sub_row_str .= "<input type=\"checkbox\" name=\"works_id[]\" value=\"{$row['id']}\">";
+            $sub_row_str .= "<a href=\"lists.php?list=badge_{$object}&badge={$row['id']}\" title=\"Друкувати посвідчення(тільки зв'язані з роботою)\"></a>";
+            $sub_row_str .= '<input type="checkbox" name="works_id[]" value="' . $row['id'] . '">';
             $sub_row_str .= "</li>\n";
         }
     }

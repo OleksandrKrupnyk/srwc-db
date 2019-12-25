@@ -52,7 +52,7 @@ class UserRepository extends AbstractRepository
         }
 
         $users[0] = 'not set';
-        ksort($users);
+        \ksort($users);
         return $users;
     }
 

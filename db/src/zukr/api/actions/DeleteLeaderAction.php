@@ -53,7 +53,7 @@ class DeleteLeaderAction implements ApiActionsInterface
             ($delete) ? $leaderQuery->commit() : $leaderQuery->rollback();
             $response = ['msg' => 'Запис керівника видалено', 'code' => 0];
         } catch (\Exception $e) {
-            if ($leaderQuery !== null) {
+            if (isset($leaderQuery) && $leaderQuery !== null) {
                 $leaderQuery->rollback();
             }
             $response = ['msg' => $e->getMessage(), 'code' => $e->getCode()];

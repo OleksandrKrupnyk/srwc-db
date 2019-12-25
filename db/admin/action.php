@@ -72,23 +72,21 @@ $_type = $session->getFlash('recordSaveType', '');
         <link rel="manifest" href="manifest.json">
         <link href="../css/menustyle.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/phone.min.css" type="text/css" rel="stylesheet"/>
-<!--        <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>-->
-<link href="../css/jquery-confirm.min.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/jquery-confirm.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/style.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="../js/jquery.min.js"></script>
-<!--        <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>-->
         <script type="text/javascript" src="../js/notify.js"></script>
-<script type="text/javascript" src="../js/jquery-confirm.min.js"></script>
+        <script type="text/javascript" src="../js/jquery-confirm.min.js"></script>
         <script type="text/javascript" src="../js/menuscript.js"></script>
         <script type="text/javascript" src="../js/comon.js"></script>
         <script type="text/javascript" src="../js/admin.js" async></script>
         <script>
-        
+
             jconfirm.defaults = {
                 useBootstrap: false,
                 theme: 'supervan',
             };
-            
+
         </script>
     </head>
     <body>
@@ -135,8 +133,8 @@ $_type = $session->getFlash('recordSaveType', '');
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= 'from :' . urldecode($_SESSION['from']) ?><?= $error_message; ?></div>
     <div id="operator">Оператор :<span><?= Base::$user->getUser()->getLogin() ?></span>
-        <span><?= Base::$user->getUser()->isAdmin() ?'A':''?></span>
-        <span><?= Base::$user->getUser()->isReview()?'R':'' ?></span>
+        <span><?= Base::$user->getUser()->isAdmin() ? 'A' : '' ?></span>
+        <span><?= Base::$user->getUser()->isReview() ? 'R' : '' ?></span>
     </div>
     <autor class="autor"><?= 'xdebug_time_index :' . number_format(xdebug_time_index(), 3) . 'sec| xdebug_peak_memory_usage :' . number_format(xdebug_peak_memory_usage() / 1024 / 1024, 3) . 'MB| xdebug_memory_usage :' . number_format(xdebug_memory_usage() / 1024 / 1024, 3) . 'MB' ?>
         Krupnik&copy;

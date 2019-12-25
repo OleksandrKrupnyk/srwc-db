@@ -40,6 +40,7 @@ $color = array($red,$pink,$purpure,$lblue,$blue,$ygreen,$green,$yellow,$gyellow)
 $angles = array();
 $angles[0] = 0;
 $sum1 = 0;
+
 for ($i = 1; $i <count($c); $i++) {
     $sum1 += $c[$i-1];
     $angles[$i] = $sum1;
@@ -63,4 +64,3 @@ for($i = 1; $i < count($c)+1;$i++ ){
 header('Content-type: image/png');
 imagepng($image);
 imagedestroy($image);
-?>
