@@ -48,7 +48,7 @@ class Log extends Record
     /**
      * @return Log
      */
-    public static function getInstance()
+    public static function getInstance(): Log
     {
         if (self::$obj === null) {
             self::$obj = new self();
@@ -62,7 +62,7 @@ class Log extends Record
      * @param null $table
      * @param null $action_id
      */
-    public function logAction($action = null, $table = null, $action_id = null)
+    public function logAction($action = null, $table = null, $action_id = null): void
     {
         $this->action = $action ?? $_POST['action'];
         $this->table = $table ?? 'Unknown';
@@ -75,7 +75,7 @@ class Log extends Record
     /**
      * @return bool
      */
-    public function beforeSave()
+    public function beforeSave(): bool
     {
         $this->tz_ip = $_SERVER['REMOTE_ADDR'];
         $this->tz_id = $_SESSION['id'] ?? '777';

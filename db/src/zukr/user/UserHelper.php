@@ -16,9 +16,6 @@ class UserHelper
     /** @var UserHelper */
     private static $obj;
 
-    /** @var array */
-    private $users;
-
     private $adminIds;
     /**
      * LeaderHelper constructor.

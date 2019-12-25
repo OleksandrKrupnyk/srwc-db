@@ -32,7 +32,7 @@ class StatusRepository extends AbstractRepository
     public function getDropDownList()
     {
         if ($this->statuses === null) {
-            $statuses = Base::$app->cacheGetOrSet(get_called_class(), $this->getStatusesFormDB(), 3600);
+            $statuses = Base::$app->cacheGetOrSet(static::class, $this->getStatusesFormDB(), 3600);
             $this->statuses = $statuses;
         }
         return $this->statuses;

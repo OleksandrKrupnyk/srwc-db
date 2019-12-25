@@ -13,8 +13,8 @@ use Stash\Pool;
 /**
  * Class App
  *
- * @property string    app_name
- * @property \MysqliDb $db
+ * @property string app_name
+ * @property DB     $db
  * @package zukr\base
  */
 class App
@@ -24,7 +24,7 @@ class App
     /** @var App */
     private static $obj;
     /**
-     * @var \MysqliDb
+     * @var DB
      */
     private $_db;
     /**
@@ -94,6 +94,7 @@ class App
         if ('app_name' === $name) {
             return '&quot;' . $this->_app_name . '&quot;&copy;';
         }
+        return null;
     }
 
     /**
@@ -118,6 +119,7 @@ class App
         if ($name === 'db') {
             return isset($this->_db);
         }
+        return null;
     }
 
     /**

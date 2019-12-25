@@ -21,12 +21,6 @@ class ApiHelper
     /** @var ApiHelper */
     private static $obj;
 
-    /** @var array */
-    private $worksAutors;
-    /** @var array */
-    private $autorsOfWork;
-
-
     /**
      * WorkHelper constructor.
      */
@@ -54,7 +48,7 @@ class ApiHelper
     {
         $action = StringHelper::id2camel($action);
         $className = $this->getClassName($action);
-        if (class_exists($className)) {
+        if (\class_exists($className)) {
             return new $className();
         } else {
             Base::$log->critical(__METHOD__ . ' Not found class ' . $className);

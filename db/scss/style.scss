@@ -186,6 +186,7 @@ h4 {
     }
   }
 }
+
 form {
   background-color: #ff9f9f;
   border-bottom: 1px outset;
@@ -584,8 +585,8 @@ a[href^="#remove"] {
   background: url(../images/del.png) no-repeat;
   padding: 0 0 0 16px;
   margin: 0;
-  &:hover
-  {
+
+  &:hover {
     background: url(../images/del2.png) no-repeat center;
   }
 }
@@ -616,23 +617,35 @@ td[title*="Комен"] {
 
 .listsaotursleaders {
 
-  margin-left: 40px;
-  width: 90%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin: 0 2rem;
   border: 1px solid black;
 
-  #listautors {
-    /*display: inline-block;   */
-    padding: 2px;
-    width: 50%;
+  .col-select {
+    width: 48%;
+    padding: 5px;
   }
 
-  #listleaders {
-    /*display: inline-block;*/
-    padding: 2px;
-    width: 49%;
+  #select-authors, #select-leaders {
+    width: 100%;
+
   }
+
 }
 
+.form-input{
+  display: block;
+  label{
+
+  }
+  input,select{
+    width: 100%;
+    font-size: 14px;
+  }
+
+}
 td > output.balls {
   width: 20px;
   display: block;

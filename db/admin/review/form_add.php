@@ -2,7 +2,9 @@
 
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
+use zukr\leader\LeaderHelper;
 use zukr\review\ReviewHelper;
 use zukr\work\WorkHelper;
 use zukr\work\WorkRepository;
@@ -37,8 +39,7 @@ if (Base::$user->getUser()->isAdmin()) {
             Base::$session->setFlash('recordSaveType', 'error');
             Go_page('action.php?action=all_view');
         }
-        $lh = \zukr\leader\LeaderHelper::getInstance();
-        $userFullName = $lh->getFullName($userData);
+        $userFullName =PersonHelper::getFullName($userData);
     }
 } else {
     Base::$session->setFlash('recordSaveMsg', 'Ви не маєте права на рецензію роботи');

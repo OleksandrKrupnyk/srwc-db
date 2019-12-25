@@ -63,10 +63,4 @@ class Review extends Record
         return 'reviews';
     }
 
-    public function dateTimeUpdate() :array
-    {
-        return ['date'];
-    }
-
-
 }

@@ -12,9 +12,7 @@ global $link;
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="../css/style.css" type="text/css" rel="stylesheet"/>
-    <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
     <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
     <script type="text/javascript" src="../js/admin.js"></script>
     <title>Журнал &quot;СНР 2018&quot;&copy;</title>
 </head>
@@ -22,8 +20,6 @@ global $link;
 <?php
 if ($_SESSION['access']) {
     echo "<header><a href=\"action.php\">Меню</a></header>";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     if (isset($_GET['view'])) {
         echo "<header>Данні {$_GET['view']}</header>";
         echo "<header><a href=\"log.php\" >Журнал</a></header>";
@@ -68,8 +64,6 @@ FROM log
 JOIN tz_members ON tz_members.id = log.tz_id
 JOIN leaders ON tz_members.id = leaders.id_tzmember
 WHERE `table` = 'reviews' GROUP BY usr ORDER BY countReview DESC";
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query);
 $sumCountReview = 0;
 $a = array();
@@ -78,8 +72,8 @@ $f = array();
 printf("<p>Статистика рецензування:</p><ol>");
 while ($row = mysqli_fetch_array($result)) {
     printf("<li>%s - %s</li>", $row['fio'], $row['countReview']);
-    array_push($a,$row['countReview']);
-    array_push($f,$row['fio']);
+    $a[] = $row['countReview'];
+    $f[] = $row['fio'];
 }
 printf("</ol>");
 
@@ -89,8 +83,8 @@ $strArrayFormat1 = array();
 $strArrayFormat2 = array();
 
 foreach ($a as $element){
-    array_push($strArrayFormat1, "a[]=%s");
-    array_push($strArrayFormat2, "f[]=%s");
+    $strArrayFormat1[] = "a[]=%s";
+    $strArrayFormat2[] = "f[]=%s";
 }
 $strFormat .= implode("&",$strArrayFormat1);
 $strFormat .= "&";

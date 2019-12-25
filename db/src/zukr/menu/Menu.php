@@ -28,7 +28,7 @@ class Menu
     /**
      * @return string
      */
-    public function getMenu()
+    public function getMenu():string
     {
         $headMenu = $this->renderHeadMenu();
         $subMenu = $this->renderSubMenu();
@@ -51,7 +51,7 @@ __HTML__;
     /**
      * @return string
      */
-    private function renderHeadMenu()
+    private function renderHeadMenu():string
     {
         $str = '';
         foreach ($this->_menu as $id => $item) {
@@ -63,12 +63,12 @@ __HTML__;
     /**
      * @return string
      */
-    private function renderSubMenu()
+    private function renderSubMenu(): string
     {
         $subMenu = '';
         foreach ($this->_menu as $id => $_subMenu) {
+            $_subMenu_ = '';
             if (isset($_subMenu['items']) && is_array($_subMenu['items']) && !empty($_subMenu['items'])) {
-                $_subMenu_ = '';
                 foreach ($_subMenu['items'] as $item) {
                     if (isset($item['items']) && is_array($item['items']) && !empty($item['items'])) {
                         $subSubMenu = $this->renderSubSubMenu($item['items']);
@@ -95,7 +95,7 @@ __HTML__;
      * @param array $items
      * @return string
      */
-    private function renderSubSubMenu(array $items)
+    private function renderSubSubMenu(array $items) :string
     {
         $itemList = '';
         foreach ($items as $item) {
@@ -107,9 +107,10 @@ __HTML__;
     /**
      * @param array  $item
      * @param string $content
+     * @param string $id
      * @return string
      */
-    private function item(array $item, $content = '', $id = '')
+    private function item(array $item, $content = '', $id = '') :string
     {
         $href = $item['href'] ?? '#';
         $title = isset($item['title']) ? " title='{$item['title']}' " : '';

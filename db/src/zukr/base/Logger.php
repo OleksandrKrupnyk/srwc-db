@@ -50,7 +50,7 @@ class Logger implements LoggerInterface
 
 
     /**
-     * @return Params
+     * @return Logger
      */
     public static function getInstance(): self
     {

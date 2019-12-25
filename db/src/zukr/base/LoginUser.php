@@ -23,8 +23,6 @@ class LoginUser
      * @var AuthInterface
      */
     private $user;
-    /** @var array */
-    private $profile = [];
     /**
      * @var int
      */

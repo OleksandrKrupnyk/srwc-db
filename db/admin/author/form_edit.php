@@ -64,7 +64,7 @@ Base::$session->setRedirectParam();
 
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
-    <input type="hidden" name="action" value="autor_edit">
+    <input type="hidden" name="action" value="author_edit">
     <input type="hidden" name="Author[id]" value="<?= $author['id'] ?>">
     <input type="hidden" name="id_a" value="<?= $id_a ?>">
 </form>

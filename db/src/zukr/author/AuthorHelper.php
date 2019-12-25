@@ -91,7 +91,7 @@ class AuthorHelper
     {
         $authors = $this->getAutors();
         if (!empty($authors)) {
-            return array_filter($this->getAutors(), function ($author) use ($univerId) {
+            return array_filter($this->getAutors(), static function ($author) use ($univerId) {
                 return $author['id_u'] === $univerId;
             });
         }

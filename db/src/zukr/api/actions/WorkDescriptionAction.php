@@ -50,9 +50,9 @@ class WorkDescriptionAction implements ApiActionsInterface
     /**
      * @param array $params
      */
-    public function init(array $params = [])
+    public function init(array $params = []):void
     {
-        $this->id_u = filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
-        $this->id_w = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+        $this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
     }
 }

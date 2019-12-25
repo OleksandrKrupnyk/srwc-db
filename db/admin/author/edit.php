@@ -25,7 +25,7 @@ if ($autor->id > 0) {
     $log->logAction(null, $autor::getTableName(), $autor->id);
 }
 if (isset($_POST['save'])) {
-    $url2go = 'action.php?action=autor_edit&id_a=' . $id_a;
+    $url2go = 'action.php?action=author_edit&id_a=' . $id_a;
 }
 if (isset($_POST['save+exit'])) {
     $url2go = Base::$session->get('redirect_to');

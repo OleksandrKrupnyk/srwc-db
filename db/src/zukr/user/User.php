@@ -53,7 +53,7 @@ class User extends Record implements AuthInterface
     }
 
     /**
-     * @return User|null
+     * @return array
      */
     public function getProfile(): array
     {

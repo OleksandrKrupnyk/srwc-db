@@ -29,7 +29,7 @@ class DegreeRepository extends AbstractRepository
     public function getDropDownList()
     {
         if ($this->degrees === null) {
-            $statuses = Base::$app->cacheGetOrSet(get_called_class(), $this->getDegreesFormDB(), 3600);
+            $statuses = Base::$app->cacheGetOrSet(static::class, $this->getDegreesFormDB(), 3600);
             $this->degrees = $statuses;
         }
         return $this->degrees;
@@ -46,6 +46,7 @@ class DegreeRepository extends AbstractRepository
                 ->get(Degree::getTableName(), null, ['id', 'degreefull']);
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
+            return [];
         }
     }
 }

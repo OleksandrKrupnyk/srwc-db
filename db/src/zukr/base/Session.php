@@ -35,7 +35,7 @@ class Session
     }
 
     /**
-     * @return Params
+     * @return Session
      */
     public static function getInstance(): self
     {
@@ -157,7 +157,7 @@ class Session
     public function get($key, $defaultValue = null)
     {
         $this->open();
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : $defaultValue;
+        return $_SESSION[$key] ?? $defaultValue;
     }
 
     /**
@@ -435,7 +435,7 @@ class Session
             if ($this->getIsActive()) {
             } else {
                 $error = error_get_last();
-                $message = isset($error['message']) ? $error['message'] : 'Failed to unfreeze session.';
+                $message = $error['message'] ?? 'Failed to unfreeze session.';
             }
             $_SESSION = $this->frozenSessionData;
             $this->frozenSessionData = null;

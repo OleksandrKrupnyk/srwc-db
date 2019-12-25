@@ -34,10 +34,7 @@ $(document).ready(function () {
     });
 
 
-    // Меню на главной странице
-    $(function () {
-        $("#menu").menu();
-    });
+    
 
 
     //Удаление автора или руководителя из реестра
@@ -109,58 +106,6 @@ $(document).ready(function () {
             $('#letter1link').attr("href", "./invitation.php?id_u=" + val + "&letter=1");
             $('#letter2link').attr("href", "./invitation.php?id_u=" + val + "&letter=2");
         }
-    });
-
-
-    /**
-     * Обработка события при добавлении всей информации по работе
-     */
-
-    $("#selunivers").on('change', function () {
-        var val = $(this).find("option:selected").val();
-        //console.log("val  ="+val);
-        //Отправить запрос
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"action": "getlists", "id_u": val},
-            cache: false,
-            success: function (txt) {
-                txt = txt.split("!");
-                //Записать все в тело документа
-                $("#listautors").empty().append('<option value="-1" disabled="">Автори університету</option>\n<option value="888" selected>Відсутній у списку</option>\n' + txt[0]);
-                $("#listleaders").empty().append('<option value="-1" disabled="">Керівники університету</option>\n<option value="888" selected>Відсутній у списку</option>\n' + txt[1]);
-                // обработка выбора на спиксе
-                $("#listautors").on('change', function () {
-                    var id_a = $(this).find("option:selected").val();
-                    //console.log('Выбрали автора:'+id_a);
-                    // Если id_a <> 0 то скрыть отображение данны
-                    if (id_a != 888) {
-                        $("#data_autor").hide();
-                        $("#data_autor :input").removeAttr('required');
-                        $("#data_autor").find("option:selected").attr("disabled", false);
-                        //var val = $("#data_autor").find("option:selected").val();
-                        //console.log('=== > '+val);
-                        //$("#data_autor :input").removeAttr('required');
-                    } else {
-                        $("#data_autor").show();
-                    }//if
-                });//second ajax
-                $("#listleaders").on('change', function () {
-                    var id_l = $(this).find("option:selected").val();
-                    //console.log('Выбрали руководителя:'+id_l);
-                    // Если id_a <> 0 то скрыть отображение данны
-                    if (id_l != 888) {
-                        $("#data_leader").hide();
-                        $("#data_leader :input").removeAttr('required');
-                        $("#data_leader").find("option:selected").attr("disabled", false);
-
-                    } else {
-                        $("#data_leader").show();
-                    }//if
-                });//second ajax
-            }//succses
-        });
     });
 
     /*Запрос на формирование списка авторов и рукводителей для отметки о приезде*/
@@ -236,22 +181,22 @@ $(document).ready(function () {
     /* TODO */
 
 
-//Обработка отметки о прибытии автора
-    $('#selectAutors').on('dblclick', 'li', function (eventObject) {
-        eventObject.preventDefault();
+    //Обработка отметки о прибытии автора
+    $('#selectAutors').on('dblclick', 'li', function (e) {
+        e.preventDefault();
         this.blur();
         var val = $(this).attr("alt");
-
-//Какая клавиша нажата
-        if (eventObject.ctrlKey) {//Нажата Shift значит удалить из приглашенных
-            var action = "rem_arrival";
-            var answer = confirm('Виправити помилку?\n\tВи впевнені?');
-            if (answer != true) return false;
+        var action,answer;
+        //Какая клавиша нажата
+        if (e.ctrlKey) {//Нажата Shift значит удалить из приглашенных
+            action = "rem_arrival";
+            answer = confirm('Виправити помилку?\n\tВи впевнені?');
+            if (!answer) return false;
             $(this).removeClass();
         } else {//Без Shift добавить приглашение
-            var answer = confirm('Відмитити приїзд на конференцію?\n\tВи впевнені?');
-            if (answer != true) return false;
-            var action = "add_arrival";
+            action = "add_arrival";
+            answer = confirm('Відмитити приїзд на конференцію?\n\tВи впевнені?');
+            if (!answer) return false;
             $(this).addClass("option-arrival");
         }
         $.ajax({
@@ -260,27 +205,26 @@ $(document).ready(function () {
             data: {"action": action, "id_a": val},
             cache: false,
             success: function (txt) {
-                //console.log('Запрос обработан\n'+txt);
             }
         });
     });
 
 
-//Обработка отметки о прибытии руководителя или сопровождающего
+    //Обработка отметки о прибытии руководителя или сопровождающего
     $('#selectLeaders').on('dblclick', 'li', function (eventObject) {
         eventObject.preventDefault();
         this.blur();
         var val = $(this).attr("alt");
         var action, answer;
-//Какая клавиша нажата
+        //Какая клавиша нажата
         if (eventObject.ctrlKey) {//Нажата Shift значит удалить из проглашенных
             action = "rem_arrival";
             answer = confirm('Виправити помилку?\n\tВи впевнені?');
-            if (answer !== true) return false;
+            if (!answer) return false;
             $(this).removeClass();
         } else {//Без Shift добавить приглашение
             answer = confirm('Відмитити приїзд на конференцію?\n\tВи впевнені?');
-            if (answer !== true) return false;
+            if (!answer) return false;
             action = "add_arrival";
             $(this).addClass("option-arrival");
         }

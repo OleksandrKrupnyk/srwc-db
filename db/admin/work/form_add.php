@@ -7,6 +7,7 @@
  */
 
 
+use zukr\base\Base;
 use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\section\SectionHelper;
@@ -19,7 +20,7 @@ $univers = $uh->getInvitedDropdownList();
 $sh = SectionHelper::getInstance();
 $sections = $sh->getDropdownList();
 // redirect_to -> session
-$session->setRedirectParam();
+Base::$session->setRedirectParam();
 ?>
 <!-- Форма добавления работы-->
 <header><a href="action.php">Меню</a></header>

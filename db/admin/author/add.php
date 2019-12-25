@@ -15,6 +15,7 @@ use zukr\log\Log;
 use zukr\workauthor\WorkAuthor;
 
 $_SESSION['id_u'] = $_POST['id_u'];
+
 $autor = new Author();
 $autor->load($_POST);
 $save = $autor->save();
@@ -31,7 +32,7 @@ if ($workId && $autor->id > 0) {
     $url2go = 'action.php?action=all_view#id_w' . $_POST['id_w'];
 }
 if (isset($_POST['save'])) {
-    $url2go = 'action.php?action=autor_edit&id_a=' . $autor->id;
+    $url2go = 'action.php?action=author_edit&id_a=' . $autor->id;
 }
 if (isset($_POST['save+exit'])) {
     $url2go = Base::$session->get('redirect_to');
