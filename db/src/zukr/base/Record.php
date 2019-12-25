@@ -103,8 +103,15 @@ abstract class Record implements RecordInterface
 
 
     /**
-     * @param      $arrayData
-     * @param null $form
+     * ```php
+     *
+     *  load($_POST),
+     *
+     *  load(['a'=>1],false)
+     *
+     * ```
+     * @param array            $arrayData
+     * @param bool|string|null $form
      */
     public function load(array $arrayData, $form = null)
     {
@@ -120,7 +127,7 @@ abstract class Record implements RecordInterface
 
         if (!empty($data)) {
             foreach ($data as $field => $value) {
-                $this->{$field} = trim(addslashes($value));
+                $this->{$field} = \trim(\addslashes($value));
             }
         }
 

@@ -19,11 +19,11 @@ try {
     $log = Log::getInstance();
 
     $admins = (new UserRepository())->getUserIdAsAdmin();
-    $id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
+    $id_w = \filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
     $session = Base::$session;
     $userId = (int)$session->get('id');
 
-    if (in_array($userId, $admins, true) && $id_w) {
+    if (\in_array($userId, $admins, true) && $id_w) {
 
         $workLeader = new WorkLeader();
         $queryLeader = $workLeader->getDb();

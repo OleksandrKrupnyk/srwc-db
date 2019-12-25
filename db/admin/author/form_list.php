@@ -10,7 +10,7 @@ Base::$session->setFromParam();
     <div>Список авторів</div>
     <a href="action.php?action=leader_list">Список керівників</a>
 </header>
-<header><a href="action.php?action=autor_add">[ + автор]</a></header>
+<header><a href="action.php?action=author_add">[ + автор]</a></header>
 <form method="POST" action="lists.php?list=badge_autors">
     <?=getListOfObjects('author', true, true, false); ?>
     <input type="submit" value="Print">
