@@ -142,10 +142,10 @@ class ReviewHelper
     public function registerJS()
     {
         $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'review.js';
-        $fileContent = \is_file($filename)
-            ? \file_get_contents($filename)
+        $fileContent = \file_exists($filename) && \is_file($filename)
+            ? '<script>' . \file_get_contents($filename) . '</script>'
             : '';
-        return '<script>' . $fileContent . '</script>';
+        return $fileContent;
     }
 
     /**

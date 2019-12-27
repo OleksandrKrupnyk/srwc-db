@@ -26,7 +26,7 @@ if (isset($_GET['logoff'])) {
 }
 
 
-if ($_SESSION['access'] && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']) {
+if (isset($_SESSION['access']) && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']) {
     // Если вы вошли в систему, но куки tzRemember (рестарт браузера) отсутствует
     // и вы не отметили чекбокс 'Запомнить меня':
     $log->logAction('logoff', 'tz_members', '');
@@ -94,13 +94,13 @@ if (isset($_POST['submit'])) {
     <script type="text/javascript" src="../js/jquery.js"></script>
     <title>Реєст <?= Base::$app->app_name ?></title>
 </head>
-<?php if (!$_SESSION['access']) : ?>
+<?php if (!isset($_SESSION['access'])) : ?>
     <!-- Форма авторизации на страничке -->
     <body>
     <form method='post' action='' class="ui-form">
         <h3>Вхід<br><?= Base::$app->app_name ?></h3>
         <?php
-        if ($_SESSION['msg']['login-err']) {
+        if (isset($_SESSION['msg']['login-err'])) {
             echo "<div class='err'>{$_SESSION['msg']['login-err']}</div>";
             unset($_SESSION['msg']['login-err']);
         }

@@ -25,8 +25,6 @@ mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query)
 or die("Полка оновлення запису дія univer_edit: " . mysqli_error($link));
 log_action($_POST['action'], "univers", $_POST['id']);
-$url2go = ($_POST['from']) ? $_POST['from'] : "action.php?action=all_view";
+$url2go = $_POST['from'] ?? 'action.php?action=all_view';
 $url2go = ($_GET['from']) ? $_GET['from'] : $url2go;
-header("Location:" . $url2go);
-//    header("Location: action.php?action=all_view");
-?>
+Go_page($url2go);

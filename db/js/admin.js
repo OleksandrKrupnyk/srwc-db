@@ -34,7 +34,7 @@ $(document).ready(function () {
     });
 
 
-    
+
 
 
     //Удаление автора или руководителя из реестра
@@ -381,26 +381,6 @@ $(document).ready(function () {
         const message = operator + '\n Відокремити автора/керівника від роботи?';
         return confirm(message);
     });
-
-
-//Приглашение ВНЗ для 1-го информационного приглашения
-    var myChange = $('#tableInviteUnivers :checkbox[name=invitation]');
-    myChange.click(
-        function () {
-            var id_u = $(this).next('input').attr("value");
-            var invite = ($(this).is(':checked')) ? "1" : "0";
-            console.log('Установлено ' + invite);
-            $.ajax({
-                type: "POST",
-                url: "ajax.php",
-                data: {"id_u": id_u, "action": "invitationUniver", "invite": invite},
-                cache: false,
-                success: function (txt) {
-                    //console.log('Изменено приглашение вуза!\n'+txt);
-                }
-            });
-
-        });
 
 //Изменение в Области textarea
     var textAC1 = $('#letter2autors');

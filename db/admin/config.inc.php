@@ -7,7 +7,7 @@ define('DB_NAME', 'elm_c2018');
 define('N_LEADERS', 1);//Максимальное количество руководителей на 1 работу
 define('N_AUTORS', 2); //Максимальное количество студентов авторов на 1 работу
 define('YEAR', 2020);
-define('NYEARS', 2019/2020);
+define('NYEARS', '2019/2020');
 $timecooke = 60;
 
 define('DIR', './../files/');

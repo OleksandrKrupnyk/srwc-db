@@ -127,7 +127,7 @@ abstract class Record implements RecordInterface
 
         if (!empty($data)) {
             foreach ($data as $field => $value) {
-                $this->{$field} = \trim(\addslashes($value));
+                $this->{$field} = ($form === false) ? $value : \trim(\addslashes($value));
             }
         }
 
@@ -140,13 +140,13 @@ abstract class Record implements RecordInterface
     public function findById($id)
     {
         try {
-            if (filter_var($id, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY)) {
+            if (\filter_var($id, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY)) {
                 return $this->_db
                     ->where('id', $id, 'IN')
                     ->get($this->_table);
             }
 
-            if (filter_var($id, FILTER_VALIDATE_INT)) {
+            if (\filter_var($id, FILTER_VALIDATE_INT)) {
                 return $this->_db->where('id', $id)
                     ->getOne($this->_table);
 

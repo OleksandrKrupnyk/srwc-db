@@ -7,6 +7,8 @@
 * * * * * * * { outline: 1px solid orange; }
 * * * * * * * * { outline: 1px solid blue; }*/
 $color_red: #970000;
+$color_red2 : #993333;
+$color_red3 : #e17979;
 
 body {
   font-family: Verdana, Geneva, sans-serif;
@@ -36,7 +38,7 @@ details {
   width: 100px;
   left: 10px;
   top: 150px;
-  border: 2px outset #e17979;
+  border: 2px outset $color_red3;
   font-size: 10px;
 }
 
@@ -48,7 +50,7 @@ textarea {
   }
 
   :focus {
-    border: dashed 1px #993333;
+    border: dashed 1px $color_red2;
     background: #ffe;
   }
 }
@@ -75,7 +77,7 @@ select {
   margin: 5px 0;
 
   :focus {
-    border: dashed 1px #993333;
+    border: dashed 1px $color_red2;
     background: #ffe
   }
 }
@@ -128,8 +130,8 @@ table, td, th {
 th {
   text-shadow: 2px 2px 2px #747474;
   color: white;
-  border: 3px outset #e17979;
-  background-color: #e17979;
+  border: 3px outset $color_red3;
+  background-color: $color_red3;
 }
 
 td {
@@ -223,7 +225,7 @@ label {
 header, footer {
   margin: 5px;
   padding: 5px;
-  border: 4px outset #e17979;
+  border: 4px outset $color_red3;
   width: 100px;
   top: 4px;
   text-align: center;
@@ -255,10 +257,10 @@ header:active {
 
 #reviewer {
   width: 400px;
-}
 
-#reviewer option {
-  width: 400px;
+  option {
+    width: 400px;
+  }
 }
 
 #operator {
@@ -268,13 +270,14 @@ header:active {
   right: 170px;
   padding: 3px;
   font-size: x-small;
-  border: dotted 1px #e17979;
-  text-shadow: 2px 3px 9px #e17979
+  border: dotted 1px $color_red3;
+  text-shadow: 2px 3px 9px $color_red3;
+
+  span {
+    font-weight: bolder;
+  }
 }
 
-#operator span {
-  font-weight: bolder;
-}
 
 .autor {
   font-size: x-small;
@@ -295,8 +298,8 @@ header + header,
   height: 14pt;
   width: 10cm;
   color: white;
-  border: 3px outset #e17979;
-  background: #e17979 linear-gradient(to top, #db0000, #e17979);
+  border: 3px outset $color_red3;
+  background: $color_red3 linear-gradient(to top, #db0000, $color_red3);
   text-shadow: 2px 3px 9px black;
   text-align: center;
   font-weight: bold;
@@ -307,29 +310,30 @@ header + header,
   border-radius: 5px;
 }
 
-header + header {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-around;
-}
+header {
+  & + header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-around;
 
-header + header a {
-  /*color: black;*/
-  text-shadow: 2px 3px 9px white;
-}
+    a {
+      text-shadow: 2px 3px 9px white;
+    }
 
-header + header + header {
-  width: 5cm;
-  position: relative;
-  top: -25pt;
-  left: 105mm;
+    & + header {
+      width: 5cm;
+      position: relative;
+      top: -25pt;
+      left: 105mm;
 
-  &:active {
-    width: 5cm;
-    position: relative;
-    top: -25pt;
-    left: 105mm;
+      &:active {
+        width: 5cm;
+        position: relative;
+        top: -25pt;
+        left: 105mm;
+      }
+    }
   }
 }
 
@@ -441,16 +445,12 @@ background-color: #dcdcdc;
   }
 }
 
-.invitateWork td > a,
-.invitateWork li > a,
-.fistPlace li > a,
-.fistPlace td > a,
-.secondPlace li > a,
-.secondPlace td > a,
-.thirdPlace li > a,
-.thirdPlace td > a {
-  color: white;
-
+.invitateWork, .fistPlace, .secondPlace, .thirdPlace {
+  td, li {
+    & > a {
+      color: white;
+    }
+  }
 }
 
 .workID {
@@ -459,7 +459,10 @@ background-color: #dcdcdc;
   font-size: 14px;
 }
 
-input[type="submit"], a > input[type="button"], input[type="button"] {
+input[type="submit"],
+input[type="button"],
+a > input[type="button"]
+{
   background-color: white;
   border: 1px solid #782121;
   text-shadow: 2px 3px 9px white;
@@ -470,6 +473,7 @@ input[type="submit"], a > input[type="button"], input[type="button"] {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  margin: 4px;
 }
 
 #viewtable {
@@ -505,7 +509,7 @@ input[type="submit"], a > input[type="button"], input[type="button"] {
     padding-top: 25px;
     padding-right: 50px;
     padding-bottom: 10px;
-    background: linear-gradient(to top, #db0000, #e17979);
+    background: linear-gradient(to top, #db0000, $color_red3);
     border: 1px solid #8d0000;
     text-shadow: 0 1px 1px black;
     border-radius: 10px 10px 0 0;
@@ -635,17 +639,20 @@ td[title*="Комен"] {
 
 }
 
-.form-input{
+.form-input {
   display: block;
-  label{
+
+  label {
 
   }
-  input,select{
+
+  input, select {
     width: 100%;
     font-size: 14px;
   }
 
 }
+
 td > output.balls {
   width: 20px;
   display: block;
@@ -713,3 +720,5 @@ td > output.balls {
   }
 }
 
+@import '_toggle.scss';
+@import '_table.scss';
