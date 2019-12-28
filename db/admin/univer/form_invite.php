@@ -1,31 +1,35 @@
 <?php
-global $link;
-$query = "SELECT id,univerfull, invite FROM  univers ORDER BY univerfull ASC ";
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
-//посылаем запрос
-$result = mysqli_query($link, $query)
-or die('Invalid query функція action=univer_invite: ' . mysqli_error($link));
+
+use zukr\base\Base;
+use zukr\univer\UniverHelper;
+use zukr\univer\UniverRepository;
+
+$univerRepository = new UniverRepository();
+$univers = $univerRepository->getAllUniversAsArrayFromDB();
+$uh = UniverHelper::getInstance();
+if(!Base::$user->getUser()->isAdmin()){
+    Base::$session->setFlash('recordSaveMsg', 'Заборонена дія');
+    Base::$session->setFlash('recordSaveType', 'warn');
+    Go_page(null);
+}
 ?>
 <!-- Редактирование списка университетов в которые следует направить первое информационное сообщение -->
 <header><a href='action.php'>Меню</a></header>
 <header>Список университетів</header>
-<table id='tableInviteUnivers'>
+<table id='tableInviteUnivers' class="zebra">
     <tr>
         <th>№</th>
         <th>Університет</th>
         <th>?</th>
     </tr>
     <?php
-    //первый запрос
     $i = 1;
-    while ($row = mysqli_fetch_array($result)) {
-        $str1 = "<tr><td>{$i}</td>";
-        $str1 .= "<td><a href='action.php?action=univer_edit&id_u={$row['id']}&FROM=action.php?action=univer_invite'>{$row['univerfull']}</a></td>";
-        echo $str1 . '<td>';
-        chk_box("invitation", "", $row['invite']);
-        echo "<input type='hidden' name='id_u' value='{$row['id']}'></td></tr>";
-        $i++;
-    }
-    ?>
+    foreach ($univers as $key => $univer):
+        echo '<tr data-key="' . $key . '"><td>' . $i++ . '</td>
+              <td><a href="action.php?action=univer_edit&id_u=' . $key . '">' . $univer['univerfull'] . '</a></td>
+              <td>' . \zukr\base\html\HtmlHelper::checkboxStyled('invitation', '', $univer['invite']) . '</td>
+              </tr>';
+
+    endforeach;?>
 </table><a href='lists.php?list=adress'><input type='button' value='Друкувати список'></a>
+<?= $uh->registerJS() ?>

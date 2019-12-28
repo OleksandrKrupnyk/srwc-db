@@ -13,26 +13,6 @@ global $link;
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRIPPED);
 $id_u = filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
 $id_w = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
-// Запрос на измемение данных в работе
-if (isset($_POST['id_w']) && $_POST['action'] === 'invitation') {//Запрос на обновление данных по приглашению
-    $query = "UPDATE `works` SET \n"
-        . "`invitation` ='" . $_POST['invit'] . "'\n"
-        . "WHERE `id` = '" . $_POST['id_w'] . "'";
-    //echo $query;
-    $result = mysqli_query($link, $query)
-    or die("Помилка запиту: " . mysqli_error($link));
-    log_action($_POST['action'], "works", $_POST['id_w']);
-}
-
-if (isset($_POST['id_w']) && $_POST['action'] === "id_sec") {
-    $query = "UPDATE `works` SET \n"
-        . "`id_sec` ='" . $_POST['id_sec'] . "'\n"
-        . "WHERE `id` = '" . $_POST['id_w'] . "'";
-    //echo $query;
-    $result = mysqli_query($link, $query)
-    or die("Помилка запиту: " . mysqli_error($link));
-    log_action($_POST['action'], "works", $_POST['id_w']);
-}
 try {
     $apih = ApiHelper::getInstance();
     /** ApiActionsInterface $classObj */
@@ -266,15 +246,6 @@ switch ($action) {
             echo $query;
         }
         break;
-    case 'invitationUniver':
-        {
-            $query = "UPDATE `univers` SET `invite` ='{$_POST['invite']}' WHERE `id` = '{$_POST['id_u']}'";
-            //echo $query;
-            $result = mysqli_query($link, $query)
-            or die('Помилка запиту на оновлення відмітки про надсилання 1-го ІП: ' . mysqli_error($link));
-        }
-        break;
-
     case 'invitationLeader':
         {
             $query = "UPDATE `leaders` SET `invitation` ='{$_POST['invitation']}' WHERE `id` = '{$_POST['id_l']}'";

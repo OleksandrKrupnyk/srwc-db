@@ -26,7 +26,7 @@ if (isset($_GET['logoff'])) {
 }
 
 
-if ($_SESSION['access'] && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']) {
+if (isset($_SESSION['access']) && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']) {
     // Если вы вошли в систему, но куки tzRemember (рестарт браузера) отсутствует
     // и вы не отметили чекбокс 'Запомнить меня':
     $log->logAction('logoff', 'tz_members', '');
@@ -85,18 +85,22 @@ if (isset($_POST['submit'])) {
 <html lang="ua">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../images/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="../images/favicon-192x192.png" sizes="192x192">
+    <link rel="manifest" href="manifest.json">
     <link href="../css/login.css" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
     <title>Реєст <?= Base::$app->app_name ?></title>
 </head>
-<?php if (!$_SESSION['access']) : ?>
+<?php if (!isset($_SESSION['access'])) : ?>
     <!-- Форма авторизации на страничке -->
     <body>
     <form method='post' action='' class="ui-form">
         <h3>Вхід<br><?= Base::$app->app_name ?></h3>
         <?php
-        if ($_SESSION['msg']['login-err']) {
+        if (isset($_SESSION['msg']['login-err'])) {
             echo "<div class='err'>{$_SESSION['msg']['login-err']}</div>";
             unset($_SESSION['msg']['login-err']);
         }

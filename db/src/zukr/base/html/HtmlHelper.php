@@ -46,6 +46,24 @@ class HtmlHelper
     }
 
     /**
+     * @param string     $name
+     * @param string     $title
+     * @param string|int $value
+     * @param null       $id
+     * @return string
+     * @throws \Exception
+     */
+    public static function checkboxStyled($name, $title, $value, $id = null): string
+    {
+        $id = $id ?? 'chkbox_'.random_int(1000, 2000);
+        $checked = ($value !== '' && ((int)$value === 1)) ? ' checked=true ' : '';
+        $checkbox = "<input type='hidden' name='{$name}' value='0'>
+<input type='checkbox' name='{$name}' title='{$title}' {$checked} style='display:none' value='1'  id={$id} />
+<label for='{$id}' class='toggle'><span></span></label>";
+        return $checkbox;
+    }
+
+    /**
      * @param $options
      * @return string
      */

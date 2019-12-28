@@ -141,13 +141,14 @@ if (!isset($_GET['action'])) {
     <?php include "ag_form_view_review.php";?>
 <?php else:?>
     <h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт
-        <br>&quot;Електротехніка та електромеханіка&quot; 2018/2019 н.р.</h1>
+        <br>&quot;Електротехніка та електромеханіка&quot; <?=NYEARS?> н.р.</h1>
     <h4>Данні реєстрів робіт
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2013'>2013-2014</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2014'>2014-2015</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2015'>2015-2016</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2016'>2016-2017</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2017'>2017-2018</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2018'>2018-2019</a>
         &nbsp;&nbsp;&nbsp;&nbsp;навчальних років.
     </h4>
     <h4><a href='http://elm-dstu-edu.org.ua/konkurs/index.php/digest/32-zbirnik-tez-2018'
@@ -181,7 +182,7 @@ if (!isset($_GET['action'])) {
                     <td class='numero'><?= $d['id'] ?></td>
                     <td title="Останні зміни:<?= $d['date'] ?>" class='title'>
                         <?= $d['title'] ?>
-                        <br><?= $d['univer'] ?><?= $d['invitation'] ?><?= $d['diploma'] ?>
+                        <br><?= $d['univer'] ?><?= $d['invitation'] ?><?= $d['diploma']??'' ?>
                     </td>
                     <td class='review'><?= $d['review'] ?></td>
                     <td class='section'><?= $d['section'] ?></td>
@@ -191,7 +192,7 @@ if (!isset($_GET['action'])) {
         </table>
         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* - Розподілення робіт по секціях може бути змінено після їх рецензування.</p>
     <?php else:?>
-        <h1>Конкурс СНР 2017/2018 н.р. завершено. Результати переміщено в архів.</h1>
+        <h1>Конкурс СНР 2018/2019 н.р. завершено. Результати переміщено в архів.</h1>
 <!--
 Закоментировав предидущую строку раскоментируй следующую (2018.06.13)
 <h1>Вибачте Реєст знаходиться в обробці. Завітайте на нашу сторінку пізніше.</h1>

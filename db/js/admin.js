@@ -34,7 +34,7 @@ $(document).ready(function () {
     });
 
 
-    
+
 
 
     //Удаление автора или руководителя из реестра
@@ -382,26 +382,6 @@ $(document).ready(function () {
         return confirm(message);
     });
 
-
-//Приглашение ВНЗ для 1-го информационного приглашения
-    var myChange = $('#tableInviteUnivers :checkbox[name=invitation]');
-    myChange.click(
-        function () {
-            var id_u = $(this).next('input').attr("value");
-            var invite = ($(this).is(':checked')) ? "1" : "0";
-            console.log('Установлено ' + invite);
-            $.ajax({
-                type: "POST",
-                url: "ajax.php",
-                data: {"id_u": id_u, "action": "invitationUniver", "invite": invite},
-                cache: false,
-                success: function (txt) {
-                    //console.log('Изменено приглашение вуза!\n'+txt);
-                }
-            });
-
-        });
-
 //Изменение в Области textarea
     var textAC1 = $('#letter2autors');
     textAC1.keypress(function () {
@@ -420,47 +400,6 @@ $(document).ready(function () {
         $('#previewletter2leaders').html(textAC2.val());
         //console.log("Изменеие зафиксированы");
     });
-
-
-//Приглашение работы
-    var myChange = $('#tableInvitationSection :checkbox[name=invitation]');
-    myChange.click(
-        function () {
-            var id_w = $(this).parents('tr').children('td:first').text();
-            var invit = ($(this).is(':checked')) ? "1" : "0";
-            //console.log('Установлено'+ invit);
-
-
-            $.ajax({
-                type: "POST",
-                url: "ajax.php",
-                data: {"id_w": id_w, "action": "invitation", "invit": invit},
-                cache: false,
-                success: function (txt) {
-                    //console.log('Изменено приглашение работы!\n'+txt);
-
-                }
-            });
-        });
-
-//Изменение секции
-    var myChangeSection = $('#tableInvitationSection :input[name="section"]');
-    myChangeSection.change(function () {
-        var id_sec = $(this).find("option:selected").val();
-        var id_w = $(this).parents('tr').children('td:first').text();
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"id_w": id_w, "action": "id_sec", "id_sec": id_sec},
-            cache: false,
-            success: function (txt) {
-                //console.log('Изменена секция работы!\n'+txt);
-
-            }
-        });
-    });//Окончание Изменение секции
-
-
 //Изменение аудитории
     var myChangeRoom = $('#tableSelectRoom :input[name="room"]');
     myChangeRoom.change(function () {

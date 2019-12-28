@@ -68,4 +68,31 @@ ORDER BY `works`.title
         }
     }
 
+    /**
+     * Список робіт для запрошення у 2-му турі без спеціальної ознаки
+     * в прядку зменшення сумарної кількості балів за рецензію
+     *
+     * @return array Список робіт
+     */
+    public function getWorksForInvitationAndSection(): array
+    {
+        try {
+            return Work::find()->rawQuery('
+            SELECT works.id,works.invitation,works.id_sec,works.balls,works.title,
+       univers.univer,
+       COUNT(reviews.id_w) AS countReview
+FROM works
+         JOIN univers ON works.id_u = univers.id
+         JOIN reviews ON reviews.id_w = works.id
+WHERE dead = 0
+GROUP BY works.id, works.balls
+ORDER BY works.balls DESC
+            ');
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
+
+
 }

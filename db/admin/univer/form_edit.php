@@ -16,12 +16,12 @@ $uInfo = fullinfo("univers", "id", $_GET['id_u']);
     <input type="text" name="univer" title="Скорочена назва. Наприклад:ДДТУ,СумДУ." value="<?= $uInfo['univer'] ?>">
     <br>
     <label>Повна назва</label><br>
-    <textarea name="univerfull" cols="50" rows="4" wrap="virtual" maxlength="255"
+    <textarea name="univerfull" cols="50" rows="4"  maxlength="255" class="w-100"
               title="Повна назва. Наприклад:Кременчуцький національний технічний університет ім М.Остроградського."
               required><?= $uInfo['univerfull'] ?></textarea>
     <br>
     <label>Назва у у родовому відмінку</label><br>
-    <textarea name="univerrod" cols="50" rows="4" wrap="virtual" maxlength="255"
+    <textarea name="univerrod" cols="50" rows="4" maxlength="255" class="w-100"
               title="Повна назва університету у родовому відмінку. Наприклад:Кременчуцького національного технічного університету ім М.Остроградського."
               required><?= $uInfo['univerrod'] ?></textarea>
     <br>
@@ -29,7 +29,7 @@ $uInfo = fullinfo("univers", "id", $_GET['id_u']);
     <input type="text" name="zipcode" size="5" maxlength="5" title="Поштовий індекс.Наприклад: 00103, 51918"
            value="<?= $uInfo['zipcode'] ?>" pattern="[0-9]{5}" required>
     <br>
-    <label>Адресса</label>
+    <label>Адреса</label>
     <input type="text" name="adress" size="65" maxlength="150"
            title="Вулиця,Місто,Область,Обласний центр.Наприклад: Бериславське шосе, 24, м.Херсон, Запорізька обл."
            value="<?= $uInfo['adress'] ?>" required>
@@ -49,5 +49,5 @@ $uInfo = fullinfo("univers", "id", $_GET['id_u']);
     <input type="submit" value="Змінити">
     <input type="hidden" name="action" value="univer_edit">
     <input type="hidden" name="id" value="<?= $_GET['id_u'] ?>">
-    <input type="hidden" name="from" value="<?= $_GET['FROM'] ?>">
+    <input type="hidden" name="from" value="<?= $_GET['FROM']??'/' ?>">
 </form>

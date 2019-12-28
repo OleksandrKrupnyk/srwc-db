@@ -1,0 +1,11 @@
+.zebra {
+  tr {
+    &:nth-child(2n+1) {
+      background: #f3dfdf;
+    }
+
+    &:hover {
+      background: #edaeaa;
+    }
+  }
+}

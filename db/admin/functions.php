@@ -75,13 +75,13 @@ function log_action($action, $table, $action_id = 0, $tz_id = 888)
     //Проверка а доступен ли tz_id
     $action_id = (int)isset($action_id) ? $action_id : 777;
     $action_id = (int)$action_id = '' ? 777 : $action_id;
-    $tz_id = (int)$_SESSION['id'] == 0 ? $tz_id : $_SESSION['id'];
+    $tz_id = $_SESSION['id'] ?? $tz_id;
     $query = "INSERT INTO `log` (`tz_id`,`date`,`action`,`table`,`action_id`,`tz_ip`)\n
         VALUES\n
         ('{$tz_id}',NOW(),'{$action}','{$table}','{$action_id}','{$_SERVER['REMOTE_ADDR']}')";
     //echo( $query);
     $result = mysqli_query($link, $query)
-    or die("Помилка запису журналу: " . mysqli_error($link) . $action_id);
+    or die('Помилка запису журналу: ' . mysqli_error($link) . $action_id);
 }
 
 /**
@@ -551,8 +551,8 @@ JOIN univers ON leaders.id_u = univers.id";
             if ($row['email_recive'] == 1 && $hash) {
                 $sub_row_str .= ' [The email have received and read.' . $row['email_date'] . ' ] ';
             }
-            $sub_row_str .= "<a href=\"lists.php?list=badge_{$object}&badge={$row['id']}\" title=\"Друкувати посвідчення\"></a>";
-            $sub_row_str .= "<input type=\"checkbox\" name=\"works_id[]\" value=\"{$row['id']}\">";
+            $sub_row_str .= "<a href=\"lists.php?list=badge_{$object}&badge={$row['id']}\" title=\"Друкувати посвідчення(тільки зв'язані з роботою)\"></a>";
+            $sub_row_str .= '<input type="checkbox" name="works_id[]" value="' . $row['id'] . '">';
             $sub_row_str .= "</li>\n";
         }
     }
@@ -717,27 +717,6 @@ function print_work_row(array $work,LoginUser $userLogin)
 ROWTABLE;
     return $row_table;
 }
-
-/** * ********************************************************************************
- * Строка таблици для отображения в таблице приглашений
- * $href если true то вывести ссылку на редактирование работы
- * @param array $row рядок запроса
- * @param bool $href
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function print_row_table_section_select($row, $href = false)
-{
-    $id_title = ($href) ? "<a href=action.php?action=work_edit&id_w=" . $row['id'] . " title=\"Редагувати роботу\">" : "";
-    $id_title .= $row['id'];
-    $id_title .= ($href) ? "</a>\n" : "";
-    echo "<tr><td>{$id_title}</td><td>{$row['title']} ({$row['univer']})<strong>[{$row['balls']}]</strong><{$row['countReview']}></td>";
-    echo '<td>';
-    chk_box('invitation', 'Відмітити для запрошення', $row['invitation']);
-    echo "</td>";
-    echo "<td>";
-    list_("sections", "section", $row['id_sec'], 1, "Секція...");
-    echo '</td></tr>';
-}
-
 /**
  * Строка таблици для списка рассылок
  *

@@ -2,22 +2,28 @@
 //header("Content-Type: text/html; charset=utf-8");
 require 'config.inc.php';
 require 'functions.php';
+require '../vendor/autoload.php';
+
+use zukr\base\Base;
+
 global $link;
 ?>
 <!DOCTYPE html>
 <html lang="ua">
-<?php if (!isset($_GET['id_u'])): ?>
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../images/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="../images/favicon-192x192.png" sizes="192x192">
+    <link rel="manifest" href="manifest.json">
     <link href="../css/style.css" type="text/css" rel="stylesheet">
-    <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
     <script type="text/javascript" src="../js/admin.js"></script>
-    <title>Запрошення &quot;СНР 2018&quot;&copy;</title>
+    <title>Запрошення <?= Base::$app->app_name ?></title>
 </head>
 <body>
+<?php if (!isset($_GET['id_u'])): ?>
 <h1>Запрошення для участників конкурсу</h1>
 <p>1-2 квітня 2018 року на поштові адреси ВНЗ направлені листи ректорам з повідомленням про авторів студентських
     наукових робіт,
@@ -63,19 +69,7 @@ echo "</select>\n";
         налаштуваннях вашого програмного забезпечення опцію друкуквання фонових зображень.</em></p>
 
 <h1>Запрошення для журі конкурсу</h1> -->
-</body>
 <?php else: ?>
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="../css/print.css" type="text/css" rel="stylesheet"/>
-    <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
-    <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
-    <script type="text/javascript" src="../js/admin.js"></script>
-    <title>Запрошення &quot;СНР 2018&quot;&copy;</title>
-</head>
-<body>
 
 <?php
 $id_u = $_GET['id_u'];
