@@ -7,26 +7,26 @@ namespace zukr\api\actions;
 use zukr\base\exceptions\InvalidArgumentException;
 use zukr\base\exceptions\NullReturnedException;
 use zukr\log\Log;
-use zukr\univer\UniverRepository;
+use zukr\work\WorkRepository;
 
 /**
- * Class InvitationUniverAction
+ * Class ChangeWorkInvitationAction
  *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class InvitationUniverAction implements ApiActionsInterface
+class ChangeWorkInvitationAction implements ApiActionsInterface
 {
 
     /**
-     * @var int ІД університету
+     * @var int ІД Роботи
      */
-    protected $id_u;
+    protected $id_w;
     /**
-     * @var int Ознака запрошення університету
+     * @var int Ознака запрошення роботи до участі у конференції
      */
-    protected $invite;
+    protected $invitation;
 
     /**
      * @throws NullReturnedException
@@ -35,16 +35,16 @@ class InvitationUniverAction implements ApiActionsInterface
     {
         $message = 'Значення не змінено';
         $type = 'error';
-        $univer = (new UniverRepository())->findById($this->id_u);
-        if ($univer === null) {
+        $work = (new WorkRepository())->findById($this->id_w);
+        if ($work === null) {
             throw new NullReturnedException('$univer Return value is null');
         }
 
-        $univer->invite = $this->invite;
-        $save = $univer->save();
+        $work->invitation = $this->invitation;
+        $save = $work->save();
         if ($save) {
             $log = Log::getInstance();
-            $log->logAction(null, $univer::getTableName(), $univer->id);
+            $log->logAction(null,$work::getTableName(),$work->id);
             $message = 'Значення змінено';
             $type = 'success';
         }
@@ -57,13 +57,13 @@ class InvitationUniverAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        if (empty($this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT))) {
-            throw new InvalidArgumentException('id_u Must be set');
+        if (empty($this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_w Must be set');
         }
         if (
-            ($this->invite = \filter_input(INPUT_POST, 'invite', FILTER_VALIDATE_INT)) === null
+            ($this->invitation = \filter_input(INPUT_POST, 'invitation', FILTER_VALIDATE_INT)) === null
         ) {
-            throw new InvalidArgumentException('invite Must be set');
+            throw new InvalidArgumentException('invitation Must be set');
         }
     }
 }

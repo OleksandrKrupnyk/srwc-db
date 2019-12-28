@@ -3,7 +3,13 @@
 
 namespace zukr\section;
 
-
+/**
+ * Class SectionHelper
+ *
+ * @package      zukr\section
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class SectionHelper
 {
 
@@ -17,7 +23,7 @@ class SectionHelper
     private $sectionRepository;
 
     /**
-     * WorkHelper constructor.
+     * SectionHelper constructor.
      */
     private function __construct()
     {
@@ -42,13 +48,15 @@ class SectionHelper
     public function getAllSections()
     {
         if ($this->sections === null) {
-            $this->sections =$this->sectionRepository->getAllSectionsAsArray();
+            $this->sections = $this->sectionRepository->getAllSectionsAsArray();
         }
         return $this->sections;
     }
 
     /**
-     * @return array
+     * Повертає список секцій індексований за ІД секції
+     *
+     * @return array Спсиок секцій
      */
     public function getDropdownList(): array
     {

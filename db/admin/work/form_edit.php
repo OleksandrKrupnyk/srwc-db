@@ -102,6 +102,6 @@ Base::$session->setRedirectParam();
         <input type="file" name="file" size="20">
         <input type="submit" value="Завантажити">
         <input type="hidden" name="action" value="file_add">
-        <input type="hidden" name="id_w" value="<?= $wInfo['id'] ?>">
+        <input type="hidden" name="id_w" value="<?= $work['id'] ?>">
     </fieldset>
 </form>
