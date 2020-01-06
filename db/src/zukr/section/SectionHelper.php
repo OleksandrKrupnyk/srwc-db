@@ -67,4 +67,15 @@ class SectionHelper
         return $list;
     }
 
+    /**
+     * @return string
+     */
+    public function registerJS()
+    {
+        $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'room.js';
+        $fileContent = \file_exists($filename) && \is_file($filename)
+            ? '<script>' . \file_get_contents($filename) . '</script>'
+            : '';
+        return $fileContent;
+    }
 }

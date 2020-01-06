@@ -36,4 +36,25 @@ class SectionRepository extends AbstractRepository
             return [];
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getSectionAndCountRooms(): array
+    {
+        try {
+            return $this->model::find()
+                ->rawQuery("
+SELECT  sections.*,count
+FROM (SELECT id_sec, COUNT(id_sec) as count
+      FROM works
+      WHERE invitation = '1'
+        AND arrival = '1'
+      GROUP BY id_sec) as w
+         LEFT JOIN sections ON w.id_sec = sections.id;");
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
 }
