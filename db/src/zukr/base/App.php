@@ -33,12 +33,16 @@ class App
     private $_cache;
     private $_app_name;
     public  $param;
-    public  $param2;
-
+    /**
+     * @var int Час кешування
+     */
     private $_ttl;
-    public  $__params = [];
 
     private $isCached;
+    /**
+     * @var string Шлях для теки кешування
+     */
+    private $cachePath;
 
     /**
      * App constructor.
@@ -46,18 +50,27 @@ class App
     private function __construct()
     {
         Dotenv::create(__DIR__ . '/../../../')->load();
-        $this->setAppName(getenv('APP_NAME'));
-        $this->isCached = getenv('CACHE');
+        $this->setAppName(\getenv('APP_NAME'));
+        $this->isCached = \getenv('CACHE');
         $this->isCached = $this->isCached ?? false;
+        $this->cachePath = \getenv('CACHE_PATH') ?? '/tmp';
 
-        $this->_ttl = (int)getenv('CACHE_TTL');
+        $this->_ttl = (int)\getenv('CACHE_TTL');
         $this->_ttl = $this->_ttl ?? self::TTL;
+
         $driver = new FileSystem([
-            'path' => 'c:\\temp1'
+            'path' => $this->cachePath
         ]);
+
         $driverRedis = new Redis([
-            'servers' => [['server' => '127.0.0.1', 'port' => '6379', 'ttl' => $this->_ttl]]
+            'servers' => [
+                [
+                    'server' => \getenv('REDIS_SERVER') ?? '127.0.0.1',
+                    'port' => \getenv('RD_PORT') ?? '6379',
+                    'ttl' => $this->_ttl]
+            ]
         ]);
+
         $this->_cache = new Pool($driverRedis);
         $this->initDB();
     }
@@ -128,10 +141,10 @@ class App
     private function initDB()
     {
 
-        $host = getenv('DB_SERVER');
-        $user = getenv('DB_USER');
-        $base = getenv('DB_NAME');
-        $pass = getenv('DB_PASSWORD');
+        $host = \getenv('DB_SERVER') ?? '127.0.0.1';
+        $user = \getenv('DB_USER') ?? 'root';
+        $base = \getenv('DB_NAME') ?? 'root';
+        $pass = \getenv('DB_PASSWORD') ?? 'test';
         $this->_db = new DB($host, $user, $pass, $base);
 
     }
@@ -175,7 +188,7 @@ class App
     private function setAppName($app_name): void
     {
         $this->_app_name = empty($app_name)
-            ? 'Zukr '. date('Y')
+            ? 'Zukr ' . \date('Y')
             : $app_name;
     }
 
