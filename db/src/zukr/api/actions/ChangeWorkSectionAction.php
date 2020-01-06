@@ -36,7 +36,7 @@ class ChangeWorkSectionAction implements ApiActionsInterface
         $type = 'error';
         $work = (new WorkRepository())->findById($this->id_w);
         if ($work === null) {
-            throw new NullReturnedException('$univer Return value is null');
+            throw new NullReturnedException('$work Return value is null');
         }
 
         $work->id_sec = $this->id_sec;

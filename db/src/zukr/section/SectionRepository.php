@@ -38,7 +38,9 @@ class SectionRepository extends AbstractRepository
     }
 
     /**
-     * @return array
+     * Список секцій з кількістю робіт заяввлених у секції
+     *
+     * @return array Список секції
      */
     public function getSectionAndCountRooms(): array
     {

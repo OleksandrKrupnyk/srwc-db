@@ -2,7 +2,7 @@ $(document).ready(function () {
     let isLoading = false;
 
     const myChangeRoom = $('#tableSelectRoom :input[name="room"]');
-    myChangeRoom.on('click',
+    myChangeRoom.on('change',
         function () {
             if (!isLoading) {
                 isLoading = true;
@@ -11,7 +11,7 @@ $(document).ready(function () {
                 $.ajax({
                     type: "POST",
                     url: "ajax.php",
-                    data: {"room": room, "action": "change_room", "id_sec": id_sec},
+                    data: {"room": room, "action": "change-room", "id_sec": id_sec},
                     cache: false,
                     success: function (response) {
                         isLoading = false;

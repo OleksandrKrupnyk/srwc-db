@@ -205,18 +205,6 @@ switch ($action) {
             }
         }
         break;
-    /** Запрос на изменение аудитории заседания секции */
-    case 'change_room':
-        {
-            if (isset($_POST['id_sec'])) {
-                $query = "UPDATE `sections` SET `room` = '{$_POST['room'] }' WHERE `id` = '{$_POST['id_sec']}'";
-                //echo $query;
-                $result = mysqli_query($link, $query)
-                or die("Помилка запиту: " . mysqli_error($link));
-                log_action($_POST['action'], "sections", $_POST['id_sec']);
-            }
-        }
-        break;
     /** Установление отметки об участии в конференции в записи о работе на основе данных прибывших*/
     case 'update_arrival_works':
         {
