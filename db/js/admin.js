@@ -34,9 +34,6 @@ $(document).ready(function () {
     });
 
 
-
-
-
     //Удаление автора или руководителя из реестра
     $('a[class|="delete"]').click(function (e) {
         e.preventDefault();
@@ -77,8 +74,7 @@ $(document).ready(function () {
     //Поиск опреатора на странице
     $(function () {
         const operator = $('#operator span').text();
-        if ((operator === 'krupnik') || (operator === 'roman')) {
-            //if((operator == 'krupnik') || (operator == 'marina') || (operator == 'roman')){
+        if (operator.match('krupnik') || operator.match('roman')) {
             disableObject.show();
         }
     });
@@ -186,7 +182,7 @@ $(document).ready(function () {
         e.preventDefault();
         this.blur();
         var val = $(this).attr("alt");
-        var action,answer;
+        var action, answer;
         //Какая клавиша нажата
         if (e.ctrlKey) {//Нажата Shift значит удалить из приглашенных
             action = "rem_arrival";
@@ -400,23 +396,6 @@ $(document).ready(function () {
         $('#previewletter2leaders').html(textAC2.val());
         //console.log("Изменеие зафиксированы");
     });
-//Изменение аудитории
-    var myChangeRoom = $('#tableSelectRoom :input[name="room"]');
-    myChangeRoom.change(function () {
-        var room = $(this).find("option:selected").val();
-        var id_sec = $(this).parents('tr').children('td:first').text();
-        //console.log(room+" "+id_sec);
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"room": room, "action": "change_room", "id_sec": id_sec},
-            cache: false,
-            success: function (txt) {
-                //console.log('Изменена аудитория для секции работы!\n'+txt);
-
-            }
-        });
-    });//Окончание Изменение аудитории
 
     //Обработка переключателей на форме редактирования сведений о работе
     var chkBoxInvitation = $('.editWork :checkbox[name=invitation]');

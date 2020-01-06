@@ -881,24 +881,6 @@ function right($str, $num)
     $len = strlen($str);
     return mb_substr($str, $len - $num, $len);
 }
-
-/**
- * Функция выводит конструкцию <select></select> для выбора аудитории для списка оценивания
- *
- * @param string $room
- * @param array  $rooms
- * @return string
- */
-function select_room($room, $rooms = ['7-43', '7-53', '7-54'])
-{
-    $list = '';
-    foreach ($rooms as $item) {
-        $selected = $room === $item ? 'selected' : '';
-        $list     .= "<option value='{$item}' $selected >$item</option>" . PHP_EOL;
-    }
-    return "<select size='1' name='room' title='Аудиторія'>\n{$list}</select>\n";
-}
-
 /**
  * Функция выводит конструкцию <select></select> для выбора должности руководителя ВУЗ
  * @param String $posada
