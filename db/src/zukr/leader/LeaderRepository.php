@@ -175,7 +175,7 @@ ORDER BY suname;', [$univerId]);
         try {
             $r = $this->model::find()
                 ->where('id_u', $univerId)
-                ->get($this->model::getTableName(), null, 'id,suname,lname,name');
+                ->get($this->model::getTableName());
             return $r ?? [];
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());

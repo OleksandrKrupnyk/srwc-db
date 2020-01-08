@@ -103,9 +103,37 @@ class UniverHelper
     }
 
     /**
+     * Список універистетів, що подали роботи і хоча б одна робота була запрошена (окрім ДДТУ)
+     *
+     *
+     * @return array Список університетів
+     */
+    public function getInvitedDropdownListWithoutDSTU(): array
+    {
+        return $this->getDropDownListFull(
+            \array_filter($this->univerRepository->getUniversWhoSentWorks(), static function ($v) {
+                return (string)$v['id'] !== '1';
+            }));
+    }
+
+    /**
+     * @param array $univers
      * @return array
      */
-    public function getTakePartUniversDropDownList():array
+    public function getDropDownListFull(array $univers): array
+    {
+        $list = [];
+        foreach ($univers as $key => $u) {
+            $list [$key] = $u['univerfull'];
+        }
+        ArrayHelper::asort($list);
+        return $list;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTakePartUniversDropDownList(): array
     {
         $wh = WorkHelper::getInstance();
         $univerIds = $wh->getTakePartUniversIds();
@@ -118,16 +146,16 @@ class UniverHelper
             $list);
 
     }
+
     /**
      * @return string
      */
-    public function registerJS()
+    public function registerJS(): string
     {
         $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'univer.js';
-        $fileContent = \file_exists($filename) && \is_file($filename)
+        return \file_exists($filename) && \is_file($filename)
             ? '<script>' . \file_get_contents($filename) . '</script>'
             : '';
-        return $fileContent;
     }
 
 }

@@ -260,17 +260,14 @@ function list_leaders_invite($id_u, $check = true)
     $query .= ($check) ? "" : " AND `leaders`.`invitation` = TRUE \n";
     $query .= "ORDER BY  `suname` ASC";
 
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die("Invalid query: " . mysqli_error($link));
+    $result = mysqli_query($link, $query) or die("Invalid query: " . mysqli_error($link));
     $count = mysqli_num_rows($result);
     if ($count == 0) {
         return false;
     }
-    echo "\t\t<ol>\n";
+    echo "<ol>";
     while ($row = mysqli_fetch_array($result)) {
-        echo "\t\t\t<li>" . $row['suname'] . " " . $row['name'] . " " . $row['lname'];
+        echo "<li>" . $row['suname'] . " " . $row['name'] . " " . $row['lname'];
         if (true == $check) {
             echo "<input type=\"hidden\" value=\"" . $row['id'] . "\">";
             chk_box("invitation", "Запросити", $row['invitation']);

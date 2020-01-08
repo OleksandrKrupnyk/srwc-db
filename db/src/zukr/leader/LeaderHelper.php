@@ -93,4 +93,19 @@ class LeaderHelper
         return (new LeaderRepository())->getCountInvitedLeaders();
     }
 
+    /**
+     * @param int $univerId
+     * @return array
+     */
+    public function getAllInvitationLeadersByUniverId(int $univerId): array
+    {
+        $leaders = (new LeaderRepository())->getAllByUniverId($univerId);
+        if (!empty($leaders)) {
+            return \array_filter($leaders, static function ($leader) {
+                return $leader['invitation'] === 1;
+            });
+        }
+        return [];
+    }
+
 }
