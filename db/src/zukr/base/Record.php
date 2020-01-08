@@ -18,19 +18,8 @@ abstract class Record implements RecordInterface
      * @var MysqliDb
      */
     private $_db;
-    private $_table;
     private $_actionSave;
     public  $_isNewRecord;
-
-    /**
-     * Повертає назву колонки ключа
-     *
-     * @return string
-     */
-    public function getIdColumn(): string
-    {
-        return 'id';
-    }
 
     /**
      * @return bool
@@ -85,7 +74,6 @@ abstract class Record implements RecordInterface
     public function __construct()
     {
         $this->_db = Base::$app->db;
-        $this->_table = static::getTableName();
     }
 
     /**
@@ -147,29 +135,29 @@ abstract class Record implements RecordInterface
      * @param array|int|string $id
      * @return MysqliDb|array|null
      */
-    public function findById($id)
+    public function findById($id): ?array
     {
         try {
             if (static::getPrimaryKey() === 'id') {
                 if (\filter_var($id, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY)) {
                     return $this->_db
                         ->where(static::getPrimaryKey(), $id, 'IN')
-                        ->get($this->_table);
+                        ->get(static::getTableName());
                 }
                 if (\filter_var($id, FILTER_VALIDATE_INT)) {
                     return $this->_db->where(static::getPrimaryKey(), $id)
-                        ->getOne($this->_table);
+                        ->getOne(static::getTableName());
                 }
             } else {
 
                 if (\filter_var($id, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY)) {
                     return $this->_db
                         ->where(static::getPrimaryKey(), $id, 'IN')
-                        ->get($this->_table);
+                        ->get(static::getTableName());
                 }
                 if (\filter_var($id, FILTER_SANITIZE_STRING)) {
                     return $this->_db->where(static::getPrimaryKey(), $id)
-                        ->getOne($this->_table);
+                        ->getOne(static::getTableName());
                 }
             }
             return null;

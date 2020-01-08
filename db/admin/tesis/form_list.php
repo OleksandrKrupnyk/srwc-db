@@ -12,9 +12,6 @@ $query = "SELECT works.title,works.id,sections.section,univers.town FROM works
 LEFT JOIN sections ON works.id_sec=sections.id 
 LEFT JOIN univers ON works.id_u=univers.id
 WHERE tesis = 1 GROUP BY id_sec,title";
-//настройка соединения
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
 //посылаем запрос
 $result = mysqli_query($link, $query);
 

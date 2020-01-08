@@ -17,21 +17,19 @@ use zukr\work\WorkHelper;
 class UniverHelper
 {
 
-    /** @var UniverHelper */
+    /**
+     * @var UniverHelper
+     */
     private static $obj;
 
-    /** @var array */
-    private $univers;
-    /** */
-    private $univerRepository;
-
     /**
-     * WorkHelper constructor.
+     * @var array
      */
-    private function __construct()
-    {
-        $this->univerRepository = new UniverRepository();
-    }
+    private $univers;
+    /**
+     * @var UniverRepository
+     */
+    private $univerRepository;
 
     /**
      * @return UniverHelper
@@ -65,7 +63,7 @@ class UniverHelper
      */
     public function getAllUniversFromDB(): array
     {
-        return $this->univerRepository->getAllUniversAsArrayFromDB();
+        return $this->getUniverRepository()->getAllUniversAsArrayFromDB();
     }
 
     /**
@@ -103,9 +101,37 @@ class UniverHelper
     }
 
     /**
+     * Список універистетів, що подали роботи і хоча б одна робота була запрошена (окрім ДДТУ)
+     *
+     *
+     * @return array Список університетів
+     */
+    public function getInvitedDropdownListWithoutDSTU(): array
+    {
+        return $this->getDropDownListFull(
+            \array_filter($this->getUniverRepository()->getUniversWhoSentWorks(), static function ($v) {
+                return (string)$v['id'] !== '1';
+            }));
+    }
+
+    /**
+     * @param array $univers
      * @return array
      */
-    public function getTakePartUniversDropDownList():array
+    public function getDropDownListFull(array $univers): array
+    {
+        $list = [];
+        foreach ($univers as $key => $u) {
+            $list [$key] = $u['univerfull'];
+        }
+        ArrayHelper::asort($list);
+        return $list;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTakePartUniversDropDownList(): array
     {
         $wh = WorkHelper::getInstance();
         $univerIds = $wh->getTakePartUniversIds();
@@ -118,16 +144,46 @@ class UniverHelper
             $list);
 
     }
+
     /**
      * @return string
      */
-    public function registerJS()
+    public function registerJS(): string
     {
         $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'univer.js';
-        $fileContent = \file_exists($filename) && \is_file($filename)
+        return \file_exists($filename) && \is_file($filename)
             ? '<script>' . \file_get_contents($filename) . '</script>'
             : '';
-        return $fileContent;
+    }
+
+    /**
+     * @return UniverRepository
+     */
+    protected function getUniverRepository(): UniverRepository
+    {
+        if ($this->univerRepository === null) {
+            $this->univerRepository = new UniverRepository();
+        }
+        return $this->univerRepository;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getUniversIdWhoSendWork()
+    {
+        return $this->getUniverRepository()->getUniversIdWhoSendWork();
+    }
+
+    /**
+     * Повертає дані університету
+     *
+     * @param int|string $id ІД запис університету
+     * @return array|null Дані університету
+     */
+    public function getUniverById($id): ?array
+    {
+        return $this->getUniverRepository()->getById($id);
     }
 
 }

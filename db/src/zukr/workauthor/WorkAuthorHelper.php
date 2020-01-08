@@ -3,7 +3,13 @@
 
 namespace zukr\workauthor;
 
-
+/**
+ * Class WorkAuthorHelper
+ *
+ * @package      zukr\workauthor
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class WorkAuthorHelper
 {
     /** @var WorkAuthorHelper */
@@ -39,12 +45,14 @@ class WorkAuthorHelper
     public function getIdsAuthorsOfWorkByWorkId(int $workId)
     {
         $authors = (new WorkAuthorRepository())->getAllAuthorsOfWorkByWorkId($workId);
-        return array_map(static function ($v) {
+        return \array_map(static function ($v) {
             return $v['id'];
         }, $authors);
     }
 
-
+    /**
+     * @return array|\MysqliDb
+     */
     public function getWorksAuthor()
     {
         if ($this->worksAuthor == []) {

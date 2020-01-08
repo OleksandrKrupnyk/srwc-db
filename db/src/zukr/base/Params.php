@@ -7,6 +7,7 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 use Serializable;
+use zukr\base\helpers\ArrayHelper;
 
 /**
  * Class Params
@@ -63,11 +64,9 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     private function __construct()
     {
         $this->db = Base::$app->db;
-        $params = $this->db->get(self::tableName());
-        $keys = \array_map(static function ($array) {
-            return $array['parametr'];
-        }, $params);
-        $this->_container = \array_combine($keys, $params);
+        $this->_container = $this->db
+            ->map('parametr')
+            ->get(self::tableName());
     }
 
     /**
@@ -173,7 +172,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
      */
     public function count(): int
     {
-        return count($this->_container);
+        return \count($this->_container);
     }
 
     /**
@@ -221,8 +220,8 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
      */
     public function __set($name, $value)
     {
-        $keys = array_keys($this->_container);
-        if (in_array($name, $keys)) {
+        $keys = \array_keys($this->_container);
+        if (\in_array($name, $keys)) {
             $this->_container[$name]['value'] = $value;
         }
     }
@@ -239,9 +238,19 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     /**
      * @return array
      */
-    public function getContainer()
+    public function getContainer(): ?array
     {
         return $this->_container;
+    }
+
+    /**
+     * Спсиок значень налаштувань індексований за назвою параметра
+     *
+     * @return array Список налаштувань
+     */
+    public function getAllsettingValue(): ?array
+    {
+        return ArrayHelper::map($this->getContainer(), 'parametr', 'value');
     }
 
 }
