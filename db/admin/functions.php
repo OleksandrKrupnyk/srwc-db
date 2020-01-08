@@ -32,36 +32,6 @@ function read_settings()
             $settings[$parametr] = '1';
     }
 }
-
-/**
- * Вывод странички настроек программы
- *
- */
-function print_page_settings()
-{
-    global $link;
-    global $settings;
-    $query = 'SELECT * FROM `settings`';
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die("Помилка зчитування налаштувань програми: " . mysqli_error($link));
-    echo "<form action=\"settings.php\" method=POST>\n<table>\n"
-    . '<h2>Коротка інформація про систему</h2>'
-    . '<h5>Обмеження розміру файлу на завантаження:' . ini_get('upload_max_filesize'). '</h5>'
-    . '<h5>Кодування за замовчуванням:' . ini_get('default_charset')."</h5>"
-    . '<h5>Шляхи до підключення розширень dll/lib:' . ini_get('extension_dir'). '</h5>'
-    . '<h5>Шляхи до файлів включення файлів php:' . ini_get('include_path'). '</h5>'
-    . '<h5>Максимальний розмір POST запиту:' . ini_get('post_max_size'). '</h5>'
-    . '<tr><th>Налаштування</th><th>Значення</th></tr>';
-    while ($row = mysqli_fetch_array($result)) {
-        echo '<tr><td>' . $row['description'] . '</td><td>';
-        chk_box($row['parametr'], '', $row['value']);
-        echo '</td></tr>';
-    }
-    echo "</table>\n<input type=\"submit\" name=\"SAVE_SETTINGS\" value=\"Записати зміни\">\n</form>";
-}
-
 /**
  * Функция журналирования системы
  * @param string $action

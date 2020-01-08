@@ -23,6 +23,16 @@ abstract class Record implements RecordInterface
     public  $_isNewRecord;
 
     /**
+     * Повертає назву колонки ключа
+     *
+     * @return string
+     */
+    public function getIdColumn(): string
+    {
+        return 'id';
+    }
+
+    /**
      * @return bool
      */
     public function beforeSave()
@@ -58,7 +68,7 @@ abstract class Record implements RecordInterface
     /**
      * @return string
      */
-    public static function getPrimaryKey()
+    public static function getPrimaryKey(): string
     {
         return 'id';
     }
@@ -134,24 +144,34 @@ abstract class Record implements RecordInterface
     }
 
     /**
-     * @param array|int $id
+     * @param array|int|string $id
      * @return MysqliDb|array|null
      */
     public function findById($id)
     {
         try {
-            if (\filter_var($id, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY)) {
-                return $this->_db
-                    ->where('id', $id, 'IN')
-                    ->get($this->_table);
+            if (static::getPrimaryKey() === 'id') {
+                if (\filter_var($id, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY)) {
+                    return $this->_db
+                        ->where(static::getPrimaryKey(), $id, 'IN')
+                        ->get($this->_table);
+                }
+                if (\filter_var($id, FILTER_VALIDATE_INT)) {
+                    return $this->_db->where(static::getPrimaryKey(), $id)
+                        ->getOne($this->_table);
+                }
+            } else {
+
+                if (\filter_var($id, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY)) {
+                    return $this->_db
+                        ->where(static::getPrimaryKey(), $id, 'IN')
+                        ->get($this->_table);
+                }
+                if (\filter_var($id, FILTER_SANITIZE_STRING)) {
+                    return $this->_db->where(static::getPrimaryKey(), $id)
+                        ->getOne($this->_table);
+                }
             }
-
-            if (\filter_var($id, FILTER_VALIDATE_INT)) {
-                return $this->_db->where('id', $id)
-                    ->getOne($this->_table);
-
-            }
-
             return null;
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());

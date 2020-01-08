@@ -15,6 +15,7 @@ use Stash\Pool;
  *
  * @property string app_name
  * @property DB     $db
+ * @property string $_snrcrf
  * @package zukr\base
  */
 class App
@@ -43,6 +44,10 @@ class App
      * @var string Шлях для теки кешування
      */
     private $cachePath;
+    /**
+     * @var string
+     */
+    private $_snrcrf;
 
     /**
      * App constructor.
@@ -73,6 +78,7 @@ class App
 
         $this->_cache = new Pool($driverRedis);
         $this->initDB();
+
     }
 
 
@@ -107,6 +113,9 @@ class App
         if ('app_name' === $name) {
             return '&quot;' . $this->_app_name . '&quot;&copy;';
         }
+        if ('_snrcrf' === $name) {
+            return $this->_snrcrf;
+        }
         return null;
     }
 
@@ -120,6 +129,8 @@ class App
             $this->_db = $value;
         } elseif ('cache' === $name && $value instanceof Pool) {
             $this->_cache = $value;
+        } elseif ('_snrcrf' === $name && is_string($value)) {
+            $this->_snrcrf = $value;
         }
     }
 

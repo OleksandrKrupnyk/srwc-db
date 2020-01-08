@@ -129,19 +129,22 @@ if (!isset($_GET['action'])) {
 <html lang="ua">
 <head>
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <meta content="Конкурс,СНР,Електротехніка,електромеханіка,ДДТУ,ЕЛМ,студентських,науових,робіт,конференція" name="keywords">
-    <meta content="Електротехніка та електромеханіка - реєстр робіт Всеукраїнського конкурсу студентських наукових робіт" name="description">
+    <meta content="Конкурс,СНР,Електротехніка,електромеханіка,ДДТУ,ЕЛМ,студентських,науових,робіт,конференція"
+          name="keywords">
+    <meta
+        content="Електротехніка та електромеханіка - реєстр робіт Всеукраїнського конкурсу студентських наукових робіт"
+        name="description">
     <?php include_once 'analyticstracking.php'; ?>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="../css/userstyle.css" type="text/css" rel="stylesheet">
-    <title>Реєст &quot;СНР 2018&quot;&copy;</title>
+    <title><?= Base::$app->app_name ?></title>
 </head>
 <body>
-<?php if(isset($_GET['action']) && $_GET['action'] === 'review_view'):?>
-    <?php include "ag_form_view_review.php";?>
-<?php else:?>
+<?php if (isset($_GET['action']) && $_GET['action'] === 'review_view'): ?>
+    <?php include "ag_form_view_review.php"; ?>
+<?php else: ?>
     <h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт
-        <br>&quot;Електротехніка та електромеханіка&quot; <?=NYEARS?> н.р.</h1>
+        <br>&quot;Електротехніка та електромеханіка&quot; <?= NYEARS ?> н.р.</h1>
     <h4>Данні реєстрів робіт
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2013'>2013-2014</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2014'>2014-2015</a>

@@ -56,6 +56,35 @@ class Base
             self::$user = LoginUser::getInstance();
             self::$isInit = true;
         }
+
+    }
+
+    /**
+     *
+     */
+    public static function setSNRCRF(): void
+    {
+        if (self::$session !== null && self::$app !== null) {
+            $_SNRCRF = \md5('SNRCRF' . time());
+            self::$session->set('_SNRCRF', $_SNRCRF);
+            self::$app->_snrcrf = $_SNRCRF;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public static function getSNRCRF(): string
+    {
+        if (self::$session !== null && self::$app !== null) {
+            $_SNRCRF = self::$session->get('_SNRCRF', null);
+            if ($_SNRCRF !== null) {
+                self::$app->_snrcrf = $_SNRCRF;
+                return $_SNRCRF;
+            }
+            return null;
+        }
+        return null;
     }
 
 }

@@ -13,73 +13,13 @@ require '../vendor/autoload.php';
 header('Content-Type: text/html; charset=utf-8');
 session_name('tzLogin');
 session_start();
-global $link;
+
 //Если есть доступ к странице
 Base::init();
+Base::setSNRCRF();
+$params = Base::$param->getContainer();
 if (!Base::$user->getUser()->isAdmin()) {
     Go_page('error');
-}
-if (isset($_POST['SAVE_SETTINGS'])) {
-    $value = ($_POST['SHOW_DB_TABLE'] == '') ? 0 : 1;
-    $query = 'UPDATE `settings` SET';
-    $query .= " `value` = '{$value}'";
-    $query .= " WHERE `parametr` = 'SHOW_DB_TABLE'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка оновлення налаштувань: ' . mysqli_error($link) . ' SHOW_DB_TABLE');
-
-    $value = ($_POST['SHOW_PROGRAMA'] == '') ? 0 : 1;
-    $query = 'UPDATE `settings` SET';
-    $query .= " `value` = '{$value}'";
-    $query .= " WHERE `parametr` = 'SHOW_PROGRAMA'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка оновлення налаштувань: ' . mysqli_error($link) . ' SHOW_PROGRAMA');
-
-
-    $value = ($_POST['PRINT_DDTU_HEADER'] == '') ? 0 : 1;
-    $query = 'UPDATE `settings` SET';
-    $query .= " `value` = '{$value}'";
-    $query .= " WHERE `parametr` = 'PRINT_DDTU_HEADER'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка оновлення налаштувань: ' . mysqli_error($link) . 'PRINT_DDTU_HEADER');
-
-    $value = ($_POST['SHOW_RAITING'] == '') ? 0 : 1;
-    $query = 'UPDATE `settings` SET';
-    $query .= " `value` = '{$value}'";
-    $query .= " WHERE `parametr` = 'SHOW_RAITING'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка оновлення налаштувань: ' . mysqli_error($link) . 'SHOW_RAITING');
-
-    $value = ($_POST['ALLOW_EMAIL'] == '') ? 0 : 1;
-    $query = 'UPDATE `settings` SET';
-    $query .= " `value` = '{$value}'";
-    $query .= " WHERE `parametr` = 'ALLOW_EMAIL'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка оновлення налаштувань: ' . mysqli_error($link) . 'ALLOW_EMAIL');
-
-    $value = ($_POST['INVITATION'] == '') ? 0 : 1;
-    $query = 'UPDATE `settings` SET';
-    $query .= " `value` = '{$value}'";
-    $query .= " WHERE `parametr` = 'INVITATION'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка оновлення налаштувань: ' . mysqli_error($link) . 'INVITATION');
-
-
-    $value = ($_POST['SHOW_FILES_LINK'] == '') ? 0 : 1;
-    $query = 'UPDATE `settings` SET';
-    $query .= " `value` = '{$value}'";
-    $query .= " WHERE `parametr` = 'SHOW_FILES_LINK'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка оновлення налаштувань: ' . mysqli_error($link) . 'SHOW_FILES_LINK');
-
-    $value = ($_POST['DENNY_EDIT_REVIEW'] == '') ? 0 : 1;
-    $query = 'UPDATE `settings` SET';
-    $query .= " `value` = '{$value}'";
-    $query .= " WHERE `parametr` = 'DENNY_EDIT_REVIEW'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка оновлення налаштувань: ' . mysqli_error($link) . 'DENNY_EDIT_REVIEW');
-
-
-    unset($_POST['SAVE_SETTINGS']);
 }
 ?>
 <!DOCTYPE html>
@@ -87,14 +27,39 @@ if (isset($_POST['SAVE_SETTINGS'])) {
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="../css/style.css" type="text/css" rel="stylesheet"/>
-    <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
     <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
     <script type="text/javascript" src="../js/admin.js"></script>
+    <script type="text/javascript" src="../js/notify.js"></script>
+    <script type="text/javascript" src="../js/params.js"></script>
+    <script>
+        var _SNRCRF = '<?=Base::$app->_snrcrf?>';
+    </script>
     <title>Налаштування</title>
 </head>
 <body>
 <header><a href="action.php">Меню</a></header>
-<?php print_page_settings(); ?>
+<?php
+echo '<form action="settings.php" method=POST><h2>Коротка інформація про систему</h2>'
+    . '<h5>Обмеження розміру файлу на завантаження:' . ini_get('upload_max_filesize') . '</h5>'
+    . '<h5>Кодування за замовчуванням:' . ini_get('default_charset') . "</h5>"
+    . '<h5>Шляхи до підключення розширень dll/lib:' . ini_get('extension_dir') . '</h5>'
+    . '<h5>Шляхи до файлів включення файлів php:' . ini_get('include_path') . '</h5>'
+    . '<h5>Максимальний розмір POST запиту:' . ini_get('post_max_size') . '</h5>'
+    . '
+<table class="params">
+        <tr><th>Налаштування</th><th>Значення</th></tr>';
+foreach ($params as $key => $p) {
+    echo '<tr data-key="' . $key . '"><td>' . $p['description'] . '</td><td>'
+        . \zukr\base\html\HtmlHelper::checkboxStyled($key, '', $p['value'])
+        . '</td></tr>';
+}
+echo '</table></form>'; ?>
+<script>
+    $.notify.defaults({
+        position: 'top center',
+        globalPosition: 'top center',
+        gap: 8
+    });
+</script>
 </body>
 </html>

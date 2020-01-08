@@ -28,6 +28,19 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     const TURN_ON  = '1';
     const TURN_OFF = '0';
     /**
+     * Дозволені імена параметрів
+     */
+    const PARAMS = [
+        'ALLOW_EMAIL',
+        'DENNY_EDIT_REVIEW',
+        'INVITATION',
+        'PRINT_DDTU_HEADER',
+        'SHOW_DB_TABLE',
+        'SHOW_FILES_LINK',
+        'SHOW_PROGRAMA',
+        'SHOW_RAITING',
+    ];
+    /**
      * @var Params
      */
     private static $obj;
@@ -89,7 +102,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset):bool
+    public function offsetExists($offset): bool
     {
         return isset($this->_container[$offset]);
     }
@@ -150,7 +163,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     /**
      * @return bool
      */
-    public function valid():bool
+    public function valid(): bool
     {
         return isset($this->_container[$this->_position]);
     }
@@ -158,7 +171,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     /**
      * @return int
      */
-    public function count():int
+    public function count(): int
     {
         return count($this->_container);
     }
@@ -166,7 +179,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     /**
      * @return string
      */
-    public function serialize():string
+    public function serialize(): string
     {
         return \serialize($this->_container);
     }
