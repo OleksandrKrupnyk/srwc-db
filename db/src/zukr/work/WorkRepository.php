@@ -30,6 +30,8 @@ class WorkRepository extends AbstractRepository
     }
 
     /**
+     * Усі роботи
+     *
      * @return array|\MysqliDb
      */
     public function getAllWorksAsArray()

@@ -17,14 +17,12 @@ if ($_SESSION['access']) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="ua">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="../css/print.css" type="text/css" rel="stylesheet">
-    <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet">
-    <script language="javascript" type="text/javascript" src="../js/jquery.js"></script>
-    <script language="javascript" type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
-    <script language="javascript" type="text/javascript" src="../js/admin.js"></script>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/admin.js"></script>
     <title>Программа підсумкової конференції</title>
 </head>
 <body>
@@ -35,8 +33,6 @@ $query = "SELECT `works`.`id`,`title`,`section`,`univer`\n"
     . "left outer join `univers` ON `works`.`id_u`= `univers`.`id`\n"
     . "WHERE `invitation` ='1'\n"
     . "ORDER BY `sections`.`id`,`title`";
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_array($result);
 $section = $row['section'];

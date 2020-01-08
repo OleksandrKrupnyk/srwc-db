@@ -17,21 +17,19 @@ use zukr\work\WorkHelper;
 class UniverHelper
 {
 
-    /** @var UniverHelper */
+    /**
+     * @var UniverHelper
+     */
     private static $obj;
 
-    /** @var array */
-    private $univers;
-    /** */
-    private $univerRepository;
-
     /**
-     * WorkHelper constructor.
+     * @var array
      */
-    private function __construct()
-    {
-        $this->univerRepository = new UniverRepository();
-    }
+    private $univers;
+    /**
+     * @var UniverRepository
+     */
+    private $univerRepository;
 
     /**
      * @return UniverHelper
@@ -65,7 +63,7 @@ class UniverHelper
      */
     public function getAllUniversFromDB(): array
     {
-        return $this->univerRepository->getAllUniversAsArrayFromDB();
+        return $this->getUniverRepository()->getAllUniversAsArrayFromDB();
     }
 
     /**
@@ -111,7 +109,7 @@ class UniverHelper
     public function getInvitedDropdownListWithoutDSTU(): array
     {
         return $this->getDropDownListFull(
-            \array_filter($this->univerRepository->getUniversWhoSentWorks(), static function ($v) {
+            \array_filter($this->getUniverRepository()->getUniversWhoSentWorks(), static function ($v) {
                 return (string)$v['id'] !== '1';
             }));
     }
@@ -156,6 +154,36 @@ class UniverHelper
         return \file_exists($filename) && \is_file($filename)
             ? '<script>' . \file_get_contents($filename) . '</script>'
             : '';
+    }
+
+    /**
+     * @return UniverRepository
+     */
+    protected function getUniverRepository(): UniverRepository
+    {
+        if ($this->univerRepository === null) {
+            $this->univerRepository = new UniverRepository();
+        }
+        return $this->univerRepository;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getUniversIdWhoSendWork()
+    {
+        return $this->getUniverRepository()->getUniversIdWhoSendWork();
+    }
+
+    /**
+     * Повертає дані університету
+     *
+     * @param int|string $id ІД запис університету
+     * @return array|null Дані університету
+     */
+    public function getUniverById($id): ?array
+    {
+        return $this->getUniverRepository()->getById($id);
     }
 
 }

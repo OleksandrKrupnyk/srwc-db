@@ -4,13 +4,11 @@ $query = "SELECT `reviews`.*, works.title,
           FROM `reviews`
           JOIN `works` ON `works`.`id` = `reviews`.`id_w` 
           WHERE `reviews`.`id` ='{$_GET['id']}'";
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query) or die('Invalid query in function list_reviews_for_one_work : ' . mysqli_error($link));
 $row = mysqli_fetch_array($result);
-echo '<h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт<br>&quot;Електротехніка та електромеханіка&quot;</h1>';
-echo '<h2>Рецензія на студентську наукову роботу</h2>';
-echo "<h3>&laquo;{$row['title']}&raquo;</h3>";
+echo '<h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт<br>&quot;Електротехніка та електромеханіка&quot;</h1>'
+    . '<h2>Рецензія на студентську наукову роботу</h2>'
+    . "<h3>&laquo;{$row['title']}&raquo;</h3>";
 ?>
 
     <table style="box-sizing: border-box; border-collapse: collapse">
@@ -57,19 +55,26 @@ echo "<h3>&laquo;{$row['title']}&raquo;</h3>";
                     <li> розвиток інформаційних і комунікаційних технологій, робототехніки.
                 </ol>
             </td>
-            <td class='balls'><?= $row['government']?></td></tr>
+            <td class='balls'><?= $row['government'] ?></td>
+        </tr>
         <tr>
-            <td>11</td><td>Відповідність роботи сучасним світовим тенденціям розвитку<br>  електроенергетики, електротехніки та електромеханіки.</td>
-            <td class='balls'><?= $row['tendentious']?></td></tr>
+            <td>11</td>
+            <td>Відповідність роботи сучасним світовим тенденціям розвитку<br> електроенергетики, електротехніки та
+                електромеханіки.
+            </td>
+            <td class='balls'><?= $row['tendentious'] ?></td>
+        </tr>
         <tr>
-            <td>12</td><td>Сума.</td><td class='balls'><?= $row['sumball']?></td></tr>
+            <td>12</td>
+            <td>Сума.</td>
+            <td class='balls'><?= $row['sumball'] ?></td>
+        </tr>
     </table>
-    <fieldset><legend>Зауваження та недоліки</legend>
+<fieldset>
+    <legend>Зауваження та недоліки</legend>
     <p>
-        <?php echo(htmlspecialchars($row['defects'])); ?>
+        <?= htmlspecialchars($row['defects']); ?>
     </p>
-    </fieldset>
-    <?php   $conclusion = ($row['conclusion'] == 0) ? 'Не рекомендується ' : 'Рекомендується'; ?>
-    <p>Загальний висновок : <?= $conclusion?> для захисту на науково-практичній конференції</p>
-
-
+</fieldset>
+<?php $conclusion = ($row['conclusion'] == 0) ? 'Не рекомендується ' : 'Рекомендується'; ?>
+<p>Загальний висновок : <?= $conclusion ?> для захисту на науково-практичній конференції</p>
