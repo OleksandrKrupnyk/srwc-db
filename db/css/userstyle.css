@@ -1,26 +1,27 @@
-*{
-	font-family: "Times New Roman", Times, serif;
+* {
+    font-family: "Times New Roman", Times, serif;
     background-color: #ccc;
 }
 
-body,tr,td,th,p,h1,h2,h3,h4,fieldset,legend,p,a,strong,form,input,label,select,ol,ul,li,autor{
+body, tr, td, th, p, h1, h2, h3, h4, fieldset, legend, p, a, strong, form, input, label, select, ol, ul, li {
     background: white;
 }
 
-body{
+body {
     border: solid 1pt #3377aa;
     font-size: 12pt;
     width: 1024px;
     margin: auto;
     position: relative;
     padding-bottom: 5pt;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-select{
+select {
     width: 500px;
     margin-left: 1cm;
 }
+
 h1, h2, h3 {
     margin: auto;
     text-align: center;
@@ -33,54 +34,53 @@ h4 {
 }
 
 table {
-    border-spacing: 0px;
+    border-spacing: 0;
     margin: inherit;
     width: 800px;
     margin-bottom: 1cm;
+    border-collapse: collapse;
 }
 
-table, td ,th {
-    border: solid 0.5px #000000;
+table, td, th {
+    border: solid 1px black;
 }
 
-td{
+td {
     padding-left: 5pt;
     padding-right: 3pt;
 }
 
-p,ul,ol {
+p, ul, ol {
     margin-left: 1cm;
     margin-right: 1cm;
 }
 
-tr + td{
+tr + td {
     text-align: center;
 }
 
-fieldset{
+fieldset {
     margin: auto;
     position: inherit;
     width: 775px;
 
 }
 
-fieldset>p{
+fieldset > p {
     font-style: italic;
 }
 
-
-
-td > a, a{
+td > a, a {
     color: #0c0c0c;
     text-decoration: none;
 }
 
-td > a:hover, a:hover{
+td > a:hover, a:hover {
     color: crimson;
     text-decoration: none;
 }
 
-autor{
+.autor {
     font-size: x-small;
     font-style: italic;
     position: fixed;
@@ -92,13 +92,38 @@ autor{
 .section, .review, .balls {
     text-align: center;
 }
-.viewReview{
+
+.viewReview {
     background: url(../images/review.png) no-repeat;
     padding-left: 17px;
 }
 
-td > span.invite2018{
+td > span.invite2018 {
     background-color: white;
     color: green;
     font-weight: bold;
+}
+
+@media print {
+    * {
+        background-color: white;
+    }
+
+    body {
+        box-shadow: none;
+        border: none;
+    }
+
+    .viewReview:before {
+        content: "[=]";
+    }
+
+    .viewReview {
+        background: none;
+        padding-left: 0;
+    }
+
+    td > span.invite2018 {
+        color: black;
+    }
 }
