@@ -62,7 +62,10 @@ class WorkLeaderRepository extends AbstractRepository
         }
     }
 
-
+    /**
+     * @param int $workId
+     * @return array|\MysqliDb
+     */
     public function getCountAuthorsByWorkId(int $workId)
     {
         try {

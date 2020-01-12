@@ -2,13 +2,11 @@
 $(document).ready(function () {
 
     const $body = $('body');
-    $('#columnAutors').css("display", "none");
-    $('#columnLeaders').css("display", "none");
-//$('.loginForm').css("display","none");
-
-
     const disableObject = $('li').find('.special').parent();
     disableObject.hide();
+
+    $('#columnAutors').css("display", "none");
+    $('#columnLeaders').css("display", "none");
 
 
     //Проверяем все select что бы не были равны -1
@@ -37,10 +35,9 @@ $(document).ready(function () {
     //Удаление автора или руководителя из реестра
     $('a[class|="delete"]').click(function (e) {
         e.preventDefault();
-        //var id_w = $(this).parents('tr').children('td:first').text();
-        const $this = $(this).parent('li');
-        const id = $this.data('index');
-        const table = $this.parent('ol').data('objectName');
+        const $this = $(this).parent('li'),
+            id = $this.data('index'),
+            table = $this.parent('ol').data('objectName');
         let action = ('delete-' + table).toString();
 
         const answer = confirm("Видалити\n запис?");
@@ -104,111 +101,6 @@ $(document).ready(function () {
         }
     });
 
-    /*Запрос на формирование списка авторов и рукводителей для отметки о приезде*/
-    $("#univer_reseption").on('change', function () {
-        $('#columnLeaders').slideUp(100);
-        $('#columnAutors').slideUp(100);
-        var val = $(this).find("option:selected").val();
-
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"action": "list_al", "id_u": val},
-            cache: false,
-            success: function (txt) {
-                txt = txt.split("!");
-                $('#columnAutors').slideDown(500);
-                $("#selectAutors").empty().append(txt[0]).slideDown(500);
-                $('#columnLeaders').slideDown(500);
-                $("#selectLeaders").empty().append(txt[1]).slideDown(500);
-
-            }
-        });
-
-    });
-
-
-//обработка собития обновления отметки о прибытии работы при двойном клике на названии меню
-    $('#update_arrival_works').on('dblclick', function () {
-        //console.log('Дважды нажали');
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"action": "update_arrival_works"},
-            cache: false,
-            success: function (txt) {
-                //console.log('Запрос обработан! Оновлено:'+txt+' запис(ів)');
-                alert('Оновлення записів виконано! Оновлено:' + txt + ' запис(ів)');
-            }
-        });
-    });
-// Статистика по местам в конце таблицы на странице определения мест
-    /* TODO */
-
-
-    //Обработка отметки о прибытии автора
-    $('#selectAutors').on('dblclick', 'li', function (e) {
-        e.preventDefault();
-        this.blur();
-        var val = $(this).attr("alt");
-        var action, answer;
-        //Какая клавиша нажата
-        if (e.ctrlKey) {//Нажата Shift значит удалить из приглашенных
-            action = "rem_arrival";
-            answer = confirm('Виправити помилку?\n\tВи впевнені?');
-            if (!answer) return false;
-            $(this).removeClass();
-        } else {//Без Shift добавить приглашение
-            action = "add_arrival";
-            answer = confirm('Відмитити приїзд на конференцію?\n\tВи впевнені?');
-            if (!answer) return false;
-            $(this).addClass("option-arrival");
-        }
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"action": action, "id_a": val},
-            cache: false,
-            success: function (txt) {
-            }
-        });
-    });
-
-
-    //Обработка отметки о прибытии руководителя или сопровождающего
-    $('#selectLeaders').on('dblclick', 'li', function (eventObject) {
-        eventObject.preventDefault();
-        this.blur();
-        var val = $(this).attr("alt");
-        var action, answer;
-        //Какая клавиша нажата
-        if (eventObject.ctrlKey) {//Нажата Shift значит удалить из проглашенных
-            action = "rem_arrival";
-            answer = confirm('Виправити помилку?\n\tВи впевнені?');
-            if (!answer) return false;
-            $(this).removeClass();
-        } else {//Без Shift добавить приглашение
-            answer = confirm('Відмитити приїзд на конференцію?\n\tВи впевнені?');
-            if (!answer) return false;
-            action = "add_arrival";
-            $(this).addClass("option-arrival");
-        }
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"action": action, "id_l": val},
-            cache: false,
-            success: function (txt) {
-                //console.log('Запрос обработан\n'+txt);
-            }
-        });
-    });
-
-    /*
-    * Обработка отметки в списке приглашений для руководителей /представителей внз
-    * */
-
-
     /* Изменение выбора университета */
     $("#selunivers").on('change', function () {
         var id_u = $(this).find("option:selected").val();
@@ -233,8 +125,8 @@ $(document).ready(function () {
 
     $("#table_la").hide();
     $("#work").on('change', '#selwork', function () {
-        var id_w = $(this).find("option:selected").val();
-        var id_u = $("#selunivers").find("option:selected").val();
+        var id_w = $(this).find("option:selected").val(),
+            id_u = $("#selunivers").find("option:selected").val();
         //console.log('Work:'+id_w+' Univer:'+id_u);
 
         $.ajax({
@@ -251,34 +143,28 @@ $(document).ready(function () {
                 $("#autor").html(txt[2]).fadeIn(400);
                 $("#autors").html(txt[3]).fadeIn(400);
             },
-            error: function () {
-                console.log('Что-то не то');
+            error: function (e) {
+                console.log(e, 'Что-то не то');
             }
         });
     });
 
 
+    const operator = $('#operator span').text().toString();
     //Запрос на удаление работы из реестра
-    var removeWork = $('a[href*="delete_work"]');
+    const removeWork = $('a[href*="delete_work"]');
     removeWork.on('click', function () {
-        if ($('#operator span').text().toString() == 'krupnik') {
-            answerWork = confirm('Ви впевнені що хочете видалити роботу?');
-            if (answerWork == true) {
-                return true;
-            } else {
-                return false;
-            }
+        if (operator.match('krupnik')) {
+            return confirm('Ви впевнені що хочете видалити роботу?');
         } else {
             alert('Дія заборонена!');
             return false;
         }
     });
-
-
     //удаление файла работы
     const delete_file = $('a[href*="delete_file"]');
     delete_file.on('click', function () {
-        if ($('#operator span').text().toString() === 'krupnik') {
+        if (operator.match('krupnik')) {
             return confirm('Ви впевнені що хочете видалити файл роботи?');
         } else {
             alert('Дія заборонена!');

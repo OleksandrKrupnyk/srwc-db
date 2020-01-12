@@ -28,44 +28,14 @@ try {
 
 switch ($action) {
     //Обработка Запроса на список работ в вузе
-    case 'selunivers':
-        {
-            if (!empty($id_u) && !isset($_POST['id_w'])) {
-                $select_id_w = $_POST['select_id_w'] ?? '';
-                echo list_works_of_univer($_POST['id_u'], 'title', $select_id_w, 5);
-            }
-        }
-        break;
-    /* Обработка запроса на отметку в графе прибытие */
-    case 'add_arrival':
-        {
-            if (isset($_POST['id_a'])) {
-                $query = "UPDATE `autors` SET `arrival` = '1' \n"
-                    . "WHERE `autors`.`id` ='" . $_POST['id_a'] . "'";
-                log_action($_POST['action'], "autors", $_POST['id_a']);
-            } elseif (isset($_POST['id_l'])) {
-                $query = "UPDATE `leaders` SET `arrival` = '1' "
-                    . "WHERE `leaders`.`id` ='{$_POST['id_l']}'";
-                log_action($_POST['action'], "leaders", $_POST['id_l']);
-            }
-            $result = mysqli_query($link, $query)
-            or die("Помилка запиту: " . mysqli_error($link));
-        }
-        break;
-    /* Убирает отметку о прибитии на конференцию автора или руководителя */
-    case 'rem_arrival':
-        {
-            if (isset($_POST['id_a'])) {
-                $query = "UPDATE `autors` SET `arrival` = '0' WHERE `autors`.`id` ='{$_POST['id_a']}'";
-                log_action($_POST['action'], "autors", $_POST['id_a']);
-            } elseif (isset($_POST['id_l'])) {
-                $query = "UPDATE `leaders` SET `arrival` = '0' WHERE `leaders`.`id` ='{$_POST['id_l']}'";
-                log_action($_POST['action'], "leaders", $_POST['id_l']);
-            }
-            $result = mysqli_query($link, $query)
-            or die("Помилка запиту: " . mysqli_error($link));
-        }
-        break;
+    //    case 'selunivers':
+    //        {
+    //            if (!empty($id_u) && !isset($_POST['id_w'])) {
+    //                $select_id_w = $_POST['select_id_w'] ?? '';
+    //                echo list_works_of_univer($_POST['id_u'], 'title', $select_id_w, 5);
+    //            }
+    //        }
+    //        break;
     /*     * ------------------------------------------------------- */
     case 'selwork':
         {
@@ -81,7 +51,7 @@ switch ($action) {
                 if ($col_l < N_LEADERS) {
                     $i = 1;
                     while ($col_l < N_LEADERS) {
-                        list_fio("leaders", "leader[" . $i . "]", $_POST['id_u'], 1);
+                        list_fio('leaders', "leader[" . $i . "]", $_POST['id_u'], 1);
                         echo "<br>";
                         $i++;
                         $col_l++;
@@ -96,14 +66,14 @@ switch ($action) {
                 if ($col_a != 0) {
                     echo(list_leader_or_autors_str($_POST['id_w'], "wa", true));
                 } elseif ($col_a == 0) {
-                    echo "<span class=\"info\">Відсутні</span>";
+                    echo '<span class="info">Відсутні</span>';
                 }
                 echo '!';//символ разбиения строки не просто так написан
                 if ($col_a < N_AUTORS) {
                     $i = 1;
                     while ($col_a < N_AUTORS) {
-                        list_fio("autors", "autor[" . $i . "]", $_POST['id_u'], 1);
-                        echo "<br>";
+                        list_fio('autors', "autor[" . $i . "]", $_POST['id_u'], 1);
+                        echo '<br>';
                         $i++;
                         $col_a++;
                     }
@@ -118,99 +88,20 @@ switch ($action) {
     /**
      * Получить список всех руководителей и авторов данного вуза
      */
-    case 'getlists':
-        {
-            list_fio('autors', 'autor', $_POST['id_u'], 1, $selecttag = false);
-            echo '!';
-            list_fio('leaders', 'leaders', $_POST['id_u'], 1, $selecttag = false);
-        }
-        break;
-    case 'list_all':
-        {
-            list_fio('autors', 'autor', $_POST['id_u'], 1, $selecttag = true);
-            echo "!";
-            list_fio('leaders', 'leaders', $_POST['id_u'], 1, $selecttag = true);
-        }
-        break;
-
-
-    /**
-     * Вернуть список авторов и руководителей по выбраному ВУЗ и отметить которые прибыли
-     */
-    case 'list_al':
-        {
-            if (isset($_POST['id_u'])) {
-                //Первый запрос в таблицу авторов
-                $query = "SELECT `autors`.`id`,
-                      CONCAT(`autors`.`suname`,' ',`autors`.`name`,' ',`autors`.`lname`) AS fio_a, `autors`.`arrival`,`works`.`invitation`  
-                      FROM `autors` 
-                      RIGHT OUTER JOIN `wa` ON `autors`.`id` =  `wa`.`id_a`
-                      JOIN  `works` ON `wa`.`id_w` = `works`.`id` 
-                      WHERE `autors`.`id_u` = {$_POST['id_u']} AND `works`.`invitation` = '1' 
-                      GROUP BY fio_a 
-                      ORDER BY fio_a";
-                $result = mysqli_query($link, $query)
-                or die("Помилка запиту: " . mysqli_error($link));
-
-                $str = "";
-                while ($row = mysqli_fetch_array($result)) {
-                    $Class = ($row['arrival'] == 1) ? "class=\"option-arrival\"" : "";
-                    $str .= "<li alt=\"" . $row['id'] . "\" " . $Class . ">" . $row['fio_a'] . "</li>\n";
-                }
-                $str .= "!"; //символ разделитель
-                // Второй запрос в таблицу уководителей
-                $query = "SELECT `leaders`.`id`, 
-                    CONCAT(`leaders`.`suname`,' ',`leaders`.`name`,' ',`leaders`.`lname`) as fio_a, `leaders`.`arrival`  
-                    FROM `leaders` 
-                    RIGHT OUTER JOIN `wl` ON `leaders`.`id` =  `wl`.`id_l` 
-                    WHERE `leaders`.`id_u` = {$_POST['id_u']} 
-                    GROUP BY `fio_a` 
-                    ORDER BY `fio_a`";
-                $result = mysqli_query($link, $query)
-                or die('Помилка запиту: ' . mysqli_error($link));
-                $str .= "";
-                while ($row = mysqli_fetch_array($result)) {
-                    $Class = ($row['arrival'] == 1) ? "class=\"option-arrival\"" : "";
-                    $str .= "<li alt=\"" . $row['id'] . "\" " . $Class . ">" . $row['fio_a'] . "</li>\n";
-                }
-
-                echo $str;
-            }
-        }
-        break;
-
-    /** Запрос на изменение секции куда прислана работа */
-    case 'id_sec':
-        {
-            if (isset($_POST['id_w'])) {
-                $query = "UPDATE `works` SET `id_sec` ='{$_POST['id_sec']}' WHERE `id` = '{$_POST['id_w']}'";
-                //echo $query;
-                $result = mysqli_query($link, $query)
-                or die('Помилка запиту: ' . mysqli_error($link));
-                log_action($_POST['action'], "works", $_POST['id_w']);
-            }
-        }
-        break;
-    /** Установление отметки об участии в конференции в записи о работе на основе данных прибывших*/
-    case 'update_arrival_works':
-        {
-            $query = "UPDATE works dest , 
-                 (SELECT `works`.`id`,`autors`.`arrival` as arr 
-                  FROM works 
-                  JOIN wa on works.id=wa.id_w 
-                  JOIN autors on wa.id_a=autors.id 
-                  WHERE autors.arrival ='1' AND works.invitation='1') src 
-                  SET dest.arrival=src.arr 
-                  WHERE dest.id=src.id";
-            //echo $query;
-            $result = mysqli_query($link, $query)
-            or die('Помилка запиту на оновлення відміток про прибуття роботи: ' . mysqli_error($link));
-            $query = "SELECT ROW_COUNT()";
-            $result = mysqli_query($link, $query);
-            $row = mysqli_fetch_array($result);
-            echo $row[0];
-        }
-        break;
+    //    case 'getlists':
+    //        {
+    //            list_fio('autors', 'autor', $_POST['id_u'], 1, $selecttag = false);
+    //            echo '!';
+    //            list_fio('leaders', 'leaders', $_POST['id_u'], 1, $selecttag = false);
+    //        }
+    //        break;
+    //    case 'list_all':
+    //        {
+    //            list_fio('autors', 'autor', $_POST['id_u'], 1, $selecttag = true);
+    //            echo "!";
+    //            list_fio('leaders', 'leaders', $_POST['id_u'], 1, $selecttag = true);
+    //        }
+    //        break;
 }//end switch
 
 
@@ -234,8 +125,8 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
     $query = ($id_w != "") ? "SELECT * FROM `{$table}` WHERE id_w='{$id_w}'" : "SELECT * FROM `{$table}` ORDER BY `suname` ASC";
     //echo $query;
     //"SELECT * FROM `".$table."` ORDER BY `suname` ASC"
-    $sub_table = ($table === 'wl') ? "leaders" : "autors";
-	$linkName = ($table === 'wl') ? "leaders" : "authors";
+    $sub_table = ($table === 'wl') ? 'leaders' : 'autors';
+    $linkName = ($table === 'wl') ? 'leaders' : 'authors';
     $result = mysqli_query($link, $query)
     or die("Invalid query функція list_leader_or_autors_str: " . mysqli_error($link));
     // Попытка обработки строки ошибки когда база пуста
@@ -251,7 +142,7 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
             : "";
         $sub_row_str .= $sub_row['suname'] . " " . mb_substr($sub_row['name'], 0, 1, 'UTF-8') . "." . mb_substr($sub_row['lname'], 0, 1, 'UTF-8') . ".";
         $sub_row_str .= ($showId) ? "<{$sub_row['id']}>" : "";
-        if ($showPlace && ($sub_row['place'] <> 'D')) {
+        if ($showPlace && $sub_row['place'] <> 'D') {
             $sub_row_str .= "(&nbsp;{$sub_row['place']}&nbsp;)";
         }
 

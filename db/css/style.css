@@ -7,31 +7,36 @@
 * * * * * * { outline: 1px solid green; }
 * * * * * * * { outline: 1px solid orange; }
 * * * * * * * * { outline: 1px solid blue; }*/
+
 body {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 12px;
   background: white;
   border: solid 1px #0c0c0c;
   max-width: 1024px;
-  margin: 5px auto auto;
-  padding: 5px;
-  position: relative;
-  border-radius: 5px;
+    margin: 5px auto auto;
+    padding: 5px;
+    position: relative;
+    border-radius: 5px;
 }
 
 details summary {
-  cursor: pointer;
+    cursor: pointer;
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 #barUnivers {
-  overflow-y: scroll;
-  /*    */
-  background-color: white;
-  box-shadow: 3px 3px 6px #000000;
-  position: fixed;
-  max-height: 800px;
-  height: 400px;
-  width: 100px;
+    overflow-y: scroll;
+    /*    */
+    background-color: white;
+    box-shadow: 3px 3px 6px #000000;
+    position: fixed;
+    max-height: 800px;
+    height: 400px;
+    width: 100px;
   left: 10px;
   top: 150px;
   border: 2px outset #e17979;
@@ -156,11 +161,6 @@ h4 {
   text-decoration: line-through;
 }
 
-/*
-#columnAutors, #columnLeaders,ol{
-    border: 1px dotted #cccccc;
-}
-*/
 #columnAutors, #columnLeaders {
   margin-top: 5px;
 }
@@ -264,19 +264,17 @@ header:active {
   text-shadow: 2px 3px 9px red;
 }
 
-header + header,
-#columnAutors > label,
-#columnLeaders > label {
-  padding: 2px 4px;
-  margin-left: 1cm;
-  height: 14pt;
-  width: 10cm;
-  color: white;
-  border: 3px outset #e17979;
-  background: #e17979 linear-gradient(to top, #db0000, #e17979);
-  text-shadow: 2px 3px 9px black;
-  text-align: center;
-  font-weight: bold;
+header + header, .header {
+    padding: 2px 4px;
+    margin-left: 1cm;
+    height: 14pt;
+    width: 10cm;
+    color: white;
+    border: 3px outset #e17979;
+    background: #e17979 linear-gradient(to top, #db0000, #e17979);
+    text-shadow: 2px 3px 9px black;
+    text-align: center;
+    font-weight: bold;
   font-size: 12pt;
   display: block;
   -moz-border-radius: 5px;
@@ -306,9 +304,9 @@ header + header + header:active {
   left: 105mm;
 }
 
-#columnAutors > label, #columnLeaders > label {
-  margin-left: 15px;
-  width: 7cm;
+.header > label {
+    margin-left: 15px;
+    width: 7cm;
 }
 
 a {

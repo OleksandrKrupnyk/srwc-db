@@ -28,6 +28,10 @@ details {
   }
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 #barUnivers {
   overflow-y: scroll; /*    */
   background-color: white;
@@ -168,12 +172,6 @@ h4 {
   text-decoration: line-through;
 }
 
-/*
-#columnAutors, #columnLeaders,ol{
-    border: 1px dotted #cccccc;
-}
-*/
-
 #columnAutors, #columnLeaders {
   margin-top: 5px;
 
@@ -290,24 +288,22 @@ header:active {
   text-shadow: 2px 3px 9px red;
 }
 
-header + header,
-#columnAutors > label,
-#columnLeaders > label {
-  padding: 2px 4px;
-  margin-left: 1cm;
-  height: 14pt;
-  width: 10cm;
-  color: white;
-  border: 3px outset $color_red3;
+header + header, .header {
   background: $color_red3 linear-gradient(to top, #db0000, $color_red3);
-  text-shadow: 2px 3px 9px black;
-  text-align: center;
-  font-weight: bold;
-  font-size: 12pt;
-  display: block;
+  border: 3px outset $color_red3;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
+  color: white;
+  display: block;
+  font-size: 12pt;
+  font-weight: bold;
+  height: 14pt;
+  margin-left: 1cm;
+  padding: 2px 4px;
+  text-align: center;
+  text-shadow: 2px 3px 9px black;
+  width: 10cm;
 }
 
 header {
@@ -337,7 +333,7 @@ header {
   }
 }
 
-#columnAutors, #columnLeaders {
+.header {
   & > label {
     margin-left: 15px;
     width: 7cm;

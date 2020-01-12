@@ -187,8 +187,6 @@ function list_works_of_univer($id_u, $pole, $selected, $size)
     global $link;
     //Формируем запрос на поле указанное как пареметр функции
     $query = "SELECT * FROM `works` WHERE `id_u`='{$id_u}'";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
     or die('Invalid query in function list_works_of_univer : ' . mysqli_error($link));
     $select = '<select size="' . $size . '" id="selwork" name="id_w">' . PHP_EOL
@@ -221,8 +219,6 @@ function list_fio($table, $pole, $id_u, $size, $selecttag = true)
     } else {
         $query = "SELECT * FROM `{$table}` WHERE `id_u`='{$id_u}' ORDER BY  `suname` ASC";
     }
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
     or die("Invalid query: " . mysqli_error($link));
     //Проверка а вообще есть результаты по запросу

@@ -58,7 +58,7 @@ class Leader extends Record
     /**
      * @var int
      */
-    public $arrival;
+    public $arrival = 0;
     /**
      * @var int
      */

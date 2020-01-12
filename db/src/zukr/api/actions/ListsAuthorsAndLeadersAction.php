@@ -11,6 +11,7 @@ use zukr\leader\LeaderRepository;
 
 /**
  * Class ListsAuthorsAndLeadersAction
+ * Додававання усіх відомостей про роботу списки керівників та авторів
  *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
@@ -19,7 +20,7 @@ use zukr\leader\LeaderRepository;
 class ListsAuthorsAndLeadersAction implements ApiActionsInterface
 {
     /**
-     * @var
+     * @var int ІД запису університету
      */
     private $id_u;
 

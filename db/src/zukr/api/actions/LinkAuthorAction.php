@@ -3,6 +3,7 @@
 
 namespace zukr\api\actions;
 
+use zukr\base\exceptions\InvalidArgumentException;
 use zukr\log\Log;
 use zukr\workauthor\WorkAuthor;
 use zukr\workleader\WorkLeaderRepository;
@@ -31,8 +32,12 @@ class LinkAuthorAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        $this->id_a = \filter_input(INPUT_POST, 'id_a', FILTER_VALIDATE_INT);
-        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+        if (empty($this->id_a = \filter_input(INPUT_POST, 'id_a', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_a Must be set');
+        }
+        if (empty($this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_w Must be set');
+        }
     }
 
     /**

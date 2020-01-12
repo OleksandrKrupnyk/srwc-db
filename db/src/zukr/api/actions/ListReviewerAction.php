@@ -3,6 +3,7 @@
 
 namespace zukr\api\actions;
 
+use zukr\base\exceptions\InvalidArgumentException;
 use zukr\base\html\Html;
 use zukr\review\ReviewHelper;
 
@@ -44,7 +45,11 @@ class ListReviewerAction implements ApiActionsInterface
     public function init(array $params = [])
     {
 
-        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
-        $this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+        if (empty($this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_w Must be set');
+        }
+        if (empty($this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_u Must be set');
+        }
     }
 }
