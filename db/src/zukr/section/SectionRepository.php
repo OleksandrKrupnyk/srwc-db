@@ -29,8 +29,8 @@ class SectionRepository extends AbstractRepository
     {
         try {
             return $this->model::find()
-                ->map('id')
-                ->get($this->model::getTableName());
+                    ->map('id')
+                    ->get($this->model::getTableName()) ?? [];
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];

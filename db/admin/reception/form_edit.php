@@ -15,7 +15,7 @@ $univers = $uh->getDropDownListShotFull(
 <div class="layout">
     <header><a href="action.php">Меню</a></header>
     <header id="update_arrival_works" class="header pointer"
-            title="Подвійне клацання для оновлення відміток у таблиці робіт">Реестрація
+            title="Подвійне клацання для оновлення відміток у таблиці робіт">Реєстрація
         учасників конференції
     </header>
     <?= Html::select('id_u', null, $univers, ['class' => 'w-100', 'size' => 10, 'id' => 'univer_reseption']) ?>

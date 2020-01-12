@@ -30,9 +30,9 @@ class UniverRepository extends AbstractRepository
     {
         try {
             return Univer::find()
-                ->map('id')
-                ->orderBy('univerfull', 'ASC')
-                ->get(Univer::getTableName());
+                    ->map('id')
+                    ->orderBy('univerfull', 'ASC')
+                    ->get(Univer::getTableName()) ?? [];
 
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
@@ -50,10 +50,10 @@ class UniverRepository extends AbstractRepository
         try {
             $univerIds = $this->getUniversIdWhoSendWork();
             return Univer::find()->map('id')
-                ->where('id',
-                    $univerIds
-                    , 'in')
-                ->get(Univer::getTableName());
+                    ->where('id',
+                        $univerIds
+                        , 'in')
+                    ->get(Univer::getTableName()) ?? [];
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];
@@ -70,9 +70,9 @@ class UniverRepository extends AbstractRepository
     {
         try {
             return Work::find()
-                ->setQueryOption(['DISTINCT'])
-                ->where('invitation', Work::KEY_ON)
-                ->getValue(Work::getTableName(), 'id_u', null);
+                    ->setQueryOption(['DISTINCT'])
+                    ->where('invitation', Work::KEY_ON)
+                    ->getValue(Work::getTableName(), 'id_u', null) ?? [];
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];
