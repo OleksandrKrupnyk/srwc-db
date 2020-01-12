@@ -18,7 +18,7 @@ use zukr\work\WorkRepository;
  */
 class ChangeWorkInvitationAction implements ApiActionsInterface
 {
-
+use ApiMessageTrait;
     /**
      * @var int ІД Роботи
      */
@@ -33,8 +33,7 @@ class ChangeWorkInvitationAction implements ApiActionsInterface
      */
     public function execute()
     {
-        $message = 'Значення не змінено';
-        $type = 'error';
+
         $work = (new WorkRepository())->findById($this->id_w);
         if ($work === null) {
             throw new NullReturnedException('$univer Return value is null');
@@ -44,11 +43,10 @@ class ChangeWorkInvitationAction implements ApiActionsInterface
         $save = $work->save();
         if ($save) {
             $log = Log::getInstance();
-            $log->logAction(null,$work::getTableName(),$work->id);
-            $message = 'Значення змінено';
-            $type = 'success';
+            $log->logAction(null, $work::getTableName(), $work->id);
+            $this->changeMessage();
         }
-        return \json_encode(\compact('message', 'type'));
+        return $this->getMessage();
     }
 
     /**

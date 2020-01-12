@@ -19,6 +19,7 @@ use zukr\section\SectionRepository;
  */
 class ChangeRoomAction implements ApiActionsInterface
 {
+    use ApiMessageTrait;
     /**
      * @var int ІД секції
      */
@@ -34,8 +35,7 @@ class ChangeRoomAction implements ApiActionsInterface
      */
     public function execute()
     {
-        $message = 'Значення не змінено';
-        $type = 'error';
+
         $section = (new SectionRepository())->findById($this->id_sec);
         if ($section === null) {
             throw new NullReturnedException('$section Return value is null');
@@ -45,10 +45,9 @@ class ChangeRoomAction implements ApiActionsInterface
         if ($save) {
             $log = Log::getInstance();
             $log->logAction(null, $section::getTableName(), $section->id);
-            $message = 'Значення змінено';
-            $type = 'success';
+            $this->changeMessage();
         }
-        return \json_encode(\compact('message', 'type'));
+        return $this->getMessage();
     }
 
     /**

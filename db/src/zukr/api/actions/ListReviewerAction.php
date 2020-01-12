@@ -15,8 +15,13 @@ use zukr\review\ReviewHelper;
  */
 class ListReviewerAction implements ApiActionsInterface
 {
-
+    /**
+     * @var int
+     */
     public $id_u;
+    /**
+     * @var int
+     */
     public $id_w;
 
     /**
@@ -39,7 +44,7 @@ class ListReviewerAction implements ApiActionsInterface
     public function init(array $params = [])
     {
 
-        $this->id_w = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
-        $this->id_u = filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+        $this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
     }
 }

@@ -18,6 +18,7 @@ use zukr\work\WorkRepository;
  */
 class ChangeWorkSectionAction implements ApiActionsInterface
 {
+    use ApiMessageTrait;
     /**
      * @var int ІД Роботи
      */
@@ -32,8 +33,7 @@ class ChangeWorkSectionAction implements ApiActionsInterface
      */
     public function execute()
     {
-        $message = 'Значення не змінено';
-        $type = 'error';
+
         $work = (new WorkRepository())->findById($this->id_w);
         if ($work === null) {
             throw new NullReturnedException('$work Return value is null');
@@ -44,10 +44,9 @@ class ChangeWorkSectionAction implements ApiActionsInterface
         if ($save) {
             $log = Log::getInstance();
             $log->logAction(null, $work::getTableName(), $work->id);
-            $message = 'Значення змінено';
-            $type = 'success';
+            $this->changeMessage();
         }
-        return \json_encode(\compact('message', 'type'));
+        return $this->getMessage();
     }
 
     /**

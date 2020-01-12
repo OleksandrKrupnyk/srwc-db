@@ -21,13 +21,15 @@ use zukr\setting\SettingRepository;
  */
 class ChangeParamAction implements ApiActionsInterface
 {
-    use SNRCRFTrait;
+    use SNRCRFTrait, ApiMessageTrait;
 
     /**
      * @var string Назва параметру
      */
     private $param;
-    /** @var string Значення параметру */
+    /**
+     * @var string Значення параметру
+     */
     private $value;
 
 
@@ -36,8 +38,7 @@ class ChangeParamAction implements ApiActionsInterface
      */
     public function execute()
     {
-        $message = 'Значення не змінено';
-        $type = 'error';
+
         $snrcrf = Base::getSNRCRF();
         if (\in_array($this->param, Params::PARAMS) && $this->isValidSNRCRF($snrcrf)) {
             /** @var Setting $setting */
@@ -48,11 +49,10 @@ class ChangeParamAction implements ApiActionsInterface
             $setting->value = $this->value;
             $save = $setting->save();
             if ($save) {
-                $message = 'Значення змінено';
-                $type = 'success';
+                $this->changeMessage();
             }
         }
-        return \json_encode(\compact('message', 'type'));
+        return $this->getMessage();
     }
 
     /**

@@ -20,9 +20,13 @@ use zukr\workleader\WorkLeaderHelper;
 class AuthorsLeadersAction implements ApiActionsInterface
 {
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id_u;
-    /** @var */
+    /**
+     * @var
+     */
     public $id_w;
 
     /**

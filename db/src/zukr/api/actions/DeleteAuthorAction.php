@@ -17,7 +17,9 @@ use zukr\workauthor\WorkAuthorRepository;
  */
 class DeleteAuthorAction implements ApiActionsInterface
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id;
 
     /**

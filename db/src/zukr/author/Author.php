@@ -16,20 +16,53 @@ use zukr\base\Record;
 class Author extends Record
 {
     /**
+     *
+     */
+    public const PLACES = [
+        'I',
+        'II',
+        'III',
+        'D'
+    ];
+    /**
      * @var int
      */
     public $id;
+    /**
+     * @var int
+     */
     public $id_u;
+    /**
+     * @var string
+     */
     public $suname;
+    /**
+     * @var string
+     */
     public $name;
-    public $lname        = '';
-    public $curse        = 0;
-    public $email        = '';
-    public $place        = 'D';
-    public $active       = 0;
-    public $arrival      = 0;
-    public $phone        = '';
-    public $date         = 'NOW';
+    /**
+     * @var string
+     */
+    public $lname = '';
+    /**
+     * @var int Курс навчання
+     */
+    public $curse = 0;
+    /**
+     * @var string Пошта
+     */
+    public $email = '';
+    /**
+     * @var string Призове місце
+     */
+    public $place   = 'D';
+    public $active  = 0;
+    public $arrival = 0;
+    public $phone   = '';
+    public $date    = 'NOW';
+    /**
+     * @var string
+     */
     public $hash;
     public $email_recive = 0;
     public $email_date   = '2013-11-25 09:00:00';

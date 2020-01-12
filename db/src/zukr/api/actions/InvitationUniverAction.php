@@ -19,6 +19,7 @@ use zukr\univer\UniverRepository;
 class InvitationUniverAction implements ApiActionsInterface
 {
 
+    use ApiMessageTrait;
     /**
      * @var int ІД університету
      */
@@ -33,8 +34,7 @@ class InvitationUniverAction implements ApiActionsInterface
      */
     public function execute()
     {
-        $message = 'Значення не змінено';
-        $type = 'error';
+
         $univer = (new UniverRepository())->findById($this->id_u);
         if ($univer === null) {
             throw new NullReturnedException('$univer Return value is null');
@@ -45,10 +45,9 @@ class InvitationUniverAction implements ApiActionsInterface
         if ($save) {
             $log = Log::getInstance();
             $log->logAction(null, $univer::getTableName(), $univer->id);
-            $message = 'Значення змінено';
-            $type = 'success';
+            $this->changeMessage();
         }
-        return \json_encode(\compact('message', 'type'));
+        return $this->getMessage();
     }
 
     /**

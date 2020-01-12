@@ -159,8 +159,6 @@ switch ($action) {
                       WHERE `autors`.`id_u` = {$_POST['id_u']} AND `works`.`invitation` = '1' 
                       GROUP BY fio_a 
                       ORDER BY fio_a";
-                mysqli_query($link, "SET NAMES 'utf8'");
-                mysqli_query($link, "SET CHARACTER SET 'utf8'");
                 $result = mysqli_query($link, $query)
                 or die("Помилка запиту: " . mysqli_error($link));
 
@@ -178,8 +176,6 @@ switch ($action) {
                     WHERE `leaders`.`id_u` = {$_POST['id_u']} 
                     GROUP BY `fio_a` 
                     ORDER BY `fio_a`";
-                mysqli_query($link, "SET NAMES 'utf8'");
-                mysqli_query($link, "SET CHARACTER SET 'utf8'");
                 $result = mysqli_query($link, $query)
                 or die('Помилка запиту: ' . mysqli_error($link));
                 $str .= "";
@@ -223,15 +219,6 @@ switch ($action) {
             $result = mysqli_query($link, $query);
             $row = mysqli_fetch_array($result);
             echo $row[0];
-        }
-        break;
-    /** */
-    case 'setplace':
-        {
-            $query = "UPDATE autors  SET place = '{$_POST['place']}' WHERE `id`='{$_POST['id_a']}'";
-            $result = mysqli_query($link, $query)
-            or die('Помилка запиту на оновлення місця автора у конкурсі: ' . mysqli_error($link));
-            echo $query;
         }
         break;
     case 'invitationLeader':
