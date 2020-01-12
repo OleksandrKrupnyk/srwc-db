@@ -37,7 +37,9 @@ class SetPlaceAction implements ApiActionsInterface
     public function execute()
     {
         if (\in_array($this->place, Author::PLACES)) {
-            /** @var Author $author */
+            /**
+             * @var Author $author
+             */
             $author = (new AuthorRepository())->findById($this->id_a);
             if ($author !== null) {
                 $author->place = $this->place;

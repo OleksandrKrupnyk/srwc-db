@@ -2,6 +2,7 @@
 
 use zukr\base\html\Html;
 use zukr\univer\UniverHelper;
+use zukr\work\WorkHelper;
 use zukr\work\WorkRepository;
 
 $id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
@@ -11,7 +12,9 @@ if ($id_w) {
 }
 $id_u = $id_u ?? null;
 $uh = UniverHelper::getInstance();
-$univers = $uh->getTakePartUniversDropDownList();
+$wh = WorkHelper::getInstance();
+$univerIds = $wh->getTakePartUniversIds();
+$univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($univerIds));
 ?>
     <!-- Связывание работы -->
     <header><a href="action.php">Меню</a></header>

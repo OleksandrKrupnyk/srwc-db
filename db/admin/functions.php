@@ -73,8 +73,6 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
     $query .= ($checkin ==1)?" GROUP BY univers.id ":"";
     $query .= "ORDER BY univer";
     //echo $query;
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
     or die("Invalid query: " . mysqli_error($link));
     $idString = ($shortname == 0)? "selunivers":"shortlistunivers";
@@ -254,13 +252,13 @@ function list_fio($table, $pole, $id_u, $size, $selecttag = true)
 function list_leaders_invite($id_u, $check = true)
 {
     global $link;
-    $query = "SELECT `leaders`.*,`positions`.`position`  FROM `leaders`\n"
-        . "JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`\n"
-        . "WHERE `leaders`.`id_u`='" . $id_u . "' \n";
-    $query .= ($check) ? "" : " AND `leaders`.`invitation` = TRUE \n";
+    $query = 'SELECT `leaders`.*,`positions`.`position`  FROM `leaders`'
+        . 'JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`'
+        . "WHERE `leaders`.`id_u`='" . $id_u . "' ";
+    $query .= ($check) ? '' : ' AND `leaders`.`invitation` = TRUE ';
     $query .= "ORDER BY  `suname` ASC";
 
-    $result = mysqli_query($link, $query) or die("Invalid query: " . mysqli_error($link));
+    $result = mysqli_query($link, $query) or die('Invalid query: ' . mysqli_error($link));
     $count = mysqli_num_rows($result);
     if ($count == 0) {
         return false;
@@ -274,9 +272,9 @@ function list_leaders_invite($id_u, $check = true)
         } else {
             echo ", " . $row['position'];
         }
-        echo "</li>\n";
+        echo "</li>";
     }
-    echo "\t\t</ol>\n";
+    echo "</ol>";
 }
 
 

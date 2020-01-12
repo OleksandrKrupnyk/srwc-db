@@ -5,21 +5,63 @@ namespace zukr\leader;
 
 use zukr\base\Record;
 
+/**
+ * Class Leader
+ *
+ * @package      zukr\leader
+ * @author       Alex.Krupnik <krupnik_a@ukr.net>
+ * @copyright (c), Thread
+ */
 class Leader extends Record
 {
 
+    /**
+     * @var int
+     */
     public $id;
+    /**
+     * @var int
+     */
     public $id_tzmember;
+    /**
+     * @var int
+     */
     public $id_u;
+    /**
+     * @var string
+     */
     public $suname;
+    /**
+     * @var string
+     */
     public $name;
+    /**
+     * @var string
+     */
     public $lname = '';
-
+    /**
+     * @var int
+     */
     public $id_pos;
+    /**
+     * @var int
+     */
     public $id_sat;
+    /**
+     * @var int
+     */
     public $id_deg;
+    /**
+     * @var int
+     */
     public $invitation;
+    /**
+     * @var int
+     */
     public $arrival;
+    /**
+     * @var int
+     */
     public $review       = 0;
     public $phone        = '';
     public $email        = '';

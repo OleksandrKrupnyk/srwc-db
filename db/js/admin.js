@@ -204,48 +204,6 @@ $(document).ready(function () {
         });
     });
 
-
-    /*
-    * Обработка странички приглашения для авторов
-    * */
-    $("#shortlistunivers").on('change', function () {
-        var val = $(this).find("option:selected").val();
-        console.log('Запрос обработан\n' + val);
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"action": "getlistinvitationleaders", "id_u": val},
-            cache: false,
-            success: function (txt) {
-                console.log('Запрос обработан\n' + txt);
-                $("#listleaders").hide().html(txt).slideDown(400);
-                var myChangechk = $("#listleaders li input:checkbox");
-
-                myChangechk.click(function () {
-                    var id_l = $(this).prev('input').attr("value");
-                    var invit = ($(this).is(':checked')) ? "1" : "0";
-                    console.log("Знайдено : " + invit + "\n id_l : " + id_l);
-
-                    $.ajax({
-                        type: "POST",
-                        url: "ajax.php",
-                        data: {"action": "invitationLeader", "id_l": id_l, "invitation": invit},
-                        cache: false,
-                        success: function (txt) {
-                            console.log('Изменено приглашение !\n' + txt);
-                        }
-                    })//ajax
-
-                    //console.log(id_l);
-                });
-
-
-            }
-        });//ajax
-
-
-    });
-
     /*
     * Обработка отметки в списке приглашений для руководителей /представителей внз
     * */
