@@ -17,9 +17,13 @@ use zukr\workleader\WorkLeaderRepository;
 class LinkAuthorAction implements ApiActionsInterface
 {
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id_a;
-    /** @var */
+    /**
+     * @var
+     */
     public $id_w;
 
     /**
@@ -27,8 +31,8 @@ class LinkAuthorAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        $this->id_a = filter_input(INPUT_POST, 'id_a', FILTER_VALIDATE_INT);
-        $this->id_w = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+        $this->id_a = \filter_input(INPUT_POST, 'id_a', FILTER_VALIDATE_INT);
+        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
     }
 
     /**

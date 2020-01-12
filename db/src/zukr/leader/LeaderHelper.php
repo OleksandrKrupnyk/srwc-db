@@ -5,6 +5,9 @@ namespace zukr\leader;
 
 
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\helpers\PersonHelper;
+use zukr\base\html\HtmlHelper;
+use zukr\position\PositionRepository;
 use zukr\workleader\WorkLeaderRepository;
 
 /**
@@ -20,11 +23,19 @@ class LeaderHelper
     /** @var LeaderHelper */
     private static $obj;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $worksLeaders;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $leadersOfWork;
 
+    /**
+     * @var LeaderRepository
+     */
+    private $leaderRepository;
 
     /**
      * LeaderHelper constructor.
@@ -90,7 +101,7 @@ class LeaderHelper
      */
     public function getCountInvitationLeaders(): int
     {
-        return (new LeaderRepository())->getCountInvitedLeaders();
+        return $this->getLeaderRepository()->getCountInvitedLeaders();
     }
 
     /**
@@ -99,7 +110,7 @@ class LeaderHelper
      */
     public function getAllInvitationLeadersByUniverId(int $univerId): array
     {
-        $leaders = (new LeaderRepository())->getAllByUniverId($univerId);
+        $leaders = $this->getLeaderRepository()->getAllByUniverId($univerId);
         if (!empty($leaders)) {
             return \array_filter($leaders, static function ($leader) {
                 return $leader['invitation'] === 1;
@@ -108,4 +119,42 @@ class LeaderHelper
         return [];
     }
 
+    /**
+     * @return string
+     */
+    public function registerJS(): string
+    {
+        $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'leader.js';
+        $fileContent = \file_exists($filename) && \is_file($filename)
+            ? '<script>' . \file_get_contents($filename) . '</script>'
+            : '';
+        return $fileContent;
+    }
+
+    /**
+     * @return LeaderRepository
+     */
+    public function getLeaderRepository(): LeaderRepository
+    {
+        if ($this->leaderRepository === null) {
+            $this->leaderRepository = new LeaderRepository();
+        }
+        return $this->leaderRepository;
+    }
+
+    /**
+     * @param array $leaders Список керівників
+     * @return string
+     */
+    public function listWithCheckBox(array $leaders): string
+    {
+        $list = [];
+        $positions = (new PositionRepository())->getDropDownList();
+        foreach ($leaders as $leader) {
+            $item = HtmlHelper::checkbox('invitation', '', $leader['invitation']) . PersonHelper::getFullName($leader) . ', ' . $positions[$leader['id_pos']];
+            $list[] = '<li data-key="' . $leader['id'] . '">' . $item . '</li>';
+        }
+        return '<ol>' . \implode('', $list) . '</ol>';
+
+    }
 }

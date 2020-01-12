@@ -16,9 +16,13 @@ use zukr\work\WorkRepository;
 class WorkDescriptionAction implements ApiActionsInterface
 {
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id_u;
-    /** @var */
+    /**
+     * @var int
+     */
     public $id_w;
 
     /**

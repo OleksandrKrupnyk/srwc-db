@@ -48,8 +48,6 @@ switch ($action) {
                     . "WHERE `leaders`.`id` ='{$_POST['id_l']}'";
                 log_action($_POST['action'], "leaders", $_POST['id_l']);
             }
-            mysqli_query($link, "SET NAMES 'utf8'");
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
             $result = mysqli_query($link, $query)
             or die("Помилка запиту: " . mysqli_error($link));
         }
@@ -64,8 +62,6 @@ switch ($action) {
                 $query = "UPDATE `leaders` SET `arrival` = '0' WHERE `leaders`.`id` ='{$_POST['id_l']}'";
                 log_action($_POST['action'], "leaders", $_POST['id_l']);
             }
-            mysqli_query($link, "SET NAMES 'utf8'");
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
             $result = mysqli_query($link, $query)
             or die("Помилка запиту: " . mysqli_error($link));
         }
@@ -129,12 +125,6 @@ switch ($action) {
             list_fio('leaders', 'leaders', $_POST['id_u'], 1, $selecttag = false);
         }
         break;
-
-    case 'getlistinvitationleaders':
-        {
-            list_leaders_invite($_POST['id_u']);
-        }
-        break;
     case 'list_all':
         {
             list_fio('autors', 'autor', $_POST['id_u'], 1, $selecttag = true);
@@ -159,8 +149,6 @@ switch ($action) {
                       WHERE `autors`.`id_u` = {$_POST['id_u']} AND `works`.`invitation` = '1' 
                       GROUP BY fio_a 
                       ORDER BY fio_a";
-                mysqli_query($link, "SET NAMES 'utf8'");
-                mysqli_query($link, "SET CHARACTER SET 'utf8'");
                 $result = mysqli_query($link, $query)
                 or die("Помилка запиту: " . mysqli_error($link));
 
@@ -178,8 +166,6 @@ switch ($action) {
                     WHERE `leaders`.`id_u` = {$_POST['id_u']} 
                     GROUP BY `fio_a` 
                     ORDER BY `fio_a`";
-                mysqli_query($link, "SET NAMES 'utf8'");
-                mysqli_query($link, "SET CHARACTER SET 'utf8'");
                 $result = mysqli_query($link, $query)
                 or die('Помилка запиту: ' . mysqli_error($link));
                 $str .= "";
@@ -225,22 +211,6 @@ switch ($action) {
             echo $row[0];
         }
         break;
-    /** */
-    case 'setplace':
-        {
-            $query = "UPDATE autors  SET place = '{$_POST['place']}' WHERE `id`='{$_POST['id_a']}'";
-            $result = mysqli_query($link, $query)
-            or die('Помилка запиту на оновлення місця автора у конкурсі: ' . mysqli_error($link));
-            echo $query;
-        }
-        break;
-    case 'invitationLeader':
-        {
-            $query = "UPDATE `leaders` SET `invitation` ='{$_POST['invitation']}' WHERE `id` = '{$_POST['id_l']}'";
-            $result = mysqli_query($link, $query)
-            or die('Помилка запиту на оновлення відмітки про надсилання 1-го ІП: ' . mysqli_error($link));
-        }
-        break;
 }//end switch
 
 
@@ -266,8 +236,6 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
     //"SELECT * FROM `".$table."` ORDER BY `suname` ASC"
     $sub_table = ($table === 'wl') ? "leaders" : "autors";
 	$linkName = ($table === 'wl') ? "leaders" : "authors";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
     $result = mysqli_query($link, $query)
     or die("Invalid query функція list_leader_or_autors_str: " . mysqli_error($link));
     // Попытка обработки строки ошибки когда база пуста

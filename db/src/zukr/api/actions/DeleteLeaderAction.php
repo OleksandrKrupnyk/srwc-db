@@ -18,7 +18,9 @@ use zukr\workleader\WorkLeaderRepository;
  */
 class DeleteLeaderAction implements ApiActionsInterface
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id;
 
     /**
@@ -74,6 +76,6 @@ class DeleteLeaderAction implements ApiActionsInterface
     private function isLeaderAuthorOfReviews(): bool
     {
         $oneReview = (new ReviewRepository())->getOneReviewByReviewerId($this->id);
-        return is_array($oneReview) && !empty($oneReview);
+        return \is_array($oneReview) && !empty($oneReview);
     }
 }

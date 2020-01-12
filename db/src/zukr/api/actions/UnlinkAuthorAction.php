@@ -17,15 +17,19 @@ class UnlinkAuthorAction implements ApiActionsInterface
 {
 
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id_a;
-    /** @var */
+    /**
+     * @var
+     */
     public $id_w;
 
     /**
      * @param array $params
      */
-    public function init(array $params = []):void
+    public function init(array $params = []): void
     {
         $this->id_a = \filter_input(INPUT_POST, 'id_a', FILTER_VALIDATE_INT);
         $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);

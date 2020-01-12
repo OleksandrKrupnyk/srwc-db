@@ -5,7 +5,6 @@ namespace zukr\univer;
 
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
-use zukr\work\WorkHelper;
 
 /**
  * Class UniverHelper
@@ -53,6 +52,20 @@ class UniverHelper
         $list = [];
         foreach ($univers as $key => $u) {
             $list [$key] = '(' . $u['univer'] . ') ' . $u['univerfull'];
+        }
+        ArrayHelper::asort($list);
+        return $list;
+    }
+
+    /**
+     * @param array $univers
+     * @return array
+     */
+    public function getDropDownListShot(array $univers): array
+    {
+        $list = [];
+        foreach ($univers as $key => $u) {
+            $list [$key] = $u['univer'];
         }
         ArrayHelper::asort($list);
         return $list;
@@ -129,19 +142,17 @@ class UniverHelper
     }
 
     /**
+     * @param array $univerIds
      * @return array
      */
-    public function getTakePartUniversDropDownList(): array
+    public function getTakePartUniversDropDownList(array $univerIds): array
     {
-        $wh = WorkHelper::getInstance();
-        $univerIds = $wh->getTakePartUniversIds();
         $list = [];
         $invitedUnivers = $this->getInvitedUnivers();
         foreach ($univerIds as $univerId) {
             $list[$univerId] = $invitedUnivers[$univerId];
         }
-        return $this->getDropDownListShotFull(
-            $list);
+        return $list;
 
     }
 

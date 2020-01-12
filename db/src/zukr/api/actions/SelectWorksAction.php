@@ -17,9 +17,13 @@ use zukr\work\WorkHelper;
 class SelectWorksAction implements ApiActionsInterface
 {
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id_u;
-    /** @var */
+    /**
+     * @var int
+     */
     public $id_w;
 
     /**
@@ -27,8 +31,8 @@ class SelectWorksAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        $this->id_u = filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
-        $this->id_w = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+        $this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
     }
 
     /**

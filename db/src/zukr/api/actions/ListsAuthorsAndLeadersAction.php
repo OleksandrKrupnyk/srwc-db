@@ -18,7 +18,9 @@ use zukr\leader\LeaderRepository;
  */
 class ListsAuthorsAndLeadersAction implements ApiActionsInterface
 {
-
+    /**
+     * @var
+     */
     private $id_u;
 
     /**

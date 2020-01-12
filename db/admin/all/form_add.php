@@ -7,16 +7,18 @@ use zukr\position\PositionRepository;
 use zukr\section\SectionHelper;
 use zukr\status\StatusRepository;
 use zukr\univer\UniverHelper;
+use zukr\work\WorkHelper;
 
 $uh = UniverHelper::getInstance();
-$univers = $uh->getTakePartUniversDropDownList();
+$wh = WorkHelper::getInstance();
+$univerIds = $wh->getTakePartUniversIds();
+$univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($univerIds));
 
 $positions = (new PositionRepository())->getDropDownList();
 $statuses = (new StatusRepository())->getDropDownList();
 $degrees = (new DegreeRepository())->getDropDownList();
 $sh = SectionHelper::getInstance();
 $sections = $sh->getDropdownList();
-$wh = \zukr\work\WorkHelper::getInstance();
 $id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
 ?>
     <!-- Форма добавления всех сведений-->

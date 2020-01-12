@@ -142,37 +142,6 @@ $(document).ready(function () {
             }
         });
     });
-
-//обработка запроса на назначение призового места
-    var myPlace = $('#tableSetPlace :input[name="place"]');
-
-    /*var summaryResult = $('#summaryResult');*/
-
-    myPlace.on('change', function () {
-        var place = $(this).find("option:selected").val();
-        var id_a = $(this).parents('tr').children('td:first').text();
-        var place2 = myPlace.find("option:selected");
-        var p1 = 0, p2 = 0, p3 = 0, pd = 0;
-        for (i = 0; i < myPlace.length; i++) {
-            if (place2[i].value == 'I') p1++;
-            else if (place2[i].value == 'II') p2++;
-            else if (place2[i].value == 'III')
-                p3++
-            else
-                pd++;
-
-        }
-        //console.log(p1+' '+p2+' '+p3+' '+pd);
-        $('#summaryResult').text('I(' + p1 + ') II(' + p2 + ') III(' + p3 + ') D(' + pd + ')');
-        $.ajax({
-            type: "POST",
-            url: "ajax.php", data: {"action": "setplace", "place": place, "id_a": id_a},
-            success: function (txt) {
-                //console.log('Злюкен собакен яйцен клац-клац!'+txt);
-            }
-        });
-    });
-
 // Статистика по местам в конце таблицы на странице определения мест
     /* TODO */
 
@@ -233,48 +202,6 @@ $(document).ready(function () {
                 //console.log('Запрос обработан\n'+txt);
             }
         });
-    });
-
-
-    /*
-    * Обработка странички приглашения для авторов
-    * */
-    $("#shortlistunivers").on('change', function () {
-        var val = $(this).find("option:selected").val();
-        console.log('Запрос обработан\n' + val);
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {"action": "getlistinvitationleaders", "id_u": val},
-            cache: false,
-            success: function (txt) {
-                console.log('Запрос обработан\n' + txt);
-                $("#listleaders").hide().html(txt).slideDown(400);
-                var myChangechk = $("#listleaders li input:checkbox");
-
-                myChangechk.click(function () {
-                    var id_l = $(this).prev('input').attr("value");
-                    var invit = ($(this).is(':checked')) ? "1" : "0";
-                    console.log("Знайдено : " + invit + "\n id_l : " + id_l);
-
-                    $.ajax({
-                        type: "POST",
-                        url: "ajax.php",
-                        data: {"action": "invitationLeader", "id_l": id_l, "invitation": invit},
-                        cache: false,
-                        success: function (txt) {
-                            console.log('Изменено приглашение !\n' + txt);
-                        }
-                    })//ajax
-
-                    //console.log(id_l);
-                });
-
-
-            }
-        });//ajax
-
-
     });
 
     /*
