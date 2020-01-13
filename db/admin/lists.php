@@ -1,10 +1,12 @@
 <?php
 /**
- * @author studyjquery
+ * @author    studyjquery
  * @copyright 2015
  */
 
 use zukr\base\Base;
+use zukr\base\helpers\PersonHelper;
+use zukr\place\PlaceHelper;
 
 require 'config.inc.php';
 require 'functions.php';
@@ -17,12 +19,12 @@ global $FROM;
 //переменная для определения предка вызова сценария
 $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
 // Прочитать насторйки программы из БД
-read_settings();
 Base::init();
-
+$settings = Base::$param;
 if (Base::$user->getUser()->isGuest()) {
     Go_page('index.php');
 }
+$ph = PlaceHelper::getInstance();
 ?>
 <!DOCTYPE html>
 <html lang="ua">
@@ -103,30 +105,49 @@ try {
                 $result = mysqli_query($link, $query);
                 echo '<div class="envelope">';
                 while ($row = mysqli_fetch_array($result)) {
-                    echo '<div id="fromAdress">'
-                        . '<strong><ins>Всеукраїнський конкурс студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</ins></strong><br>'
-                        . '<em>вул.&nbsp;Дніпробудівська,2 м.&nbsp;Кам’янське,<br>Дніпропетровська обл.</em><br>'
-                        . '<strong>51918</strong></div>';
-                    echo '<div id="whomAdress">'
-                        . print_adress2($row)
-                        . '</div><hr>';
+                    $envelop = <<<__ENVELOP__
+    <div id="fromAdress">
+        <strong><ins>Всеукраїнський конкурс студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</ins></strong><br>
+        <em>вул.&nbsp;Дніпробудівська,2 м.&nbsp;Кам’янське,
+        <br>Дніпропетровська обл.</em><br><strong>51918</strong>
+    </div>
+    <div id="whomAdress">
+        <strong><ins>{$row['univerfull']}</ins></strong><br>
+        <em>{$row['adress']}</em><br>
+        <strong>{$row['zipcode']}</strong>
+    </div>
+    <hr>
+__ENVELOP__;
+                    echo $envelop;
                 }
                 echo '</div>';
             }
             break;
         case 'envelope2'://Конерти 2-го інфомаційного повідомлення
             {
-                $query = "select univers.* FROM univers LEFT JOIN works ON univers.id = works.id_u WHERE works.invitation = '1' AND univers.id != '1' GROUP BY univers.univer ORDER BY univers.univer ";
+                $query = "SELECT univers.* 
+                          FROM univers 
+                              LEFT JOIN works ON univers.id = works.id_u 
+                          WHERE works.invitation = '1' AND univers.id != '1' 
+                          GROUP BY univers.univer 
+                          ORDER BY univers.univer;";
                 $result = mysqli_query($link, $query);
                 echo '<div class="envelope">';
                 while ($row = mysqli_fetch_array($result)) {
-                    echo '<div id="fromAdress">' .
-                        '<strong><ins>Всеукраїнський конкурс студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</ins></strong><br>'
-                        . '<em>вул.&nbsp;Дніпробудівська,2 м.&nbsp;Кам’янське,<br>Дніпропетровська обл.</em><br>'
-                        . '<strong>51918</strong></div>'
-                        . '<div id="whomAdress">'
-                        . print_adress2($row)
-                        . '</div><hr>';
+                    $envelop = <<<__ENVELOP__
+    <div id="fromAdress">
+        <strong><ins>Всеукраїнський конкурс студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</ins></strong><br>
+        <em>вул.&nbsp;Дніпробудівська,2 м.&nbsp;Кам’янське,
+        <br>Дніпропетровська обл.</em><br><strong>51918</strong>
+    </div>
+    <div id="whomAdress">
+        <strong><ins>{$row['univerfull']}</ins></strong><br>
+        <em>{$row['adress']}</em><br>
+        <strong>{$row['zipcode']}</strong>
+    </div>
+    <hr>
+__ENVELOP__;
+                    echo $envelop;
                 }
                 echo '</div>';
             }
@@ -149,10 +170,9 @@ try {
                 $result = mysqli_query($link, $query);
                 if (!empty($result)) {
                     $total = mysqli_num_rows($result);
-                    if ($total !== 0) {//Обрабатывем если хоть какието строки получены
+                    if ($total !== 0) {
                         echo "<div class=\"v_invitation_1\">\n";
                         while ($row = mysqli_fetch_array($result)) {
-                            //var_dump($row['rector_r']);echo "<br>";
                             $rector = (!empty($row['rector_r']))
                                 ? $row['rector_r']
                                 : "<mark><a href=\"action.php?action=univer_edit&id_u={$row['id_u']}&FROM={$FROM}\">ЗАПОВНІТЬ ДАНІ ПРО ВНЗ</a></mark>";
@@ -160,13 +180,13 @@ try {
                             $invitation = '';
                             // Печатать Шапку университета
                             PrintGerb($empty = true);//Печатет данные бланка Герб и т.д.
-                            $blk_rectory = "<div id=\"rectory\">{$row['posada']} {$row['univerrod']}<br>\n{$rector}</div>\n";
+                            $blk_rectory = "<div id='rectory'>{$row['posada']} {$row['univerrod']}<br>{$rector}</div>";
                             echo $blk_rectory;
                             $blk_message = '<div id="message"><p>Галузева конкурсна комісія Всеукраїнського конкурсу студентських наукових робіт'
                                 . ' з галузі &quot;Електротехніка та електромеханіка&quot; запрошує до участі у підсумковій науково-практичній конференції авторів кращих робіт. </p>'
                                 . '<p>Список запрошених авторів наукових робіт наведено у Додатку 1.</p>'
                                 . '<p>Відповідно до &quot;Положення про  проведення Всеукраїнського конкурсу студентських наукових робіт  з природничих,'
-                                . " технічних та гуманітарних наук&quot; від {$settings['DATEPO']} №{$settings['ORDERPO']} автор наукової роботи, який  не  брав  участі  у  підсумковій"
+                                . " технічних та гуманітарних наук&quot; від {$settings->DATEPO} №{$settings->ORDERPO} автор наукової роботи, який  не  брав  участі  у  підсумковій"
                                 . ' науково-практичній конференції, не може бути претендентом на нагородження.</p>'
                                 . '</div>';
                             echo $blk_message;
@@ -176,9 +196,9 @@ try {
                             $count = mysqli_num_rows($result2);
                             // Список журі від ВНЗ
                             if (0 !== $count) {
-                                echo "<div id=\"message2\"><p>Запрошуємо взяти участь у роботі журі конкурсної комісії конференції представників вашого ВНЗ.</p>\n";
+                                echo '<div id="message2"><p>Запрошуємо взяти участь у роботі журі конкурсної комісії конференції представників вашого ВНЗ.</p>';
                                 list_leaders_invite($row['id_u'], false);
-                                echo "\t</div>\n";
+                                echo '</div>';
                             }
                             echo '<div id="message2"><p>Інформація про підсумкову конференцію наведена у Додатку 2.</p></div>'
                                 . '<div id="podpis">Перший проректор ДДТУ,<br>Голова галузевої конкурсної комісії<br><br>_______________   В.М.Гуляєв</div><hr>';
@@ -211,14 +231,14 @@ try {
                     . "професор кафедри електротехніки та електромеханіки ДДТУ<br><br>\n"
                     . "___________ О.В.Садовой</div>";*/
                 /*$blk_golova = "<div id=\"podpis\">Перший проректор ДДТУ,<br>\nГолова галузевої конкурсної комісії<br><br>\n_______________   В.М.Гуляєв</div>\n";*/
-                $blk_golova = "<div id=\"podpis\">Заступник голови голови галузевої конкурсної комісії,<br>\nзавідувач кафедри електротехніки та електромеханіки ДДТУ<br><br>\n_______________   В.Б.Нізімов</div>\n";
+                $blk_golova = '<div id="podpis">Заступник голови голови галузевої конкурсної комісії,<br>завідувач кафедри електротехніки та електромеханіки ДДТУ<br><br>_______________   В.Б.Нізімов</div>';
                 /*$blk_podpis=""; Раскоментировать для печати отчета*/
-                $blk_message = "<div id=\"message\">\n<p>"
+                $blk_message = '<div id="message"><p>'
                     . 'запрошених на підсумкову науково-практичну конференцію Всеукраїнського конкурсу студентських наукових робіт'
                     . ' з галузі &quot;Електротехніка та електромеханіка&quot;'
-                    . "</p>\n"
-                    . "</div>\n";
-                $rowStudent = "<li>%s, (№%s)</li>\n";
+                    . "</p>"
+                    . "</div>";
+                $rowStudent = "<li>%s, (№%s)</li>";
                 $rowStudentArray = [$row['fio_a'], $row['autorNumber']];
                 /* начало формирования списка документов */
                 echo '<div class="v_invitation_2">';
@@ -226,7 +246,7 @@ try {
                 echo '<div id="application1">Додаток 1</div><div id="listsudents_title"><strong>Список студентів</strong></div>';
                 //Запомним текущий универ чтобы не повторять
                 $univer = $row['univer'];
-                echo "<div id=\"univer_title\"><em>{$row['univer']}</em></div>\n"
+                echo "<div id=\"univer_title\"><em>{$row['univer']}</em></div>"
                     . $blk_message
                     . '<ol>';
                 vprintf($rowStudent, $rowStudentArray);
@@ -247,14 +267,16 @@ try {
                     }
 
                 }
-                echo "</ol>\n"
-                    . $blk_golova
-                    . "</div>\n";
+                echo '</ol>' . $blk_golova . '</div>';
             }
             break;
         case 'ahostel':
             {
-                $query = "SELECT autors.id as autorNumber, CONCAT(autors.suname,' ',autors.name,' ',autors.lname) as fio_a, univers.univerrod as univer, univers.id as id,autors.curse as curse
+                $query = "SELECT autors.id AS autorNumber, 
+                            CONCAT(autors.suname,' ',autors.name,' ',autors.lname) AS fio_a, 
+                            univers.univerrod AS univer, 
+                            univers.id AS id,
+                            autors.curse AS curse
                             FROM autors
                               LEFT JOIN univers ON univers.id=autors.id_u
                               LEFT JOIN wa ON autors.id=wa.id_a
@@ -262,62 +284,44 @@ try {
                               WHERE works.invitation = 1 AND univers.id <> '1'
                               ORDER BY univer,fio_a";
                 $result = mysqli_query($link, $query);
-                //обработаем первый запрос
                 $row = mysqli_fetch_array($result);
                 echo '<h1>Список студентів на поселеня у гуртожитку</h1>';
-                //запомним первый университет из запроса
                 $univer = $row['univer'];
                 echo '<div id="univer_title"><em>' . $row['univer'] . "</em></div>";
                 echo "<ol>";
                 echo '<li>' . $row['fio_a'] . "</li>";
                 while ($row = mysqli_fetch_array($result)) {
-                    if ($univer === $row['univer']) {//Если университет не изменился то напишем автора
+                    if ($univer === $row['univer']) {
                         echo '<li>' . $row['fio_a'] . '</li>';
-                    } else { //иначе завершим спосок закрыв тег
-                        echo '</ol>';
-                        //запомним новый университет
+                    } else {
                         $univer = $row['univer'];
-                        //напишем название университета
-                        echo '<div id="univer_title"><em>' . $row['univer'] . '</em></div>';
-                        //начнем список
-                        echo '<ol>';
-                        //запишем первого автора из нового списка
-                        echo '<li>' . $row['fio_a'] . '</li>';
+                        echo '</ol>';
+                        echo '<div id="univer_title"><em>' . $row['univer'] . '</em></div>' .
+                            '<ol>' .
+                            '<li>' . $row['fio_a'] . '</li>';
                     }
                 }
-                //завершим список
                 echo '</ol>';
             }
             break;
         case 'lhostel':
             {
-                $query = 'SELECT * FROM v_invitation_3';
-                $result = mysqli_query($link, $query);
-                if (!empty($result)) {
-                    //обработаем первый запрос
-                    $row = mysqli_fetch_array($result);
-                    echo '<h1>Список керівників на поселеня</h1>';
-                    //запомним первый университет из запроса
-                    $univer = $row['univer'];
-                    echo '<div id="univer_title"><em>' . $row['univer'] . '</em></div>';
-                    echo '<ol><li>' . $row['fio_l'] . '</li>';
-                    while ($row = mysqli_fetch_array($result)) {
-                        if ($univer === $row['univer']) {//Если университет не изменился то напишем руководителя
-                            echo '<li>' . $row['fio_l'] . '</li>';
-                        } else { //иначе завершим спосок закрыв тег
-                            echo '</ol>';
-                            //запомним новый университет
-                            $univer = $row['univer'];
-                            //напишем название университета
-                            echo '<div id="univer_title"><em>' . $row['univer'] . '</em></div>';
-                            //начнем список
-                            echo '<ol>';
-                            //запишем первого руководителя из нового списка
-                            echo '<li>' . $row['fio_l'] . '</li>';
+                $listLeaders = (new \zukr\leader\LeaderRepository())->getListLeadersForHostel();
+                $listUniver = \zukr\base\helpers\ArrayHelper::group($listLeaders, 'univerrod');
+                if (!empty($listUniver)) {
+                    $txt = [];
+                    $txt[] = '<h1>Список керівників на поселеня</h1>';
+                    foreach ($listUniver as $univer => $listLeaders) {
+                        $txt[] = '<div id="univer_title"><em>' . $univer . '</em></div>';
+                        $list = [];
+                        foreach ($listLeaders as $leader) {
+                            $list [] = '<li>' . PersonHelper::getFullName($leader) . '</li>';
                         }
+                        $txt[] = '<ol>' . implode('', $list) . '</ol>';
                     }
-                    //завершим список
-                    echo '</ol>';
+                    echo implode('', $txt);
+                } else {
+                    echo '<mark>За данним запитом данних не знайдено!</mark>';
                 }
             }
             break;
@@ -362,14 +366,14 @@ try {
         case 'badge_leader':
             { //бейджики руководителей
                 //Формируем запрос в БД
-                $query = "SELECT CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio,univerfull,position,status,degree "
-                    . "FROM leaders\n"
-                    . "JOIN univers ON leaders.id_u = univers.id\n"
-                    . "LEFT JOIN  positions ON leaders.id_pos = positions.id\n"
-                    . "LEFT outer join statuses ON leaders.id_sat = statuses.id\n"
-                    . "LEFT outer join degrees ON leaders.id_deg = degrees.id\n";
+                $query = "SELECT CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio,univerfull,position,status,degree 
+                            FROM leaders 
+                                JOIN univers ON leaders.id_u = univers.id 
+                                LEFT JOIN  positions ON leaders.id_pos = positions.id 
+                                LEFT outer join statuses ON leaders.id_sat = statuses.id 
+                                LEFT outer join degrees ON leaders.id_deg = degrees.id";
                 if (
-                    !empty($listLeadersId = filter_input(INPUT_POST, 'works_id', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))
+                !empty($listLeadersId = filter_input(INPUT_POST, 'works_id', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))
                 ) {
                     sort($listLeadersId);
                     $queryWhere = ' WHERE leaders.id IN (' . implode(',', $listLeadersId) . ') GROUP BY leaders.id';
@@ -429,16 +433,16 @@ try {
                 if ($total !== 0) {
                     while ($row = mysqli_fetch_array($result)) {
                         echo '<div class="diplom">'
-                            . '<div class="line1">' . diplom_place($row['place']) . '</div>'
+                            . '<div class="line1">' . $ph->diplomString($row['place']) . '</div>'
                             . '<div class="line2">НАГОРОДЖУЄТЬСЯ:</div>'
-                            . '<div class="line3">' . student_ka($row['O']) . ' ' . $row['univerrod'] . '</div>'
+                            . '<div class="line3">' . PersonHelper::student_ka($row['O']) . ' ' . $row['univerrod'] . '</div>'
                             . '<div class="line4">' . $row['F'] . ' ' . $row['I'] . ' ' . $row['O'] . '</div>'
                             . '<div class="line5">за наукову роботу:<br>&quot;' . $row['title'] . '&quot;</div>'
-                            . '<div class="line6"> у Всеукраїнському конкурсі студентських наукових <br> робіт ' . NYEARS . ' навчального року з галузі знань<br> &quot;Електротехніка та електромеханіка&quot;</div>'
+                            . '<div class="line6"> у Всеукраїнському конкурсі студентських наукових <br> робіт ' . $settings->NYEARS . ' навчального року з галузі знань<br> &quot;Електротехніка та електромеханіка&quot;</div>'
                             . '<div class="line7">Секція &quot;' . $row['section'] . '&quot;</div>'
                             . '<div class="line8">Перший проректор ДДТУ,<br>Голова галузевої конкурсної комісії<br> д.т.н., професор<br></div>'
                             . '<div class="line9"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>В.М.Гуляєв</div>'
-                            . '<div class="line10">м. Кам’янське ' . YEAR . '</div>' .
+                            . '<div class="line10">м. Кам’янське ' . $settings->YEAR . '</div>' .
                             '</div>';
                     }
                 } else {
@@ -472,14 +476,14 @@ try {
                         echo '<div class="charters">'
                             . '<div class="line1">ЗА АКТИВНУ УЧАСТЬ</div>'
                             . '<div class="line2">НАГОРОДЖУЄТЬСЯ:</div>'
-                            . '<div class="line3">' . student_ka($row['O']) . ' ' . $row['univerrod'] . '</div>'
+                            . '<div class="line3">' . PersonHelper::student_ka($row['O']) . ' ' . $row['univerrod'] . '</div>'
                             . '<div class="line4">' . $row['F'] . ' ' . $row['I'] . ' ' . $row['O'] . '</div>'
                             . '<div class="line5">за наукову роботу:<br>&quot;' . $row['title'] . '&quot;</div>'
-                            . '<div class="line6"> у Всеукраїнському конкурсі студентських наукових <br> робіт ' . NYEARS . ' навчального року з галузі знань<br> &quot;Електротехніка та електромеханіка&quot; </div>'
+                            . '<div class="line6"> у Всеукраїнському конкурсі студентських наукових <br> робіт ' . $settings->NYEARS . ' навчального року з галузі знань<br> &quot;Електротехніка та електромеханіка&quot; </div>'
                             . '<div class="line7">Секція &quot;' . $row['section'] . '&quot;</div>'
                             . '<div class="line8">Перший проректор ДДТУ,<br>Голова галузевої конкурсної комісії,<br> д.т.н., професор</div>'
                             . '<div class="line9"><br><br>В.М.Гуляєв</div>'
-                            . '<div class="line10">м. Кам’янське ' . YEAR . '</div>'
+                            . '<div class="line10">м. Кам’янське ' . $settings->YEAR . '</div>'
                             . '</div><hr>';
                     }
                 } else {
@@ -490,16 +494,15 @@ try {
             break;
         case 'gratitudes':
             {//Подяки
-                $query = "select leaders.id,univers.univerrod AS univer,\n"
-                    . "concat(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio_l,position,status,degree\n"
-                    . " from leaders \n"
-                    . " join univers on leaders.id_u = univers.id \n"
-                    . " LEFT outer JOIN  positions ON leaders.id_pos = positions.id\n"
-                    . " LEFT outer join statuses ON leaders.id_sat = statuses.id\n"
-                    . " LEFT outer join degrees ON leaders.id_deg = degrees.id\n"
-                    . " where ((leaders.arrival = '1') and (univers.id <> 1))\n"
-                    . " group by leaders.id_u,fio_l\n"
-                    . " order by univer,fio_l\n";
+                $query = "SELECT leaders.id,univers.univerrod AS univer, CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio_l,position,status,degree 
+                          FROM leaders  
+                              JOIN univers on leaders.id_u = univers.id  
+                              LEFT outer JOIN  positions ON leaders.id_pos = positions.id
+                              LEFT outer join statuses ON leaders.id_sat = statuses.id 
+                              LEFT outer join degrees ON leaders.id_deg = degrees.id 
+                          WHERE ((leaders.arrival = '1') and (univers.id <> 1)) 
+                          GROUP BY leaders.id_u,fio_l 
+                          ORDER BY univer, fio_l";
                 $result = mysqli_query($link, $query)
                 or die('Полка запиту : ' . mysqli_error($link));
                 $total = mysqli_num_rows($result);
@@ -520,11 +523,11 @@ try {
                             . '<div class="line2">' . $row['univer'] . '</div>'
                             . '<div class="line3">' . strtoupper($row['fio_l']) . '</div>'
                             . '<div class="line4">за активну участь в підготовці та проведенні підсумкової конференції</div>'
-                            . '<div class="line5">&quot;Електротехніка та електромеханіка - ' . YEAR . '&quot;</div>'
-                            . '<div class="line6">Всеукраїнському конкурсі студентських наукових <br> робіт ' . NYEARS . ' навчального року з галузі<br> &quot;Електротехніка та електромеханіка&quot;</div>'
+                            . '<div class="line5">&quot;Електротехніка та електромеханіка - ' . $settings->YEAR . '&quot;</div>'
+                            . '<div class="line6">Всеукраїнському конкурсі студентських наукових <br> робіт ' . $settings->NYEARS . ' навчального року з галузі<br> &quot;Електротехніка та електромеханіка&quot;</div>'
                             . '<div class="line8">Перший проректор ДДТУ,<br>Голова галузевої конкурсної комісії,<br> д.т.н., професор</div>'
                             . '<div class="line9"><br><br>В.М.Гуляєв</div>'
-                            . '<div class="line10">м. Кам’янське ' . YEAR . '</div>'
+                            . '<div class="line10">м. Кам’янське ' . $settings->YEAR . '</div>'
                             . '</div><hr>';
                     }
                 } else {

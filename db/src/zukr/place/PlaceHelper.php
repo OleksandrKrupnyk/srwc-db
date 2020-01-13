@@ -49,4 +49,15 @@ class PlaceHelper
             : '';
         return $fileContent;
     }
+
+    /**
+     * @param string $place
+     * @return string
+     */
+    public function diplomString(string $place): string
+    {
+        $text = ['I' => 'ПЕРШОГО СТУПЕНЯ', 'II' => 'ДРУГОГО СТУПЕНЯ', 'III' => 'ТРЕТЬОГО СТУПЕНЯ'];
+        return $text[$place] ?? 'ПУСТИЙ РЯДОК';
+    }
+
 }
