@@ -20,7 +20,7 @@ class StringHelper
      * @param string $string the string being measured for length
      * @return int the number of bytes in the given string.
      */
-    public static function byteLength($string):string
+    public static function byteLength($string): string
     {
         return \mb_strlen($string, '8bit');
     }
@@ -38,7 +38,7 @@ class StringHelper
      */
     public static function byteSubstr($string, $start, $length = null): string
     {
-        return mb_substr($string, $start, $length ?? mb_strlen($string, '8bit'), '8bit');
+        return \mb_substr($string, $start, $length ?? \mb_strlen($string, '8bit'), '8bit');
     }
 
     /**
@@ -56,12 +56,12 @@ class StringHelper
      */
     public static function basename($path, $suffix = ''): string
     {
-        if (($len = mb_strlen($suffix)) > 0 && mb_substr($path, -$len) === $suffix) {
-            $path = mb_substr($path, 0, -$len);
+        if (($len = \mb_strlen($suffix)) > 0 && mb_substr($path, -$len) === $suffix) {
+            $path = \mb_substr($path, 0, -$len);
         }
-        $path = rtrim(str_replace('\\', '/', $path), '/\\');
-        if (($pos = mb_strrpos($path, '/')) !== false) {
-            return mb_substr($path, $pos + 1);
+        $path = \rtrim(\str_replace('\\', '/', $path), '/\\');
+        if (($pos = \mb_strrpos($path, '/')) !== false) {
+            return \mb_substr($path, $pos + 1);
         }
 
         return $path;
@@ -78,9 +78,9 @@ class StringHelper
      */
     public static function dirname($path): string
     {
-        $pos = mb_strrpos(str_replace('\\', '/', $path), '/');
+        $pos = \mb_strrpos(\str_replace('\\', '/', $path), '/');
         if ($pos !== false) {
-            return mb_substr($path, 0, $pos);
+            return \mb_substr($path, 0, $pos);
         }
 
         return '';
@@ -102,8 +102,8 @@ class StringHelper
             $encoding = 'UTF-8';
         }
 
-        if (mb_strlen($string, $encoding) > $length) {
-            return rtrim(mb_substr($string, 0, $length, $encoding)) . $suffix;
+        if (\mb_strlen($string, $encoding) > $length) {
+            return \rtrim(mb_substr($string, 0, $length, $encoding)) . $suffix;
         }
 
         return $string;
@@ -120,9 +120,9 @@ class StringHelper
      */
     public static function truncateWords($string, $count, $suffix = '...'): string
     {
-        $words = preg_split('/(\s+)/u', trim($string), null, PREG_SPLIT_DELIM_CAPTURE);
+        $words = \preg_split('/(\s+)/u', \trim($string), null, PREG_SPLIT_DELIM_CAPTURE);
         if (count($words) / 2 > $count) {
-            return implode('', array_slice($words, 0, ($count * 2) - 1)) . $suffix;
+            return \implode('', \array_slice($words, 0, ($count * 2) - 1)) . $suffix;
         }
 
         return $string;
@@ -147,7 +147,7 @@ class StringHelper
 
         }
         $encoding = 'UTF-8';
-        return mb_strtolower(mb_substr($string, 0, $bytes, '8bit'), $encoding) === mb_strtolower($with, $encoding);
+        return \mb_strtolower(\mb_substr($string, 0, $bytes, '8bit'), $encoding) === \mb_strtolower($with, $encoding);
     }
 
     /**
@@ -170,11 +170,11 @@ class StringHelper
                 return false;
             }
 
-            return substr_compare($string, $with, -$bytes, $bytes) === 0;
+            return \substr_compare($string, $with, -$bytes, $bytes) === 0;
         }
 
         $encoding = 'UTF-8';
-        return mb_strtolower(mb_substr($string, -$bytes, mb_strlen($string, '8bit'), '8bit'), $encoding) === mb_strtolower($with, $encoding);
+        return \mb_strtolower(\mb_substr($string, -$bytes, \mb_strlen($string, '8bit'), '8bit'), $encoding) === mb_strtolower($with, $encoding);
     }
 
     /**
@@ -196,16 +196,16 @@ class StringHelper
         if ($trim !== false) {
             if ($trim === true) {
                 $trim = 'trim';
-            } elseif (!is_callable($trim)) {
+            } elseif (!\is_callable($trim)) {
                 $trim = static function ($v) use ($trim) {
-                    return trim($v, $trim);
+                    return \trim($v, $trim);
                 };
             }
-            $result = array_map($trim, $result);
+            $result = \array_map($trim, $result);
         }
         if ($skipEmpty) {
             // Wrapped with array_values to make array keys sequential after empty values removing
-            $result = array_values(array_filter($result, static function ($value) {
+            $result = \array_values(\array_filter($result, static function ($value) {
                 return $value !== '';
             }));
         }
@@ -223,7 +223,7 @@ class StringHelper
      */
     public static function countWords($string): int
     {
-        return count(preg_split('/\s+/u', $string, null, PREG_SPLIT_NO_EMPTY));
+        return \count(\preg_split('/\s+/u', $string, null, PREG_SPLIT_NO_EMPTY));
     }
 
     /**
@@ -238,11 +238,11 @@ class StringHelper
     {
         $value = (string)$value;
 
-        $localeInfo = localeconv();
+        $localeInfo = \localeconv();
         $decimalSeparator = $localeInfo['decimal_point'] ?? null;
 
         if ($decimalSeparator !== null && $decimalSeparator !== '.') {
-            $value = str_replace($decimalSeparator, '.', $value);
+            $value = \str_replace($decimalSeparator, '.', $value);
         }
 
         return $value;
@@ -261,7 +261,7 @@ class StringHelper
      */
     public static function base64UrlEncode($input): string
     {
-        return strtr(base64_encode($input), '+/', '-_');
+        return \strtr(\base64_encode($input), '+/', '-_');
     }
 
     /**
@@ -274,7 +274,7 @@ class StringHelper
      */
     public static function base64UrlDecode($input): string
     {
-        return base64_decode(strtr($input, '-_', '+/'));
+        return \base64_decode(\strtr($input, '-_', '+/'));
     }
 
     /**
@@ -290,7 +290,7 @@ class StringHelper
     {
         // . and , are the only decimal separators known in ICU data,
         // so its safe to call str_replace here
-        return str_replace(',', '.', (string)$number);
+        return \str_replace(',', '.', (string)$number);
     }
 
     /**
@@ -335,14 +335,14 @@ class StringHelper
             $replacements['\?'] = '[^/\\\\]';
         }
 
-        $pattern = strtr(preg_quote($pattern, '#'), $replacements);
+        $pattern = \strtr(preg_quote($pattern, '#'), $replacements);
         $pattern = '#^' . $pattern . '$#us';
 
         if (isset($options['caseSensitive']) && !$options['caseSensitive']) {
             $pattern .= 'i';
         }
 
-        return preg_match($pattern, $string) === 1;
+        return \preg_match($pattern, $string) === 1;
     }
 
     /**
@@ -356,10 +356,10 @@ class StringHelper
      */
     public static function mb_ucfirst($string, $encoding = 'UTF-8'): string
     {
-        $firstChar = mb_substr($string, 0, 1, $encoding);
-        $rest = mb_substr($string, 1, null, $encoding);
+        $firstChar = \mb_substr($string, 0, 1, $encoding);
+        $rest = \mb_substr($string, 1, null, $encoding);
 
-        return mb_strtoupper($firstChar, $encoding) . $rest;
+        return \mb_strtoupper($firstChar, $encoding) . $rest;
     }
 
     /**
@@ -373,13 +373,13 @@ class StringHelper
      */
     public static function mb_ucwords($string, $encoding = 'UTF-8'): string
     {
-        $words = preg_split("/\s/u", $string, -1, PREG_SPLIT_NO_EMPTY);
+        $words = \preg_split("/\s/u", $string, -1, PREG_SPLIT_NO_EMPTY);
 
-        $titelized = array_map(static function ($word) use ($encoding) {
+        $titelized = \array_map(static function ($word) use ($encoding) {
             return static::mb_ucfirst($word, $encoding);
         }, $words);
 
-        return implode(' ', $titelized);
+        return \implode(' ', $titelized);
     }
 
     /**
@@ -411,9 +411,9 @@ class StringHelper
      * @param string $separator the character used to separate the words in the ID
      * @return string the resulting CamelCase name
      */
-    public static function id2camel($id, $separator = '-'):string
+    public static function id2camel($id, $separator = '-'): string
     {
-        return str_replace(' ', '', StringHelper::mb_ucwords(str_replace($separator, ' ', $id), self::encoding()));
+        return \str_replace(' ', '', StringHelper::mb_ucwords(\str_replace($separator, ' ', $id), self::encoding()));
     }
 
 
@@ -425,7 +425,7 @@ class StringHelper
      * @param bool   $ucAll whether to set all words to uppercase
      * @return string
      */
-    public static function titleize($words, $ucAll = false):string
+    public static function titleize($words, $ucAll = false): string
     {
         $words = static::humanize(static::underscore($words), $ucAll);
 
@@ -443,9 +443,9 @@ class StringHelper
      * @return string
      * @see variablize()
      */
-    public static function camelize($word):string
+    public static function camelize($word): string
     {
-        return \str_replace(' ', '', StringHelper::mb_ucwords(preg_replace('/[^\pL\pN]+/u', ' ', $word), self::encoding()));
+        return \str_replace(' ', '', StringHelper::mb_ucwords(\preg_replace('/[^\pL\pN]+/u', ' ', $word), self::encoding()));
     }
 
     /**
@@ -456,13 +456,13 @@ class StringHelper
      * @param bool   $ucwords whether to capitalize the first letter in each word
      * @return string the resulting words
      */
-    public static function camel2words($name, $ucwords = true):string
+    public static function camel2words($name, $ucwords = true): string
     {
-        $label = mb_strtolower(trim(str_replace([
+        $label = \mb_strtolower(\trim(\str_replace([
             '-',
             '_',
             '.',
-        ], ' ', preg_replace('/(?<!\p{Lu})(\p{Lu})|(\p{Lu})(?=\p{Ll})/u', ' \0', $name))), self::encoding());
+        ], ' ', \preg_replace('/(?<!\p{Lu})(\p{Lu})|(\p{Lu})(?=\p{Ll})/u', ' \0', $name))), self::encoding());
 
         return $ucwords ? StringHelper::mb_ucwords($label, self::encoding()) : $label;
     }
@@ -470,8 +470,33 @@ class StringHelper
     /**
      * @return string
      */
-    private static function encoding():string
+    private static function encoding(): string
     {
         return 'UTF-8';
+    }
+
+    /**
+     *  Функция возвращает строку с левой стороны от строки
+     *
+     * @param string $str
+     * @param int    $num
+     * @return string
+     */
+    public static function left($str, $num)
+    {
+        return \mb_substr($str, 0, $num);
+    }
+
+    /**
+     *  Функция возвращает строку с правой стороны от строки
+     *
+     * @param string $str
+     * @param int    $num
+     * @return string
+     */
+    public static function right($str, $num)
+    {
+        $len = \strlen($str);
+        return \mb_substr($str, $len - $num, $len);
     }
 }

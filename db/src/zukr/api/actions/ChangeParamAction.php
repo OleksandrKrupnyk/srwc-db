@@ -31,6 +31,10 @@ class ChangeParamAction implements ApiActionsInterface
      * @var string Значення параметру
      */
     private $value;
+    /**
+     * @var string
+     */
+    private $typeParam;
 
 
     /**
@@ -63,15 +67,20 @@ class ChangeParamAction implements ApiActionsInterface
     {
         $this->setSnrcrf();
 
-        if (empty($this->param = \filter_input(INPUT_POST, 'param', FILTER_SANITIZE_STRING))) {
-            throw new InvalidArgumentException('param Must be set');
-
+        if (empty($this->typeParam = \filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING))) {
+            throw new InvalidArgumentException('typeParam Must be set');
         };
 
-        if (
-            ($this->value = \filter_input(INPUT_POST, 'value', FILTER_VALIDATE_INT)) === null
+        if (!\in_array($this->typeParam, Setting::TYPES)) {
+            throw new InvalidArgumentException('typeParam Wrong value');
 
-        ) {
+        }
+
+        if (empty($this->param = \filter_input(INPUT_POST, 'param', FILTER_SANITIZE_STRING))) {
+            throw new InvalidArgumentException('param Must be set');
+        };
+
+        if (empty($this->value = \filter_input(INPUT_POST, 'value', FILTER_SANITIZE_STRING))) {
             throw new InvalidArgumentException('value Must be set');
         }
     }

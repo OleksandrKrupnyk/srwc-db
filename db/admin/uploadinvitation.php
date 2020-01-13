@@ -15,11 +15,8 @@ session_name('tzLogin');
 session_start();
 global $link;
 global $FROM;
-//var_dump($_POST);
-//var_dump($_GET);
-//Если есть доступ к странице
 
-switch ($_POST['action']) {
+switch (filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING)) {
     case "upload_invitatation_file":
         { // загрузить файл сканированых листов
             //print_r($_POST);
@@ -74,7 +71,7 @@ switch ($_POST['action']) {
 }//окончание swtch
 
 // Удаление файла запрошення
-switch ($_GET['action']) {
+switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING)) {
     case "delete_file":
         {//удаление файла приглашения
             if (isset($_GET['id_u']) && isset($_GET['id_f'])) {
@@ -94,6 +91,7 @@ switch ($_GET['action']) {
                     log_action($_GET['action'], "scanfiles", $_GET['id_u']);
                 }
                 header("Location: uploadinvitation.php");
+                exit();
             }
         }
         break; //удаление файла работы
@@ -101,9 +99,6 @@ switch ($_GET['action']) {
 $query = "SELECT  `scanfiles` . * ,  `univerrod`\n"
     . "FROM  `scanfiles`\n"
     . "LEFT JOIN  `univers` ON  `scanfiles`.`id_u` =  `univers`.`id`";
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
-
 $result = mysqli_query($link, $query)
 or die("Помилка зчитування : " . mysqli_error($link));
 $count = mysqli_num_rows($result);
@@ -127,9 +122,7 @@ if ($count > 0) {
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="../css/style.css" type="text/css" rel="stylesheet"/>
-    <link href="../css/jquery-ui-1.10.3.custom.min.css" type="text/css" rel="stylesheet"/>
     <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.10.js"></script>
     <script type="text/javascript" src="../js/admin.js"></script>
     <title><?= Base::$app->app_name ?></title>
 </head>

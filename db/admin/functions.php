@@ -137,69 +137,6 @@ function list_reviews_for_one_work($id_w, bool $href = false, $isAdmin = false,$
     return $str;
 }
 
-/**
- *
- * Список из таблицы, по полю, выделить да/нет, размер списка=1,Подсказка
- * <select></select>
- * @param string $table
- * @param string $pole Sorting by pole
- * @param $chk
- * @param int $size Size of selecting list
- * @param string $caption
- * @param string $name Name of html property such "name"
- *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function list_($table, $pole, $chk, $size = 1, $caption = "Обрати...", $name = "")
-{
-    global $link;
-    //Формируем запрос на поле указанное как пареметр функции
-    //$query = "SELECT * FROM `" . $table . "` ORDER BY  `" . $table . "`.`" . $pole . "` ASC";
-    $query = "SELECT * FROM `{$table}` ORDER BY  `{$table }`.`{$pole}` ASC";
-    mysqli_query($link, "SET NAMES 'utf8'");
-    mysqli_query($link, "SET CHARACTER SET 'utf8'");
-    $result = mysqli_query($link, $query)
-    or die("Invalid query in function list_ : " . mysqli_error($link));
-    if ("" == $name) {
-        echo "<select size=\"{$size}\" name=\"{$pole}\" required>\n";
-    } else {
-        echo "<select size=\"{$size}\" name=\"{$name}\" required>\n";
-    }
-    echo "<option value =\"-1\" disabled>" . $caption . "</option>\n";
-    while ($row = mysqli_fetch_array($result)) {
-        if ((isset($_COOKIE['c' . $pole]) && $row['id'] == $_COOKIE['c' . $pole]) || (isset($chk) && $chk == $row['id']))
-            echo "<option value=\"{$row['id']}\" selected >{$row[$pole]}</option>\n";
-        else
-            echo "<option value=\"{$row['id']}\" >{$row[$pole]}</option>\n";
-    }
-    echo "</select>\n";
-}
-
-/** *
- * Список работ по конкретному вузу
- * <select></select>
- * @param int $id_u
- * @param string $pole
- * @param int selected
- * @param int $size Size of field
-  */
-function list_works_of_univer($id_u, $pole, $selected, $size)
-{
-    global $link;
-    //Формируем запрос на поле указанное как пареметр функции
-    $query = "SELECT * FROM `works` WHERE `id_u`='{$id_u}'";
-    $result = mysqli_query($link, $query)
-    or die('Invalid query in function list_works_of_univer : ' . mysqli_error($link));
-    $select = '<select size="' . $size . '" id="selwork" name="id_w">' . PHP_EOL
-        . '<option value ="-1" disabled selected>Робота...</option>' . PHP_EOL;
-    while ($row = mysqli_fetch_array($result)) {
-        $str = "<option value=\"{$row['id']}\"";
-        $str .= ($selected == $row['id']) ? ' selected ' : '';
-        $str .= ">{$row[$pole]}</option>\n";
-        $select .= $str;
-    }
-    $select .= "</select>" . PHP_EOL;
-    return $select;
-}
 
 /**
  *
@@ -261,14 +198,7 @@ function list_leaders_invite($id_u, $check = true)
     }
     echo "<ol>";
     while ($row = mysqli_fetch_array($result)) {
-        echo "<li>" . $row['suname'] . " " . $row['name'] . " " . $row['lname'];
-        if (true == $check) {
-            echo "<input type=\"hidden\" value=\"" . $row['id'] . "\">";
-            chk_box("invitation", "Запросити", $row['invitation']);
-        } else {
-            echo ", " . $row['position'];
-        }
-        echo "</li>";
+        echo '<li>' . $row['suname'] . ' ' . $row['name'] . ' ' . $row['lname'] . ', ' . $row['position'] . '</li>';
     }
     echo "</ol>";
 }
@@ -367,20 +297,6 @@ function count_la($table, $id_w)
         . "WHERE `id_w`='" . $id_w . "'";
     $result = mysqli_query($link, $query)
     or die('Помилка запиту функція count_la: ' . mysqli_error($link));
-    $row = mysqli_fetch_array($result);
-    return $row[0];
-}
-
-/**
- * @param int $id_w
- * @return int mixed
- *
- */
-function count_review($id_w){
-    global $link;
-    $query = "SELECT COUNT(id_w) FROM `reviews` WHERE `id_w` = {$id_w}";
-    $result = mysqli_query($link, $query)
-    or die("Помилка запиту функція count_review: " . mysqli_error($link));
     $row = mysqli_fetch_array($result);
     return $row[0];
 }
@@ -529,34 +445,16 @@ JOIN univers ON leaders.id_u = univers.id";
  */
 function cbo_place($id)
 {
-    $str = "<select size=\"1\" name=\"place\" title=\"Призове місце:(D-Диплом за участь)\">\n";
-    $str .= "<option disabled selected>Місце...</option>\n";
+    $str = '<select size="1" name="place" title="Призове місце:(D-Диплом за участь)">';
+    $str .= '<option disabled selected>Місце...</option>';
     $placeArray = ['D', 'I', 'II', 'III'];
     foreach ($placeArray as $i => $placeOption) {
-        $selected = ($id == $placeOption) ? " selected " : "";
-        $str .= "<option value='{$placeOption}' {$selected} >{$placeOption}</option>\n";
+        $selected = ($id == $placeOption) ? ' selected ' : '';
+        $str .= "<option value='{$placeOption}' {$selected} >{$placeOption}</option>";
     }
-    $str .= "</select>\n";
+    $str .= '</select>';
     echo $str;
 }
-
-/** * ********************************************************************************
- * Выводит чекбох и делает отметку если = 1
- * @param string $name
- * @param string $title
- * @param string $value
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function chk_box($name, $title, $value)
-{
-    $str = "<input type='checkbox' name='{$name}' title='{$title}' ";
-    if ($value != "")
-        $str .= ($value == 1) ? 'checked' : '';
-
-    $str .= ' >';
-    echo $str;
-}
-
-
 
 /**
  * Выводит заголовок  "название университета" в таблице посмотра данных о работах
@@ -692,15 +590,6 @@ function table_row_list_address2($row_number, array $row): string
         . "</tr>\n";
 }
 
-/**
- * Блок адресса на конверте
- *
- * @param array $row
- */
-function print_adress2(array $row): string
-{
-    return "<strong><ins>" . $row['univerfull'] . "</ins></strong><br>\n<em>" . $row['adress'] . "</em><br>\n<strong>" . $row['zipcode'] . '</strong>';
-}
 
 /**
  * Формирует окончание предложения для письма во 2-м инф. приглашении
@@ -819,30 +708,6 @@ function file_name_format(string $str, int $num):string
 }
 
 /**
- *  Функция возвращает строку с левой стороны от строки
- *
- * @param string $str
- * @param int    $num
- * @return string
- */
-function left($str, $num)
-{
-    return mb_substr($str, 0, $num);
-}
-
-/**
- *  Функция возвращает строку с правой стороны от строки
- *
- * @param string $str
- * @param int    $num
- * @return string
- */
-function right($str, $num)
-{
-    $len = strlen($str);
-    return mb_substr($str, $len - $num, $len);
-}
-/**
  * Функция выводит конструкцию <select></select> для выбора должности руководителя ВУЗ
  * @param String $posada
  */
@@ -867,54 +732,6 @@ function select_positionVNZ($posada)
 }
 
 /**
- * Возращает строку с надписью в дипломе (I - першого ступеня)
- *
- * @param string $place
- * @return string $str
- */
-function diplom_place(string $place): string
-{
-    $text = ['I' => 'ПЕРШОГО СТУПЕНЯ', 'II' => 'ДРУГОГО СТУПЕНЯ', 'III' => 'ТРЕТЬОГО СТУПЕНЯ'];
-    return $text[$place] ?? 'ПУСТИЙ РЯДОК';
-}
-
-/**
- *  Возвращает строку студент (студентка в звсисимости от окончания отчества)
- *
- * @param string $O
- * @return string
- */
-function student_ka($O)
-{
-    return right($O, 1) === 'ч'
-        ? 'студент'
-        : 'студентка';
-}
-
-/**
- * @param string $str
- * @return string
- */
-function AnaliseMysqlError($str): string
-{
-    //Разбиваем строку на строки по разделителю
-    $array_str = explode(' ', $str);
-    switch ($array_str[0]) {
-        case 'Duplicate' :
-            {
-                $result = 'Ошибка! Дублирование данных :' . $str . "\n";
-            }
-            break;
-        default:
-            {
-                $result = $str . "\n";
-            }
-            break;
-    }
-    return $result;
-}
-
-/**
  * @param string $page
  */
 function Go_page($page)
@@ -928,19 +745,20 @@ function Go_page($page)
  * Print gerb
  * @param  bool $empty
  * */
- function PrintGerb($empty = true){
-    $str = "\t\t\t<!-- БЛАНК УНИВЕРСИТЕТА -->\n";
-    $GERB = "<img class= \"hGERB\" src =\"./../img/gerb.png\">\n";
-    $MON = "<div class = \"hMON\">МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ</div>\n";
-    $DDTUfull = "<div class = \"hDDTUfull\">ДНІПРОВСЬКИЙ ДЕРЖАВНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ</div>\n";
-    $DDTUshort = "<div class = \"hDDTUshort\">(ДДТУ)</div>\n";
-    $ADRESS = "<div class = \"hADRESS\">вул. Дніпробудівська, 2 м. Кам’янське, 51918, тел./факс (0569) 538523</div>\n";
-    $MAIL = "<div class = \"hMAIL\">Е-mail: <span>science@dstu.dp.ua</span></div>\n";
-    $DATA = (true == $empty)? "<div class = \"hDATA\">______________№____________________":"<div class = \"hDATA\"><span>&nbsp;&nbsp;XX/XX/2018&nbsp;&nbsp;</span>№<span>".TAB_SP."108-08/10-69".TAB_SP."</span>";
-    $DATA .= TAB_SP."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;На&nbsp;№__________________від____________</div>\n";
+ function PrintGerb($empty = true)
+ {
+     $str = "<!-- БЛАНК УНИВЕРСИТЕТА -->";
+     $GERB = '<img class= "hGERB" src ="./../img/gerb.png" alt="herb">';
+     $MON = '<div class = "hMON">МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ</div>';
+     $DDTUfull = '<div class = "hDDTUfull">ДНІПРОВСЬКИЙ ДЕРЖАВНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ</div>';
+     $DDTUshort = '<div class = "hDDTUshort">(ДДТУ)</div>';
+     $ADRESS = '<div class = "hADRESS">вул. Дніпробудівська, 2 м. Кам’янське, 51918, тел./факс (0569) 538523</div>';
+     $MAIL = '<div class = "hMAIL">Е-mail: <span>science@dstu.dp.ua</span></div>';
+     $DATA = $empty ? '<div class = "hDATA">______________№____________________' : '<div class = "hDATA"><span>&nbsp;&nbsp;XX/XX/2018&nbsp;&nbsp;</span>№<span>' . TAB_SP . "108-08/10-69" . TAB_SP . "</span>";
+     $DATA .= TAB_SP . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;На&nbsp;№__________________від____________</div>';
 
-    $str .= $GERB.$MON.$DDTUfull.$DDTUshort.$ADRESS.$MAIL.$DATA;
-    printf($str);
+     $str .= $GERB . $MON . $DDTUfull . $DDTUshort . $ADRESS . $MAIL . $DATA;
+     printf($str);
 
  }
 
