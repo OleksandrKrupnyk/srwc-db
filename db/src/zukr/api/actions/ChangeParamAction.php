@@ -69,19 +69,25 @@ class ChangeParamAction implements ApiActionsInterface
 
         if (empty($this->typeParam = \filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING))) {
             throw new InvalidArgumentException('typeParam Must be set');
-        };
+        }
 
-        if (!\in_array($this->typeParam, Setting::TYPES)) {
+        if (!\in_array($this->typeParam, Setting::TYPES, true)) {
             throw new InvalidArgumentException('typeParam Wrong value');
 
         }
 
         if (empty($this->param = \filter_input(INPUT_POST, 'param', FILTER_SANITIZE_STRING))) {
             throw new InvalidArgumentException('param Must be set');
-        };
+        }
+        if ($this->typeParam === Setting::BOOL) {
 
-        if (empty($this->value = \filter_input(INPUT_POST, 'value', FILTER_SANITIZE_STRING))) {
-            throw new InvalidArgumentException('value Must be set');
+            if (($this->value = \filter_input(INPUT_POST, 'value', FILTER_VALIDATE_INT)) === null) {
+                throw new InvalidArgumentException('value (bool/int) Must be set');
+            }
+        } else {
+            if (empty($this->value = \filter_input(INPUT_POST, 'value', FILTER_SANITIZE_STRING))) {
+                throw new InvalidArgumentException('value (string) Must be set');
+            }
         }
     }
 }
