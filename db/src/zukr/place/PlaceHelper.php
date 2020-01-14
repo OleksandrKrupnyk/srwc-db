@@ -60,4 +60,16 @@ class PlaceHelper
         return $text[$place] ?? 'ПУСТИЙ РЯДОК';
     }
 
+    /**
+     * @return array
+     */
+    public function getPlaceList(): array
+    {
+        return [
+            'D' => 'D',
+            'I' => 'I',
+            'II' => 'II',
+            'III' => 'III'
+        ];
+    }
 }

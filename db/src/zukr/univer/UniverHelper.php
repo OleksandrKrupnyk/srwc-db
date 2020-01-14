@@ -170,7 +170,7 @@ class UniverHelper
     /**
      * @return UniverRepository
      */
-    protected function getUniverRepository(): UniverRepository
+    public function getUniverRepository(): UniverRepository
     {
         if ($this->univerRepository === null) {
             $this->univerRepository = new UniverRepository();
@@ -197,4 +197,18 @@ class UniverHelper
         return $this->getUniverRepository()->getById($id);
     }
 
+    /**
+     * @return array Список посад керівника ВНЗ
+     */
+    public function getPositionList(): array
+    {
+        return [
+            'Ректору' => 'Ректору',
+            'В.о.ректора' => 'В.о.ректора',
+            'Директору' => 'Директору',
+            'Начальнику інституту' => 'Начальнику інституту',
+            'Начальнику академії' => 'Начальнику академії',
+            'Начальнику військового інституту' => 'Начальнику військового інституту'
+        ];
+    }
 }

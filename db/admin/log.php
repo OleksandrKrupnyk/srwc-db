@@ -1,7 +1,7 @@
 <?php
 require 'config.inc.php';
 require 'functions.php';
-header("Content-Type: text/html; charset=utf-8");
+header('Content-Type: text/html; charset=utf-8');
 session_name('tzLogin');
 session_start();
 global $link;
@@ -14,28 +14,28 @@ global $link;
     <link href="../css/style.css" type="text/css" rel="stylesheet"/>
     <script type="text/javascript" src="../js/jquery.js"></script>
     <script type="text/javascript" src="../js/admin.js"></script>
-    <title>Журнал &quot;СНР 2018&quot;&copy;</title>
+    <title>Журнал &quot;СНР 2020&quot;&copy;</title>
 </head>
 <body>
 <?php
 if ($_SESSION['access']) {
-    echo "<header><a href=\"action.php\">Меню</a></header>";
+    echo '<header><a href="action.php">Меню</a></header>';
     if (isset($_GET['view'])) {
-        echo "<header>Данні {$_GET['view']}</header>";
-        echo "<header><a href=\"log.php\" >Журнал</a></header>";
+        echo "<header>Данні {$_GET['view']}</header>"
+            . '<header><a href="log.php" >Журнал</a></header>';
         $query = "SELECT tz_id, date,  DAYNAME(date) as `dayname`,   YEAR(date) as `year`,   MONTHNAME(date) AS `monthname`,
   TIME(date) AS `time`,   MONTH(date) AS `month`,   DAY(date) as `day`,   action, action_id,
   tz_members.usr as `operator` FROM log   JOIN tz_members ON log.tz_id=tz_members.id WHERE log.table = '{$_GET['view']}' ORDER BY log.date DESC";
         //echo $query;
         $result = mysqli_query($link, $query);
-        echo "<table>";
-        echo "<tr><th>Хто</th><th>Коли</th><th>Що робив</th><th>З записом</th></tr>";
+        echo '<table>'
+            . '<tr><th>Хто</th><th>Коли</th><th>Що робив</th><th>З записом</th></tr>';
         $row = mysqli_fetch_array($result);
         $year = $row['year'];
-        echo "<tr><th colspan=\"4\">{$year}</th></tr>";
+        echo "<tr><th colspan='4'>{$year}</th></tr>";
         $month = $row['month'];
-        echo "<tr><th colspan=\"4\">{$row['monthname']}</th></tr>";
-        echo "<tr><td>{$row['operator']} ({$row['tz_id']})</td><td>{$row['dayname']},{$row['day']} {$row['time']}</td><td>{$row['action']} </td><td>{$row['action_id']}</td></tr>";
+        echo "<tr><th colspan='4'>{$row['monthname']}</th></tr>"
+            . "<tr><td>{$row['operator']} ({$row['tz_id']})</td><td>{$row['dayname']},{$row['day']} {$row['time']}</td><td>{$row['action']} </td><td>{$row['action_id']}</td></tr>";
         while ($row = mysqli_fetch_array($result)) {
             if ($year != $row['year']) {
                 $year = $row['year'];
@@ -47,16 +47,16 @@ if ($_SESSION['access']) {
             }
             echo "<tr><td>{$row['operator']} ({$row['tz_id']})</td><td>{$row['dayname']},{$row['day']} {$row['time']}</td><td>{$row['action']}</td><td>{$row['action_id']}</td></tr>";
         }
-        echo "</table>";
+        echo '</table>';
     } else {
-        echo "<header>Журнал дій за таблицями</header>";
-        $query = "SELECT log.table FROM log GROUP BY log.table ASC";
+        echo '<header>Журнал дій за таблицями</header>';
+        $query = 'SELECT log.table FROM log GROUP BY log.table ASC';
         $result = mysqli_query($link, $query);
-        echo "<ol>";
+        echo '<ol>';
         while ($row = mysqli_fetch_array($result)) {
             echo "<li><a href=log.php?view={$row['table']}>{$row['table']}</a></li>";
         }
-        echo "</ol>";
+        echo '</ol>';
     }
 }//if
 $query = "SELECT  tz_members.usr, CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio,COUNT(tz_id) AS countReview
@@ -66,31 +66,31 @@ JOIN leaders ON tz_members.id = leaders.id_tzmember
 WHERE `table` = 'reviews' GROUP BY usr ORDER BY countReview DESC";
 $result = mysqli_query($link, $query);
 $sumCountReview = 0;
-$a = array();
-$f = array();
+$a = [];
+$f = [];
 
-printf("<p>Статистика рецензування:</p><ol>");
+echo '<p>Статистика рецензування:</p><ol>';
 while ($row = mysqli_fetch_array($result)) {
-    printf("<li>%s - %s</li>", $row['fio'], $row['countReview']);
+    printf('<li>%s - %s</li>', $row['fio'], $row['countReview']);
     $a[] = $row['countReview'];
     $f[] = $row['fio'];
 }
-printf("</ol>");
+echo '</ol>';
 
 $sumCountReview = array_sum($a);
-$strFormat = "imgchart.php?";
-$strArrayFormat1 = array();
-$strArrayFormat2 = array();
+$strFormat = 'imgchart.php?';
+$strArrayFormat1 = [];
+$strArrayFormat2 = [];
 
-foreach ($a as $element){
-    $strArrayFormat1[] = "a[]=%s";
-    $strArrayFormat2[] = "f[]=%s";
+foreach ($a as $element) {
+    $strArrayFormat1[] = 'a[]=%s';
+    $strArrayFormat2[] = 'f[]=%s';
 }
-$strFormat .= implode("&",$strArrayFormat1);
-$strFormat .= "&";
-$strFormat .= implode("&",$strArrayFormat2);
-printf("Всього рецензій : %s", $sumCountReview);
-echo "<br><img src=\"".vsprintf($strFormat,array_merge($a,$f))."\" >";
+$strFormat .= implode('&', $strArrayFormat1);
+$strFormat .= '&';
+$strFormat .= implode('&', $strArrayFormat2);
+printf('Всього рецензій : %s', $sumCountReview);
+echo '<br><img src="' . vsprintf($strFormat, array_merge($a, $f)) . "\" alt='рецензии'>";
 ?>
 </body>
 </html>

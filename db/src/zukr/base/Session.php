@@ -48,16 +48,16 @@ class Session
     /**
      * set param 'from' in session
      */
-    public function setFromParam()
+    public function setFromParam(): void
     {
-        $FROM = trim(urlencode($_SERVER['REQUEST_URI']));
+        $FROM = \trim(\urlencode($_SERVER['REQUEST_URI']));
         $this->set('from', $FROM);
     }
 
     /**
      * set param redirect_to
      */
-    public function setRedirectParam()
+    public function setRedirectParam(): void
     {
         $redirect_to = $this->get('from', '');
         $redirect_to === '' ?:

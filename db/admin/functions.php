@@ -304,13 +304,14 @@ function count_la($table, $id_w)
 /**
 * @param string $table
 */
-function list_emails($table){
+function list_emails($table)
+{
     global $link;
     $query = '';
     $get_text = '';
     //Формируем запрос на получение таблицы
-    if($table === 'autors'){//авторы работ
-        $query= "SELECT works.title,autors.id, autors.suname, autors.name,autors.lname,autors.hash,autors.email,autors.email_recive,autors.email_date
+    if ($table === 'autors') {//авторы работ
+        $query = "SELECT works.title,autors.id, autors.suname, autors.name,autors.lname,autors.hash,autors.email,autors.email_recive,autors.email_date
                  FROM works
                  LEFT JOIN wa ON wa.id_w = works.id
                  LEFT JOIN autors ON wa.id_a = autors.id
@@ -354,7 +355,7 @@ function list_emails($table){
         }
     $sub_row_str_nomail .="</ol>\n</details>";
     $sub_row_str .= "</ol>\n</details>\n".$sub_row_str_nomail;
-    echo $sub_row_str;
+    return $sub_row_str;
 }
 
 
@@ -439,24 +440,6 @@ JOIN univers ON leaders.id_u = univers.id";
 
 
 /**
- *
- * Список выбора места работы
- * @param String $id
- */
-function cbo_place($id)
-{
-    $str = '<select size="1" name="place" title="Призове місце:(D-Диплом за участь)">';
-    $str .= '<option disabled selected>Місце...</option>';
-    $placeArray = ['D', 'I', 'II', 'III'];
-    foreach ($placeArray as $i => $placeOption) {
-        $selected = ($id == $placeOption) ? ' selected ' : '';
-        $str .= "<option value='{$placeOption}' {$selected} >{$placeOption}</option>";
-    }
-    $str .= '</select>';
-    echo $str;
-}
-
-/**
  * Выводит заголовок  "название университета" в таблице посмотра данных о работах
  *
  * @param string $univer_title
@@ -466,12 +449,13 @@ function cbo_place($id)
 function print_work_univer($univer_title, $id_u, $univer)
 {
     $FROM = $_SESSION['from'] ?? '';
-    $row_univer = '
-<tr><td colspan="5" class="univerTitle">
-    <div id=id_u' . $id_u . ' style="display:inline;margin-right:5px">' . $univer . '</div><a href="action.php?action=univer_edit&id_u=' . $id_u
-        . '&FROM=' . $FROM . '" title="Редагувати данні університету">';
-    $row_univer .= $univer_title . '</a></td></tr>';
-    return $row_univer;
+    return '
+    <tr>
+    <td colspan="5" class="univerTitle">
+    <div id=id_u' . $id_u . ' style="display:inline;margin-right:5px">' . $univer . '</div>
+    <a href="action.php?action=univer_edit&id_u=' . $id_u . '&FROM=' . $FROM . '" title="Редагувати данні університету">' . $univer_title . '</a>
+    </td>
+    </tr>';
 }
 
 /**
@@ -659,10 +643,10 @@ function short_list_leader_or_autors_str($id_w, $who, $showId = false)
         FROM `wa` left outer join `autors` ON `wa`.`id_a`=`autors`.`id`\n" :
         "SELECT leaders.id, CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as  fio,
         `position`,`status`,`degree`FROM `wl` 
-        left outer join `leaders` ON `wl`.`id_l`=`leaders`.`id`
-        left outer join `positions` ON `leaders`.`id_pos` = `positions`.`id`
-        left outer join `statuses` ON `leaders`.`id_sat` = `statuses`.`id`
-        left outer join `degrees` ON `leaders`.`id_deg` = `degrees`.`id`";
+        LEFT OUTER JOIN `leaders` ON `wl`.`id_l`=`leaders`.`id`
+        LEFT OUTER JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`
+        LEFT OUTER JOIN `statuses` ON `leaders`.`id_sat` = `statuses`.`id`
+        LEFT OUTER JOIN `degrees` ON `leaders`.`id_deg` = `degrees`.`id`";
 
 
     $query .= "WHERE `id_w`='" . $id_w . "' ORDER BY `fio` ASC";
@@ -705,30 +689,6 @@ function file_name_format(string $str, int $num):string
     return (mb_strlen($str) > $num)
         ? mb_substr($str, 0, $num) . '...'
         : $str;
-}
-
-/**
- * Функция выводит конструкцию <select></select> для выбора должности руководителя ВУЗ
- * @param String $posada
- */
-function select_positionVNZ($posada)
-{
-    $str = "<select size='1' name='posada' title='Посада керівника ВНЗ'>\n";
-    $positions = [
-        'Ректору',
-        'В.о.ректора',
-        'Директору',
-        'Начальнику інституту',
-        'Начальнику академії',
-        'Начальнику військового інституту'
-    ];
-    foreach ($positions as $position) {
-        $str .= "<option value='{$position}'";
-        $str .= ($posada == $position) ? ' selected ' : '';
-        $str .= ">{$position}</option>\n";
-    }
-    $str .= "</select>\n";
-    echo $str;
 }
 
 /**

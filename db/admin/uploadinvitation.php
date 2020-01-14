@@ -96,9 +96,9 @@ switch (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING)) {
         }
         break; //удаление файла работы
 }//Обработка switch для GET
-$query = "SELECT  `scanfiles` . * ,  `univerrod`\n"
-    . "FROM  `scanfiles`\n"
-    . "LEFT JOIN  `univers` ON  `scanfiles`.`id_u` =  `univers`.`id`";
+$query = "SELECT  `scanfiles` . * ,  `univerrod` 
+    FROM  `scanfiles` 
+    LEFT JOIN  `univers` ON  `scanfiles`.`id_u` =  `univers`.`id`";
 $result = mysqli_query($link, $query)
 or die("Помилка зчитування : " . mysqli_error($link));
 $count = mysqli_num_rows($result);
@@ -140,7 +140,10 @@ if ($count > 0) {
         <input type="hidden" name="action" value="upload_invitatation_file">
     </fieldset>
 </form>
-<div id="operator">Оператор :<span><?= $_SESSION['usr'] ?></span></div>
+<div id="operator">Оператор :<span><?= Base::$user->getUser()->getLogin() ?></span>
+    <span><?= Base::$user->getUser()->isAdmin() ? 'A' : '' ?></span>
+    <span><?= Base::$user->getUser()->isReview() ? 'R' : '' ?></span>
+</div>
 <autor class="autor">Krupnik&copy;</autor>
 </body>
 </html>

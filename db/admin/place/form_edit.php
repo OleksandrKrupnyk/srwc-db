@@ -1,12 +1,19 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: sasha
  * Date: 21.03.2018
  * Time: 0:37
  */
+
+use zukr\base\helpers\StringHelper;
+use zukr\base\html\Html;
+use zukr\place\PlaceHelper;
+
 global $link;
-$query = "SELECT a.id, CONCAT(a.suname,' ',a.name,' ',a.lname) AS fio, 
+$query = "SELECT a.id, 
+       CONCAT(a.suname,' ',a.name,' ',a.lname) AS fio, 
        univers.univer,
        a.place,
        works.id AS id_w,
@@ -25,9 +32,10 @@ $result = mysqli_query($link, $query)
 or die("Помилка запиту: " . mysqli_error($link));
 
 $row = mysqli_fetch_array($result);
-$title = mb_substr($row['title'], 0, 30, "utf-8") . "...";
+
+$title = StringHelper::truncate($row['title'], 30);
 $section = $row['section'];
-$ph = \zukr\place\PlaceHelper::getInstance();
+$ph = PlaceHelper::getInstance();
 ?>
     <!-- Распределение мест стреди студентов которые приехали на конференцию-->
     <header><a href='action.php'>Меню</a></header>
@@ -46,18 +54,18 @@ $ph = \zukr\place\PlaceHelper::getInstance();
         </tr>
         <?php
         echo "<tr><th colspan='5'>{$section}</th></tr>
-          <tr data-key='{$row['id']}'><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>";
-        cbo_place($row['place']);
-        echo "</td><td title=\"{$row['title']}\">({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
+          <tr data-key='{$row['id']}'><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>"
+            . Html::select('place', $row['place'], $ph->getPlaceList(), ['title' => "Призове місце:(D-Диплом за участь)"])
+            . "</td><td title=\"{$row['title']}\">({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
         while ($row = mysqli_fetch_array($result)) {
             if ($section !== $row['section']) {
                 $section = $row['section'];
-                echo "<tr><th colspan=\"5\">{$section}</th></tr>";
+                echo "<tr><th colspan='5'>{$section}</th></tr>";
             }
             $title = mb_substr($row['title'], 0, 30, "utf-8") . "...";
-            echo "<tr data-key='{$row['id']}'><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>\n";
-            cbo_place($row['place']);
-            echo "</td><td title=\"{$row['title']}\">({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
+            echo "<tr data-key='{$row['id']}'><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>"
+                . Html::select('place', $row['place'], $ph->getPlaceList(), ['title' => "Призове місце:(D-Диплом за участь)"])
+                . "</td><td title='{$row['title']}'>({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
         } ?>
     </table>
     <!-- Распределение мест стреди студентов которые приехали на конференцию-->

@@ -7,11 +7,13 @@ use zukr\univer\UniverRepository;
 $univerRepository = new UniverRepository();
 $univers = $univerRepository->getAllUniversAsArrayFromDB();
 $uh = UniverHelper::getInstance();
-if(!Base::$user->getUser()->isAdmin()){
+if (!Base::$user->getUser()->isAdmin()) {
     Base::$session->setFlash('recordSaveMsg', 'Заборонена дія');
     Base::$session->setFlash('recordSaveType', 'warn');
     Go_page(null);
 }
+$session = Base::$session;
+$session->setFromParam();
 ?>
 <!-- Редактирование списка университетов в которые следует направить первое информационное сообщение -->
 <header><a href='action.php'>Меню</a></header>
@@ -30,6 +32,6 @@ if(!Base::$user->getUser()->isAdmin()){
               <td>' . \zukr\base\html\HtmlHelper::checkboxStyled('invitation', '', $univer['invite']) . '</td>
               </tr>';
 
-    endforeach;?>
+    endforeach; ?>
 </table><a href='lists.php?list=adress'><input type='button' value='Друкувати список'></a>
 <?= $uh->registerJS() ?>
