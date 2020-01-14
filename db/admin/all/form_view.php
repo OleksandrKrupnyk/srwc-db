@@ -79,7 +79,6 @@ $count = count($allWorks);
 <!-- Просмотр  таблици работ -->
 <header><a href="action.php">Меню</a></header>
 <header>Перегляд бази (<?= $count ?> робіт)</header>
-<h1><a href="./invitation.php">=[ Запрошення ]=</a></h1>
 <menu class="viewTableMenu">
     <?php vprintf('%s %s %s %s %s %s %s %s', $viewMenuitem); ?>
 </menu>
