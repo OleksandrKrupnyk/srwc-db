@@ -8,20 +8,20 @@ require_once 'Mail.php';
 require_once 'Mail/mime.php';
 read_settings();
 // Настройки почты
-$params['host']     = 'ssl://smtp.gmail.com';
-$params['port']     = '465';
-$params['auth']     = true;
+$params['host'] = 'ssl://smtp.gmail.com';
+$params['port'] = '465';
+$params['auth'] = true;
 $params['username'] = 'user@gmail.com';
 $params['password'] = 'password';
-$params['debug']    = 'False';
+$params['debug'] = 'False';
 
 //Параметры міме
-$mimeparams = array();
-$mimeparams['html_charset'] = "UTF-8";
-$mimeparams['head_charset'] = "UTF-8";
+$mimeparams = [];
+$mimeparams['html_charset'] = 'UTF-8';
+$mimeparams['head_charset'] = 'UTF-8';
 
 //От кого и тема письма
-$headers['From']    = "\"Конкурс СНР\" <conkstudrabot@gmail.com>";
+$headers['From'] = '"Конкурс СНР" <conkstudrabot@gmail.com>';
 $headers['Subject'] = 'Запрошення на участь у конференції';
 //$headers["Subject"] = "ТЕСТОВИЙ ЛИСТ СИСТЕМИ2";
 
@@ -30,11 +30,11 @@ $crlf = "\n";
 $mime = new Mail_mime($crlf);
 //print_r($_POST);
 //Определяем с какой таблицей рабоатем
-if ($_POST['t'] == "a") { // авторы работи
+if ($_POST['t'] === "a") { // авторы работи
     $html_base = $_POST['letter2autors'];
     //Запишем изменения в файле шаблона
     file_put_contents('letter2autors.tte', $html_base);
-} elseif ($_POST['t'] == "l") {//руководители
+} elseif ($_POST['t'] === "l") {//руководители
     $html_base = $_POST['letter2leaders'];
     //Запишем изменения в файле шаблона
     file_put_contents('letter2leaders.tte', $html_base);
@@ -74,9 +74,4 @@ if (
             unset($headers2);
         } else echo "<pre>" . $html . "</pre><hr>";
     }
-
-
 }
-
-
-?>

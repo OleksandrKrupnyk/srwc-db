@@ -15,7 +15,9 @@ use zukr\base\Base;
  */
 class LeaderRepository extends AbstractRepository
 {
-
+    /**
+     * @var string
+     */
     public $__className = Leader::class;
 
     /**
@@ -176,6 +178,28 @@ ORDER BY suname;', [$univerId]);
             $r = $this->model::find()
                 ->where('id_u', $univerId)
                 ->get($this->model::getTableName());
+            return $r ?? [];
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * @return array Список керіників для поселення в гуртожитку
+     */
+    public function getListLeadersForHostel(): array
+    {
+        try {
+            $r = $this->model::find()
+                ->rawQuery("
+SELECT suname, name, lname, id_u, univerrod
+FROM leaders LEFT JOIN univers as u on leaders.id_u = u.id
+WHERE leaders.id in (SELECT DISTINCT id_l
+             FROM wl
+             WHERE id_w in (SELECT id FROM works WHERE invitation = 1 AND id_u != 1))
+ORDER BY univerrod,suname;                
+                ");
             return $r ?? [];
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());

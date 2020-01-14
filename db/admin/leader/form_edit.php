@@ -31,7 +31,6 @@ $statuses = (new StatusRepository())->getDropDownList();
 $degrees = (new DegreeRepository())->getDropDownList();
 $users = (new UserRepository())->getDropDownList();
 // redirect_to -> session
-// redirect_to -> session
 Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование руководителя -->

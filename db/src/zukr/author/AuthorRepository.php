@@ -15,7 +15,9 @@ use zukr\base\Base;
  */
 class AuthorRepository extends AbstractRepository
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $__className = Author::class;
 
     /**

@@ -5,26 +5,24 @@
  * Date: 10.11.17
  * Time: 15:02
  */
-//редактирование данных вуза
-//print_r($_POST);
-$_POST['univer'] = trim(addslashes($_POST['univer']));
-$_POST['univerfull'] = trim(addslashes($_POST['univerfull']));
-$_POST['univerrod'] = trim(addslashes($_POST['univerrod']));
-$_POST['zipcode'] = (string)trim($_POST['zipcode']);
-$_POST['adress'] = trim(addslashes($_POST['adress']));
-$_POST['rector_r'] = trim(addslashes($_POST['rector_r']));
-$_POST['posada'] = trim(addslashes($_POST['posada']));
-$_POST['http'] = htmlspecialchars(trim($_POST['http']));
-$_POST['town'] = htmlspecialchars(trim($_POST['town']));
-$query = "UPDATE `univers` SET `univer`='{$_POST['univer']}',`univerfull`='{$_POST['univerfull']}',`univerrod`='{$_POST['univerrod']}',`zipcode`='{$_POST['zipcode']}', `town`='{$_POST['town']}',
-                        `adress`='{$_POST['adress']}',`rector_r`='{$_POST['rector_r']}',`posada`='{$_POST['posada']}',`http`='{$_POST['http']}'\n"
-    . "WHERE `id`='{$_POST['id']}'";
-global $link;
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
-$result = mysqli_query($link, $query)
-or die("Полка оновлення запису дія univer_edit: " . mysqli_error($link));
-log_action($_POST['action'], "univers", $_POST['id']);
-$url2go = $_POST['from'] ?? 'action.php?action=all_view';
-$url2go = ($_GET['from']) ? $_GET['from'] : $url2go;
+
+use zukr\base\Base;
+use zukr\log\Log;
+use zukr\univer\UniverHelper;
+
+$id_u = filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+$uh = UniverHelper::getInstance();
+$univer = $uh->getUniverRepository()->findById($id_u);
+if ($univer === null || !$id_u) {
+    Go_page('error');
+}
+$univer->load($_POST);
+$univer->save();
+$log = Log::getInstance();
+$log->logAction(null, $univer::getTableName(), $univer->id);
+if (isset($_POST['save'])) {
+    $url2go = 'action.php?' . http_build_query(['action' => 'univer_edit', 'id_u' => $univer->id]);
+} elseif (isset($_POST['save+exit'])) {
+    $url2go = $url2go = Base::$session->get('redirect_to', 'action.php?' . http_build_query(['action' => 'all_view']));
+}
 Go_page($url2go);

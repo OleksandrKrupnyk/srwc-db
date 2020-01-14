@@ -32,4 +32,17 @@ class PersonHelper
             . \mb_substr($person['lname'], 0, 1, 'UTF-8') . '.';
     }
 
+    /**
+     *  Возвращает строку студент (студентка в звсисимости от окончания отчества)
+     *
+     * @param string $O
+     * @return string
+     */
+    public static function student_ka($O): string
+    {
+        return StringHelper::right($O, 1) === 'ч'
+            ? 'студент'
+            : 'студентка';
+    }
+
 }

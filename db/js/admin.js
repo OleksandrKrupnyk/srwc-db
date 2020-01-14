@@ -1,8 +1,8 @@
 //выполнять если документ полностью загрузился
 $(document).ready(function () {
 
-    const $body = $('body');
-    const disableObject = $('li').find('.special').parent();
+    const $body = $('body'),
+        disableObject = $('li').find('.special').parent();
     disableObject.hide();
 
     $('#columnAutors').css("display", "none");
@@ -191,28 +191,10 @@ $(document).ready(function () {
         return confirm(message);
     });
 
-//Изменение в Области textarea
-    var textAC1 = $('#letter2autors');
-    textAC1.keypress(function () {
-        $('#previewletter2autors').html(textAC1.val());
-    });
-    textAC1.change(function () {
-        $('#previewletter2autors').html(textAC1.val());
-        //console.log("Изменеие зафиксированы");
-    });
-    //Изменение в Области textarea
-    var textAC2 = $('#letter2leaders');
-    textAC2.keypress(function () {
-        $('#previewletter2leaders').html(textAC2.val());
-    });
-    textAC2.change(function () {
-        $('#previewletter2leaders').html(textAC2.val());
-        //console.log("Изменеие зафиксированы");
-    });
 
     //Обработка переключателей на форме редактирования сведений о работе
-    var chkBoxInvitation = $('.editWork :checkbox[name=invitation]');
-    var chkBoxDead = $('.editWork :checkbox[name=dead]');
+    var chkBoxInvitation = $('.editWork :checkbox[name=invitation]'),
+        chkBoxDead = $('.editWork :checkbox[name=dead]');
     //Обработка при загрузке формы
     $(function () {
         if (chkBoxDead.is(':checked')) {
@@ -236,10 +218,6 @@ $(document).ready(function () {
         //console.log('Нашлась!');
     });
 //Окончание Обработка переключателей на форме редактирования сведений о работе
-
-//$('td').on('dblclick','a[name*="id_w"]',function(){
-//alert('1');location.href="http://siteaddress"
-//});
 
     //Формируем меню слевой части стороны при просмотре списка работ
     const list_short = $('div[id^="id_u"]');

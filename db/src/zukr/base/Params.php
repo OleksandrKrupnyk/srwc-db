@@ -20,6 +20,14 @@ use zukr\base\helpers\ArrayHelper;
  * @property string $SHOW_PROGRAMA
  * @property string $SHOW_RAITING
  * @property string DENNY_EDIT_REVIEW
+ * @property string DATEPL
+ * @property string DATEPO
+ * @property string N_AUTORS
+ * @property string N_LEADERS
+ * @property string NYEARS
+ * @property string ORDERPL
+ * @property string ORDERPO
+ * @property string YEAR
  *
  * @package zukr\base
  */
@@ -40,6 +48,14 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
         'SHOW_FILES_LINK',
         'SHOW_PROGRAMA',
         'SHOW_RAITING',
+        'DATEPL',
+        'DATEPO',
+        'N_AUTORS',
+        'N_LEADERS',
+        'NYEARS',
+        'ORDERPL',
+        'ORDERPO',
+        'YEAR'
     ];
     /**
      * @var Params

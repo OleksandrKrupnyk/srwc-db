@@ -6,7 +6,11 @@
  * Time: 0:33
  */
 include __DIR__ . '/../sqlquery.inc.php';
+
+use zukr\base\Base;
+
 global $link;
+$settings = Base::$param;
 $query = "SELECT COUNT(id) AS count  FROM works ";
 $query .= " UNION SELECT COUNT(ca) AS count FROM (SELECT COUNT(id_a) AS ca FROM wa JOIN works ON works.id = wa.id_w GROUP BY id_a ) AS tb";
 $query .= " UNION SELECT COUNT(cl) AS count FROM (SELECT COUNT(id_l) AS cl FROM wl JOIN works ON works.id = wl.id_w GROUP BY id_l ) AS tb ";
@@ -21,12 +25,10 @@ $row = mysqli_fetch_array($result);
 $count_leaders = $row['count'];
 $row = mysqli_fetch_array($result);
 $count_univers_from = $row['count'];
-$txt = "<p>На Конкурс 2017/2018&nbsp;н.р. з галузі “Електротехніка та електромеханіка” надійшло ";
+$txt = "<p>На Конкурс {$settings->NYEARS}&nbsp;н.р. з галузі “Електротехніка та електромеханіка” надійшло ";
 $txt .= works_declension($count_works) . " ( {$count_autors} студентів-авторів, {$count_leaders} науковий керівників) з {$count_univers_from} вищих навчальних закладів.</p>";
 
 $query = SUPERSQL3;
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
 $result = mysqli_query($link, $query)
 or die("Помилка запиту: " . mysqli_error($link));
 

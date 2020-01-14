@@ -6,6 +6,8 @@
  */
 
 use zukr\base\Base;
+use zukr\base\html\Html;
+use zukr\setting\Setting;
 
 require 'config.inc.php';
 require 'functions.php';
@@ -49,8 +51,18 @@ echo '<form action="settings.php" method=POST><h2>Коротка інформа�
 <table class="params">
         <tr><th>Налаштування</th><th>Значення</th></tr>';
 foreach ($params as $key => $p) {
-    echo '<tr data-key="' . $key . '"><td>' . $p['description'] . '</td><td>'
-        . \zukr\base\html\HtmlHelper::checkboxStyled($key, '', $p['value'])
+    if ($p['type'] === Setting::BOOL) {
+        $input = \zukr\base\html\HtmlHelper::checkboxStyled($key, '', $p['value']);
+    } elseif (
+        $p['type'] === Setting::STRING
+        ||
+        $p['type'] === Setting::INT
+    ) {
+        $input = Html::tag('input', null, ['value' => $p['value'], 'type' => 'text'])
+            . Html::tag('button', '=', ['class' => 'btn']);
+    }
+    echo '<tr data-key="' . $key . '" data-type="' . $p['type'] . '"><td>' . $p['description'] . '</td><td>'
+        . $input
         . '</td></tr>';
 }
 echo '</table></form>'; ?>
