@@ -5,6 +5,7 @@ header('Content-Type: text/html; charset=utf-8');
 session_name('tzLogin');
 session_start();
 global $link;
+
 //Если есть доступ к странице
 ?>
 <!DOCTYPE html>
@@ -32,25 +33,25 @@ if ($_SESSION['access']) {
             . '<tr><th>Хто</th><th>Коли</th><th>Що робив</th><th>З записом</th></tr>';
         $row = mysqli_fetch_array($result);
         $year = $row['year'];
-        echo "<tr><th colspan='4'>{$year}</th></tr>";
         $month = $row['month'];
-        echo "<tr><th colspan='4'>{$row['monthname']}</th></tr>"
+        echo "<tr><th colspan='4'>{$year}</th></tr>"
+            . "<tr><th colspan='4'>{$row['monthname']}</th></tr>"
             . "<tr><td>{$row['operator']} ({$row['tz_id']})</td><td>{$row['dayname']},{$row['day']} {$row['time']}</td><td>{$row['action']} </td><td>{$row['action_id']}</td></tr>";
         while ($row = mysqli_fetch_array($result)) {
             if ($year != $row['year']) {
                 $year = $row['year'];
-                echo "<tr><th colspan=\"4\">{$year}</th></tr>";
+                echo "<tr><th colspan='4'>{$year}</th></tr>";
             }
             if ($month != $row['month']) {
                 $month = $row['month'];
-                echo "<tr><th colspan=\"4\">{$row['monthname']}</th></tr>";
+                echo "<tr><th colspan='4'>{$row['monthname']}</th></tr>";
             }
             echo "<tr><td>{$row['operator']} ({$row['tz_id']})</td><td>{$row['dayname']},{$row['day']} {$row['time']}</td><td>{$row['action']}</td><td>{$row['action_id']}</td></tr>";
         }
         echo '</table>';
     } else {
         echo '<header>Журнал дій за таблицями</header>';
-        $query = 'SELECT log.table FROM log GROUP BY log.table ASC';
+        $query = 'SELECT `table` FROM `log` GROUP BY `table`';
         $result = mysqli_query($link, $query);
         echo '<ol>';
         while ($row = mysqli_fetch_array($result)) {
@@ -59,38 +60,24 @@ if ($_SESSION['access']) {
         echo '</ol>';
     }
 }//if
-$query = "SELECT  tz_members.usr, CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio,COUNT(tz_id) AS countReview
-FROM log
-JOIN tz_members ON tz_members.id = log.tz_id
-JOIN leaders ON tz_members.id = leaders.id_tzmember
-WHERE `table` = 'reviews' GROUP BY usr ORDER BY countReview DESC";
+$query = "SELECT review1,
+       COUNT(*) AS countReview,
+       CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname)AS fio
+FROM `reviews`
+         JOIN leaders ON review1 = leaders.id
+GROUP BY reviews.`review1`
+ORDER BY countReview DESC";
 $result = mysqli_query($link, $query);
-$sumCountReview = 0;
 $a = [];
-$f = [];
-
-echo '<p>Статистика рецензування:</p><ol>';
 while ($row = mysqli_fetch_array($result)) {
-    printf('<li>%s - %s</li>', $row['fio'], $row['countReview']);
+    $items[] = sprintf('<li>%s - %s</li>', $row['fio'], $row['countReview']);
     $a[] = $row['countReview'];
-    $f[] = $row['fio'];
 }
-echo '</ol>';
-
+$query = http_build_query(['a' => $a]);
 $sumCountReview = array_sum($a);
-$strFormat = 'imgchart.php?';
-$strArrayFormat1 = [];
-$strArrayFormat2 = [];
-
-foreach ($a as $element) {
-    $strArrayFormat1[] = 'a[]=%s';
-    $strArrayFormat2[] = 'f[]=%s';
-}
-$strFormat .= implode('&', $strArrayFormat1);
-$strFormat .= '&';
-$strFormat .= implode('&', $strArrayFormat2);
-printf('Всього рецензій : %s', $sumCountReview);
-echo '<br><img src="' . vsprintf($strFormat, array_merge($a, $f)) . "\" alt='рецензии'>";
+echo '<p>Статистика рецензування:</p><ol>' . implode('', $items) . '</ol>'
+    . 'Всього рецензій : ' . $sumCountReview
+    . '<br><img src="' . 'imgchart.php?' . $query . '" alt=\'рецензии\'>';
 ?>
 </body>
 </html>

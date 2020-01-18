@@ -85,5 +85,4 @@ Base::$session->setRedirectParam();
     <input type="hidden" name="action" value="leader_edit">
     <input type="hidden" name="Leader[id]" value="<?= $leader['id'] ?>">
     <input type="hidden" name="id_l" value="<?= $id_l ?>">
-    <input type="hidden" name="from" value="<?= $_GET['FROM'] ?>">
 </form>

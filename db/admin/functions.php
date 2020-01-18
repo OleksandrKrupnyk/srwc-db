@@ -723,14 +723,13 @@ function Go_page($page)
  }
 
 /**
- * @param $action_string
+ * @param string $action_string
  */
-function execute_get_action($action_string)
+function execute_get_action(string $action_string)
 {
-    if(is_string($action_string))
-    {
-         $action = explode('_', $action_string);
-        if (count($action) === 2){
+    if (is_string($action_string)) {
+        $action = explode('_', $action_string);
+        if (count($action) === 2) {
             $directory = $action[0];
             $path[] = $directory;
             $fileName = 'form_' . $action[1] . '.php';
@@ -744,22 +743,35 @@ function execute_get_action($action_string)
 }
 
 /**
- * @param $action_string
+ * @param string $action_string
  */
-function execute_post_action($action_string)
+function execute_post_action(string $action_string)
 {
-    if(is_string($action_string))
-    {
+    if (is_string($action_string)) {
         $action = explode('_', $action_string);
-        if (count($action) === 2){
+        if (count($action) === 2) {
             $directory = $action[0];
             $path[] = $directory;
             $fileName = $action[1] . '.php';
             $path[] = $fileName;
             $file = implode(DIRECTORY_SEPARATOR, $path);
-            if(is_file($file)){
+            if (is_file($file)) {
                 include_once $file;
             }
+        }
+    }
+}
+
+/**
+ * @param string $action_string
+ */
+function execute_print_action(string $action_string)
+{
+    if (is_string($action_string)) {
+        $path = ['documents', $action_string . '.php'];
+        $file = implode(DIRECTORY_SEPARATOR, $path);
+        if (is_file($file)) {
+            include_once $file;
         }
     }
 }

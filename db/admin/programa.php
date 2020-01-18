@@ -8,7 +8,6 @@
 require 'config.inc.php';
 require 'functions.php';
 header("Content-Type: text/html; charset=utf-8");
-header("Content-Type: text/html; charset=utf-8");
 session_name('tzLogin');
 session_start();
 global $link;

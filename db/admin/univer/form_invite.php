@@ -33,5 +33,5 @@ $session->setFromParam();
               </tr>';
 
     endforeach; ?>
-</table><a href='lists.php?list=adress'><input type='button' value='Друкувати список'></a>
+</table><a href='lists.php?action=adress'><input type='button' value='Друкувати список'></a>
 <?= $uh->registerJS() ?>

@@ -91,7 +91,7 @@ return [
             ],
             [
                 'value' => 'Конверти I',
-                'href'  => 'lists.php?list=envelope',
+                'href' => 'lists.php?action=envelope',
                 'title' => 'Формат паперу DL. Перевір налаштування принтеру',
             ],
         ],
@@ -130,22 +130,22 @@ return [
                 'items' => [
                     [
                         'value' => 'Список II',
-                        'href'  => 'lists.php?list=adress2',
+                        'href' => 'lists.php?action=adress2',
                         'title' => 'Друкуєтья у 2-х примірниках (пошта, канцелярія)',
                     ],
                     [
                         'value' => 'Конверти II',
-                        'href'  => 'lists.php?list=envelope2',
+                        'href' => 'lists.php?action=envelope2',
                         'title' => 'Формат паперу DL. Перевір налаштування принтеру',
                     ],
                     [
                         'value' => 'Листи ректорам',
-                        'href'  => 'lists.php?list=invitation_1',
+                        'href' => 'lists.php?action=invitation',
                         'title' => 'Листи друкуються на оффіційному аркуші університету',
                     ],
                     [
                         'value' => 'Додаток 1',
-                        'href'  => 'lists.php?list=invitation_2',
+                        'href' => 'lists.php?action=invitation2',
                         'title' => 'Формат А4. Список студентів яких запросили',
                     ],
                 ]
@@ -166,19 +166,19 @@ return [
                 'items' => [
                     [
                         'value' => 'Список авторів для поселення в гуртожитку',
-                        'href'  => 'lists.php?list=ahostel',
+                        'href' => 'lists.php?action=ahostel',
                     ],
                     [
                         'value' => 'Список керівників для поселення',
-                        'href'  => 'lists.php?list=lhostel',
+                        'href' => 'lists.php?action=lhostel',
                     ],
                     [
                         'value' => 'Бейджики Авторів',
-                        'href'  => 'lists.php?list=badge_autors',
+                        'href' => 'lists.php?action=badge_autors',
                     ],
                     [
                         'value' => 'Бейджики Керівників',
-                        'href'  => 'lists.php?list=badge_leaders',
+                        'href' => 'lists.php?action=badge_leaders',
                     ],
 
                 ]
@@ -224,15 +224,15 @@ return [
                 'items' => [
                     [
                         'value' => 'Дипломи',
-                        'href'  => 'lists.php?list=diploms',
+                        'href' => 'lists.php?action=diploms',
                     ],
                     [
                         'value' => 'Грамоты',
-                        'href'  => 'lists.php?list=charters',
+                        'href' => 'lists.php?action=charters',
                     ],
                     [
                         'value' => 'Подяки',
-                        'href'  => 'lists.php?list=gratitudes',
+                        'href' => 'lists.php?action=gratitudes',
                     ],
                 ]
             ],
