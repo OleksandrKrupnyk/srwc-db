@@ -22,63 +22,54 @@ try {
         echo $classObj->execute();
     }
 } catch (\Exception $e) {
-    Base::$log->error($e->getMessage());
+    if (isset(Base::$log) && Base::$log !== null) {
+        Base::$log->error($e->getMessage());
+    }
 }
 
 
 switch ($action) {
-    //Обработка Запроса на список работ в вузе
-    //    case 'selunivers':
-    //        {
-    //            if (!empty($id_u) && !isset($_POST['id_w'])) {
-    //                $select_id_w = $_POST['select_id_w'] ?? '';
-    //                echo list_works_of_univer($_POST['id_u'], 'title', $select_id_w, 5);
-    //            }
-    //        }
-    //        break;
-    /*     * ------------------------------------------------------- */
     case 'selwork':
         {
-            if (isset($_POST['id_w'])) {
+            if ($id_w !== false && $id_u !== false) {
                 //Запросить кол. руководителей по работе
-                $col_l = count_la("wl", $_POST['id_w']);
-                if ($col_l != 0) {
-                    echo(list_leader_or_autors_str($_POST['id_w'], "wl", true));
-                } elseif ($col_l == 0) {
+                $col_l = count_la('wl', $id_w);
+                if ($col_l > 0) {
+                    echo list_leader_or_autors_str($id_w, 'wl', true);
+                } else {
                     echo '<span class="info">Відсутні</span>';
                 }
                 echo "!"; //символ разбиения строки не просто так написан
                 if ($col_l < N_LEADERS) {
                     $i = 1;
                     while ($col_l < N_LEADERS) {
-                        list_fio('leaders', "leader[" . $i . "]", $_POST['id_u'], 1);
-                        echo "<br>";
+                        echo selectListAuthorsOrLeaders('leaders', 'leader[' . $i . ']', $id_u, 1) . "<br>";
                         $i++;
                         $col_l++;
                     }
-                    echo "<a href=\"action.php?action=leader_add&id_u=" . $_POST['id_u'] . "\" title=\"Внесення в базу даних керівника\">Створити</a>";
+                    $queryString = http_build_query(['action' => 'leader_add', 'id_u' => $id_u]);
+                    echo "<a href='action.php?{$queryString}' class='btn' title=\"Внесення в базу даних керівника\">Створити</a>";
                 } else {
                     echo '<span class="info">Досить</span>';
                 }
                 echo '!';//символ разбиения строки не просто так написан
 
-                $col_a = count_la("wa", $_POST['id_w']);
-                if ($col_a != 0) {
-                    echo(list_leader_or_autors_str($_POST['id_w'], "wa", true));
-                } elseif ($col_a == 0) {
+                $col_a = count_la('wa', $id_w);
+                if ($col_a > 0) {
+                    echo list_leader_or_autors_str($id_w, 'wa', true);
+                } else {
                     echo '<span class="info">Відсутні</span>';
                 }
                 echo '!';//символ разбиения строки не просто так написан
                 if ($col_a < N_AUTORS) {
                     $i = 1;
                     while ($col_a < N_AUTORS) {
-                        list_fio('autors', "autor[" . $i . "]", $_POST['id_u'], 1);
-                        echo '<br>';
+                        echo selectListAuthorsOrLeaders('autors', "autor[" . $i . "]", $id_u, 1) . '<br>';
                         $i++;
                         $col_a++;
                     }
-
-                    echo "<a href=\"action.php?action=author_add&id_u=" . $_POST['id_u'] . "&id_w=" . $_POST['id_w'] . "\" title=\"Внесення в базу даних автора\">Створити</a>";
+                    $queryString = http_build_query(['action' => 'author_add', 'id_u' => $id_u, 'id_w' => $id_w]);
+                    echo "<a href='action.php?{$queryString}' class='btn' title=\"Внесення в базу даних автора\">Створити</a>";
                 } else {
                     echo '<span class="info">Досить</span>';
                 }
@@ -122,7 +113,8 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
     global $link;
     global $FROM;
 
-    $query = ($id_w != "") ? "SELECT * FROM `{$table}` WHERE id_w='{$id_w}'" : "SELECT * FROM `{$table}` ORDER BY `suname` ASC";
+    $query = (!empty($id_w))
+        ? "SELECT * FROM `{$table}` WHERE id_w='{$id_w}'" : "SELECT * FROM `{$table}` ORDER BY `suname` ";
     //echo $query;
     //"SELECT * FROM `".$table."` ORDER BY `suname` ASC"
     $sub_table = ($table === 'wl') ? 'leaders' : 'autors';
@@ -131,7 +123,7 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
     or die("Invalid query функція list_leader_or_autors_str: " . mysqli_error($link));
     // Попытка обработки строки ошибки когда база пуста
     //if('order clause'==mysqli_error($link)) return 0;
-    $sub_row_str = "<ol>";
+    $sub_row_str = '<ol>';
     while ($row = mysqli_fetch_array($result)) {
         $sub_row = fullinfo($sub_table, "id", $row[2]);
         $sub_row_str .= ($href)
@@ -153,8 +145,8 @@ function list_leader_or_autors_str($id_w, $table, $href = false, $showPlace = fa
         if ($sub_row['arrival'] <> 1) {
             $sub_row_str .= ($href) ? " <a href=action.php?action=work_unlink&id_" . ltrim($table, "w") . "=" . $sub_row['id'] . "&id_w=" . $id_w . " title=\"Відокремити від роботи\"><img src=\"../images/unlink.png\"></a>" : "";
         }
-        $sub_row_str .= "</li>\n";
+        $sub_row_str .= "</li>";
     }
-    $sub_row_str .= "</ol>\n";
+    $sub_row_str .= "</ol>";
     return $sub_row_str;
 }

@@ -142,39 +142,40 @@ function list_reviews_for_one_work($id_w, bool $href = false, $isAdmin = false,$
  *
  * Список [Фамилия Имя Отчество]
  *  <select></select>
- * @param string $table  Таблица
- * @param string $pole    Имя параметра name
- * @param int $id_u id of Univercity
- * @param int $size Size of list
- * @param bool $selecttag true or false
+ *
+ * @param string $table Таблица
+ * @param string $pole  Имя параметра name
+ * @param int    $id_u  id of Univercity
+ * @param int    $size  Size of list
+ * @return string
  */
-function list_fio($table, $pole, $id_u, $size, $selecttag = true)
+function selectListAuthorsOrLeaders(string $table, string $pole, int $id_u, int $size): string
 {
     global $link;
-    if ($id_u == "") {
-        $query = "SELECT * FROM `{$table}` ORDER BY  `suname` ASC";
-    } else {
-        $query = "SELECT * FROM `{$table}` WHERE `id_u`='{$id_u}' ORDER BY  `suname` ASC";
+
+    $query = ($table === 'leaders')
+        ? 'SELECT * FROM `leaders` '
+        : 'SELECT * FROM `autors` ';
+
+    if (!empty($id_u)) {
+        $query .= " WHERE `id_u`='{$id_u}' ";
     }
+    $query .= ' ORDER BY  `suname`';
     $result = mysqli_query($link, $query)
-    or die("Invalid query: " . mysqli_error($link));
+    or die('Invalid query: ' . mysqli_error($link));
     //Проверка а вообще есть результаты по запросу
     $count = mysqli_num_rows($result);
-    if ($count == 0) {
-        echo "Незнайдено";
+    if ($count === 0) {
+        return 'Незнайдено';
     }
-    if (true == $selecttag) {
-        echo "<select size=\"$size\" name=\"$pole\"><option value=\"-1\" selected disabled>Оберіть...</option>\n";
-    }
-
+    $items = [];
     while ($row = mysqli_fetch_array($result)) {
-        echo "<option value=\"{$row['id']}\" >" . $row['suname'] . " " . $row['name'] . " " .
-            $row['lname'] . "</option>\n";
+        $items[] = "<option value='{$row['id']}' >" . implode(' ', [$row['suname'], $row['name'], $row['lname']]) . "</option>";
     }
+    return "<select size='{$size}' name='{$pole}' class='w-100'><option value='-1' selected disabled>Оберіть...</option>"
+        . implode('', $items)
+        . '</select>';
 
-    if (true == $selecttag) {
-        echo "</select>\n";
-    }
 }
 /**
  * Возвращает список руководителей с выбором включать в лист приглашения
@@ -196,11 +197,11 @@ function list_leaders_invite($id_u, $check = true)
     if ($count == 0) {
         return false;
     }
-    echo "<ol>";
+    echo '<ol>';
     while ($row = mysqli_fetch_array($result)) {
         echo '<li>' . $row['suname'] . ' ' . $row['name'] . ' ' . $row['lname'] . ', ' . $row['position'] . '</li>';
     }
-    echo "</ol>";
+    echo '</ol>';
 }
 
 
@@ -210,15 +211,14 @@ function list_leaders_invite($id_u, $check = true)
  * @param string $table
  * @param string $field
  * @param string $value
- * @param bool   $u Bool
  * @return array
  */
-function fullinfo($table, $field, $value)
+function fullinfo(string $table, string $field, $value): ?array
 {
     global $link;
     $query = "SELECT * FROM `{$table}` WHERE `{$field }`='{$value}'";
     $result = mysqli_query($link, $query)
-    or die("Помилка запиту функція fullinfo: " . mysqli_error($link));
+    or die('Помилка запиту функція fullinfo: ' . mysqli_error($link));
     return mysqli_fetch_array($result);
 }
 
@@ -232,7 +232,7 @@ function fullinfo($table, $field, $value)
 function list_files($id_w, string $typeoffile = 'all')
 {
     global $link;
-    if ($id_w != '') {
+    if (!empty($id_w)) {
         $query = "SELECT * FROM `files` WHERE `id_w`='{$id_w}'";
         switch ($typeoffile) {
             case '0':
@@ -258,7 +258,7 @@ function list_files($id_w, string $typeoffile = 'all')
         }
 
         $result = mysqli_query($link, $query)
-        or die("Помилка запиту функція list_files: " . mysqli_error($link));
+        or die('Помилка запиту функція list_files: ' . mysqli_error($link));
         $count = mysqli_num_rows($result);
         if ($count != 0) {
             $str = "<details><summary>Файли</summary><ol>";
@@ -266,7 +266,6 @@ function list_files($id_w, string $typeoffile = 'all')
                 //$str2=explode("/",$row['file']);
                 //$str2=end($str2);
                 $str_title = basename($row['file']);
-
                 //
                 $str2 = file_name_format($str_title, 30);
                 //
@@ -276,9 +275,9 @@ function list_files($id_w, string $typeoffile = 'all')
             }
             $str .= "</ol></details>";
         } else
-            $str = "";
+            $str = '';
     } else {
-        $str = "<mark>Нема файлів для відображення</mark>";
+        $str = '<mark>Нема файлів для відображення</mark>';
     }
     return $str;
 }
@@ -288,17 +287,18 @@ function list_files($id_w, string $typeoffile = 'all')
  *
  * @param string $table Table in MySQL
  * @param int    $id_w  id Work
- * @return Integer
+ * @return int
  */
-function count_la($table, $id_w)
+function count_la(string $table, int $id_w)
 {
     global $link;
-    $query = "SELECT Count(id_w) FROM `" . $table . "`\n"
-        . "WHERE `id_w`='" . $id_w . "'";
+    $query = ($table === 'wl')
+        ? "SELECT COUNT(*) FROM `wl` WHERE `id_w`='" . $id_w . "'"
+        : "SELECT COUNT(*) FROM `wa` WHERE `id_w`='" . $id_w . "'";
     $result = mysqli_query($link, $query)
     or die('Помилка запиту функція count_la: ' . mysqli_error($link));
     $row = mysqli_fetch_array($result);
-    return $row[0];
+    return (int)$row[0];
 }
 
 /**
@@ -332,18 +332,20 @@ function list_emails($table)
     //echo $query."\n";
     $result = mysqli_query($link, $query)
     or die("Invalid query функція list_emails: " . mysqli_error($link));
-    $sub_row_str_nomail ="<details>\n<summary>Не надали адресу</summary>\n<ol>";
-    $sub_row_str = "<details>\n<summary>Список отримувачів</summary>\n<ol name=" . $table . ">";
-     while ($row = mysqli_fetch_array($result)) {
+    $sub_row_str_nomail = "<details><summary>Не надали адресу</summary><ol>";
+    $sub_row_str = "<details><summary>Список отримувачів</summary><ol name=" . $table . ">";
+    while ($row = mysqli_fetch_array($result)) {
 
 
-         if($row['email'] != "") {
-             $sub_row_str .= "<li>".$row['suname']." ".$row['name']." ".$row['lname'];
-             $sub_row_str .= "<a href=\"getmails.php?hash=" . $row['hash'] . $get_text . "\">Получить письмо!</a>";
-             if ($row['email_recive'] == 1){$sub_row_str .= " [The email have recived and read.".$row['email_date']." ] ";}
-             $sub_row_str .="<input type=\"hidden\" name=emails[] value =".$row['email']." >";
-             $sub_row_str .="<input type=\"hidden\" name=whom[]   value =\"".$row['suname']." ".$row['name']." ".$row['lname']."\" >";
-             $sub_row_str .="<input type=\"hidden\" name=hashs[]  value =\"".$row['hash']."\">";
+        if ($row['email'] != "") {
+            $sub_row_str .= "<li>" . $row['suname'] . " " . $row['name'] . " " . $row['lname'];
+            $sub_row_str .= "<a href=\"getmails.php?hash=" . $row['hash'] . $get_text . "\">Получить письмо!</a>";
+            if ($row['email_recive'] == 1) {
+                $sub_row_str .= " [The email have recived and read." . $row['email_date'] . " ] ";
+            }
+            $sub_row_str .= "<input type=\"hidden\" name=emails[] value =" . $row['email'] . " >";
+            $sub_row_str .= "<input type=\"hidden\" name=whom[]   value =\"" . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . "\" >";
+            $sub_row_str .= "<input type=\"hidden\" name=hashs[]  value =\"" . $row['hash'] . "\">";
              $sub_row_str .="<input type=\"hidden\" name=titles[] value =\"".$row['title']."\">";
              $sub_row_str .= "</li>\n";
          }
@@ -382,9 +384,10 @@ function getListOfObjects(string $object, bool $phone = false, bool $email = fal
         $query = "SELECT autors.*, univers.univer 
                   FROM `autors` 
                       JOIN univers ON autors.id_u = univers.id 
-                  ORDER BY `suname` ASC";
+                  ORDER BY `suname` ";
     } else {
-        $query = "SELECT leaders.*, positions.position,degrees.degree,statuses.status,univers.univer FROM leaders 
+        $query = "SELECT leaders.*, positions.position,degrees.degree,statuses.status,univers.univer 
+FROM leaders 
 JOIN positions ON leaders.id_pos = positions.id
 JOIN degrees ON leaders.id_deg = degrees.id
 JOIN statuses ON leaders.id_sat = statuses.id
@@ -429,12 +432,12 @@ JOIN univers ON leaders.id_u = univers.id";
             if ($row['email_recive'] == 1 && $hash) {
                 $sub_row_str .= ' [The email have received and read.' . $row['email_date'] . ' ] ';
             }
-            $sub_row_str .= "<a href=\"lists.php?list=badge_{$object}&badge={$row['id']}\" title=\"Друкувати посвідчення(тільки зв'язані з роботою)\"></a>";
+            $sub_row_str .= "<a href=\"lists.php?action=badge_{$object}s&badge={$row['id']}\" title=\"Друкувати посвідчення(тільки зв'язані з роботою)\"></a>";
             $sub_row_str .= '<input type="checkbox" name="works_id[]" value="' . $row['id'] . '">';
             $sub_row_str .= "</li>\n";
         }
     }
-    $sub_row_str .= "</ol>\n";
+    $sub_row_str .= '</ol>';
     return $sub_row_str;
 }
 

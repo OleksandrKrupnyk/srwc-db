@@ -20,7 +20,7 @@ $univers = $uh->getDropDownListShot(
                 id="countLeaders"><?= $lh->getCountInvitationLeaders() ?></span>&nbsp;всього)
     </header>
     <menu class="viewTableMenu">
-        <li><a href="lists.php?list=invitation_1">Листи ректорам</a></li>
+        <li><a href="lists.php?action=invitation">Листи ректорам</a></li>
     </menu>
     <table id="tableInvitationLeaders">
         <tr>

@@ -24,10 +24,13 @@ $univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($uni
             ['id' => 'selunivers', 'prompt' => 'Оберіть', 'class' => 'w-100', 'size' => 10]) ?>
         <div id="work"></div>
         <table id="table_la" class="w-100">
+            <thead>
             <tr>
-                <th>Керівники</th>
-                <th>Автори</th>
+                <th class="w-50">Керівники</th>
+                <th class="w-50">Автори</th>
             </tr>
+            </thead>
+            <tbody>
             <tr>
                 <td id="leader"></td>
                 <td id="autor"></td>
@@ -36,6 +39,7 @@ $univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($uni
                 <td id="leaders"></td>
                 <td id="autors"></td>
             </tr>
+            </tbody>
         </table>
         <input type="submit" value="Записати">
         <input type="hidden" name="action" value="work_link">
@@ -47,7 +51,6 @@ if (isset($id_u) && isset($work)) {
 <script type="text/javascript">
 $(function(){
     selectWork({$id_u},{$work['id']});
-    $(".select-link-author").chosen({disable_search_threshold: 10});
 })
 </script>
 SCRIPT;

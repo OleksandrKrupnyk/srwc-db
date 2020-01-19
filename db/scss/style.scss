@@ -457,19 +457,19 @@ background-color: #dcdcdc;
 
 input[type="submit"],
 input[type="button"],
-a > input[type="button"]
-{
+a > input[type="button"],
+a.btn {
   background-color: white;
   border: 1px solid #782121;
-  text-shadow: 2px 3px 9px white;
-  display: inline-block;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
   color: black;
+  display: inline-block;
+  margin: 4px;
   padding: 4px 8px;
   text-decoration: none;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  margin: 4px;
+  text-shadow: 2px 3px 9px white;
 }
 
 #viewtable {

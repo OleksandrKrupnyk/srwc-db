@@ -7,36 +7,35 @@
 * * * * * * { outline: 1px solid green; }
 * * * * * * * { outline: 1px solid orange; }
 * * * * * * * * { outline: 1px solid blue; }*/
-
 body {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 12px;
   background: white;
   border: solid 1px #0c0c0c;
   max-width: 1024px;
-    margin: 5px auto auto;
-    padding: 5px;
-    position: relative;
-    border-radius: 5px;
+  margin: 5px auto auto;
+  padding: 5px;
+  position: relative;
+  border-radius: 5px;
 }
 
 details summary {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #barUnivers {
-    overflow-y: scroll;
-    /*    */
-    background-color: white;
-    box-shadow: 3px 3px 6px #000000;
-    position: fixed;
-    max-height: 800px;
-    height: 400px;
-    width: 100px;
+  overflow-y: scroll;
+  /*    */
+  background-color: white;
+  box-shadow: 3px 3px 6px #000000;
+  position: fixed;
+  max-height: 800px;
+  height: 400px;
+  width: 100px;
   left: 10px;
   top: 150px;
   border: 2px outset #e17979;
@@ -265,21 +264,21 @@ header:active {
 }
 
 header + header, .header {
-    padding: 2px 4px;
-    margin-left: 1cm;
-    height: 14pt;
-    width: 10cm;
-    color: white;
-    border: 3px outset #e17979;
-    background: #e17979 linear-gradient(to top, #db0000, #e17979);
-    text-shadow: 2px 3px 9px black;
-    text-align: center;
-    font-weight: bold;
-  font-size: 12pt;
-  display: block;
+  background: #e17979 linear-gradient(to top, #db0000, #e17979);
+  border: 3px outset #e17979;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
+  color: white;
+  display: block;
+  font-size: 12pt;
+  font-weight: bold;
+  height: 14pt;
+  margin-left: 1cm;
+  padding: 2px 4px;
+  text-align: center;
+  text-shadow: 2px 3px 9px black;
+  width: 10cm;
 }
 
 header + header {
@@ -305,8 +304,8 @@ header + header + header:active {
 }
 
 .header > label {
-    margin-left: 15px;
-    width: 7cm;
+  margin-left: 15px;
+  width: 7cm;
 }
 
 a {
@@ -407,18 +406,19 @@ background-color: #dcdcdc;
 
 input[type=submit],
 input[type=button],
-a > input[type=button] {
+a > input[type=button],
+a.btn {
   background-color: white;
   border: 1px solid #782121;
-  text-shadow: 2px 3px 9px white;
-  display: inline-block;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
   color: black;
+  display: inline-block;
+  margin: 4px;
   padding: 4px 8px;
   text-decoration: none;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  margin: 4px;
+  text-shadow: 2px 3px 9px white;
 }
 
 #viewtable {
