@@ -4,6 +4,7 @@ global $link;
 //Дипломы
 use zukr\base\helpers\PersonHelper;
 
+$settings = \zukr\base\Base::$param;
 $ph = \zukr\place\PlaceHelper::getInstance();
 $query = "SELECT
                           autors.place,

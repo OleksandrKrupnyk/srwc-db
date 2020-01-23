@@ -1,5 +1,6 @@
 <?php
 global $link;
+$settings = \zukr\base\Base::$param;
 //Подяки
 $query = "SELECT leaders.id,univers.univerrod AS univer, CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio_l,position,status,degree 
                           FROM leaders  

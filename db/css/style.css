@@ -27,19 +27,43 @@ details summary {
   cursor: pointer;
 }
 
-#barUnivers {
-  overflow-y: scroll;
-  /*    */
+.barUnivers {
   background-color: white;
-  box-shadow: 3px 3px 6px #000000;
-  position: fixed;
-  max-height: 800px;
-  height: 400px;
-  width: 100px;
-  left: 10px;
-  top: 150px;
   border: 2px outset #e17979;
+  box-shadow: 3px 3px 6px black;
   font-size: 10px;
+  left: 10px;
+  max-height: 400px;
+  overflow-y: scroll;
+  position: fixed;
+  top: 150px;
+  width: 100px;
+}
+.barUnivers ol, .barUnivers ul {
+  margin: 0;
+  padding: 0 0 0 18px;
+}
+.barUnivers ol li, .barUnivers ul li {
+  margin: 1em 5%;
+}
+
+.upPageLink {
+  background-color: #993333;
+  border: none;
+  border-radius: 10px;
+  bottom: 20px;
+  color: #ffe;
+  display: none;
+  font-size: 12px;
+  left: 30px;
+  outline: none;
+  padding: 15px;
+  position: fixed;
+  z-index: 99;
+}
+.upPageLink:hover {
+  background-color: #555;
+  /* Add a dark-grey background on hover */
 }
 
 textarea {
@@ -612,10 +636,6 @@ td > output.balls {
     box-shadow: none;
     text-shadow: none;
     background-color: white;
-  }
-
-  #barUnivers {
-    display: none;
   }
 
   td, th {

@@ -218,29 +218,31 @@ $(document).ready(function () {
         //console.log('Нашлась!');
     });
 //Окончание Обработка переключателей на форме редактирования сведений о работе
+    //Get the button:
+    mybutton = document.getElementById("btnUp");
 
-    //Формируем меню слевой части стороны при просмотре списка работ
-    const list_short = $('div[id^="id_u"]');
-    $(function () {
-        const $barUnivers = $('#barUnivers');
-        list_short.each(function () {
-            let object = $(this).text();
-            let id_u = $(this).attr("id");
-            $barUnivers.append("<li><a href=#" + id_u + ">" + object + "</a></li>");
-        })
+// When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction()
+    };
 
-    });
-
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
 
 // Телефонный номер
     var phone_list = $('span[id^="phone"]');
     $(function () {
-            phone_list.each(function () {
-                    var phone = $(this).text();
-                    var operator = (phone != 'відсутній') ? phone[0] + phone[1] + phone[2] : "000";
+        phone_list.each(function () {
+                var phone = $(this).text();
+                var operator = (phone != 'відсутній') ? phone[0] + phone[1] + phone[2] : "000";
 
-                    switch (operator) {/*МТС*/
-                        case '050':
+                switch (operator) {/*МТС*/
+                    case '050':
                         case '066':
                         case '095':
                         case '099': {

@@ -5,14 +5,21 @@
  * @copyright 2017
  */
 
+use zukr\base\Base;
+
 require 'config.inc.php';
 require 'functions.php';
+require '../vendor/autoload.php';
 header("Content-Type: text/html; charset=utf-8");
 session_name('tzLogin');
 session_start();
+Base::init();
+$session = Base::$session;
+$settings = Base::$param;
 global $link;
-if (!isset($_SESSION['access']) || $_SESSION['access'] == 0) {
-    Go_page("index.php");
+//Если есть доступ к странице
+if (Base::$user->getUser()->isGuest()) {
+    Go_page('index.php');
 }
 ?>
     <!DOCTYPE html>

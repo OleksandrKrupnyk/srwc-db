@@ -261,11 +261,7 @@ $count = count($allWorks);
 <!-- Просмотр  таблици работ -->
 <header><a href="action.php">Меню</a></header>
 <header>Перегляд бази (<?= $count ?> робіт)</header>
-<menu class="viewTableMenu">
-    <?php vprintf('%s %s %s %s %s %s %s %s', $viewMenuitem); ?>
-</menu>
-
-
+<menu class="viewTableMenu"><?= vsprintf('%s %s %s %s %s %s %s %s', $viewMenuitem); ?></menu>
 <div id="viewtable">
     <table>
         <tr>
@@ -279,11 +275,13 @@ $count = count($allWorks);
         </tr>
 
         <?php
+        $listUniversLinks = [];
         if ($who === 'raiting') {
             foreach ($allWorks as $work) {
                 $univer = $univerList[$work['id_u']];
                 echo print_work_univer($univer['univerfull'], $univer['id'], $univer['univer'])
                     . print_work_row($work, $userLogin);
+                $listUniversLinks[$univer['id']] = $univer['univer'];
             }
         } else {
             $allWorks = ArrayHelper::group($allWorks, 'id_u');
@@ -293,11 +291,17 @@ $count = count($allWorks);
                 foreach ($works as $work) {
                     echo print_work_row($work, $userLogin);
                 }
+                $listUniversLinks[$univer['id']] = $univer['univer'];
             }
         }
-
+        $barUnivers = '';
+        foreach ($listUniversLinks as $id => $u) {
+            $barUnivers .= "<li><a href='#id_u{$id}'>{$u}</a></li>";
+        }
         ?>
     </table>
 </div>
-<div id="barUnivers"></div>
+<div class="barUnivers">
+    <ol><?= $barUnivers ?></ol>
+</div>
 <!-- Окончание Просмотр базы -->

@@ -4,6 +4,7 @@ global $link;
 //Грамоты
 use zukr\base\helpers\PersonHelper;
 
+$settings = \zukr\base\Base::$param;
 $query = "SELECT
                           autors.place,
                           univers.univerrod,

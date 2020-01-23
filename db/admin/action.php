@@ -89,7 +89,7 @@ $_type = $session->getFlash('recordSaveType', '');
 
         </script>
     </head>
-    <body>
+    <body id="top">
     <?php //переменная для определения предка вызова сценария
 
     $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
@@ -130,6 +130,7 @@ $_type = $session->getFlash('recordSaveType', '');
             . $menu->getMenu();
     }
     ?>
+    <div class="upPageLink pointer" id="btnUp" onclick="window.scrollTo(0, 0);">вгору</div>
     <footer><a href="index.php?logoff">Вийти</a></footer>
     <div id="test"><?= 'from :' . urldecode($_SESSION['from']) ?><?= $error_message; ?></div>
     <div id="operator">Оператор :<span><?= Base::$user->getUser()->getLogin() ?></span>
