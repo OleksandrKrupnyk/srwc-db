@@ -26,7 +26,7 @@ $count_leaders = $row['count'];
 $row = mysqli_fetch_array($result);
 $count_univers_from = $row['count'];
 $txt = "<p>На Конкурс {$settings->NYEARS}&nbsp;н.р. з галузі “Електротехніка та електромеханіка” надійшло ";
-$txt .= works_declension($count_works) . " ( {$count_autors} студентів-авторів, {$count_leaders} науковий керівників) з {$count_univers_from} вищих навчальних закладів.</p>";
+$txt .= \zukr\base\helpers\TextHelper::declensionWork($count_works) . " ( {$count_autors} студентів-авторів, {$count_leaders} науковий керівників) з {$count_univers_from} вищих навчальних закладів.</p>";
 
 $query = SUPERSQL3;
 $result = mysqli_query($link, $query)

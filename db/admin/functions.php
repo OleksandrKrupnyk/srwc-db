@@ -5,15 +5,6 @@
  * @copyright 2014
  */
 
-use zukr\author\AuthorHelper;
-use zukr\base\Base;
-use zukr\base\html\HtmlHelper;
-use zukr\base\LoginUser;
-use zukr\file\FileHelper;
-use zukr\leader\LeaderHelper;
-use zukr\review\ReviewHelper;
-use zukr\work\WorkHelper;
-
 /**
  * Функция считытывания настроек програмы из таблици settings БД
  *
@@ -93,49 +84,7 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
     return $str;
 }
 
-/**
- * @param int  $id_w ID of work in table works
- * @param bool $href TRUE if you need to show link for edit
- * @param bool $isAdmin
- * @param int  $userProfileId
- * @return string Numeric list of reviews with links
- */
-function list_reviews_for_one_work($id_w, bool $href = false, $isAdmin = false,$loginId=0)
-{
-    global $link;
-    $query = "SELECT `reviews`.`id`, `reviews`.`id_w`, leaders.id_tzmember, reviews.conclusion,
-              CONCAT(`leaders`.`suname`,' ',`leaders`.`name`,' ',`leaders`.`lname`) AS fio,
-              (`actual`+`original`+`methods`+`theoretical`+`practical`+`literature`+`selfcontained`+`design`+`publication`+`government`+`tendentious`) AS sumball 
-              FROM `reviews` 
-              JOIN `leaders` ON `leaders`.`id` = `reviews`.`review1` 
-              WHERE id_w = {$id_w}";
 
-    $result = mysqli_query($link, $query)
-    or die('Invalid query in function list_reviews_for_one_work : ' . mysqli_error($link));
-    $fullSum = 0;
-    $conclusions = '';
-    $str = '<ol>';
-    while ($row = mysqli_fetch_array($result)) {
-        $fullSum += $row['sumball'];
-        $item = '';
-        if ($href) {
-            $item .= "<a href=\"action.php?action=review_edit&id={$row['id']}\" title=\"Ред. Рец.:{$row['fio']}\">&#9998;:[{$row['sumball']}]</a>\n";
-            if ($loginId == $row['id_tzmember'] || $isAdmin) {
-                $item .= "<a href=\"action.php?action=review_delete&id={$row['id']}&id_w={$row['id_w']}\"  title=\"Видалити рецензію\"></a>\n";
-            }
-        } else {
-            $item .= "<a href=\"action.php?action=review_view&id={$row['id']}\" title=\"[{$row['sumball']}]\">Реценз.</a>\n";
-        }
-        $conclusions .= ($row['conclusion'] == 1) ? 'ТАК&nbsp;' : 'НІ&nbsp;';
-
-        $str .= '<li>' . $item . '</li>';
-    }
-
-    $str .= '</ol>';
-
-    $str .= "<p>&nbsp;&nbsp;&nbsp;<strong>&sum;:{$fullSum}</strong>&nbsp;{$conclusions}</p>";
-    return $str;
-}
 
 
 /**
@@ -267,7 +216,7 @@ function list_files($id_w, string $typeoffile = 'all')
                 //$str2=end($str2);
                 $str_title = basename($row['file']);
                 //
-                $str2 = file_name_format($str_title, 30);
+                $str2 = \zukr\base\helpers\StringHelper::truncate($str_title, 30);
                 //
                 $str .= "<li><a href=\"{$row['file']}\" class='link-file' title=\"{$str_title}\" >{$str2}</a>&nbsp;"
                     . "<a href=\"action.php?action=file_delete&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a></li>";
@@ -442,161 +391,8 @@ JOIN univers ON leaders.id_u = univers.id";
 }
 
 
-/**
- * Выводит заголовок  "название университета" в таблице посмотра данных о работах
- *
- * @param string $univer_title
- * @param int $id_u
- * @param string $univer
- * */
-function print_work_univer($univer_title, $id_u, $univer)
-{
-    $FROM = $_SESSION['from'] ?? '';
-    return '
-    <tr>
-    <td colspan="5" class="univerTitle">
-    <div id=id_u' . $id_u . ' style="display:inline;margin-right:5px">' . $univer . '</div>
-    <a href="action.php?action=univer_edit&id_u=' . $id_u . '&FROM=' . $FROM . '" title="Редагувати данні університету">' . $univer_title . '</a>
-    </td>
-    </tr>';
-}
-
-/**
- * Выводит рядок в таблице просмотра данных о работе
- *
- * @param array  $work
- * @param LoginUser $userLogin
- **/
-function print_work_row(array $work,LoginUser $userLogin)
-{
-    $wh = WorkHelper::getInstance();
-    $sections = $wh->getAllSections();
-    $section = $sections[$work['id_sec']]['section'] ?? '';
-
-    $ah = AuthorHelper::getInstance();
-    $autors = $ah->getAutorsByWorkId($work['id']);
-
-    $lh = LeaderHelper::getInstance();
-    $leaders = $lh->getLeadersByWorkId($work['id']);
-
-    $fh = FileHelper::getInstance();
-    $filesOfWork = $fh->getFilesOneWork($work['id']);
-    $rh = ReviewHelper::getInstance();
-    /** @var \zukr\base\AuthInterface $user */
-    $user =$userLogin->getUser();
-
-    $title = '<a href=action.php?action=work_edit&id_w=' . $work['id'] . ' title="Редагувати роботу" class="">';
-    $title .= $work['arrival'] == '1'
-        ? $work['title'] . '&nbsp;[&radic;]&nbsp;'
-        : $work['title'];
-    $title .= "</a>\n";
-
-    $invitateClassWork = $work['invitation'] == 1
-        ? 'invitateWork'
-        : '';
-
-    $tesis = $work['tesis'] == 0 ? '' : "<strong>З тезами</strong>\n";
-
-    $list_leaders = WorkHelper::leaderList($leaders, false);
-
-    $list_autors = WorkHelper::authorList($autors, true, true);
-
-    $date = $work['date'];
-
-    //если установлено показывать ссылки
-    $link_add_review = (
-        (
-            ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW===Base::KEY_OFF )
-            ||
-            $user->isAdmin()
-        )
-        && (int)$rh->getCountOfReviewByWorkId($work['id']) < 2
-    )
-        ? '<a href="action.php?action=review_add&id_w=' . $work['id'] . '&id_u=' . $work['id_u'] . '">додати рецензію</a>'
-        : '';
-
-    $reviews = list_reviews_for_one_work(
-        $work['id'], ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF) || $user->isAdmin(),
-        $user->isAdmin(),
-        $userLogin->getId());
-
-    $moto = '<br/><strong>Шифр</strong>:' . $work['motto'] . PHP_EOL;
-    $link_work = '<a href=action.php?action=work_link&id_w='
-        . $work['id']
-        . ' title="Звязати з роботою керівника/автора">&laquo;</a>&nbsp;&nbsp;' .PHP_EOL;
-    $introduction = !empty($work['introduction'])
-        ? '<br/><strong>Впровадження</strong>:' . $work['introduction'] . PHP_EOL
-        : '';
-    $public = !empty($work['public'])
-        ? "<br/><strong>Публікації</strong> :{$work['public']}".PHP_EOL
-        : '';
-    $delete_work = Base::$user->getUser()->isAdmin()
-        ? '<a href=action.php?action=work_delete&id_w=' . $work['id']
-            . ' title="Видалити роботу з реєстру (Зникнуть зв\'язки, автори та керівникі будуть у базі)"></a>'. PHP_EOL
-        : '' . PHP_EOL;
-    $files = HtmlHelper::listFiles($filesOfWork);
-    $rowspan = '3';
-    $row_table = <<<ROWTABLE
-<tr class="{$invitateClassWork}">
-            <td rowspan="{$rowspan}" class="workID"><div id="id_w{$work['id']}">{$work['id']}</div></td>
-            <td colspan="4" class="title" title="Останні зміни :$date">
-            <!-- Действия над работой -->
-            {$title}&nbsp;&nbsp;{$link_work}&nbsp;&nbsp;{$delete_work} 
-            </td>
-</tr>        
-<tr   class="{$invitateClassWork}">
-            <td class="tdInfo">
-                <strong>Секція:</strong>{$section}
-                $moto $tesis
-                $public
-                $introduction $link_add_review
-                
-            </td>
-            <td>$reviews</td>
-            <td rowspan="1">$list_leaders</td>
-            <td rowspan="1">$list_autors</td>
-    </tr>
-    <tr class="{$invitateClassWork}">
-        <td colspan="1">$files</td>
-        <td colspan="4" title="Коментарі та зауваження" >{$work['comments']}</td>
-    </tr>
-ROWTABLE;
-    return $row_table;
-}
-/**
- * Строка таблици для списка рассылок
- *
- * @param int   $row_number
- * @param array $row
- */
-function table_row_list_address2($row_number, array $row): string
-{
-    return '<tr><td>' . $row_number . '</td>'
-        . '<td>' . $row['univerfull'] . '</td>'
-        . '<td>' . $row['adress'] . ' ' . $row['zipcode'] . '</td>'
-        . "</tr>\n";
-}
 
 
-/**
- * Формирует окончание предложения для письма во 2-м инф. приглашении
- *  В зависомости от количества работ изменяет окончание предложения
- *
- * @param int $col_w
- * @return string
-*/
-function works_declension($col_w)
-{
-    if (in_array($col_w, [1, 21, 31])):
-        $str = 'роботу';
-    elseif (in_array($col_w, [2, 3, 4, 22, 23, 24, 32, 263])):
-        $str = 'роботи';
-    else:
-        $str = 'робіт';
-    endif;
-
-    return $col_w . '&nbsp;' . $str;
-}
 
 
 /**

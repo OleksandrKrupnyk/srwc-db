@@ -79,4 +79,20 @@ class UniverRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @return array Список запрошених університетів
+     */
+    public function getInvited(): array
+    {
+        try {
+            return Univer::find()
+                    ->where('invite', Univer::KEY_ON)
+                    ->orderBy('univerfull','ASC')
+                    ->get(Univer::getTableName()) ?? [];
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
+
 }

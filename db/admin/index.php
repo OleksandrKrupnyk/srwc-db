@@ -52,8 +52,7 @@ if (isset($_POST['submit'])) {
         $_POST['rememberMe'] = (int)$_POST['rememberMe'];
         // Получаем все ввденые данные
 
-        $query = "SELECT id,usr\n"
-            . "FROM tz_members WHERE usr='" . $_POST['username'] . "' AND pass='" . md5($_POST['password']) . "'";
+        $query = "SELECT id,usr FROM tz_members WHERE usr='" . $_POST['username'] . "' AND pass='" . md5($_POST['password']) . "'";
         $result = mysqli_query($link, $query)
         or die('Невірний запрос до бази данних: ' . mysqli_error($link));
 

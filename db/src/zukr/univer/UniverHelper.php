@@ -92,9 +92,9 @@ class UniverHelper
     }
 
     /**
-     * @return array
+     * @return array Список запрошених університетів + ДДТУ
      */
-    public function getInvitedUnivers(): array
+    public function getInvitedUniversAndDSTU(): array
     {
         return \array_filter($this->getUnivers(),
             static function ($univer) {
@@ -108,7 +108,7 @@ class UniverHelper
     public function getInvitedDropdownList(): array
     {
         return $this->getDropDownListShotFull(
-            $this->getInvitedUnivers()
+            $this->getInvitedUniversAndDSTU()
         );
 
     }
@@ -148,7 +148,7 @@ class UniverHelper
     public function getTakePartUniversDropDownList(array $univerIds): array
     {
         $list = [];
-        $invitedUnivers = $this->getInvitedUnivers();
+        $invitedUnivers = $this->getInvitedUniversAndDSTU();
         foreach ($univerIds as $univerId) {
             $list[$univerId] = $invitedUnivers[$univerId];
         }
@@ -210,5 +210,13 @@ class UniverHelper
             'Начальнику академії' => 'Начальнику академії',
             'Начальнику військового інституту' => 'Начальнику військового інституту'
         ];
+    }
+
+    /**
+     * @return array Список запрощених унівесритетів
+     */
+    public function getInvited(): array
+    {
+        return $this->getUniverRepository()->getInvited();
     }
 }

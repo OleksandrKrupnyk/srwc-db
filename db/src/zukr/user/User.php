@@ -26,6 +26,7 @@ class User extends Record implements AuthInterface
     public $is_admin = 0;
     /** @var array */
     private $_profile = [];
+    private $_isReview;
 
     /**
      * @return string
@@ -57,8 +58,8 @@ class User extends Record implements AuthInterface
      */
     public function getProfile(): array
     {
-        if ($this->_profile === []) {
-            $this->_profile = ($this->id !== 0)
+        if ($this->_profile === null) {
+            $this->_profile = $this->id !== 0
                 ? (new LeaderRepository())->getByTzMemberId($this->id)
                 : [];
         }
@@ -70,14 +71,13 @@ class User extends Record implements AuthInterface
      */
     public function isReview(): bool
     {
-        try {
+        if ($this->_isReview === null) {
             $profile = $this->getProfile();
-            if (isset($profile['review'])) {
-                return (int)$profile['review'] === self::KEY_ON;
-            }
-        } catch (InvalidArgumentException $e) {
-
+            $this->_isReview = isset($profile['review'])
+                ? (int)$profile['review'] === self::KEY_ON
+                : false;
         }
-        return false;
+        return $this->_isReview;
+
     }
 }

@@ -1,9 +1,191 @@
 <?php
 
+use zukr\author\AuthorHelper;
+use zukr\base\AuthInterface;
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\helpers\PersonHelper;
+use zukr\base\html\HtmlHelper;
+use zukr\base\LoginUser;
+use zukr\file\FileHelper;
+use zukr\leader\LeaderHelper;
+use zukr\review\ReviewHelper;
 use zukr\univer\UniverHelper;
 use zukr\work\WorkHelper;
+
+/**
+ * Выводит заголовок  "название университета" в таблице посмотра данных о работах
+ *
+ * @param string $univer_title
+ * @param int    $id_u
+ * @param string $univer
+ *
+ * @return string
+ */
+function print_work_univer($univer_title, $id_u, $univer)
+{
+    $FROM = $_SESSION['from'] ?? '';
+    return '
+    <tr>
+    <td colspan="5" class="univerTitle">
+    <div id=id_u' . $id_u . ' style="display:inline;margin-right:5px">' . $univer . '</div>
+    <a href="action.php?action=univer_edit&id_u=' . $id_u . '&FROM=' . $FROM . '" title="Редагувати данні університету">' . $univer_title . '</a>
+    </td>
+    </tr>';
+}
+
+/**
+ * Выводит рядок в таблице просмотра данных о работе
+ *
+ * @param array     $work
+ * @param LoginUser $userLogin
+ *
+ * @return string
+ */
+function print_work_row(array $work, LoginUser $userLogin)
+{
+
+    $wh = WorkHelper::getInstance();
+    $sections = $wh->getAllSections();
+    $section = $sections[$work['id_sec']]['section'] ?? '';
+
+    $ah = AuthorHelper::getInstance();
+    $autors = $ah->getAutorsByWorkId($work['id']);
+
+    $lh = LeaderHelper::getInstance();
+    $leaders = $lh->getLeadersByWorkId($work['id']);
+
+    $fh = FileHelper::getInstance();
+    $filesOfWork = $fh->getFilesOneWork($work['id']);
+    $rh = ReviewHelper::getInstance();
+    /**
+     * @var AuthInterface $user
+     */
+    $user = $userLogin->getUser();
+
+    $title = '<a href=action.php?action=work_edit&id_w=' . $work['id'] . ' title="Редагувати роботу" class="">';
+    $title .= (int)$work['arrival'] === Base::KEY_ON
+        ? $work['title'] . '&nbsp;[&radic;]&nbsp;'
+        : $work['title'];
+    $title .= '</a>';
+
+    $invitateClassWork = (int)$work['invitation'] === Base::KEY_ON
+        ? 'invitateWork'
+        : '';
+
+    $tesis = (int)$work['tesis'] === Base::KEY_OFF ? '' : '<strong>З тезами</strong>';
+
+    $list_leaders =  WorkHelper::leaderList($leaders, false);
+
+    $list_autors = WorkHelper::authorList($autors, true, true);
+
+    $date = $work['date'];
+
+    //если установлено показывать ссылки
+    $link_add_review = (
+        (
+            ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF)
+            ||
+            $user->isAdmin()
+        )
+        && (int)$rh->getCountOfReviewByWorkId($work['id']) < 2
+    )
+        ? '<a href="action.php?action=review_add&id_w=' . $work['id'] . '&id_u=' . $work['id_u'] . '">додати рецензію</a>'
+        : '';
+
+    $reviewsData =list_reviews_for_one_work(
+        $work['id'],
+        ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF) || $user->isAdmin(),
+        $user->isAdmin(),
+        $userLogin->getId()
+    );
+
+
+    $introduction = !empty($work['introduction'])
+        ? '<br/><strong>Впровадження</strong>:' . $work['introduction'] . PHP_EOL
+        : '';
+    $public = !empty($work['public'])
+        ? "<br/><strong>Публікації</strong> :{$work['public']}" . PHP_EOL
+        : '';
+    $delete_work = Base::$user->getUser()->isAdmin()
+        ? '<a href=action.php?action=work_delete&id_w=' . $work['id']
+        . ' title="Видалити роботу з реєстру (Зникнуть зв\'язки, автори та керівникі будуть у базі)"></a>' . PHP_EOL
+        : '' . PHP_EOL;
+    $files = HtmlHelper::listFiles($filesOfWork);
+    $rowspan = '3';
+    return <<<ROWTABLE
+<tr class="{$invitateClassWork}">
+            <td rowspan="{$rowspan}" class="workID"><div id="id_w{$work['id']}">{$work['id']}</div></td>
+            <td colspan="4" class="title" title="Останні зміни :$date">
+            <!-- Действия над работой -->
+            {$title}&nbsp;&nbsp;<a href="action.php?action=work_link&id_w={$work['id']}" title="Звязати з роботою керівника/автора">&laquo;</a>&nbsp;&nbsp;&nbsp;&nbsp;{$delete_work} 
+            </td>
+</tr>        
+<tr   class="{$invitateClassWork}">
+            <td class="tdInfo">
+                <strong>Секція:</strong>{$section}
+                <br/><strong>Шифр</strong>: {$work['motto']} {$tesis}
+                $public
+                $introduction $link_add_review
+            </td>
+            <td>$reviewsData</td>
+            <td rowspan="1">$list_leaders</td>
+            <td rowspan="1">$list_autors</td>
+    </tr>
+    <tr class="{$invitateClassWork}">
+        <td colspan="1">$files</td>
+        <td colspan="4" title="Коментарі та зауваження" >{$work['comments']}</td>
+    </tr>
+ROWTABLE;
+}
+
+/**
+ * @param int  $id_w ІД запису роботи
+ * @param bool $href TRUE if you need to show link for edit
+ * @param bool $isAdmin
+ * @param int  $loginId ІД запису користувача
+ * @return string Numeric list of reviews with links
+ */
+function list_reviews_for_one_work($id_w, bool $href = false, bool $isAdmin = false, int $loginId = 0)
+{
+    $rh = ReviewHelper::getInstance();
+    $reviews = $rh->getDecisionIndexedByWorkId()[$id_w] ?? [];
+
+    $fullSum = 0;
+    $conclusions = '';
+    $str = '<ol>';
+    foreach ($reviews as $review) {
+        $fullSum += $review['sumball'];
+        $item = '';
+        $fio = PersonHelper::getFullName($review);
+        if ($href) {
+            $item .= "<a href='action.php?action=review_edit&id={$review['id']}' title='Ред. Рец.:{$fio}'>&#9998;:[{$review['sumball']}]</a>";
+            if (isAuthorOfReview($loginId, $review) || $isAdmin) {
+                $item .= "<a href='action.php?action=review_delete&id={$review['id']}&id_w={$review['id_w']}'  title='Видалити рецензію'></a>";
+            }
+        } else {
+            $item .= "<a href='action.php?action=review_view&id={$review['id']}' title='[{$review['sumball']}]'>Реценз.</a>";
+        }
+        $conclusions .= (int)$review['conclusion'] === Base::KEY_ON ? 'ТАК&nbsp;' : 'НІ&nbsp;';
+
+        $str .= '<li>' . $item . '</li>';
+    }
+
+    $str .= '</ol>';
+
+    $str .= "<p>&nbsp;&nbsp;&nbsp;<strong>&sum;:{$fullSum}</strong>&nbsp;{$conclusions}</p>";
+    return $str;
+}
+
+/**
+ * @param int $loginId
+ * @param array $review
+ * @return bool
+ */
+function isAuthorOfReview(int $loginId, array $review): bool
+{
+    return (int)$loginId === (int)$review['id_tzmember'];
+}
 
 $wh = WorkHelper::getInstance();
 //$wa = (new WorkAuthorRepository())->getAllAuthorsOfWorks();

@@ -4,6 +4,7 @@
 namespace zukr\review;
 
 
+use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\html\Html;
 use zukr\leader\LeaderRepository;
@@ -27,7 +28,14 @@ class ReviewHelper
     protected $leaderRepository;
     /** @var ReviewRepository */
     protected $reviewRepository;
-
+    /**
+     * @var array
+     */
+    protected $reviewsBalls = [];
+    /**
+     * @var
+     */
+    private $resultReviews;
     /**
      * @return LeaderRepository
      */
@@ -74,7 +82,9 @@ class ReviewHelper
             : implode("<br>", array_filter($strArray));
     }
 
-
+    /**
+     * @return array
+     */
     public function getQualities()
     {
         $description = $this->getQualityParamDescription();
@@ -225,6 +235,38 @@ class ReviewHelper
      */
     public function getCountOfReviewByWorkId(int $workId): ?int
     {
-        return $this->getReviewRepository()->getCountOfReviewByWorkId($workId);
+        if(isset($this->getDecisionIndexedByWorkId()[$workId])){
+            return \count($this->getDecisionIndexedByWorkId()[$workId]);
+        }
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDecisionIndexedByWorkId(): array
+    {
+        if (empty($this->reviewsBalls)) {
+            $resultReviews = $this->getResultReviews();
+            if (!empty($resultReviews)) {
+                $this->reviewsBalls =
+                    Base::$app->cacheGetOrSet(
+                        'getDecisionIndexedByWorkId',
+                        ArrayHelper::group($resultReviews, 'id_w'),
+                        300);
+            }
+        }
+        return $this->reviewsBalls;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getResultReviews(): array
+    {
+        if (empty($this->resultReviews)) {
+            return $this->resultReviews = $this->getReviewRepository()->getSumOfBalls();
+        }
+        return $this->resultReviews;
     }
 }
