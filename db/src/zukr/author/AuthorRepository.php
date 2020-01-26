@@ -56,4 +56,26 @@ class AuthorRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @return array Список авторів для поселелння в гуртожитку
+     */
+    public function getListAutorsForHostel(): array
+    {
+        try {
+            $r = $this->model::find()->rawQuery("
+SELECT a.suname,a.name,a.lname, 
+       u.univerrod AS univer, 
+       u.id AS id 
+FROM `autors` as a 
+    LEFT JOIN univers AS u ON u.id=a.id_u 
+    LEFT JOIN wa ON a.id=wa.id_a 
+    LEFT JOIN works ON wa.id_w = works.id 
+WHERE works.invitation = 1 AND u.id <> '1' 
+ORDER BY univer,suname");
+            return $r ?? [];
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
 }

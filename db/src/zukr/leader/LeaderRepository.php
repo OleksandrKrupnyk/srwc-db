@@ -197,7 +197,7 @@ SELECT suname, name, lname, id_u, univerrod
 FROM leaders LEFT JOIN univers as u on leaders.id_u = u.id
 WHERE leaders.id in (SELECT DISTINCT id_l
              FROM wl
-             WHERE id_w in (SELECT id FROM works WHERE invitation = 1 AND id_u != 1))
+             WHERE id_w in (SELECT id FROM works WHERE invitation = " . Base::KEY_ON . " AND id_u != 1))
 ORDER BY univerrod,suname;                
                 ");
             return $r ?? [];

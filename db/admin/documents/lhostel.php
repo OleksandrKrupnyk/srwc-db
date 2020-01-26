@@ -1,11 +1,14 @@
 <?php
 global $link;
 
+use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
+use zukr\leader\LeaderRepository;
 
-$listLeaders = (new \zukr\leader\LeaderRepository())->getListLeadersForHostel();
-$listUniver = \zukr\base\helpers\ArrayHelper::group($listLeaders, 'univerrod');
-if (!empty($listUniver)) {
+$listLeaders = (new LeaderRepository())->getListLeadersForHostel();
+$html = '';
+if (!empty($listLeaders)) {
+    $listUniver = ArrayHelper::group($listLeaders, 'univerrod');
     $txt = [];
     $txt[] = '<h1>Список керівників на поселеня</h1>';
     foreach ($listUniver as $univer => $listLeaders) {
@@ -16,7 +19,8 @@ if (!empty($listUniver)) {
         }
         $txt[] = '<ol>' . implode('', $list) . '</ol>';
     }
-    echo implode('', $txt);
+    $html = implode('', $txt);
 } else {
-    echo '<mark>За данним запитом данних не знайдено!</mark>';
+    $html = '<mark>За данним запитом данних не знайдено!</mark>';
 }
+echo $html;

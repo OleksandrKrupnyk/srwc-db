@@ -12,7 +12,8 @@ use zukr\work\WorkHelper;
 $uh = UniverHelper::getInstance();
 $wh = WorkHelper::getInstance();
 $univerIds = $wh->getTakePartUniversIds();
-$univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($univerIds));
+//$univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($univerIds));
+$univers = $uh->getInvitedDropdownList();
 
 $positions = (new PositionRepository())->getDropDownList();
 $statuses = (new StatusRepository())->getDropDownList();
