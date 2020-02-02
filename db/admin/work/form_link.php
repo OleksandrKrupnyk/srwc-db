@@ -19,7 +19,7 @@ $univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($uni
     <!-- Связывание работы -->
     <header><a href="action.php">Меню</a></header>
     <header>Зв'язування роботи</header>
-    <form class="linkworkForm" method="post" action="action.php">
+    <form class="linkworkForm form" method="post" action="action.php">
         <?php echo Html::select('Work[id_u]', $id_u, $univers,
             ['id' => 'selunivers', 'prompt' => 'Оберіть', 'class' => 'w-100', 'size' => 10]) ?>
         <div id="work"></div>

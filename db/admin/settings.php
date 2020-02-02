@@ -41,7 +41,7 @@ if (!Base::$user->getUser()->isAdmin()) {
 <body>
 <header><a href="action.php">Меню</a></header>
 <?php
-echo '<form action="settings.php" method=POST><h2>Коротка інформація про систему</h2>'
+echo '<form class="form" action="settings.php" method=POST><h2>Коротка інформація про систему</h2>'
     . '<h5>Обмеження розміру файлу на завантаження:' . ini_get('upload_max_filesize') . '</h5>'
     . '<h5>Кодування за замовчуванням:' . ini_get('default_charset') . "</h5>"
     . '<h5>Шляхи до підключення розширень dll/lib:' . ini_get('extension_dir') . '</h5>'

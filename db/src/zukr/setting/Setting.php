@@ -16,11 +16,11 @@ use zukr\base\Record;
  */
 class Setting extends Record
 {
-
-    const BOOL   = 'bool';
-    const STRING = 'string';
-    const INT    = 'int';
-    const TYPES  = [
+    protected const NOTIFICATION_ACTIONS = false;
+    const           BOOL                 = 'bool';
+    const STRING                         = 'string';
+    const INT                            = 'int';
+    const TYPES                          = [
         self::BOOL,
         self::STRING,
         self::INT

@@ -15,25 +15,33 @@ use zukr\base\Record;
  */
 class Log extends Record
 {
+    protected const NOTIFICATION_ACTIONS = false;
     /**
      * @var Log
      */
     private static $obj;
     /**
-     * @var int
+     * @var int ІД запису
      */
     public $id;
     /**
-     * @var int
+     * @var int ІД запису користувача автора дії
      */
     public $tz_id;
+    /**
+     * @var string Час за замовчуванням
+     */
     public $date = 'NOW';
-    /** @var string */
+    /**
+     * @var string Назва дії
+     */
     public $action;
-    /** @var string */
+    /**
+     * @var string Назва таблиці
+     */
     public $table;
     /**
-     * @var int
+     * @var int ІД запису
      */
     public $action_id;
     /**
@@ -41,7 +49,7 @@ class Log extends Record
      */
     public $result;
     /**
-     * @var
+     * @var string Інтернет адреса користувача
      */
     public $tz_ip;
 
@@ -58,13 +66,22 @@ class Log extends Record
 
 
     /**
-     * @param null $action
-     * @param null $table
-     * @param null $action_id
+     * @param null|string $action Назва дії
+     * @param null|string $table  Назва таблиці
+     * @param null        $action_id
      */
-    public function logAction($action = null, $table = null, $action_id = null): void
+    public function logAction(string $action = null, $table = null, $action_id = null): void
     {
-        $this->action = $action ?? $_POST['action'];
+        if ($action === null) {
+            if (isset($_POST['action'])) {
+                $this->action = (string)$_POST['action'];
+
+            } elseif ($_GET['action']) {
+                $this->action = (string)$_GET['action'];
+            } else {
+                $this->action = 'Unknown';
+            }
+        }
         $this->table = $table ?? 'Unknown';
         $this->action_id = $action_id ?? '0';
 

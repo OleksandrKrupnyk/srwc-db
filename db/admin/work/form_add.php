@@ -25,7 +25,7 @@ Base::$session->setRedirectParam();
 <!-- Форма добавления работы-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні роботи</header>
-<form class="addworkForm" method="post" action="action.php">
+<form class="addworkForm form" method="post" action="action.php">
     <label for="selunivers">Університет:</label>
     <?= Html::select('Work[id_u]', $id_u, $univers,
         ['id' => 'selunivers', 'required' => true, 'prompt' => 'Оберіть', 'class' => 'w-100'])

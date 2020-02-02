@@ -24,7 +24,7 @@ $row = mysqli_fetch_array($result);
 $fio = $row['fio'];
 $count_fio = 0; //счетчик фамилий
 $count_title = 0; //счетчик работ
-echo "<form method='post' action='test.php'>";
+echo "<form class='form' method='post' action='test.php'>";
 echo "<ol>";
 $row['email'] = ($row['email'] == "") ? "<mark>Пошта відсутня!</mark>" : $row['email'];
 echo "<li>" . $row['fio'] . " " . $row['email'];

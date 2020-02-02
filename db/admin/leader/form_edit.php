@@ -36,7 +36,7 @@ Base::$session->setRedirectParam();
 <!-- Редактирование руководителя -->
 <header><a href="action.php">Меню</a></header>
 <header>Редагування данних керівника</header>
-<form class="editLeader" method="post" action="action.php">
+<form class="editLeader form" method="post" action="action.php">
     <?= Html::select('Leader[id_u]', $leader['id_u'], $univers,
         ['class' => 'w-100', 'required' => true, 'prompt' => 'Університет...'])
     ?>

@@ -129,8 +129,8 @@ if ($count > 0) {
 <body>
 <header><a href="action.php">Меню</a></header>
 <h1>Список відсканованих запрощень</h1>
-<form><?= $str ?></form>
-<form class="addScanFiles" enctype="multipart/form-data" method="post" action="uploadinvitation.php">
+<form class="form"><?= $str ?></form>
+<form class="addScanFiles form" enctype="multipart/form-data" method="post" action="uploadinvitation.php">
     <fieldset>
         <legend>Завантаження сканованих запрошень</legend>
         <label>ВНЗ:</label> <?= list_univers(1, 1, 1) ?>

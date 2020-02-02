@@ -32,25 +32,25 @@ try {
         $delete = $workLeader->delete($queryLeader);
 
         if ($delete) {
-            $log->logAction(null, $workLeader::getTableName(), $id_w);
+            $log->logAction('delete_work_leader', $workLeader::getTableName(), $id_w);
             $workAuthor = new WorkAuthor();
             $queryAuthor = $workAuthor->getDb();
             $queryAuthor->where('id_w', $id_w);
             $delete = $workAuthor->delete($queryAuthor);
             if ($delete) {
-                $log->logAction(null, $workAuthor::getTableName(), $id_w);
+                $log->logAction('delete_work_author', $workAuthor::getTableName(), $id_w);
                 $work = new Work();
                 $queryWork = $work->getDb();
                 $queryWork->where('id', $id_w);
                 $delete = $work->delete($queryWork);
                 if ($delete) {
-                    $log->logAction(null, $work::getTableName(), $id_w);
+                    $log->logAction('delete_work', $work::getTableName(), $id_w);
                     Base::$app->cacheFlush();
                 }
             }
         }
         ($delete) ? $queryLeader->commit() : $queryLeader->rollback();
-        $url2go = Base::$session->get('redirect_to');
+        $url2go = Base::$session->get('redirect_to') ?? '/db/admin/action.php?action=all_view';
     } else {
         throw new UnauthorizedAccessException(__CLASS__ . '::' . __METHOD__ . 'User with id: ' . $userId . ' try to make delete action');
     }

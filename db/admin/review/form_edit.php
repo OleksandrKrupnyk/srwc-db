@@ -46,7 +46,7 @@ Base::$param->DENNY_EDIT_REVIEW;
 <header><a href="action.php?action=all_view#id_w<?= $review['id_w'] ?>">Усі роботи</a></header>
 <header>Редагування рецензії</header>
 
-<form class="addreviewForm" method="post" action="action.php" id="review-form">
+<form class="addreviewForm form" method="post" action="action.php" id="review-form">
     <h1><?= $work['title'] ?></h1>
     <fieldset name="descriptionWorks" id="descriptionWorks">
         <legend>Данні з роботи(виключно для рецензента)</legend>

@@ -22,7 +22,7 @@ $session->setRedirectParam();
 <!-- Форма добавления автора-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні автора</header>
-<form class="addautorForm" method="post" action="action.php" name='Autor'>
+<form class="addautorForm form" method="post" action="action.php" name='Autor'>
     <?= Html::select('Author[id_u]', $id_u, $univers,
         ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...', 'class' => 'w-100'])
     ?>

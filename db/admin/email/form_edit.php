@@ -21,7 +21,7 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
 <header><a href="action.php">Меню</a></header>
 <header>Список розсилки</header>
 <h1 title="Попередження"><?= $str ?></h1>
-<form method="post" action="sentmails.php">
+<form class="form" method="post" action="sentmails.php">
     <fieldset><?= list_emails("leaders"); ?></fieldset>
     <label>Перегляд листа</label>
     <div id="previewletter2leaders"><?= file_get_contents("letter2leaders.tte"); ?></div>
@@ -39,7 +39,7 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
     <input type="submit" value="<?= $buttonName ?>">
     <input type="hidden" name="t" value="l">
 </form>
-<form method="post" action="sentmails.php">
+<form class="form" method="post" action="sentmails.php">
     <h2>Листи для авторів</h2>
     <fieldset><?= list_emails("autors") ?></fieldset>
     <label>Перегляд листа</label>

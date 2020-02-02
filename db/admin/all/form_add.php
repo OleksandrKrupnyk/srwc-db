@@ -25,7 +25,7 @@ $id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
     <!-- Форма добавления всех сведений-->
     <header><a href="action.php">Меню</a></header>
     <header>Усі данні роботи</header>
-    <form class="addAllForm" method="post" action="action.php">
+    <form class="addAllForm form" method="post" action="action.php">
         <label>Університет</label>
         <?= Html::select('Work[id_u]', $id_u, $univers,
             ['id' => 'select-univer', 'required' => true, 'prompt' => 'Оберіть', 'class' => 'w-100'])

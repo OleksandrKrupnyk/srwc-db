@@ -4,7 +4,6 @@ use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
-use zukr\leader\LeaderHelper;
 use zukr\review\ReviewHelper;
 use zukr\work\WorkHelper;
 use zukr\work\WorkRepository;
@@ -50,7 +49,7 @@ if (Base::$user->getUser()->isAdmin()) {
 <!--Добавление рецензии -->
 <header><a href="action.php?action=all_view#id_w<?= $id_w ?>">Усі роботи</a></header>
 <header>Додавання рецензії</header>
-<form class="addreviewForm" method="post" action="action.php" id="review-form">
+<form class="addreviewForm form" method="post" action="action.php" id="review-form">
     <?php if (Base::$user->getUser()->isAdmin()): ?>
         <label>Оберіть роботу :</label>
         <?= Html::select('Review[id_w]', $id_w, $items,

@@ -30,7 +30,7 @@ Base::$session->setRedirectParam();
 <!-- Редактирование работы -->
 <header><a href="action.php">Меню</a></header>
 <header>Редагування работы</header>
-<form class="editWork" method="post" action="action.php">
+<form class="editWork form" method="post" action="action.php">
     <label for="selunivers">Університет:</label>
     <?= Html::select('Work[id_u]', $work['id_u'], $univers,
         ['id' => 'selunivers', 'required' => true, 'prompt' => 'Оберіть', 'class' => 'w-100'])
@@ -88,7 +88,7 @@ Base::$session->setRedirectParam();
     <input type="hidden" name="id_w" value="<?= $work['id'] ?>">
 </form>
 <!-- Форма загрузкки файлов работы при её редактировании -->
-<form class="addWorkFiles" enctype="multipart/form-data" method="post" action="action.php">
+<form class="addWorkFiles form" enctype="multipart/form-data" method="post" action="action.php">
     <fieldset>
         <legend>Завантаження</legend>
         <?php echo(list_files($_GET['id_w'])); ?>

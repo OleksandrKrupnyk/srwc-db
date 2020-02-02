@@ -289,8 +289,8 @@ class Html
     public static function ol(array $list, $options = [])
     {
         $items = [];
-        foreach ($list as $item) {
-            $items [] = self::tag('li', $item);
+        foreach ($list as $key => $item) {
+            $items [] = self::tag('li', $item, ['data-key' => $key]);
         }
         return self::tag('ol', implode('', $items), $options);
     }

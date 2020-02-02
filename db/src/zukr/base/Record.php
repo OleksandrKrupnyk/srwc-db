@@ -12,8 +12,12 @@ use MysqliDb;
  */
 abstract class Record implements RecordInterface
 {
-    public const KEY_ON  = 1;
-    public const KEY_OFF = 0;
+    /**
+     * Інформувати користувача про зміні в записі
+     */
+    protected const NOTIFICATION_ACTIONS = true;
+    public const    KEY_ON               = 1;
+    public const    KEY_OFF              = 0;
     /**
      * @var MysqliDb
      */
@@ -182,7 +186,7 @@ abstract class Record implements RecordInterface
 
             $save = $save && $this->afterSave();
             ($save) ? $this->_db->commit() : $this->_db->rollback();
-            if ($save) {
+            if ($save && static::NOTIFICATION_ACTIONS) {
                 Base::$session->setFlash('recordSaveMsg', 'Запис був збережений');
                 Base::$session->setFlash('recordSaveType', 'info');
             }

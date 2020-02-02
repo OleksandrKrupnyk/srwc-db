@@ -9,6 +9,7 @@
 //Добавление всех ведомостей
 use zukr\author\Author;
 use zukr\base\Base;
+use zukr\leader\Leader;
 use zukr\log\Log;
 use zukr\work\Work;
 use zukr\workauthor\WorkAuthor;
@@ -37,7 +38,7 @@ if ($id_a === Work::PERSON_EXIST) {
 }
 
 if ($id_l === Work::PERSON_EXIST) {
-    $leader = new Author();
+    $leader = new Leader();
     $leader->load($_POST);
     $leader->save();
     $log->logAction('leader_add', $leader::getTableName(), $work->id);

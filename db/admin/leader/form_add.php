@@ -27,7 +27,7 @@ Base::$session->setRedirectParam();
 <!-- Форма добавления керівника-->
 <header><a href="action.php">Меню</a></header>
 <header>Данні керівника</header>
-<form class="addleaderForm" method="post" action="action.php">
+<form class="addleaderForm form" method="post" action="action.php">
     <?= Html::select('Leader[id_u]', $id_u, $univers,
         ['class' => 'w-100', 'required' => true, 'prompt' => 'Університет...',])
     ?>
