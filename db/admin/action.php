@@ -38,7 +38,8 @@ if (in_array($actionPost, [
     'file_add',
     'review_add',
     'review_edit',
-
+    'section_add',
+    'section_edit',
 ])) {
     execute_post_action($actionPost);
 }
@@ -103,6 +104,7 @@ $_type = $session->getFlash('recordSaveType', '');
         'leader_add',
         'leader_edit',
         'leader_invit',
+        'section_list',
         'all_add',
         'all_view',
         'review_add',
