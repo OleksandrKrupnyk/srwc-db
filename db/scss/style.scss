@@ -485,7 +485,7 @@ background-color: #dcdcdc;
 input[type="submit"],
 input[type="button"],
 a > input[type="button"],
-a.btn {
+.btn {
   background-color: white;
   border: 1px solid #782121;
   -moz-border-radius: 5px;
@@ -606,12 +606,12 @@ a[href$=".ppt"], a[href$=".pptx"] {
   padding: 5px 0 5px 24px;
 }
 
-.delete-author,
+.js-delete-list-item,
 a[href*="_delete"],
 a[href^="#remove"] {
   background: url(../images/del.png) no-repeat;
-  padding: 0 0 0 16px;
   margin: 0;
+  padding: 0 0 0 16px;
 
   &:hover {
     background: url(../images/del2.png) no-repeat center;

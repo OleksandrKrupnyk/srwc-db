@@ -255,20 +255,26 @@ return [
         'items' => [
             [
                 'value' => 'Налаштування',
-                'href'  => 'settings.php',
+                'href' => 'settings.php',
                 'title' => '',
                 'class' => 'special',
             ],
             [
+                'value' => 'Секції',
+                'href' => 'action.php?action=section_list',
+                'title' => 'Редагування назв секцій',
+                'class' => 'special',
+            ],
+            [
                 'value' => 'Журнал дій',
-                'href'  => 'log.php',
+                'href' => 'log.php',
                 'title' => '',
                 'class' => 'special',
             ],
             [
                 'value' => 'Розсилка',
-                'href'  => '#',
-                'items'=>[
+                'href' => '#',
+                'items' => [
                     [
                         'value' => 'Електронні запрошення',
                         'href'  => 'action.php?action=email_edit',
