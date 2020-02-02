@@ -5,6 +5,7 @@ namespace zukr\univer;
 
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\RecordHelper;
 
 /**
  * Class UniverHelper
@@ -13,7 +14,7 @@ use zukr\base\helpers\ArrayHelper;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class UniverHelper
+class UniverHelper extends RecordHelper
 {
 
     /**
@@ -36,7 +37,7 @@ class UniverHelper
     public static function getInstance(): UniverHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
 
@@ -154,17 +155,6 @@ class UniverHelper
         }
         return $list;
 
-    }
-
-    /**
-     * @return string
-     */
-    public function registerJS(): string
-    {
-        $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'univer.js';
-        return \file_exists($filename) && \is_file($filename)
-            ? '<script>' . \file_get_contents($filename) . '</script>'
-            : '';
     }
 
     /**

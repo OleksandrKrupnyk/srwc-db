@@ -30,6 +30,18 @@ class WorkRepository extends AbstractRepository
     }
 
     /**
+     * @param int $id_sec ІД секции
+     * @return mixed
+     * @throws \Exception
+     */
+    public function useSectionId(int $id_sec)
+    {
+        return Work::find()
+                ->where('id_sec', $id_sec)
+                ->getValue(Work::getTableName(), 'id_sec') ?? false;
+    }
+
+    /**
      * Усі роботи
      *
      * @return array|\MysqliDb

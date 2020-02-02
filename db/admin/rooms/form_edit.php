@@ -31,5 +31,5 @@ $sections = (new SectionRepository())->getSectionAndCountRooms();
     ?>
     </tbody>
 </table>
-<?= SectionHelper::getInstance()->registerJS() ?>
+<?= SectionHelper::getInstance()->registerJS('room.js') ?>
 <!-- Окончание распределения секций по аудиториям-->

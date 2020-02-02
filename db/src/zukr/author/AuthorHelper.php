@@ -5,6 +5,7 @@ namespace zukr\author;
 
 
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\RecordHelper;
 use zukr\workauthor\WorkAuthorRepository;
 
 /**
@@ -14,7 +15,7 @@ use zukr\workauthor\WorkAuthorRepository;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class AuthorHelper
+class AuthorHelper extends RecordHelper
 {
     /** @var AuthorHelper */
     private static $obj;
@@ -27,23 +28,14 @@ class AuthorHelper
     private $autors;
 
     /**
-     * WorkHelper constructor.
-     */
-    private function __construct()
-    {
-
-    }
-
-    /**
      * @return AuthorHelper
      */
     public static function getInstance(): AuthorHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
-
     }
 
     /**

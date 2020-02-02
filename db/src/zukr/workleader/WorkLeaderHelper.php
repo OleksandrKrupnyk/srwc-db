@@ -3,6 +3,8 @@
 namespace zukr\workleader;
 
 
+use zukr\base\RecordHelper;
+
 /**
  * Class WorkLeaderHelper
  *
@@ -10,18 +12,10 @@ namespace zukr\workleader;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class WorkLeaderHelper
+class WorkLeaderHelper extends RecordHelper
 {
     /** @var WorkLeaderHelper */
     private static $obj;
-
-    /**
-     * WorkHelper constructor.
-     */
-    private function __construct()
-    {
-
-    }
 
     /**
      * @return WorkLeaderHelper
@@ -29,7 +23,7 @@ class WorkLeaderHelper
     public static function getInstance(): WorkLeaderHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
 

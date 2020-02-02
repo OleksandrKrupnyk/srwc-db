@@ -52,6 +52,6 @@ while ($row = mysqli_fetch_array($result)) {
     $i++;
 }
 echo "</table>";
-echo $wh->registerJS();
+echo $wh->registerJS('work.js');
 ?>
 <!-- Окончание по секциям и приглашения -->
