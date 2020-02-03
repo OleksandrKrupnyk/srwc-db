@@ -68,24 +68,4 @@ try {
 </body>
 </html>
 <?php
-//$stylesheet = file_get_contents(__DIR__.'/../../css/print.css');
-////var_dump($stylesheet);die();
-//$defaultConfig = (new Mpdf\Config\ConfigVariables())->getDefaults();
-//$fontDirs = $defaultConfig['fontDir'];
-//
-//$defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
-//$fontData = $defaultFontConfig['fontdata'];
-//
-//$mpdf = new \Mpdf\Mpdf([
-//
-//    'mode' => 'utf-8',
-//    'format' => [210, 297],
-//]);
-//$mpdf->SetAuthor('Крупник');
-//$mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
-////
-//// Write some HTML code:
-//$mpdf->WriteHTML($html,\Mpdf\HTMLParserMode::HTML_BODY);
-//// Output a PDF file directly to the browser
-//$mpdf->Output();
 ob_flush();

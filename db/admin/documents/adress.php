@@ -2,6 +2,7 @@
 
 use zukr\univer\UniverHelper;
 
+$pdf = \zukr\pdf\PdfWrapper::getInstance();
 $univers = UniverHelper::getInstance()->getInvited();
 $html = '<div class="adress2">
           <header>Список розсилки 1-го інформаційного повідомлення <br>
@@ -20,4 +21,4 @@ foreach ($univers as $i => $u) {
 }
 $html .= '</tbody></table>
 </div><div id="prorector">Перший проректор ДДТУ<br></div><div id="prorectorNAME">В.М. Гуляєв</div></div>';
-echo $html;
+$pdf->getPdf($html);

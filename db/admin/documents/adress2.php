@@ -1,8 +1,10 @@
 <?php
 
 use zukr\base\Base;
+use zukr\pdf\PdfWrapper;
 
 $db = Base::$app->db;
+$pdf = PdfWrapper::getInstance();
 $univers = $db->rawQuery("SELECT univers.*
 FROM univers
          LEFT JOIN works ON (univers.id = works.id_u and works.invitation = '1')
@@ -26,4 +28,4 @@ foreach ($univers as $i => $u) {
 }
 
 $html .= '</tbody></table></div><div id="prorector">Перший проректор ДДТУ<br></div><div id="prorectorNAME">В.М. Гуляєв</div></div>';
-echo $html;
+$pdf->getPdf($html);

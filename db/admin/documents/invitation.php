@@ -21,7 +21,7 @@ $result = mysqli_query($link, $query);
 if (!empty($result)) {
     $total = mysqli_num_rows($result);
     if ($total !== 0) {
-        echo "<div class=\"v_invitation_1\">\n";
+        echo '<div class="v_invitation_1">';
         while ($row = mysqli_fetch_array($result)) {
             $rector = (!empty($row['rector_r']))
                 ? $row['rector_r']
@@ -57,4 +57,6 @@ if (!empty($result)) {
     } else {
         echo '<mark>За данним запитом данних не знайдено! <br> Встановіть відмітку про запрошення хоча б в одній роботі.</mark>';
     }
+} else {
+    echo '<mark>Помилка запиту даних.</mark>';
 }
