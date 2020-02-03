@@ -5,6 +5,7 @@ namespace zukr\file;
 
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\RecordHelper;
 
 /**
  * Class FileHelper
@@ -13,7 +14,7 @@ use zukr\base\helpers\ArrayHelper;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class FileHelper
+class FileHelper extends RecordHelper
 {
 
     /** @var FileHelper */
@@ -22,13 +23,6 @@ class FileHelper
     /** @var array */
     private $files;
 
-    /**
-     * LeaderHelper constructor.
-     */
-    private function __construct()
-    {
-
-    }
 
     /**
      * @return FileHelper
@@ -36,7 +30,7 @@ class FileHelper
     public static function getInstance(): FileHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
 

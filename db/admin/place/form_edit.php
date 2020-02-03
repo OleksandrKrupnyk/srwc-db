@@ -69,4 +69,4 @@ $ph = PlaceHelper::getInstance();
         } ?>
     </table>
     <!-- Распределение мест стреди студентов которые приехали на конференцию-->
-<?= $ph->registerJS() ?>
+<?= $ph->registerJS('place.js') ?>

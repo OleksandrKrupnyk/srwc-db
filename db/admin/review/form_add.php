@@ -126,4 +126,4 @@ if (Base::$user->getUser()->isAdmin()) {
     <input type="hidden" name="action" value="review_add">
     <input type="hidden" name="id_u" value="<?= $id_u ?>">
 </form>
-<?= $rh->registerJS() ?>
+<?= $rh->registerJS('review.js') ?>

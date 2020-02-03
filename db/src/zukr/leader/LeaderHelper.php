@@ -7,6 +7,7 @@ namespace zukr\leader;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\HtmlHelper;
+use zukr\base\RecordHelper;
 use zukr\position\PositionRepository;
 use zukr\workleader\WorkLeaderRepository;
 
@@ -17,10 +18,12 @@ use zukr\workleader\WorkLeaderRepository;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class LeaderHelper
+class LeaderHelper extends RecordHelper
 {
 
-    /** @var LeaderHelper */
+    /**
+     * @var LeaderHelper
+     */
     private static $obj;
 
     /**
@@ -38,20 +41,12 @@ class LeaderHelper
     private $leaderRepository;
 
     /**
-     * LeaderHelper constructor.
-     */
-    private function __construct()
-    {
-
-    }
-
-    /**
      * @return LeaderHelper
      */
     public static function getInstance(): LeaderHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
 
@@ -117,18 +112,6 @@ class LeaderHelper
             });
         }
         return [];
-    }
-
-    /**
-     * @return string
-     */
-    public function registerJS(): string
-    {
-        $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'leader.js';
-        $fileContent = \file_exists($filename) && \is_file($filename)
-            ? '<script>' . \file_get_contents($filename) . '</script>'
-            : '';
-        return $fileContent;
     }
 
     /**

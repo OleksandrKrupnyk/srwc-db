@@ -169,4 +169,4 @@ $id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
         <input type="hidden" name="action" value="all_add">
     </form>
     <!-- Окончание Форма добавления всех сведений-->
-<?= $wh->registerJS() ?>
+<?= $wh->registerJS('work.js') ?>

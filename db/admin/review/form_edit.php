@@ -113,4 +113,4 @@ Base::$param->DENNY_EDIT_REVIEW;
            onclick="window.location='action.php?action=all_view#id_w'+<?= $review['id_w'] ?>">
     <input type="hidden" name="action" value="review_edit">
 </form>
-<?= $rh->registerJS() ?>
+<?= $rh->registerJS('review.js') ?>

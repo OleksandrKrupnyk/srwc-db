@@ -38,4 +38,4 @@ $univers = $uh->getDropDownListShot(
             </td>
         </tr>
     </table>
-<?= $lh->registerJS() ?>
+<?= $lh->registerJS('leader.js') ?>

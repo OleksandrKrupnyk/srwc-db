@@ -7,6 +7,7 @@ namespace zukr\review;
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\html\Html;
+use zukr\base\RecordHelper;
 use zukr\leader\LeaderRepository;
 use zukr\work\WorkRepository;
 
@@ -17,7 +18,7 @@ use zukr\work\WorkRepository;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class ReviewHelper
+class ReviewHelper extends RecordHelper
 {
 
     /** @var ReviewHelper */
@@ -47,13 +48,6 @@ class ReviewHelper
         return $this->leaderRepository;
     }
 
-    /**
-     * LeaderHelper constructor.
-     */
-    private function __construct()
-    {
-
-    }
 
     /**
      * @return ReviewHelper
@@ -61,7 +55,7 @@ class ReviewHelper
     public static function getInstance(): ReviewHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
 
@@ -146,17 +140,6 @@ class ReviewHelper
         return [$items, $options];
     }
 
-    /**
-     * @return string
-     */
-    public function registerJS()
-    {
-        $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'review.js';
-        $fileContent = \file_exists($filename) && \is_file($filename)
-            ? '<script>' . \file_get_contents($filename) . '</script>'
-            : '';
-        return $fileContent;
-    }
 
     /**
      * @return WorkRepository

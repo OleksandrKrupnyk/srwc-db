@@ -7,6 +7,7 @@ namespace zukr\work;
 use zukr\base\Base;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
+use zukr\base\RecordHelper;
 use zukr\section\SectionRepository;
 
 /**
@@ -16,24 +17,23 @@ use zukr\section\SectionRepository;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class WorkHelper
+class WorkHelper extends RecordHelper
 {
-    /** @var WorkHelper */
+    /**
+     * @var WorkHelper
+     */
     private static $obj;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $works;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $sections;
 
-    /**
-     * WorkHelper constructor.
-     */
-    private function __construct()
-    {
-
-    }
 
     /**
      * @return WorkHelper
@@ -41,7 +41,7 @@ class WorkHelper
     public static function getInstance(): WorkHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
 
@@ -202,7 +202,7 @@ class WorkHelper
         $list = [];
         foreach ($leaders as $leader) {
             $item = '';
-            $item .= '<a href=action.php?action=leader_edit&id_l=' . $leader['id'] .' title="Ред.:' . PersonHelper::getFullName($leader) . '">';
+            $item .= '<a href=action.php?action=leader_edit&id_l=' . $leader['id'] . ' title="Ред.:' . PersonHelper::getFullName($leader) . '">';
             $item .= PersonHelper::getShortName($leader);
             $item .= $showId ? '<' . $leader['id'] . '>' : '';
 
@@ -252,16 +252,5 @@ class WorkHelper
         });
 
         return $array;
-    }
-    /**
-     * @return string
-     */
-    public function registerJS():string
-    {
-        $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'work.js';
-        $fileContent = \is_file($filename)
-            ? \file_get_contents($filename)
-            : '';
-        return '<script>' . $fileContent . '</script>';
     }
 }

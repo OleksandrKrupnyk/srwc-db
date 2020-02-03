@@ -3,6 +3,8 @@
 
 namespace zukr\user;
 
+use zukr\base\RecordHelper;
+
 /**
  * Class UserHelper
  *
@@ -10,20 +12,13 @@ namespace zukr\user;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class UserHelper
+class UserHelper extends RecordHelper
 {
 
     /** @var UserHelper */
     private static $obj;
 
     private $adminIds;
-    /**
-     * LeaderHelper constructor.
-     */
-    private function __construct()
-    {
-
-    }
 
     /**
      * @return UserHelper
@@ -31,7 +26,7 @@ class UserHelper
     public static function getInstance(): UserHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
 
@@ -42,8 +37,7 @@ class UserHelper
      */
     public function getIdsAdmin():array
     {
-        if($this->adminIds === null)
-        {
+        if($this->adminIds === null) {
             $adminIds = (new UserRepository())->getUserIdAsAdmin();
             $this->adminIds  = $adminIds;
         }

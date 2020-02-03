@@ -3,6 +3,8 @@
 
 namespace zukr\section;
 
+use zukr\base\RecordHelper;
+
 /**
  * Class SectionHelper
  *
@@ -10,7 +12,7 @@ namespace zukr\section;
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
-class SectionHelper
+class SectionHelper extends RecordHelper
 {
 
     /** @var SectionHelper */
@@ -23,20 +25,12 @@ class SectionHelper
     private $sectionRepository;
 
     /**
-     * SectionHelper constructor.
-     */
-    private function __construct()
-    {
-        $this->sectionRepository = new SectionRepository();
-    }
-
-    /**
      * @return SectionHelper
      */
     public static function getInstance(): SectionHelper
     {
         if (static::$obj === null) {
-            static::$obj = new self();
+            static::$obj = new static();
         }
         return static::$obj;
 
@@ -48,7 +42,7 @@ class SectionHelper
     public function getAllSections()
     {
         if ($this->sections === null) {
-            $this->sections = $this->sectionRepository->getAllSectionsAsArray();
+            $this->sections = $this->getSectionRepository()->getAllSectionsAsArray();
         }
         return $this->sections;
     }
@@ -68,14 +62,13 @@ class SectionHelper
     }
 
     /**
-     * @return string
+     * @return SectionRepository
      */
-    public function registerJS()
+    public function getSectionRepository(): SectionRepository
     {
-        $filename = __DIR__ . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'room.js';
-        $fileContent = \file_exists($filename) && \is_file($filename)
-            ? '<script>' . \file_get_contents($filename) . '</script>'
-            : '';
-        return $fileContent;
+        if ($this->sectionRepository === null) {
+            $this->sectionRepository = new SectionRepository();
+        }
+        return $this->sectionRepository;
     }
 }
