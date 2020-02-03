@@ -274,16 +274,17 @@ return [
             [
                 'value' => 'Розсилка',
                 'href' => '#',
+                'class' => '',
                 'items' => [
                     [
                         'value' => 'Електронні запрошення',
-                        'href'  => 'action.php?action=email_edit',
+                        'href' => 'action.php?action=email_edit',
                         'title' => 'Редагувати тектс листа та надіслати запрошення',
                         'class' => 'special',
                     ],
                     [
                         'value' => 'Тестова сторінка',
-                        'href'  => 'action.php?action=test_edit',
+                        'href' => 'action.php?action=test_edit',
                         'title' => 'Тестова сторінка нічого не недасилається',
                         'class' => 'special',
                     ],

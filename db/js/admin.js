@@ -71,7 +71,7 @@ $(document).ready(function () {
     //Поиск опреатора на странице
     $(function () {
         const operator = $('#operator span').text();
-        if (operator.match('krupnik') || operator.match('roman')) {
+        if (operator.match('krupnik') || operator.match('roman') || operator.match('shramko')) {
             disableObject.show();
         }
     });

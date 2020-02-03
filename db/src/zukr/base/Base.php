@@ -12,7 +12,6 @@ namespace zukr\base;
  */
 class Base
 {
-
     public const KEY_ON  = 1;
     public const KEY_OFF = 0;
     private static $isInit = false;
@@ -23,6 +22,7 @@ class Base
         'param' => Params::class,
         'session' => Session::class,
         'user' => LoginUser::class,
+        'dir' => Dir::class,
     ];
     /**
      * @var App
@@ -41,7 +41,10 @@ class Base
      * @var LoginUser
      */
     public static $user;
-
+    /**
+     * @var Dir
+     */
+    public static $dir;
 
     /**
      *
@@ -54,6 +57,7 @@ class Base
             self::$param = Params::getInstance();
             self::$log = Logger::getInstance();
             self::$user = LoginUser::getInstance();
+            self::$dir = Dir::getInstance();
             self::$isInit = true;
         }
 
