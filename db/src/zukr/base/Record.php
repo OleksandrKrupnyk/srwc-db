@@ -129,10 +129,9 @@ abstract class Record implements RecordInterface
 
         if (!empty($data)) {
             foreach ($data as $field => $value) {
-                $this->{$field} = ($form === false) ? $value : \trim(\addslashes($value));
+                $this->{$field} = ($form === false) ? ($value) : \strip_tags(\trim($value));
             }
         }
-
     }
 
     /**
