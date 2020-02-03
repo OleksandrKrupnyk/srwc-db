@@ -26,7 +26,7 @@ Base::$session->setRedirectParam();
 <form class="editUniver form" method="post" action="action.php">
     <label>Коротка назва</label>
     <input type="text" name="Univer[univer]" title="Скорочена назва. Наприклад:ДДТУ,СумДУ."
-           value="<?= $univer['univer'] ?>">
+           value='<?= $univer['univer'] ?>'>
     <br>
     <label>Повна назва</label><br>
     <textarea name="Univer[univerfull]" cols="50" rows="4" maxlength="255" class="w-100"

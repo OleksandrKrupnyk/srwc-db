@@ -6,21 +6,12 @@
   /* Путь к файлу со шрифтом */
 }
 * {
-  font-family: "Times New Roman", Times, serif;
   font-weight: normal;
   /*   border: 1px dashed #ccc;*/
 }
 
 .adress2 {
   width: 18cm;
-}
-
-.envelope {
-  width: 220mm;
-  margin: 0 0;
-  padding: 0 0;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10pt;
 }
 
 .v_invitation_1,
@@ -34,7 +25,6 @@
   margin-left: 10cm;
   margin-top: 1cm;
 }
-
 .v_invitation_1 #message {
   margin-left: 1cm;
   margin-top: 1cm;
@@ -44,7 +34,8 @@ ol {
   margin-bottom: 0;
 }
 
-.v_invitation_1 #message p, .v_invitation_1 #message2 p,
+.v_invitation_1 #message p,
+.v_invitation_1 #message2 p,
 .v_invitation_2 #message p {
   margin: 3pt 0;
   text-align: justify;
@@ -61,23 +52,20 @@ ol {
   margin-left: 1.25cm;
 }
 
-.v_invitation_1 #golova,
-.v_invitation_2 #golova {
+.v_invitation_1 #golova, .v_invitation_2 #golova {
   padding-top: 1em;
   margin-left: 1.5cm;
   width: 45%;
   float: left;
 }
 
-.v_invitation_1 #podpis,
-.v_invitation_2 #podpis {
+.v_invitation_1 #podpis, .v_invitation_2 #podpis {
   padding-top: 1em;
   margin-left: 11.5cm;
   padding-bottom: 30pt;
 }
 
-.v_invitation_1 #dstuheader,
-.v_invitation_1 #dstuheader2 {
+.v_invitation_1 #dstuheader, .v_invitation_1 #dstuheader2, .v_invitation_2 #dstuheader, .v_invitation_2 #dstuheader2 {
   height: 7.5cm;
   width: 16cm;
   margin-left: 2cm;
@@ -92,8 +80,7 @@ ol {
   margin-left: 15.5cm;
 }
 
-.v_invitation_2 #listsudents_title,
-.v_invitation_2 #univer_title {
+.v_invitation_2 #listsudents_title, .v_invitation_2 #univer_title {
   text-align: center;
 }
 
@@ -154,7 +141,7 @@ header {
 
 table, td, th {
   border-collapse: collapse;
-  border-spacing: 0px;
+  border-spacing: 0;
   border-width: 1px;
   border-style: solid;
   border-color: black;
@@ -249,7 +236,6 @@ p {
   background-repeat: no-repeat;
   background-position: top;
 }
-
 .diplom div {
   /*border: 1px solid #ccc;*/
   font-weight: bolder;
@@ -257,7 +243,6 @@ p {
   width: 140mm;
   margin-left: 28mm;
 }
-
 .diplom .line1 {
   padding-top: 100mm;
   font-size: 20pt;
@@ -267,17 +252,14 @@ p {
 .diplom .line2, .charters .line2 {
   font-style: normal;
 }
-
 .diplom .line3, .charters .line3 {
   height: 3.5em;
 }
-
 .diplom .line4, .charters .line4 {
   font-style: normal;
   font-size: 18pt;
   height: 1.5em;
 }
-
 .diplom .line5, .charters .line5 {
   height: 6em;
 }
@@ -294,8 +276,7 @@ p {
   font-size: 13pt;
 }
 
-.diplom .line8,
-.charters .line8, .gratitudes .line8 {
+.diplom .line8, .charters .line8, .gratitudes .line8 {
   width: 85mm;
   padding-left: 5mm;
   text-align: left;
@@ -311,7 +292,6 @@ p {
   padding-top: 0;
   float: none;
 }
-
 .diplom .line10, .charters .line10, .gratitudes .line10 {
   padding-top: 2em;
 }
@@ -328,7 +308,6 @@ p {
   background-repeat: no-repeat;
   background-position: top;
 }
-
 .gratitudes div {
   /*border: 1px solid #ccc;*/
   font-weight: bolder;
@@ -336,17 +315,14 @@ p {
   width: 150mm;
   margin-left: 28mm;
 }
-
 .gratitudes .line1 {
   font-weight: bold;
   padding-top: 100mm;
 }
-
 .gratitudes .line2 {
   margin-top: 2mm;
   font-weight: bold;
 }
-
 .gratitudes .line3 {
   font-style: normal;
   font-weight: bolder;
@@ -355,13 +331,11 @@ p {
   text-transform: uppercase;
   height: 2em;
 }
-
 .gratitudes .line6, .gratitudes .line5, .gratitudes .line4 {
   font-weight: bold;
   font-size: 16pt;
   padding: 3mm 0;
 }
-
 .gratitudes div {
   border: 1px solid #ccc;
 }
@@ -376,7 +350,6 @@ p {
   background-repeat: no-repeat;
   background-position: top;
 }
-
 .charters div {
   border: 1px solid #ccc;
   font-weight: bolder;
@@ -384,7 +357,6 @@ p {
   width: 130mm;
   margin-left: 35mm;
 }
-
 .charters .line1 {
   padding-top: 110mm;
 }
@@ -406,15 +378,16 @@ p {
   page-break-after: always;
 }
 
-.envelope #whomAdress,
-.envelope strong,
-.envelope em,
-.envelope ins,
-.envelope #fromAdress {
-  font-family: Arial, Helvetica, sans-serif;
+.envelope {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 12pt !important;
+  width: 210mm;
+  margin: 0;
+  padding: 0;
 }
 
-#fromAdress {
+.envelope .from-address {
+  font-family: inherit;
   margin-top: 25mm;
   padding-top: 4mm;
   margin-left: 8mm;
@@ -422,17 +395,13 @@ p {
   height: 25mm;
 }
 
-#whomAdress {
-  font-size: 12pt;
+.envelope .whom-address {
+  font-family: inherit;
   word-wrap: break-word;
   margin-top: 0;
   padding-top: 7mm;
   width: 75mm;
   margin-left: 135mm;
-}
-
-#whomAdress strong {
-  font-size: 12pt;
 }
 
 /* Оформление бейджиков*/
@@ -535,11 +504,11 @@ div[class^=h], img[class^=h] {
 
 @media print {
   /* Make page break always when see on print*/
-  #whomAdress,
-#podpis_image,
-.charters,
-.diplom,
-.gratitudes {
+  .whom-address,
+  #podpis_image,
+  .charters,
+  .diplom,
+  .gratitudes {
     page-break-after: always;
   }
 
