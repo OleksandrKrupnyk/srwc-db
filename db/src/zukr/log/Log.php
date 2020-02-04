@@ -81,6 +81,8 @@ class Log extends Record
             } else {
                 $this->action = 'Unknown';
             }
+        } else {
+            $this->action = $action;
         }
         $this->table = $table ?? 'Unknown';
         $this->action_id = $action_id ?? '0';
