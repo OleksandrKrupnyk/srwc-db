@@ -41,7 +41,7 @@ class DeleteSectionAction implements ApiActionsInterface
             $sectionQuery->where('id', $this->id);
             $delete = $section->delete($sectionQuery);
             $log = Log::getInstance();
-            $log->logAction('Delete-Section-Action', $section::getTableName(), $this->id);
+            $log->logAction('delete_section', $section::getTableName(), $this->id);
             ($delete) ? $sectionQuery->commit() : $sectionQuery->rollback();
             $this->changeMessage('Запис виделено');
 
