@@ -3,6 +3,7 @@
 
 namespace zukr\section;
 
+use zukr\base\Base;
 use zukr\base\RecordHelper;
 
 /**
@@ -42,7 +43,12 @@ class SectionHelper extends RecordHelper
     public function getAllSections()
     {
         if ($this->sections === null) {
-            $this->sections = $this->getSectionRepository()->getAllSectionsAsArray();
+            $this->sections = Base::$app->cacheGetOrSet(
+                'section_list',
+                function () {
+                    return $this->getSectionRepository()->getAllSectionsAsArray();
+                },
+                120);
         }
         return $this->sections;
     }

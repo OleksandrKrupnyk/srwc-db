@@ -29,7 +29,12 @@ class PositionRepository extends AbstractRepository
     public function getDropDownList()
     {
         if ($this->positions === null) {
-            $positions = Base::$app->cacheGetOrSet(static::class, $this->getPositionsFormDB(), 3600);
+            $positions = Base::$app->cacheGetOrSet(
+                static::class,
+                function () {
+                    return $this->getPositionsFormDB();
+                },
+                3600);
             $this->positions = $positions;
         }
         return $this->positions;

@@ -37,6 +37,7 @@ class ReviewHelper extends RecordHelper
      * @var
      */
     private $resultReviews;
+
     /**
      * @return LeaderRepository
      */
@@ -218,7 +219,7 @@ class ReviewHelper extends RecordHelper
      */
     public function getCountOfReviewByWorkId(int $workId): ?int
     {
-        if(isset($this->getDecisionIndexedByWorkId()[$workId])){
+        if (isset($this->getDecisionIndexedByWorkId()[$workId])) {
             return \count($this->getDecisionIndexedByWorkId()[$workId]);
         }
         return null;
@@ -235,7 +236,9 @@ class ReviewHelper extends RecordHelper
                 $this->reviewsBalls =
                     Base::$app->cacheGetOrSet(
                         'getDecisionIndexedByWorkId',
-                        ArrayHelper::group($resultReviews, 'id_w'),
+                        static function () use ($resultReviews) {
+                            return ArrayHelper::group($resultReviews, 'id_w');
+                        },
                         300);
             }
         }
