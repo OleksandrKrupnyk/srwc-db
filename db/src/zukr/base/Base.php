@@ -2,6 +2,8 @@
 
 
 namespace zukr\base;
+use Monolog\Logger as MonologLogger;
+
 /**
  * Class Base
  *
@@ -16,26 +18,22 @@ class Base
     public const KEY_OFF = 0;
     private static $isInit = false;
 
-    const OBJ_SINGLE = [
-        'app' => App::class,
-        'logs' => Logger::class,
-        'param' => Params::class,
-        'session' => Session::class,
-        'user' => LoginUser::class,
-        'dir' => Dir::class,
-    ];
     /**
-     * @var App
+     * @var App Додаток
      */
     public static $app;
     /**
-     * @var Params
+     * @var Params Налаштування
      */
     public static $param;
 
-    /** @var Session */
+    /**
+     * @var Session
+     */
     public static $session;
-    /** @var Logger */
+    /**
+     * @var MonologLogger
+     */
     public static $log;
     /**
      * @var LoginUser
@@ -52,10 +50,12 @@ class Base
     public static function init()
     {
         if (!self::$isInit) {
+            $loggerBuilder = LoggerBuilder::getInstance();
             self::$session = Session::getInstance();
             self::$app = App::getInstance();
+            $logFile = \realpath(\getenv('LOG_FILE') ?? '/var/log/elm.log');
             self::$param = Params::getInstance();
-            self::$log = Logger::getInstance();
+            self::$log = $loggerBuilder->getLogger($logFile);
             self::$user = LoginUser::getInstance();
             self::$dir = Dir::getInstance();
             self::$isInit = true;

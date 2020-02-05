@@ -1,27 +1,30 @@
 <?php
-xdebug_time_index();
 require 'config.inc.php';
 require 'functions.php';
 require '../vendor/autoload.php';
 
+use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\StandardDebugBar;
 use zukr\base\Base;
 use zukr\menu\Menu;
 
 session_name('tzLogin');
 session_start();
 Base::init();
-$session = Base::$session;
-$settings = Base::$param;
-$menuData = include 'menu.php';
-$menu = new Menu($menuData);
-$actionPost = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
-ob_start();
 //Если есть доступ к странице
 if (Base::$user->getUser()->isGuest()) {
     Go_page('index.php');
 }
-//Сообщение об ошибке. Если оно пусто то на экран ничего не выводиться.
-$error_message = '';
+$session = Base::$session;
+$settings = Base::$param;
+$debugbar = new StandardDebugBar();
+$debugbarRenderer = $debugbar->getJavascriptRenderer('/../db/vendor/maximebf/debugbar/src/DebugBar/Resources');
+$debugbar->addCollector(new MessagesCollector('logging'));
+$debugbar['logging']->aggregate(new DebugBar\Bridge\MonologCollector(Base::$log));
+$debugbar['logging']->aggregate(new DebugBar\Bridge\MonologCollector(Base::$app->db->getLogger()));
+$debugbar->addCollector(new DebugBar\DataCollector\ConfigCollector($settings->getAllsettingValue()));
+$actionPost = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
+ob_start();
 /**
  * Команды переданные по POST запросу
  */
@@ -89,10 +92,10 @@ $_type = $session->getFlash('recordSaveType', '');
             };
 
         </script>
+        <?php echo $debugbarRenderer->renderHead() ?>
     </head>
     <body id="top">
     <?php //переменная для определения предка вызова сценария
-
     $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
     if (in_array($action, [
         'work_add',
@@ -127,6 +130,8 @@ $_type = $session->getFlash('recordSaveType', '');
         'error_list',])) {
         execute_get_action($action);
     } else {
+        $menuData = include 'menu.php';
+        $menu = new Menu($menuData);
         $session->setFromParam();
         echo "<header>Меню</header>"
             . $menu->getMenu();
@@ -139,9 +144,7 @@ $_type = $session->getFlash('recordSaveType', '');
         <span><?= Base::$user->getUser()->isAdmin() ? 'A' : '' ?></span>
         <span><?= Base::$user->getUser()->isReview() ? 'R' : '' ?></span>
     </div>
-    <autor class="autor"><?= 'xdebug_time_index :' . number_format(xdebug_time_index(), 3) . 'sec| xdebug_peak_memory_usage :' . number_format(xdebug_peak_memory_usage() / 1024 / 1024, 3) . 'MB| xdebug_memory_usage :' . number_format(xdebug_memory_usage() / 1024 / 1024, 3) . 'MB' ?>
-        Krupnik&copy;
-    </autor>
+    <autor class="autor">Krupnik&copy;</autor>
     <script>
         jconfirm.defaults = {
             useBootstrap: false,
@@ -159,8 +162,8 @@ $_type = $session->getFlash('recordSaveType', '');
             $.notify(_msg, _type);
         }
     </script>
+    <?php echo $debugbarRenderer->render() ?>
     </body>
-
-    </html>
+</html>
 <?php
 ob_flush();
