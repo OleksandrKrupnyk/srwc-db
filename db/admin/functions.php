@@ -506,18 +506,12 @@ function Go_page($page)
  * */
  function PrintGerb($empty = true)
  {
-     $str = "<!-- БЛАНК УНИВЕРСИТЕТА -->";
-     $GERB = '<img class= "hGERB" src ="./../img/gerb.png" alt="herb">';
-     $MON = '<div class = "hMON">МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ</div>';
-     $DDTUfull = '<div class = "hDDTUfull">ДНІПРОВСЬКИЙ ДЕРЖАВНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ</div>';
-     $DDTUshort = '<div class = "hDDTUshort">(ДДТУ)</div>';
-     $ADRESS = '<div class = "hADRESS">вул. Дніпробудівська, 2 м. Кам’янське, 51918, тел./факс (0569) 538523</div>';
-     $MAIL = '<div class = "hMAIL">Е-mail: <span>science@dstu.dp.ua</span></div>';
-     $DATA = $empty ? '<div class = "hDATA">______________№____________________' : '<div class = "hDATA"><span>&nbsp;&nbsp;XX/XX/2018&nbsp;&nbsp;</span>№<span>' . TAB_SP . "108-08/10-69" . TAB_SP . "</span>";
+     $DATA = '<div class = "hDATA">';
+     $DATA .= $empty
+         ? '______________№____________________'
+         : '<span>&nbsp;&nbsp;XX/XX/2018&nbsp;&nbsp;</span>№<span>' . TAB_SP . "108-08/10-69" . TAB_SP . "</span>";
      $DATA .= TAB_SP . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;На&nbsp;№__________________від____________</div>';
-
-     $str .= $GERB . $MON . $DDTUfull . $DDTUshort . $ADRESS . $MAIL . $DATA;
-     printf($str);
+     return $DATA;
 
  }
 

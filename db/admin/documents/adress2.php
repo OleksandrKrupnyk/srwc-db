@@ -27,4 +27,8 @@ foreach ($univers as $i => $u) {
 }
 
 $html .= '</tbody></table></div><div id="prorector">Перший проректор ДДТУ<br></div><div id="prorectorNAME">В.М. Гуляєв</div></div>';
-$pdf->getPdf($html);
+if (filter_input(INPUT_GET, 'pdf')) {
+    $pdf->getPdf($html);
+} else {
+    echo $html;
+}

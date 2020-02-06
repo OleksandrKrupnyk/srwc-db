@@ -5,6 +5,14 @@
   src: url(../fonts/unn.ttf);
   /* Путь к файлу со шрифтом */
 }
+
+@font-face {
+  font-family: unn;
+  /* Имя шрифта */
+  src: url(../fonts/unn.ttf);
+  /* Путь к файлу со шрифтом */
+}
+
 * {
   font-weight: normal;
   /*   border: 1px dashed #ccc;*/
@@ -14,42 +22,92 @@
   width: 18cm;
 }
 
-.v_invitation_1,
-.v_invitation_2 {
-  width: 18cm;
-  font-family: "Times New Roman", Times, serif;
-  font-weight: normal;
+.v_invitation_1 {
+  padding: 0 1cm;
+  border: 1px dashed gray;
+}
+
+.v_invitation_1 .hGERB {
+  padding-bottom: 12pt;
+  margin-left: 7.8cm;
+  width: 86px;
+  height: 120px;
+}
+
+.v_invitation_1 .hMON {
+  letter-spacing: 1px;
+  font-weight: bold;
+  font-size: 12.5pt;
+  padding-bottom: 16pt;
+  text-align: center;
+}
+
+.v_invitation_1 .hDDTUfull, .v_invitation_1 .hDDTUshort {
+  font-size: 12.5pt;
+  font-weight: bold;
+  text-align: center;
+}
+
+.v_invitation_1 .hDDTUshort, .v_invitation_1 .hMAIL {
+  padding-bottom: 12pt;
+  text-align: center;
+  display: block;
+}
+
+.v_invitation_1 .hMAIL > span {
+  text-decoration: underline;
+}
+
+.v_invitation_1 .hADRESS {
+  font-size: 12pt;
+  text-align: center;
+}
+
+.v_invitation_1 .hDATA {
+  padding-bottom: 6pt;
+}
+
+.v_invitation_1 .hDATA span {
+  text-decoration: underline;
+  font-family: handwrite;
+  font-size: 14pt;
 }
 
 .v_invitation_1 #rectory {
   margin-left: 10cm;
   margin-top: 1cm;
 }
+
 .v_invitation_1 #message {
-  margin-left: 1cm;
   margin-top: 1cm;
 }
 
-ol {
-  margin-bottom: 0;
-}
-
-.v_invitation_1 #message p,
-.v_invitation_1 #message2 p,
-.v_invitation_2 #message p {
+.v_invitation_1 #message p {
   margin: 3pt 0;
   text-align: justify;
   text-indent: 20px;
 }
 
 .v_invitation_1 #message2 p {
+  margin: 3pt 0;
+  text-align: justify;
+  text-indent: 20px;
   margin-top: 0;
-  margin-left: 10mm;
 }
 
 .v_invitation_1 #message2 ol {
   margin-top: 0;
   margin-left: 1.25cm;
+}
+
+ol {
+  margin-bottom: 0;
+}
+
+.v_invitation_1, .v_invitation_2 {
+  width: 18cm;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: normal;
 }
 
 .v_invitation_1 #golova, .v_invitation_2 #golova {
@@ -58,6 +116,7 @@ ol {
   padding-top: 1em;
   width: 45%;
 }
+
 .v_invitation_1 #podpis, .v_invitation_2 #podpis {
   margin-left: 11.5cm;
   padding-bottom: 30pt;
@@ -77,8 +136,15 @@ ol {
   margin-left: 15.5cm;
   width: 2.2cm;
 }
+
 .v_invitation_2 #listsudents_title, .v_invitation_2 #univer_title {
   text-align: center;
+}
+
+.v_invitation_2 #message p {
+  margin: 3pt 0;
+  text-align: justify;
+  text-indent: 20px;
 }
 
 header {
@@ -413,15 +479,12 @@ p {
   text-align: center;
   width: 9cm;
 }
-
 .badge .konkurs {
   font-family: "Times New Roman", Times, serif;
 }
-
 .badge .buniverfull {
   font-size: 12pt;
 }
-
 .badge .bfio {
   font-family: inherit;
   font-size: 18pt;
@@ -450,58 +513,7 @@ div[class^="h"],img[class^="h"]{
 display:none;
 }
 
-
 /*PRINT view */
-div[class^=h], img[class^=h] {
-  text-align: center;
-  display: block;
-}
-
-.hGERB {
-  width: 15mm;
-  /*margin:0 auto;*/
-  padding-bottom: 12pt;
-  margin-left: 8.8cm;
-}
-
-.hMON {
-  letter-spacing: 1px;
-  font-weight: bold;
-  font-size: 12.5pt;
-  padding-bottom: 16pt;
-  margin-left: 1cm;
-}
-
-.hDDTUfull, .hDDTUshort {
-  margin-left: 1cm;
-  font-size: 12.5pt;
-  font-weight: bold;
-}
-
-.hDDTUshort, .hMAIL {
-  padding-bottom: 12pt;
-  margin-left: 1cm;
-}
-
-.hMAIL > span {
-  text-decoration: underline;
-}
-
-.hADRESS {
-  font-size: 12pt;
-  margin-left: 1cm;
-}
-
-.hDATA {
-  margin-left: 1cm;
-  padding-bottom: 6pt;
-}
-.hDATA span {
-  text-decoration: underline;
-  font-family: handwrite;
-  font-size: 14pt;
-}
-
 @media print {
   /* Make page break always when see on print*/
   .whom-address,
@@ -528,7 +540,7 @@ div[class^=h], img[class^=h] {
   /*display: none;
   }
   */
-  hr {
+  hr, .page-break {
     display: none;
     page-break-after: always;
   }
@@ -563,54 +575,57 @@ div[class^=h], img[class^=h] {
   }
 
   /*VIEW HEADER OF DOCUMENT*/
-  div[class^=h], img[class^=h] {
-    text-align: center;
-    display: block;
+  .v_invitation_1 {
+    border: none;
+    padding: 0;
   }
 
-  .hGERB {
-    width: 15mm;
-    /*margin:0 auto;*/
+  .v_invitation_1 .hGERB {
     padding-bottom: 12pt;
-    margin-left: 8.8cm;
+    margin-left: 7.8cm;
   }
 
-  .hMON {
+  .v_invitation_1 .hMON {
     letter-spacing: 1px;
     font-weight: bold;
     font-size: 12.5pt;
     padding-bottom: 16pt;
-    margin-left: 1cm;
+    text-align: center;
+    display: block;
   }
 
-  .hDDTUfull, .hDDTUshort {
-    margin-left: 1cm;
+  .v_invitation_1 .hDDTUfull, .v_invitation_1 .hDDTUshort {
     font-size: 12.5pt;
     font-weight: bold;
+    text-align: center;
+    display: block;
   }
 
-  .hDDTUshort, .hMAIL {
+  .v_invitation_1 .hDDTUshort, .v_invitation_1 .hMAIL {
     padding-bottom: 12pt;
-    margin-left: 1cm;
+    text-align: center;
+    display: block;
   }
 
-  .hMAIL > span {
+  .v_invitation_1 .hMAIL > span {
     text-decoration: underline;
   }
 
-  .hADRESS {
+  .v_invitation_1 .hADRESS {
     font-size: 12pt;
-    margin-left: 1cm;
+    text-align: center;
+    display: block;
   }
 
-  .hDATA {
-    margin-left: 1cm;
+  .v_invitation_1 .hDATA {
     padding-bottom: 6pt;
+    text-align: center;
+    display: block;
   }
 
-  .hDATA span {
+  .v_invitation_1 .hDATA span {
     text-decoration: underline;
-    font-family: handwrite;
+    font-family: unn;
     font-size: 14pt;
   }
 }
@@ -622,7 +637,7 @@ div[class^=h], img[class^=h] {
 #test {
   color: #7b68ee;
   font-size: 12pt;
-  font-family: handwrite;
+  font-family: unn;
 }
 
 /*# sourceMappingURL=print.css.map */
