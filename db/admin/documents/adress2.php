@@ -5,12 +5,11 @@ use zukr\pdf\PdfWrapper;
 
 $db = Base::$app->db;
 $pdf = PdfWrapper::getInstance();
-$univers = $db->rawQuery("SELECT univers.*
-FROM univers
-         LEFT JOIN works ON (univers.id = works.id_u and works.invitation = '1')
-WHERE univers.id != '1'
-GROUP BY univers.univer
-ORDER BY univers.univer");
+$univers = $db->rawQuery("
+SELECT u.univerfull,u.adress FROM univers AS u WHERE u.id IN (SELECT DISTINCT id_u 
+FROM works AS w 
+WHERE w.invitation = 1 AND id<>1) ORDER BY u.univerfull;
+");
 //ТОлько те работы у коротых есть приглашенные работы минус ДДТУ
 $html = '<div class="adress2">'
     . '<header>Список розсилки 2-го інформаційного повідомлення <br>Всеукраїнського конкурсу студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</header>'
