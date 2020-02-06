@@ -1,15 +1,17 @@
 <?php
-global $link;
-$query = "SELECT univers.* 
-          FROM univers 
-              LEFT JOIN works ON univers.id = works.id_u 
-          WHERE works.invitation = '1' AND univers.id != '1' 
-          GROUP BY univers.univer 
-          ORDER BY univers.univer;";
-$result = mysqli_query($link, $query);
-echo '<div class="envelope">';
-while ($row = mysqli_fetch_array($result)) {
-    $envelop = <<<__ENVELOP__
+
+use zukr\base\Base;
+
+$db = Base::$app->db;
+$univers = $db->rawQuery("
+SELECT u.univerfull,u.adress,u.zipcode FROM univers AS u WHERE u.id IN (SELECT DISTINCT id_u 
+FROM works AS w 
+WHERE w.invitation = 1 AND id<>1) ORDER BY u.univerfull;
+");
+$envelops = '';
+if (!empty($univers)) {
+    foreach ($univers as $row) {
+        $envelop = <<<__ENVELOP__
     <div class="from-address">
         <strong><ins>Всеукраїнський конкурс студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</ins></strong><br>
         <em>вул.&nbsp;Дніпробудівська,2 м.&nbsp;Кам’янське,
@@ -22,6 +24,8 @@ while ($row = mysqli_fetch_array($result)) {
     </div>
     <hr>
 __ENVELOP__;
-    echo $envelop;
+        $envelops .= $envelop;
+    }
 }
-echo '</div>';
+$html = '<div class="envelope">' . $envelops . '</div>';
+echo $html;
