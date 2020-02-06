@@ -40,8 +40,19 @@ class Dir
         return \realpath($this->getRoot() . '/js');
     }
 
+    /**
+     * @return string
+     */
     public function getFontDir(): string
     {
         return \realpath($this->getRoot() . '/fonts');
+    }
+
+    /**
+     * @return string
+     */
+    public function getTmpDir(): string
+    {
+        return \realpath($this->getRoot() . '/tmp');
     }
 }

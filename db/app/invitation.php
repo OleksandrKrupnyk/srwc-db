@@ -113,7 +113,6 @@ if (empty($id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT))):
         <p>Інформація про підсумкову конференцію наведена у Додатку 2.</p>
     </div>
     <div id="podpis_image2" title="Сканований підпис Голови комісії"></div>
-    <hr>        
 </div>
 __HTML__;
         echo $CONTENT;

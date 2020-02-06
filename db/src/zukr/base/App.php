@@ -5,10 +5,10 @@ namespace zukr\base;
 
 
 use Dotenv\Dotenv;
-use MysqliDb as DB;
 use Stash\Driver\FileSystem;
 use Stash\Driver\Redis;
 use Stash\Pool;
+use zukr\base\database\MysqliDbWrapper as DB;
 
 /**
  * Class App
@@ -32,20 +32,28 @@ class App
      * @var Pool
      */
     private $_cache;
+    /**
+     * @var string Назва додатку
+     */
     private $_app_name;
-    public  $param;
+    /**
+     * @var
+     */
+    public $param;
     /**
      * @var int Час кешування
      */
     private $_ttl;
-
+    /**
+     * @var array|bool|false|string
+     */
     private $isCached;
     /**
      * @var string Шлях для теки кешування
      */
     private $cachePath;
     /**
-     * @var string
+     * @var string Змінна для зберігання хеш рядка
      */
     private $_snrcrf;
 
@@ -76,7 +84,7 @@ class App
             ]
         ]);
 
-        $this->_cache = new Pool($driverRedis);
+        $this->_cache = new Pool($driver);
         $this->initDB();
 
     }
@@ -171,14 +179,16 @@ class App
         $ttl = $ttl ?? $this->_ttl;
         $item = $this->_cache->getItem($key);
         if ($item->isMiss()) {
+            Base::$log->warning('Update cache by key :' . $key);
             if ($func instanceof \Closure) {
                 $data = $func();
             } else {
+                Base::$log->warning('Data is not a Closure. Change calling');
                 $data = $func;
             }
-
             $item->setTTL($ttl);
-            $this->_cache->save($item->set($data));
+            $item->set($data);
+            $this->_cache->save($item);
             return $data;
 
         }

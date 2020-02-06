@@ -8,7 +8,6 @@ use zukr\base\Base;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
 use zukr\base\RecordHelper;
-use zukr\section\SectionRepository;
 
 /**
  * Class WorkHelper
@@ -30,12 +29,6 @@ class WorkHelper extends RecordHelper
     private $works;
 
     /**
-     * @var array
-     */
-    private $sections;
-
-
-    /**
      * @return WorkHelper
      */
     public static function getInstance(): WorkHelper
@@ -55,29 +48,14 @@ class WorkHelper extends RecordHelper
         if ($this->works === null) {
             $works = Base::$app->cacheGetOrSet(
                 'works_list',
-                (new WorkRepository())->getAllWorksAsArray(),
-                30);
+                static function () {
+                    return (new WorkRepository())->getAllWorksAsArray();
+                },
+                3600);
             $this->works = $works;
         }
         return $this->works;
     }
-
-
-    /**
-     * @return array|mixed
-     */
-    public function getAllSections()
-    {
-        if ($this->sections === null) {
-            $sections = Base::$app->cacheGetOrSet(
-                'section_list',
-                (new SectionRepository())->getAllSectionsAsArray(),
-                60);
-            $this->sections = $sections;
-        }
-        return $this->sections;
-    }
-
 
     /**
      * @return array

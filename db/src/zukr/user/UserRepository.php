@@ -31,7 +31,11 @@ class UserRepository extends AbstractRepository
     public function getDropDownList()
     {
         if ($this->users === null) {
-            $users = Base::$app->cacheGetOrSet(static::class, $this->getUsersFormDB(), 600);
+            $users = Base::$app->cacheGetOrSet(static::class,
+                function () {
+                    return $this->getUsersFormDB();
+                },
+                600);
             $this->users = $users;
         }
         return $this->users;

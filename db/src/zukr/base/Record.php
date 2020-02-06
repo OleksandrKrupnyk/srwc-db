@@ -19,51 +19,33 @@ abstract class Record implements RecordInterface
     public const    KEY_ON               = 1;
     public const    KEY_OFF              = 0;
     /**
+     * @var bool
+     */
+    public $_isNewRecord;
+    /**
      * @var MysqliDb
      */
     private $_db;
+    /**
+     * @var string Назва дії
+     */
     private $_actionSave;
-    public  $_isNewRecord;
 
     /**
-     * @return bool
+     * Record constructor
      */
-    public function beforeSave()
+    public function __construct()
     {
-        $primaryKeyId = static::getPrimaryKey();
-        if ($this->{$primaryKeyId} === null) {
-            $this->_actionSave = 'insert';
-            $this->_isNewRecord = true;
-        } else {
-            $this->_actionSave = 'update';
-            $this->_isNewRecord = false;
-        }
-        return true;
+        $this->_db = Base::$app->db;
     }
 
     /**
-     * @return bool
+     * @return MysqliDb
      */
-    public function afterSave(): bool
+    public static function find()
     {
-        try {
-            if ($this->_isNewRecord) {
-                $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
-                $this->_isNewRecord = false;
-            }
-            return true;
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            return false;
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public static function getPrimaryKey(): string
-    {
-        return 'id';
+        $className = static::class;
+        return (new $className())->getDb();
     }
 
     /**
@@ -73,36 +55,6 @@ abstract class Record implements RecordInterface
     {
         return $this->_db;
     }
-
-
-    public function __construct()
-    {
-        $this->_db = Base::$app->db;
-    }
-
-    /**
-     * @return string Назва моделі
-     */
-    public function getNameModel(): string
-    {
-        try {
-            return (new \ReflectionClass($this))->getShortName();
-        } catch (\ReflectionException $e) {
-            Base::$log->error($e->getMessage());
-            return 'noName';
-        }
-    }
-
-    /**
-     * Повертаэ назву таблиці
-     *
-     * @return string  Назва таблиці
-     */
-    public static function getTableName(): string
-    {
-        return \strtolower(\basename(static::class));
-    }
-
 
     /**
      * ```php
@@ -131,6 +83,19 @@ abstract class Record implements RecordInterface
             foreach ($data as $field => $value) {
                 $this->{$field} = ($form === false) ? ($value) : \strip_tags(\trim($value));
             }
+        }
+    }
+
+    /**
+     * @return string Назва моделі
+     */
+    public function getNameModel(): string
+    {
+        try {
+            return (new \ReflectionClass($this))->getShortName();
+        } catch (\ReflectionException $e) {
+            Base::$log->error($e->getMessage());
+            return 'noName';
         }
     }
 
@@ -171,6 +136,24 @@ abstract class Record implements RecordInterface
     }
 
     /**
+     * @return string
+     */
+    public static function getPrimaryKey(): string
+    {
+        return 'id';
+    }
+
+    /**
+     * Повертаэ назву таблиці
+     *
+     * @return string  Назва таблиці
+     */
+    public static function getTableName(): string
+    {
+        return \strtolower(\basename(static::class));
+    }
+
+    /**
      * @return bool Результат виконання операції
      */
     public function save(): bool
@@ -196,61 +179,36 @@ abstract class Record implements RecordInterface
     }
 
     /**
-     * @return MysqliDb
+     * @return bool
      */
-    public static function find()
+    public function beforeSave()
     {
-        $className = static::class;
-        return (new $className())->getDb();
+        $primaryKeyId = static::getPrimaryKey();
+        if ($this->{$primaryKeyId} === null) {
+            $this->_actionSave = 'insert';
+            $this->_isNewRecord = true;
+        } else {
+            $this->_actionSave = 'update';
+            $this->_isNewRecord = false;
+        }
+        return true;
     }
 
     /**
      * @return bool
-     * @throws \Exception
      */
-    protected function update(): bool
+    public function afterSave(): bool
     {
-        $arrayAttributes = $this->setAttributes();
-        $primaryKeyId = static::getPrimaryKey();
-        return $this->_db->where($primaryKeyId, $this->{$primaryKeyId})
-            ->update(static::getTableName(), $arrayAttributes);
-    }
-
-    /**
-     * @return bool|string
-     * @throws \Exception
-     */
-    protected function insert()
-    {
-        $arrayAttributes = $this->setAttributes();
-        $id = $this->_db->insert(static::getTableName(), $arrayAttributes);
-        if ($id) {
-            $primaryKeyId = static::getPrimaryKey();
-            $this->{$primaryKeyId} = $id;
-            return true;
-        }
-        return $this->_db->getLastError();
-    }
-
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    protected function setAttributes()
-    {
-        $attributes = [];
-        $dateTimeUpdate = $this->dateTimeUpdate();
-        foreach ($this as $field => $value) {
-            if ($value !== null && !is_object($value) && $field[0] !== '_') {
-                if (\in_array($field, $dateTimeUpdate, true)) {
-                    $attributes[$field] = $this->_db->now();
-                } else {
-                    $attributes[$field] = $value;
-                }
+        try {
+            if ($this->_isNewRecord) {
+                $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
+                $this->_isNewRecord = false;
             }
-
+            return true;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
         }
-        return $attributes;
     }
 
     /**
@@ -282,11 +240,60 @@ abstract class Record implements RecordInterface
     }
 
     /**
+     * @return bool
+     * @throws \Exception
+     */
+    protected function update(): bool
+    {
+        $arrayAttributes = $this->setAttributes();
+        $primaryKeyId = static::getPrimaryKey();
+        return $this->_db->where($primaryKeyId, $this->{$primaryKeyId})
+            ->update(static::getTableName(), $arrayAttributes);
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    protected function setAttributes()
+    {
+        $attributes = [];
+        $dateTimeUpdate = $this->dateTimeUpdate();
+        foreach ($this as $field => $value) {
+            if ($value !== null && !is_object($value) && $field[0] !== '_') {
+                if (\in_array($field, $dateTimeUpdate, true)) {
+                    $attributes[$field] = $this->_db->now();
+                } else {
+                    $attributes[$field] = $value;
+                }
+            }
+
+        }
+        return $attributes;
+    }
+
+    /**
      * @return array Список полів, в яких необхідно оновити дату створення/редагування
      */
     public function dateTimeUpdate(): array
     {
         return ['date'];
+    }
+
+    /**
+     * @return bool|string
+     * @throws \Exception
+     */
+    protected function insert()
+    {
+        $arrayAttributes = $this->setAttributes();
+        $id = $this->_db->insert(static::getTableName(), $arrayAttributes);
+        if ($id) {
+            $primaryKeyId = static::getPrimaryKey();
+            $this->{$primaryKeyId} = $id;
+            return true;
+        }
+        return $this->_db->getLastError();
     }
 
 }

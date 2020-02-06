@@ -10,6 +10,7 @@ use zukr\base\LoginUser;
 use zukr\file\FileHelper;
 use zukr\leader\LeaderHelper;
 use zukr\review\ReviewHelper;
+use zukr\section\SectionHelper;
 use zukr\univer\UniverHelper;
 use zukr\work\WorkHelper;
 
@@ -45,8 +46,8 @@ function print_work_univer($univer_title, $id_u, $univer)
 function print_work_row(array $work, LoginUser $userLogin)
 {
 
-    $wh = WorkHelper::getInstance();
-    $sections = $wh->getAllSections();
+    $sh = SectionHelper::getInstance();
+    $sections = $sh->getAllSections();
     $section = $sections[$work['id_sec']]['section'] ?? '';
 
     $ah = AuthorHelper::getInstance();
@@ -188,9 +189,8 @@ function isAuthorOfReview(int $loginId, array $review): bool
 }
 
 $wh = WorkHelper::getInstance();
-//$wa = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
 $uh = UniverHelper::getInstance();
-$univerList = $uh->getAllUniversFromDB();
+$univerList = $uh->getUnivers();
 $userLogin = Base::$user;
 $session = Base::$session;
 $session->setFromParam();

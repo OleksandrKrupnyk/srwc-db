@@ -6,8 +6,9 @@ $pdf = \zukr\pdf\PdfWrapper::getInstance();
 
 $univers = UniverHelper::getInstance()->getInvited();
 $envelops = '';
-foreach ($univers as $u) {
-    $envelop = <<<__ENVELOP__
+if (!empty($univers)) {
+    foreach ($univers as $u) {
+        $envelop = <<<__ENVELOP__
     <div class="from-address">
         <strong><ins>Всеукраїнський конкурс студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</ins></strong><br>
         <em>вул.&nbsp;Дніпробудівська,2 м.&nbsp;Кам’янське,
@@ -21,7 +22,8 @@ foreach ($univers as $u) {
     </div>
     <hr>
 __ENVELOP__;
-    $envelops .= $envelop;
+        $envelops .= $envelop;
+    }
 }
 $html = '<div class="envelope">' . $envelops . '</div>';
 echo $html;

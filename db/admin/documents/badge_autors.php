@@ -28,7 +28,7 @@ echo '<div class="badges">';
 if (!empty($query)) {
     $result = mysqli_query($link, $query);
     while ($row = mysqli_fetch_array($result)) {
-        $badge = '<div class="badge"><div>Всеукраїнський конкурс СНР з галузі знань</div><div>&quot;Електротехніка та електромеханіка&quot;</div>';
+        $badge = '<div class="badge"><div class="konkurs">Всеукраїнський конкурс СНР з галузі знань</div><div class="konkurs">&quot;Електротехніка та електромеханіка&quot;</div>';
         $badge .= '<div class="id-number">' . $row['a_id'] . '</div><div class="bif">' . $row['if_a'] . '</div></div>';
         echo $badge;
     }

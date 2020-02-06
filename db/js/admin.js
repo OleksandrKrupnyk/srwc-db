@@ -217,14 +217,14 @@ $(document).ready(function () {
         } else chkBoxDead.removeAttr("disabled");
         //console.log('Нашлась!');
     });
-//Окончание Обработка переключателей на форме редактирования сведений о работе
+    //Окончание Обработка переключателей на форме редактирования сведений о работе
     //Get the button:
     mybutton = document.getElementById("btnUp");
-
-// When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function () {
-        scrollFunction()
-    };
+    if (mybutton !== null) {
+        window.onscroll = function () {
+            scrollFunction()
+        };
+    }
 
     function scrollFunction() {
         if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
@@ -243,16 +243,16 @@ $(document).ready(function () {
 
                 switch (operator) {/*МТС*/
                     case '050':
-                        case '066':
-                        case '095':
-                        case '099': {
-                            $(this).addClass("mobo-mts-16");
-                        }
-                            break;
-                        case '067':/*Киевстар*/
-                        case '068':
-                        case '097':
-                        case '098': {
+                    case '066':
+                    case '095':
+                    case '099': {
+                        $(this).addClass("mobo-mts-16");
+                    }
+                        break;
+                    case '067':/*Киевстар*/
+                    case '068':
+                    case '097':
+                    case '098': {
                             $(this).addClass("mobo-kyivstar-16");
                         }
                             break;

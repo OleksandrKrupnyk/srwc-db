@@ -10,8 +10,6 @@
 use zukr\log\Log;
 use zukr\section\Section;
 
-$_SESSION['id_u'] = $_POST['id_u'];
-
 $section = new Section();
 $section->load($_POST);
 $save = $section->save();

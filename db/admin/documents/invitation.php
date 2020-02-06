@@ -2,61 +2,96 @@
 global $link;
 
 use zukr\base\Base;
+use zukr\base\helpers\ArrayHelper;
+use zukr\base\helpers\PersonHelper;
+use zukr\base\html\Html;
+use zukr\pdf\PdfWrapper;
+
+$db = Base::$app->db;
+
+$pdf = PdfWrapper::getInstance();
+$universList = $db->rawQuery("
+SELECT
+  w.*,
+  univers.*
+FROM (SELECT
+    id_u,
+    COUNT(w.id) AS count_take_part,
+    SUM(CASE WHEN invitation = 1 THEN 1 ELSE 0 END) AS count_invitation
+  FROM `works` AS w
+  WHERE id <> 1
+  GROUP BY id_u 
+    HAVING count_invitation>0
+    ) w
+  LEFT JOIN univers
+    ON w.id_u = univers.id
+    ORDER BY univerfull ");
+
+$staff = $db->rawQuery("
+SELECT l.id_u,l.suname,l.name,l.lname,
+  `positions`.`position`  
+  FROM `leaders` AS l
+  JOIN `positions` ON l.`id_pos` = `positions`.`id`
+ WHERE l.`invitation` = '1'
+ORDER BY  id_u,`suname`
+");
+$staff = ArrayHelper::group($staff, 'id_u');
 
 $settings = Base::$param;
-$query = "SELECT 
-       v_take_part.id_u AS id_u, 
-       v_take_part.count_take_part AS count_take_part,
-        v_invitation.count_invitation AS count_invitation, 
-       univers.univerrod AS univerrod, 
-       univers.rector_r AS rector_r, 
-       univers.posada AS posada 
-                FROM `v_take_part` 
-                    LEFT JOIN v_invitation on v_take_part.id_u = v_invitation.id_u 
-                    LEFT JOIN univers on v_take_part.id_u = univers.id
-                    WHERE (univers.id <> '1') AND (count_invitation > 0) 
-                    ORDER BY univerfull ";
-//echo $query;
-$result = mysqli_query($link, $query);
-if (!empty($result)) {
-    $total = mysqli_num_rows($result);
-    if ($total !== 0) {
-        echo '<div class="v_invitation_1">';
-        while ($row = mysqli_fetch_array($result)) {
-            $rector = (!empty($row['rector_r']))
-                ? $row['rector_r']
-                : "<mark><a href=\"action.php?action=univer_edit&id_u={$row['id_u']}&FROM={$FROM}\">ЗАПОВНІТЬ ДАНІ ПРО ВНЗ</a></mark>";
-            //$invitation = ($row['count_invitation'] != '') ? $row['count_invitation'] : "<mark><a href=\"action.php?action=all_view#id_u{$row['id_u']}\">ЗАПРОСИТИ?</a></mark>";
-            $invitation = '';
-            // Печатать Шапку университета
-            PrintGerb($empty = true);//Печатет данные бланка Герб и т.д.
-            $blk_rectory = "<div id='rectory'>{$row['posada']} {$row['univerrod']}<br>{$rector}</div>";
-            echo $blk_rectory;
-            $blk_message = '<div id="message"><p>Галузева конкурсна комісія Всеукраїнського конкурсу студентських наукових робіт'
-                . ' з галузі &quot;Електротехніка та електромеханіка&quot; запрошує до участі у підсумковій науково-практичній конференції авторів кращих робіт. </p>'
-                . '<p>Список запрошених авторів наукових робіт наведено у Додатку 1.</p>'
-                . '<p>Відповідно до &quot;Положення про  проведення Всеукраїнського конкурсу студентських наукових робіт  з природничих,'
-                . " технічних та гуманітарних наук&quot; від {$settings->DATEPO} №{$settings->ORDERPO} автор наукової роботи, який  не  брав  участі  у  підсумковій"
-                . ' науково-практичній конференції, не може бути претендентом на нагородження.</p>'
-                . '</div>';
-            echo $blk_message;
-            $query2 = "SELECT leaders.invitation  FROM leaders WHERE id_u = '{$row['id_u']}' AND invitation = TRUE";
-            $result2 = mysqli_query($link, $query2)
-            or die('Invalid query: ' . mysqli_error($link));
-            $count = mysqli_num_rows($result2);
-            // Список журі від ВНЗ
-            if (0 !== $count) {
-                echo '<div id="message2"><p>Запрошуємо взяти участь у роботі журі конкурсної комісії конференції представників вашого ВНЗ.</p>';
-                list_leaders_invite($row['id_u'], false);
-                echo '</div>';
+$invitations = '';
+if (!empty($universList)) {
+    $gerb = PrintGerb($empty = true);
+    foreach ($universList as $row) {
+        $rector = (!empty($row['rector_r']))
+            ? $row['rector_r']
+            : "<mark><a href=\"action.php?action=univer_edit&id_u={$row['id_u']}\">ЗАПОВНІТЬ ДАНІ ПРО ВНЗ</a></mark>";
+        $leaders = '';
+        if (isset($staff[$row['id_u']]) && !empty($staff[$row['id_u']])) {
+            $leadersList = $staff[$row['id_u']];
+            $list = [];
+            foreach ($leadersList as $leader) {
+                $list[] = PersonHelper::getFullName($leader) . ', ' . $leader['position'];
             }
-            echo '<div id="message2"><p>Інформація про підсумкову конференцію наведена у Додатку 2.</p></div>'
-                . '<div id="podpis">Перший проректор ДДТУ,<br>Голова галузевої конкурсної комісії<br><br>_______________   В.М.Гуляєв</div><hr>';
+            $leaders .= '<div id="message2"><p>Запрошуємо взяти участь у роботі журі конкурсної комісії конференції представників вашого ВНЗ.</p>' . Html::ol($list) . '</div>';
         }
-        echo '</div>';
-    } else {
-        echo '<mark>За данним запитом данних не знайдено! <br> Встановіть відмітку про запрошення хоча б в одній роботі.</mark>';
+
+        $invitation = <<<__INVITATION__
+<div class="v_invitation_1">
+    <!-- БЛАНК УНИВЕРСИТЕТА -->
+    <img class= "hGERB" src ="./../img/gerb.png" alt="herb" style="margin-left: 7.8cm;">
+    <div class = "hMON">МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ</div>
+    <div class = "hDDTUfull">ДНІПРОВСЬКИЙ ДЕРЖАВНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ</div>
+    <div class = "hDDTUshort">(ДДТУ)</div>
+    <div class = "hADRESS">вул. Дніпробудівська, 2 м. Кам’янське, 51918, тел./факс (0569) 538523</div>
+    <div class = "hMAIL">Е-mail: <span>science@dstu.dp.ua</span> код ЄДРПОУ 02070737</div>
+    {$gerb}
+    <div id='rectory'>{$row['posada']} {$row['univerrod']}<br>{$rector}</div>
+    <div id="message">
+        <p>Галузева конкурсна комісія Всеукраїнського конкурсу студентських наукових робіт 
+        з галузі &quot;Електротехніка та електромеханіка&quot; запрошує до участі у підсумковій науково-практичній конференції 
+        авторів кращих робіт. </p>
+        <p>Список запрошених авторів наукових робіт наведено у Додатку 1.</p>
+        <p>Відповідно до &quot;Положення про  проведення Всеукраїнського конкурсу студентських наукових робіт  з природничих, 
+        технічних та гуманітарних наук&quot; від {$settings->DATEPO} №{$settings->ORDERPO} автор наукової 
+        роботи, який  не  брав  участі  у  підсумковій науково-практичній конференції, не може бути претендентом на нагородження.
+        </p>
+    </div>
+    {$leaders}
+    <div id="message2">
+    <p>Інформація про підсумкову конференцію наведена у Додатку 2.</p>
+    </div>
+    <div id="podpis">Перший проректор ДДТУ,<br>Голова галузевої конкурсної комісії<br><br>_______________   В.М.Гуляєв</div>
+</div>
+<div class="page-break"></div> 
+<!-- Окончание БЛАНК УНИВЕРСИТЕТА -->
+__INVITATION__;
+        $invitations .= $invitation;
     }
 } else {
-    echo '<mark>Помилка запиту даних.</mark>';
+    $invitations .= '<mark>Помилка запиту даних.</mark>';
+}
+if (filter_input(INPUT_GET, 'pdf')) {
+    $pdf->getPdf($invitations);
+} else {
+    echo $invitations;
 }
