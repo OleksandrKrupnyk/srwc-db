@@ -144,16 +144,6 @@ abstract class Record implements RecordInterface
     }
 
     /**
-     * Повертаэ назву таблиці
-     *
-     * @return string  Назва таблиці
-     */
-    public static function getTableName(): string
-    {
-        return \strtolower(\basename(static::class));
-    }
-
-    /**
      * @return bool Результат виконання операції
      */
     public function save(): bool
