@@ -239,7 +239,7 @@ class ReviewHelper extends RecordHelper
                         static function () use ($resultReviews) {
                             return ArrayHelper::group($resultReviews, 'id_w');
                         },
-                        300);
+                        30);
             }
         }
         return $this->reviewsBalls;

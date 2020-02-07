@@ -34,7 +34,7 @@ class PositionRepository extends AbstractRepository
                 function () {
                     return $this->getPositionsFormDB();
                 },
-                3600);
+                60);
             $this->positions = $positions;
         }
         return $this->positions;

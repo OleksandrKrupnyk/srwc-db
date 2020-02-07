@@ -35,7 +35,7 @@ class UserRepository extends AbstractRepository
                 function () {
                     return $this->getUsersFormDB();
                 },
-                600);
+                60);
             $this->users = $users;
         }
         return $this->users;

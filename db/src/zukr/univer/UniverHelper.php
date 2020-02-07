@@ -90,7 +90,7 @@ class UniverHelper extends RecordHelper
                 function () {
                     return $this->getAllUniversFromDB();
                 },
-                360);
+                30);
             $this->univers = $univers;
         }
         return $this->univers;

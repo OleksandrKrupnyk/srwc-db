@@ -48,7 +48,7 @@ class SectionHelper extends RecordHelper
                 function () {
                     return $this->getSectionRepository()->getAllSectionsAsArray();
                 },
-                120);
+                30);
         }
         return $this->sections;
     }

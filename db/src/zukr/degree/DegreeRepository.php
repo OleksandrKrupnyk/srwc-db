@@ -33,7 +33,7 @@ class DegreeRepository extends AbstractRepository
                 function () {
                     return $this->getDegreesFormDB();
                 },
-                3600);
+                60);
             $this->degrees = $statuses;
         }
         return $this->degrees;

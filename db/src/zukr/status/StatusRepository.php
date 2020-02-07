@@ -37,7 +37,7 @@ class StatusRepository extends AbstractRepository
                 function () {
                     return $this->getStatusesFormDB();
                 },
-                3600);
+                60);
             $this->statuses = $statuses;
         }
         return $this->statuses;

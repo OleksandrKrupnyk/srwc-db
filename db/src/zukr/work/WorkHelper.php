@@ -51,7 +51,7 @@ class WorkHelper extends RecordHelper
                 static function () {
                     return (new WorkRepository())->getAllWorksAsArray();
                 },
-                3600);
+                30);
             $this->works = $works;
         }
         return $this->works;

@@ -47,7 +47,7 @@ class FileHelper extends RecordHelper
                 function () {
                     return $this->getFilesFromDB();
                 },
-                300);
+                30);
         }
         return $this->files;
     }
