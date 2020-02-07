@@ -7,12 +7,14 @@
  */
 
 //Добавление секции
+use zukr\base\Base;
 use zukr\log\Log;
 use zukr\section\Section;
 
 $section = new Section();
 $section->load($_POST);
 $save = $section->save();
+Base::$app->cacheFlush();
 $log = Log::getInstance();
 $log->logAction(null, $section::getTableName(), $section->id);
 $url2go = 'action.php?action=section_list';
