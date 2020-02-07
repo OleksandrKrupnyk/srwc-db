@@ -64,6 +64,15 @@ class Log extends Record
         return static::$obj;
     }
 
+    /**
+     * Повертаэ назву таблиці
+     *
+     * @return string  Назва таблиці
+     */
+    public static function getTableName(): string
+    {
+        return 'log';
+    }
 
     /**
      * @param null|string $action Назва дії
