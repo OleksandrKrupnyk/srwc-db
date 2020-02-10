@@ -86,11 +86,11 @@ class UniverHelper extends RecordHelper
     public function getUnivers(): array
     {
         if ($this->univers === null) {
-            $univers = Base::$app->cacheGetOrSet(static::class,
+            $univers = Base::$app->cacheGetOrSet(Univer::class,
                 function () {
                     return $this->getAllUniversFromDB();
                 },
-                30);
+                3600);
             $this->univers = $univers;
         }
         return $this->univers;
