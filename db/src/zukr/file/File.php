@@ -15,23 +15,41 @@ use zukr\base\Record;
  */
 class File extends Record
 {
-    /** @var int Файли роботи */
+
+    protected const FLUSH_CACHE = true;
+    /**
+     * @var int Файли роботи
+     */
     public const TYPE_WORK = 0;
-    /** @var int файли тезисів */
+    /**
+     * @var int файли тезисів
+     */
     public const TYPE_TESIS = 1;
-    /** @var int Файли презентацій */
+    /**
+     * @var int Файли презентацій
+     */
     public const TYPE_OFFICE_PRESENTATION = 2;
 
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id;
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id_w;
-    /** @var string */
+    /**
+     * @var string
+     */
     public $file;
-    /** @var int */
+    /**
+     * @var int
+     */
     public $typeoffile = 0;
-    /** @var string */
+    /**
+     * @var string
+     */
     public $date = 'NOW';
 
     /**
