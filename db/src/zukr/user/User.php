@@ -5,7 +5,6 @@ namespace zukr\user;
 
 
 use zukr\base\AuthInterface;
-use zukr\base\exceptions\InvalidArgumentException;
 use zukr\base\Record;
 use zukr\leader\LeaderRepository;
 
@@ -18,14 +17,37 @@ use zukr\leader\LeaderRepository;
  */
 class User extends Record implements AuthInterface
 {
-
+    /**
+     *
+     */
+    protected const FLUSH_CACHE = true;
+    /**
+     * @var int ІД запису
+     */
     public $id;
+    /**
+     * @var string Логін
+     */
     public $usr;
+    /**
+     * @var string Пароль
+     */
     public $pass;
+    /**
+     * @var
+     */
     public $dt;
+    /**
+     * @var int
+     */
     public $is_admin = 0;
-    /** @var array */
+    /**
+     * @var array
+     */
     private $_profile = [];
+    /**
+     * @var
+     */
     private $_isReview;
 
     /**
@@ -36,18 +58,25 @@ class User extends Record implements AuthInterface
         return 'tz_members';
     }
 
-
-    public final function isGuest(): bool
+    /**
+     * @return bool
+     */
+    final public function isGuest(): bool
     {
         return false;
     }
 
-
+    /**
+     * @return bool
+     */
     public function isAdmin(): bool
     {
         return (bool)$this->is_admin;
     }
 
+    /**
+     * @return string
+     */
     public function getLogin(): string
     {
         return $this->usr;
