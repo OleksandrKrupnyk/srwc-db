@@ -21,18 +21,26 @@ use zukr\work\WorkRepository;
 class ReviewHelper extends RecordHelper
 {
 
-    /** @var ReviewHelper */
+    /**
+     * @var ReviewHelper
+     */
     private static $obj;
-    /** @var WorkRepository */
+    /**
+     * @var WorkRepository
+     */
     protected $workRepository;
-    /** @var LeaderRepository */
+    /**
+     * @var LeaderRepository
+     */
     protected $leaderRepository;
-    /** @var ReviewRepository */
+    /**
+     * @var ReviewRepository
+     */
     protected $reviewRepository;
     /**
-     * @var array
+     * @var array Список балів рецензії зрупований за ІД роботи
      */
-    protected $reviewsBalls = [];
+    protected $reviewsBalls;
     /**
      * @var
      */
@@ -214,8 +222,10 @@ class ReviewHelper extends RecordHelper
     }
 
     /**
-     * @param int $workId
-     * @return int|null
+     * Повертає кількість рецензій за казаним ІД роботи
+     *
+     * @param int $workId ІД роботи
+     * @return int|null Кількість рецензій за на роботу
      */
     public function getCountOfReviewByWorkId(int $workId): ?int
     {
@@ -230,16 +240,18 @@ class ReviewHelper extends RecordHelper
      */
     public function getDecisionIndexedByWorkId(): array
     {
-        if (empty($this->reviewsBalls)) {
+        if ($this->reviewsBalls === null) {
             $resultReviews = $this->getResultReviews();
             if (!empty($resultReviews)) {
                 $this->reviewsBalls =
                     Base::$app->cacheGetOrSet(
-                        'getDecisionIndexedByWorkId',
+                        Review::class,
                         static function () use ($resultReviews) {
                             return ArrayHelper::group($resultReviews, 'id_w');
                         },
-                        30);
+                        3600);
+            } else {
+                $this->reviewsBalls = [];
             }
         }
         return $this->reviewsBalls;

@@ -18,6 +18,7 @@ abstract class Record implements RecordInterface
     protected const NOTIFICATION_ACTIONS = true;
     public const    KEY_ON               = 1;
     public const    KEY_OFF              = 0;
+    protected const FLUSH_CACHE          = false;
     /**
      * @var bool
      */
@@ -194,9 +195,10 @@ abstract class Record implements RecordInterface
                 $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
                 $this->_isNewRecord = false;
             }
+            $this->flushCache();
             return true;
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            Base::$log->error($e->getMessage());
             return false;
         }
     }
@@ -284,6 +286,16 @@ abstract class Record implements RecordInterface
             return true;
         }
         return $this->_db->getLastError();
+    }
+
+    /**
+     * Анулювання результатів кешування
+     */
+    private function flushCache()
+    {
+        if (static::FLUSH_CACHE === true) {
+            Base::$app->cacheFlush(static::class);
+        }
     }
 
 }
