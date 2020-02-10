@@ -15,13 +15,27 @@ use zukr\base\Record;
  */
 class Section extends Record
 {
-    /** @var array */
+    /**
+     *
+     */
+    protected const FLUSH_CACHE = true;
+    /**
+     * @var array
+     */
     public const ROOMS = [
         '7-43', '7-53', '7-54'
     ];
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id;
+    /**
+     * @var string Назва секції
+     */
     public $section;
+    /**
+     * @var string Аудиторія за замовчуванням
+     */
     public $room = '7-53';
 
     /**
