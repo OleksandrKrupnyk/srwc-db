@@ -18,6 +18,10 @@ class Work extends Record
     /**
      *
      */
+    protected const FLUSH_CACHE = true;
+    /**
+     *
+     */
     public const PERSON_EXIST = 888;
     /**
      * @var int ІД запису

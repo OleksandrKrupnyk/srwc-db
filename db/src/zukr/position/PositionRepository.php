@@ -30,11 +30,11 @@ class PositionRepository extends AbstractRepository
     {
         if ($this->positions === null) {
             $positions = Base::$app->cacheGetOrSet(
-                static::class,
+                Position::class,
                 function () {
                     return $this->getPositionsFormDB();
                 },
-                60);
+                3600);
             $this->positions = $positions;
         }
         return $this->positions;

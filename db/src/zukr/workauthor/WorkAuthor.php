@@ -16,15 +16,28 @@ use zukr\base\Record;
 class WorkAuthor extends Record
 {
 
+    protected const FLUSH_CACHE = true;
+    /**
+     * @var int ІД запису
+     */
     public $id;
+    /**
+     * @var  int ІД запису роботи
+     */
     public $id_w;
+    /**
+     * @var int ІД запису автора
+     */
     public $id_a;
-    public $date='NOW';
+    /**
+     * @var string
+     */
+    public $date = 'NOW';
 
     /**
      * @inheritDoc
      */
-    public static function getTableName():string
+    public static function getTableName(): string
     {
         return 'wa';
     }

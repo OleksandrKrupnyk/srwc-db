@@ -84,7 +84,7 @@ class App
             ]
         ]);
 
-        $this->_cache = new Pool($driver);
+        $this->_cache = new Pool($driverRedis);
         $this->initDB();
 
     }
@@ -179,7 +179,7 @@ class App
         $ttl = $ttl ?? $this->_ttl;
         $item = $this->_cache->getItem($key);
         if ($item->isMiss()) {
-            Base::$log->warning('Update cache by key :' . $key);
+            Base::$log->warning('Expiration :' . $item->getExpiration()->format('Y-m-d H:i:s') . '. Update cache by key :' . $key);
             if ($func instanceof \Closure) {
                 $data = $func();
             } else {
@@ -197,9 +197,12 @@ class App
 
     /**
      * Очищення кешу
+     *
+     * @param string $key Ключ кешування
      */
-    public function cacheFlush(): void
+    public function cacheFlush(string $key): void
     {
+        $this->_cache->getItem($key);
         $this->_cache->clear();
     }
 

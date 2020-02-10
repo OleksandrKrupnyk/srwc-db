@@ -16,13 +16,19 @@ use zukr\base\RecordHelper;
 class SectionHelper extends RecordHelper
 {
 
-    /** @var SectionHelper */
+    /**
+     * @var SectionHelper
+     */
     private static $obj;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $sections;
 
-    /** @var  SectionRepository */
+    /**
+     * @var  SectionRepository
+     */
     private $sectionRepository;
 
     /**
@@ -44,11 +50,11 @@ class SectionHelper extends RecordHelper
     {
         if ($this->sections === null) {
             $this->sections = Base::$app->cacheGetOrSet(
-                'section_list',
+                Section::class,
                 function () {
                     return $this->getSectionRepository()->getAllSectionsAsArray();
                 },
-                30);
+                3600);
         }
         return $this->sections;
     }

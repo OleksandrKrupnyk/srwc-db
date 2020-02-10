@@ -43,11 +43,11 @@ class FileHelper extends RecordHelper
     {
         if ($this->files === null) {
             $this->files = Base::$app->cacheGetOrSet(
-                static::class,
+                File::class,
                 function () {
                     return $this->getFilesFromDB();
                 },
-                30);
+                3600);
         }
         return $this->files;
     }

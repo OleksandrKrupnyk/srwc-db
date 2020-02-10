@@ -15,7 +15,10 @@ use zukr\base\Record;
  */
 class Univer extends Record
 {
-
+    /**
+     *
+     */
+    protected const FLUSH_CACHE = true;
     /**
      * @var string Скорочена назва університету
      */
@@ -65,6 +68,5 @@ class Univer extends Record
     {
         return 'univers';
     }
-
 
 }

@@ -18,6 +18,7 @@ abstract class Record implements RecordInterface
     protected const NOTIFICATION_ACTIONS = true;
     public const    KEY_ON               = 1;
     public const    KEY_OFF              = 0;
+    protected const FLUSH_CACHE          = false;
     /**
      * @var bool
      */
@@ -194,9 +195,10 @@ abstract class Record implements RecordInterface
                 $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
                 $this->_isNewRecord = false;
             }
+            $this->flushCache();
             return true;
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            Base::$log->error($e->getMessage());
             return false;
         }
     }
@@ -224,7 +226,10 @@ abstract class Record implements RecordInterface
     {
         $result = false;
         if ($db instanceof MysqliDb) {
-            $result = (bool)$db->delete(static::getTableName());
+            if ($this->beforeDelete()) {
+                $result = (bool)$db->delete(static::getTableName());
+                $this->afterDelete();
+            }
         }
         return $result;
     }
@@ -284,6 +289,34 @@ abstract class Record implements RecordInterface
             return true;
         }
         return $this->_db->getLastError();
+    }
+
+    /**
+     * Анулювання результатів кешування
+     */
+    protected function flushCache()
+    {
+        if (static::FLUSH_CACHE === true) {
+            Base::$app->cacheFlush(static::class);
+        }
+    }
+
+    /**
+     * Виконуэться перед видаленням запису
+     *
+     * @return bool
+     */
+    protected function beforeDelete(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Виконується після видалення запису
+     */
+    protected function afterDelete()
+    {
+        $this->flushCache();
     }
 
 }

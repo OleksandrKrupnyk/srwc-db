@@ -29,6 +29,11 @@ class WorkHelper extends RecordHelper
     private $works;
 
     /**
+     * @var WorkRepository
+     */
+    private $worksRepository;
+
+    /**
      * @return WorkHelper
      */
     public static function getInstance(): WorkHelper
@@ -47,11 +52,11 @@ class WorkHelper extends RecordHelper
     {
         if ($this->works === null) {
             $works = Base::$app->cacheGetOrSet(
-                'works_list',
-                static function () {
-                    return (new WorkRepository())->getAllWorksAsArray();
+                Work::class,
+                function () {
+                    return $this->getWorksRepository()->getAllWorksAsArray();
                 },
-                30);
+                3600);
             $this->works = $works;
         }
         return $this->works;
@@ -230,5 +235,16 @@ class WorkHelper extends RecordHelper
         });
 
         return $array;
+    }
+
+    /**
+     * @return WorkRepository
+     */
+    public function getWorksRepository(): WorkRepository
+    {
+        if ($this->worksRepository === null) {
+            $this->worksRepository = new WorkRepository();
+        }
+        return $this->worksRepository;
     }
 }

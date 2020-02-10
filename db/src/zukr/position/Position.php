@@ -17,9 +17,18 @@ use zukr\base\Record;
  */
 class Position extends Record
 {
-    /** @var int ІД запису */
+
+    /**
+     *
+     */
+    protected const FLUSH_CACHE = true;
+    /**
+     * @var int ІД запису
+     */
     public $id;
-    /** @var string Посада */
+    /**
+     * @var string Посада
+     */
     public $position;
 
 

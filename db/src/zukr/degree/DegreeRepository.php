@@ -29,11 +29,11 @@ class DegreeRepository extends AbstractRepository
     public function getDropDownList()
     {
         if ($this->degrees === null) {
-            $statuses = Base::$app->cacheGetOrSet(static::class,
+            $statuses = Base::$app->cacheGetOrSet(Degree::class,
                 function () {
                     return $this->getDegreesFormDB();
                 },
-                60);
+                3600);
             $this->degrees = $statuses;
         }
         return $this->degrees;
