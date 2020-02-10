@@ -17,13 +17,22 @@ use zukr\base\Record;
  */
 class Degree extends Record
 {
-    /** @var int ІД запису */
+    public const FLUSH_CACHE = true;
+    /**
+     * @var int ІД запису
+     */
     public $id;
-    /** @var string  Скорочена назва наукового ступуню */
+    /**
+     * @var string  Скорочена назва наукового ступуню
+     */
     public $degree;
-    /** @var string Науковий ступінь повністю */
+    /**
+     * @var string Науковий ступінь повністю
+     */
     public $degreefull;
-    /** @var string Науковий ступінь в давальному відмінку */
+    /**
+     * @var string Науковий ступінь в давальному відмінку
+     */
     public $degreegive;
 
     /**
