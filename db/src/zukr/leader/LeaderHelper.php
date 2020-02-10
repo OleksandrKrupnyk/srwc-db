@@ -4,11 +4,13 @@
 namespace zukr\leader;
 
 
+use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\HtmlHelper;
 use zukr\base\RecordHelper;
 use zukr\position\PositionRepository;
+use zukr\workleader\WorkLeader;
 use zukr\workleader\WorkLeaderRepository;
 
 /**
@@ -39,6 +41,10 @@ class LeaderHelper extends RecordHelper
      * @var LeaderRepository
      */
     private $leaderRepository;
+    /**
+     * @var WorkLeaderRepository
+     */
+    private $workLeaderRepository;
 
     /**
      * @return LeaderHelper
@@ -71,7 +77,13 @@ class LeaderHelper extends RecordHelper
     protected function getWorksLeaders()
     {
         if ($this->worksLeaders === null) {
-            $this->worksLeaders = (new WorkLeaderRepository())->getAllLeadersOfWorks();
+            $this->worksLeaders = Base::$app->cacheGetOrSet(
+                WorkLeader::class,
+                function () {
+                    return $this->getWorkLeaderRepository()->getAllLeadersOfWorks();
+                },
+                360
+            );
         }
         return $this->worksLeaders;
     }
@@ -139,5 +151,16 @@ class LeaderHelper extends RecordHelper
         }
         return '<ol>' . \implode('', $list) . '</ol>';
 
+    }
+
+    /**
+     * @return WorkLeaderRepository
+     */
+    public function getWorkLeaderRepository(): WorkLeaderRepository
+    {
+        if ($this->workLeaderRepository === null) {
+            $this->workLeaderRepository = new WorkLeaderRepository();
+        }
+        return $this->workLeaderRepository;
     }
 }
