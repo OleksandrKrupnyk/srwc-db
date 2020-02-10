@@ -33,11 +33,11 @@ class StatusRepository extends AbstractRepository
     {
         if ($this->statuses === null) {
             $statuses = Base::$app->cacheGetOrSet(
-                static::class,
+                Status::class,
                 function () {
                     return $this->getStatusesFormDB();
                 },
-                60);
+                3600);
             $this->statuses = $statuses;
         }
         return $this->statuses;
