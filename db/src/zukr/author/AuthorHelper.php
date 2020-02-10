@@ -4,8 +4,10 @@
 namespace zukr\author;
 
 
+use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\RecordHelper;
+use zukr\workauthor\WorkAuthor;
 use zukr\workauthor\WorkAuthorRepository;
 
 /**
@@ -28,6 +30,11 @@ class AuthorHelper extends RecordHelper
     private $autors;
 
     /**
+     * @var WorkAuthorRepository
+     */
+    private $workAuthorRepository;
+
+    /**
      * @return AuthorHelper
      */
     public static function getInstance(): AuthorHelper
@@ -44,7 +51,7 @@ class AuthorHelper extends RecordHelper
      */
     public function getAutorsByWorkId($workId)
     {
-        if ($this->autorsOfWork == null) {
+        if ($this->autorsOfWork === null) {
             $worksAutors = $this->getWorksAutors();
             $this->autorsOfWork = ArrayHelper::group($worksAutors, 'id_w');
         }
@@ -57,7 +64,12 @@ class AuthorHelper extends RecordHelper
     protected function getWorksAutors()
     {
         if ($this->worksAutors === null) {
-            $worksAutors = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
+
+            $worksAutors = Base::$app->cacheGetOrSet(
+                WorkAuthor::class,
+                function () {
+                    return $this->getWorkAuthorRepository()->getAllAuthorsOfWorks();
+                }, 360);
             $this->worksAutors = $worksAutors;
         }
         return $this->worksAutors;
@@ -88,6 +100,17 @@ class AuthorHelper extends RecordHelper
             });
         }
         return [];
+    }
+
+    /**
+     * @return WorkAuthorRepository
+     */
+    public function getWorkAuthorRepository(): WorkAuthorRepository
+    {
+        if ($this->workAuthorRepository === null) {
+            $this->workAuthorRepository = new WorkAuthorRepository();
+        }
+        return $this->workAuthorRepository;
     }
 
 }
