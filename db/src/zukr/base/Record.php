@@ -226,7 +226,10 @@ abstract class Record implements RecordInterface
     {
         $result = false;
         if ($db instanceof MysqliDb) {
-            $result = (bool)$db->delete(static::getTableName());
+            if ($this->beforeDelete()) {
+                $result = (bool)$db->delete(static::getTableName());
+                $this->afterDelete();
+            }
         }
         return $result;
     }
@@ -291,11 +294,29 @@ abstract class Record implements RecordInterface
     /**
      * Анулювання результатів кешування
      */
-    private function flushCache()
+    protected function flushCache()
     {
         if (static::FLUSH_CACHE === true) {
             Base::$app->cacheFlush(static::class);
         }
+    }
+
+    /**
+     * Виконуэться перед видаленням запису
+     *
+     * @return bool
+     */
+    protected function beforeDelete(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Виконується після видалення запису
+     */
+    protected function afterDelete()
+    {
+        $this->flushCache();
     }
 
 }
