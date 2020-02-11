@@ -7,6 +7,7 @@ use zukr\base\Base;
 use zukr\base\exceptions\InvalidArgumentException;
 use zukr\base\exceptions\NullReturnedException;
 use zukr\base\Params;
+use zukr\log\Log;
 use zukr\setting\Setting;
 use zukr\setting\SettingRepository;
 
@@ -53,6 +54,10 @@ class ChangeParamAction implements ApiActionsInterface
             $setting->value = $this->value;
             $save = $setting->save();
             if ($save) {
+                Log::getInstance()->logAction(
+                    'change-param',
+                    $setting::getTableName(),
+                    $setting->parametr . '=' . $setting->value);
                 $this->changeMessage();
             }
         }

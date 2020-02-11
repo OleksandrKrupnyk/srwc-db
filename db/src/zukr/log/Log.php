@@ -41,7 +41,7 @@ class Log extends Record
      */
     public $table;
     /**
-     * @var int ІД запису
+     * @var string ІД запису
      */
     public $action_id;
     /**
@@ -79,7 +79,7 @@ class Log extends Record
      * @param null|string $table  Назва таблиці
      * @param null        $action_id
      */
-    public function logAction(string $action = null, $table = null, $action_id = null): void
+    public function logAction(string $action = null, $table = null, string $action_id = null): void
     {
         if ($action === null) {
             if (isset($_POST['action'])) {
