@@ -12,13 +12,15 @@ use zukr\work\WorkRepository;
 /**
  * Class ChangeWorkInvitationAction
  *
+ * Зміна відмітки запрошення роботи до участі в підсумковій конференції
+ *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
  */
 class ChangeWorkInvitationAction implements ApiActionsInterface
 {
-use ApiMessageTrait;
+    use ApiMessageTrait;
     /**
      * @var int ІД Роботи
      */

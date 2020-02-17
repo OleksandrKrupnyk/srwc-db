@@ -11,6 +11,8 @@ use zukr\work\WorkRepository;
 /**
  * Class DeleteSectionAction
  *
+ * Видалення секції
+ *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread

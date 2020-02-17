@@ -18,7 +18,9 @@ use zukr\work\Work;
  */
 class WorkAuthorRepository extends AbstractRepository
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $__className = WorkAuthor::class;
     /**
      * @var WorkAuthor
@@ -62,7 +64,7 @@ class WorkAuthorRepository extends AbstractRepository
     }
 
     /**
-     * @param int $id
+     * @param int $id ІД запису автора роботи
      * @return array|\MysqliDb
      */
     public function getByAuthorId(int $id)
@@ -112,6 +114,24 @@ class WorkAuthorRepository extends AbstractRepository
                 ->where('id_w', $workIds, 'IN')
                 ->orderBy('suname', 'ASC')
                 ->get($table, null, $table . '.date,id_w, ' . $joinTable . '.*');
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Спиок ІД авторів роботи роботи
+     *
+     * @param int $workId ІД роботи
+     * @return array|\MysqliDb
+     */
+    public function getAuthorsIdsByWorkId(int $workId)
+    {
+        try {
+            return $this->model::find()
+                ->where('id_w', $workId)
+                ->get($this->model::getTableName(), null, 'id_a');
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];

@@ -12,6 +12,8 @@ use zukr\work\WorkRepository;
 /**
  * Class ChangeWorkSectionAction
  *
+ * Зміна секції роботи
+ *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread

@@ -3,7 +3,6 @@
 
 namespace zukr\api\actions;
 
-use zukr\base\Base;
 use zukr\base\exceptions\InvalidArgumentException;
 use zukr\base\exceptions\NullReturnedException;
 use zukr\base\Params;
@@ -44,7 +43,7 @@ class ChangeParamAction implements ApiActionsInterface
     public function execute()
     {
 
-        $snrcrf = Base::getSNRCRF();
+        $snrcrf = $this->getSnrcrfFromSeesion();
         if (\in_array($this->param, Params::PARAMS) && $this->isValidSNRCRF($snrcrf)) {
             /** @var Setting $setting */
             $setting = (new SettingRepository())->findById($this->param);

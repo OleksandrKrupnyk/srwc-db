@@ -11,6 +11,8 @@ use zukr\section\SectionRepository;
 /**
  * Class ChangeSectionAction
  *
+ * Зміна назви секції
+ *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
@@ -56,8 +58,7 @@ class ChangeSectionAction implements ApiActionsInterface
     {
         if (empty($this->id_sec = \filter_input(INPUT_POST, 'id_sec', FILTER_VALIDATE_INT))) {
             throw new InvalidArgumentException('id_sec Must be set');
-
-        };
+        }
         if (empty($this->section = \filter_input(INPUT_POST, 'section', FILTER_SANITIZE_STRING))) {
             throw new InvalidArgumentException('section Must be set');
 

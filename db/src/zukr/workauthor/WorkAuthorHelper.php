@@ -14,11 +14,18 @@ use zukr\base\RecordHelper;
  */
 class WorkAuthorHelper extends RecordHelper
 {
-    /** @var WorkAuthorHelper */
+    /**
+     * @var WorkAuthorHelper
+     */
     private static $obj;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $worksAuthor = [];
+
+
+    private $workAuthorRepository;
 
     /**
      * @return WorkAuthorHelper
@@ -50,9 +57,20 @@ class WorkAuthorHelper extends RecordHelper
     public function getWorksAuthor()
     {
         if ($this->worksAuthor == []) {
-            $this->worksAuthor = (new WorkAuthorRepository())->getAllAuthorsOfWorks();
+            $this->worksAuthor = $this->getWorkAuthorRepository()->getAllAuthorsOfWorks();
         }
         return $this->worksAuthor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWorkAuthorRepository()
+    {
+        if ($this->workAuthorRepository === null) {
+            $this->workAuthorRepository = new WorkAuthorRepository();
+        }
+        return $this->workAuthorRepository;
     }
 
 

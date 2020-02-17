@@ -10,6 +10,8 @@ use zukr\review\ReviewHelper;
 /**
  * Class ListReviewerAction
  *
+ * Список рецензентів в розділі створення рецензії
+ *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
@@ -36,7 +38,6 @@ class ListReviewerAction implements ApiActionsInterface
             [
                 'required' => true, 'class' => 'w-100', 'id' => 'review-review1'
             ]);
-        // TODO: Implement execute() method.
     }
 
     /**

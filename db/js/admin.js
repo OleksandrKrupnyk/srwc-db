@@ -103,50 +103,52 @@ $(document).ready(function () {
 
     /* Изменение выбора университета */
     $("#selunivers").on('change', function () {
-        var id_u = $(this).find("option:selected").val();
-        var data = {
-            "id_u": id_u,
-            "action": "select-works"
-        };
+        let id_u = $(this).find("option:selected").val(),
+            data = {
+                "id_u": id_u,
+                "action": "select-works"
+            };
         $("#table_la").hide();
         $.ajax({
             type: "POST",
             url: "ajax.php",
             data: data,
             cache: false,
-            success: function (txt) {
-                $("#work").hide().html(txt).slideDown(400);
-
+            success: function (response) {
+                $("#work").hide().html(response).slideDown(400);
+            },
+            error: function (e) {
+                console.log(e);
             }
         });
 
-    });//$("#selunivers").change
+    });
 
 
     $("#table_la").hide();
     $("#work").on('change', '#selwork', function () {
-        var id_w = $(this).find("option:selected").val(),
+        let id_w = $(this).find("option:selected").val(),
             id_u = $("#selunivers").find("option:selected").val();
-        //console.log('Work:'+id_w+' Univer:'+id_u);
 
         $.ajax({
             type: "POST",
             url: "ajax.php",
-            data: {"id_w": id_w, "id_u": id_u, "action": "selwork"},
+            data: {"id_w": id_w, "id_u": id_u, "action": "authors-leaders"},
             cache: false,
-            success: function (txt) {
-                //console.log('Получено \n'+txt);
-                txt = txt.split("!");
+            success: function (response) {
+                let list = response.replace(/\\"/g, ""),
+                    objs = JSON.parse(list.toString());
                 $("#table_la").fadeIn(400);
-                $("#leader").html(txt[0]).fadeIn(400);
-                $("#leaders").html(txt[1]).fadeIn(400);
-                $("#autor").html(txt[2]).fadeIn(400);
-                $("#autors").html(txt[3]).fadeIn(400);
+                $("#leader").html(objs.linkedLeaders || 'Сталася помилка').fadeIn(400);
+                $("#leaders").html(objs.listLeaders || 'Сталася помилка').fadeIn(400);
+                $("#autor").html(objs.linkedAuthors || 'Сталася помилка').fadeIn(400);
+                $("#autors").html(objs.listAuthors || 'Сталася помилка').fadeIn(400);
             },
             error: function (e) {
                 console.log(e, 'Что-то не то');
             }
         });
+
     });
 
 
@@ -253,16 +255,16 @@ $(document).ready(function () {
                     case '068':
                     case '097':
                     case '098': {
-                            $(this).addClass("mobo-kyivstar-16");
-                        }
-                            break;
-                        case '091': {
-                            $(this).addClass("mobo-utel-16");
-                        }
-                            break;
-                        case '092': {
-                            $(this).addClass("mobo-peoplenet-16");
-                        }
+                        $(this).addClass("mobo-kyivstar-16");
+                    }
+                        break;
+                    case '091': {
+                        $(this).addClass("mobo-utel-16");
+                    }
+                        break;
+                    case '092': {
+                        $(this).addClass("mobo-peoplenet-16");
+                    }
                             break;
                         case '093':
                         case '063': {/*Лайф*/

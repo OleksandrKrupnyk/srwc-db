@@ -5,11 +5,14 @@ namespace zukr\api\actions;
 
 use zukr\author\Author;
 use zukr\author\AuthorRepository;
+use zukr\base\exceptions\InvalidArgumentException;
 use zukr\log\Log;
 use zukr\workauthor\WorkAuthorRepository;
 
 /**
  * Class DeleteAuthorAction
+ *
+ * Видалення запису автора роботи
  *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
@@ -18,7 +21,7 @@ use zukr\workauthor\WorkAuthorRepository;
 class DeleteAuthorAction implements ApiActionsInterface
 {
     /**
-     * @var int
+     * @var int ІД запису автора
      */
     public $id;
 
@@ -61,6 +64,8 @@ class DeleteAuthorAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        $this->id = \filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        if (empty($this->id = \filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id Must be set');
+        }
     }
 }

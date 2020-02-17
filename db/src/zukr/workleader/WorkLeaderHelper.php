@@ -14,8 +14,15 @@ use zukr\base\RecordHelper;
  */
 class WorkLeaderHelper extends RecordHelper
 {
-    /** @var WorkLeaderHelper */
+    /**
+     * @var WorkLeaderHelper
+     */
     private static $obj;
+
+    /**
+     * @var WorkLeaderRepository
+     */
+    private $workLeaderRepository;
 
     /**
      * @return WorkLeaderHelper
@@ -35,10 +42,21 @@ class WorkLeaderHelper extends RecordHelper
      */
     public function getIdsLeadersOfWorkByWorkId(int $workId)
     {
-        $leaders = (new WorkLeaderRepository())->getAllLeadersOfWorkByWorkId($workId);
-        return array_map(static function ($v) {
+        $leaders = $this->getWorkLeaderRepository()->getAllLeadersOfWorkByWorkId($workId);
+        return \array_map(static function ($v) {
             return $v['id'];
         }, $leaders);
+    }
+
+    /**
+     * @return WorkLeaderRepository
+     */
+    public function getWorkLeaderRepository(): WorkLeaderRepository
+    {
+        if ($this->workLeaderRepository === null) {
+            $this->workLeaderRepository = new WorkLeaderRepository();
+        }
+        return $this->workLeaderRepository;
     }
 
 }
