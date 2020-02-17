@@ -17,7 +17,9 @@ use zukr\leader\Leader;
  */
 class WorkLeaderRepository extends AbstractRepository
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $__className = WorkLeader::class;
     /**
      * @var WorkLeader
@@ -44,7 +46,9 @@ class WorkLeaderRepository extends AbstractRepository
 
 
     /**
-     * @param int $workId
+     * Дані по усіх керівниках роботи за переданим ІД роботи
+     *
+     * @param int $workId ІД запису роботи
      * @return array|\MysqliDb
      */
     public function getAllLeadersOfWorkByWorkId(int $workId)
@@ -63,15 +67,17 @@ class WorkLeaderRepository extends AbstractRepository
     }
 
     /**
-     * @param int $workId
+     * Спиок ІД керівників роботи
+     *
+     * @param int $workId ІД роботи
      * @return array|\MysqliDb
      */
-    public function getCountAuthorsByWorkId(int $workId)
+    public function getLeadersIdsByWorkId(int $workId)
     {
         try {
             return $this->model::find()
                 ->where('id_w', $workId)
-                ->get($this->model::getTableName(), null, 'count(*) as count');
+                ->get($this->model::getTableName(), null, 'id_l');
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];
@@ -79,7 +85,7 @@ class WorkLeaderRepository extends AbstractRepository
     }
 
     /**
-     * @param int $id
+     * @param int $id ІД запису керівника роботи
      * @return array|\MysqliDb
      */
     public function getByLeaderId(int $id)

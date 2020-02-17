@@ -8,6 +8,8 @@ use ReflectionClass;
 /**
  * Class RecordHelper
  *
+ * Базовий клас для допоміжних класів
+ *
  * @package      zukr\base
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
