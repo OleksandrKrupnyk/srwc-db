@@ -196,13 +196,20 @@ class App
     }
 
     /**
-     * Очищення кешу
+     * Очищення кешу по ключу
      *
      * @param string $key Ключ кешування
      */
-    public function cacheFlush(string $key): void
+    public function deleteItem(string $key): void
     {
-        $this->_cache->getItem($key);
+        $this->_cache->deleteItem($key);
+    }
+
+    /**
+     * Очищення усього кешу
+     */
+    public function cacheFlush()
+    {
         $this->_cache->clear();
     }
 

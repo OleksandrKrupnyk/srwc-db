@@ -45,7 +45,6 @@ try {
                 $delete = $work->delete($queryWork);
                 if ($delete) {
                     $log->logAction('delete_work', $work::getTableName(), $id_w);
-                    Base::$app->cacheFlush();
                 }
             }
         }

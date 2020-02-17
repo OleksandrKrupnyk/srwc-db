@@ -195,7 +195,7 @@ abstract class Record implements RecordInterface
                 $this->{self::getPrimaryKey()} = $this->_db->getInsertId();
                 $this->_isNewRecord = false;
             }
-            $this->flushCache();
+            $this->flushCacheRecord();
             return true;
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
@@ -210,7 +210,7 @@ abstract class Record implements RecordInterface
     {
         $attributes = [];
         foreach ($this as $field => $value) {
-            if ($value !== null && !is_object($value) && $field[0] !== '_') {
+            if ($value !== null && !\is_object($value) && $field[0] !== '_') {
                 $attributes[$field] = $value;
             }
         }
@@ -255,7 +255,7 @@ abstract class Record implements RecordInterface
         $attributes = [];
         $dateTimeUpdate = $this->dateTimeUpdate();
         foreach ($this as $field => $value) {
-            if ($value !== null && !is_object($value) && $field[0] !== '_') {
+            if ($value !== null && !\is_object($value) && $field[0] !== '_') {
                 if (\in_array($field, $dateTimeUpdate, true)) {
                     $attributes[$field] = $this->_db->now();
                 } else {
@@ -292,12 +292,12 @@ abstract class Record implements RecordInterface
     }
 
     /**
-     * Анулювання результатів кешування
+     * Анулювання результатів кешування запису
      */
-    protected function flushCache()
+    protected function flushCacheRecord()
     {
         if (static::FLUSH_CACHE === true) {
-            Base::$app->cacheFlush(static::class);
+            Base::$app->deleteItem(static::class);
         }
     }
 
@@ -316,7 +316,7 @@ abstract class Record implements RecordInterface
      */
     protected function afterDelete()
     {
-        $this->flushCache();
+        $this->flushCacheRecord();
     }
 
 }
