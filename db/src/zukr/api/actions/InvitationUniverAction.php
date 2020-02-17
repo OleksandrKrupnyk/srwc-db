@@ -12,6 +12,8 @@ use zukr\univer\UniverRepository;
 /**
  * Class InvitationUniverAction
  *
+ * Відмітка про перше інформаційне повідомлення для університетів
+ *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread

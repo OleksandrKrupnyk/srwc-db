@@ -11,6 +11,7 @@ use zukr\leader\LeaderRepository;
 
 /**
  * Class ListsAuthorsAndLeadersAction
+ *
  * Додававання усіх відомостей про роботу списки керівників та авторів
  *
  * @package      zukr\api\actions

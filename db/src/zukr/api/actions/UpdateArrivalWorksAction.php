@@ -8,6 +8,8 @@ use zukr\base\Base;
 /**
  * Class UpdateArrivalWorksAction
  *
+ * Оновлення відміток про участь роботи в конференції
+ *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread

@@ -5,6 +5,7 @@ namespace zukr\api\actions;
 
 use zukr\author\AuthorHelper;
 use zukr\base\Base;
+use zukr\base\exceptions\InvalidArgumentException;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
@@ -15,6 +16,8 @@ use zukr\workleader\WorkLeaderHelper;
 
 /**
  * Class AuthorsLeaders
+ *
+ * Зв'язування роботи автора та керівника
  *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
@@ -62,8 +65,12 @@ class AuthorsLeadersAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        $this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
-        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+        if (empty($this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_u Must be set');
+        };
+        if (empty($this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_w Must be set');
+        };
     }
 
     /**

@@ -4,10 +4,13 @@
 namespace zukr\api\actions;
 
 
+use zukr\base\exceptions\InvalidArgumentException;
 use zukr\work\WorkRepository;
 
 /**
  * Class WorkDescriptionAction
+ *
+ * Опис роботи при під час вибору рецензії
  *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
@@ -54,9 +57,13 @@ class WorkDescriptionAction implements ApiActionsInterface
     /**
      * @param array $params
      */
-    public function init(array $params = []):void
+    public function init(array $params = []): void
     {
-        $this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
-        $this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT);
+        if (empty($this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_u Must be set');
+        }
+        if (empty($this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_w Must be set');
+        }
     }
 }

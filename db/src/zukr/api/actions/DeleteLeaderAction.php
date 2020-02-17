@@ -3,6 +3,7 @@
 
 namespace zukr\api\actions;
 
+use zukr\base\exceptions\InvalidArgumentException;
 use zukr\leader\Leader;
 use zukr\leader\LeaderRepository;
 use zukr\log\Log;
@@ -12,6 +13,8 @@ use zukr\workleader\WorkLeaderRepository;
 /**
  * Class DeleteLeaderAction
  *
+ * Видалення запису керівника з системи
+ *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
@@ -19,7 +22,7 @@ use zukr\workleader\WorkLeaderRepository;
 class DeleteLeaderAction implements ApiActionsInterface
 {
     /**
-     * @var int
+     * @var int ІД запису керівника
      */
     public $id;
 
@@ -69,7 +72,9 @@ class DeleteLeaderAction implements ApiActionsInterface
      */
     public function init(array $params = [])
     {
-        $this->id = \filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        if (empty($this->id = \filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id Must be set');
+        }
     }
 
 
