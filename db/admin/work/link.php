@@ -1,41 +1,38 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: krupnik
- * Date: 10.11.17
- * Time: 14:55
- */
-//проверка известен ли номер
-//работы с которой связываем руководителя или автора
-//Завершение обработки связывния таблиц
-global $link;
-if (isset($_POST['id_w'])) {
-    // обработаем руководителей
-    //передан ли массив руководителей (добалял ли пользователь таковых)
-    if (isset($_POST['leader']) && $_POST['leader'] != '-1') {
-        // получим список руководителей
-        $leaders = $_POST['leader'];
+
+use zukr\log\Log;
+use zukr\workauthor\WorkAuthor;
+use zukr\workleader\WorkLeader;
+
+if (($id_w = filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT)) !== false) {
+    $log = Log::getInstance();
+    if (!empty($leaders = filter_input(INPUT_POST, 'leaders', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))) {
         foreach ($leaders as $id_l) {
-            $query = "INSERT INTO `wl` (`id_w`,`id_l`,`date`) "
-                . "VALUE ('{$_POST['id_w']}','{$id_l}',NOW())";
-            $result = mysqli_query($link, $query);
-            log_action($_POST['action'], "wl", $_POST['id_w']);
-            //or die("Помилка зв'язування керівника: " . mysqli_error($link));
-        }
-        // обработаем авторов
-    }
-    if (isset($_POST['autor']) && $_POST['autor'] != '-1') {
-        $autors = $_POST['autor'];
-        foreach ($autors as $id_a) {
-            $query = "INSERT INTO `wa` (`id_w`,`id_a`,`date`) "
-                . "VALUE ('{$_POST['id_w']}','{$id_a}',NOW())";
-            $result = mysqli_query($link, $query);
-            log_action($_POST['action'], "wa", $_POST['id_w']);
-            // or die("Помилка зв'язування автора: " . mysqli_error($link));
+            if ((int)$id_l === -1) {
+                continue;
+            }
+            /** @var WorkLeader $workLeader */
+            $workLeader = new WorkLeader();
+            $workLeader->id_w = $id_w;
+            $workLeader->id_l = $id_l;
+            $workLeader->save();
+            $log->logAction(null, $workLeader::getTableName(), $workLeader->id ?? 0);
         }
     }
-    //перейдем к просмотру списка работ
-    Go_page('action.php?action=all_view');
+    if (!empty($authors = filter_input(INPUT_POST, 'authors', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))) {
+        foreach ($authors as $id_a) {
+            if ((int)$id_a === -1) {
+                continue;
+            }
+            /** @var  WorkAuthor $workAuthor */
+            $workAuthor = new WorkAuthor();
+            $workAuthor->id_w = $id_w;
+            $workAuthor->id_a = $id_a;
+            $workAuthor->save();
+            $log->logAction(null, $workAuthor::getTableName(), $workAuthor->id ?? 0);
+        }
+    }
+    Go_page('action.php?action=all_view#id_w' . $id_w);
 } else {
     Go_page('action.php');
 }

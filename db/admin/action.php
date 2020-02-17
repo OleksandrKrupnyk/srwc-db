@@ -155,14 +155,13 @@ $_type = $session->getFlash('recordSaveType', '');
             globalPosition: 'top center',
             gap: 8
         });
-        var _type = '<?=$_type?>'.toString();
-        var _msg = '<?=$_msg?>'.toString();
-        console.log(_type, _msg);
+        let _type = '<?=$_type?>'.toString(),
+            _msg = '<?=$_msg?>'.toString();
         if (_msg !== '') {
             $.notify(_msg, _type);
         }
     </script>
-    <?php echo $debugbarRenderer->render() ?>
+    <?= $debugbarRenderer->render() ?>
     </body>
 </html>
 <?php

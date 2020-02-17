@@ -3,16 +3,15 @@
 use zukr\base\html\Html;
 use zukr\univer\UniverHelper;
 use zukr\work\WorkHelper;
-use zukr\work\WorkRepository;
 
-$id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT);
+$id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT) ?? false;
+$wh = WorkHelper::getInstance();
+$uh = UniverHelper::getInstance();
+$id_u = null;
 if ($id_w) {
-    $work = (new WorkRepository())->getById($id_w);
+    $work = $wh->getWorksRepository()->getById($id_w);
     $id_u = $work['id_u'];
 }
-$id_u = $id_u ?? null;
-$uh = UniverHelper::getInstance();
-$wh = WorkHelper::getInstance();
 $univerIds = $wh->getTakePartUniversIds();
 $univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($univerIds));
 ?>
@@ -20,7 +19,7 @@ $univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($uni
     <header><a href="action.php">Меню</a></header>
     <header>Зв'язування роботи</header>
     <form class="linkworkForm form" method="post" action="action.php">
-        <?php echo Html::select('Work[id_u]', $id_u, $univers,
+        <?= Html::select('Work[id_u]', $id_u, $univers,
             ['id' => 'selunivers', 'prompt' => 'Оберіть', 'class' => 'w-100', 'size' => 10]) ?>
         <div id="work"></div>
         <table id="table_la" class="w-100">
