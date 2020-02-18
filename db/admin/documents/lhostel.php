@@ -1,5 +1,4 @@
 <?php
-global $link;
 
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
