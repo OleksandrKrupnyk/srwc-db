@@ -5,6 +5,7 @@ namespace zukr\api\actions;
 
 
 use zukr\author\AuthorRepository;
+use zukr\base\exceptions\InvalidArgumentException;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
 use zukr\leader\LeaderRepository;
@@ -54,9 +55,12 @@ class ListsAuthorsAndLeadersAction implements ApiActionsInterface
 
     /**
      * @inheritDoc
+     * @throws InvalidArgumentException
      */
     public function init(array $params = [])
     {
-        $this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT);
+        if (empty($this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT))) {
+            throw new InvalidArgumentException('id_u Must be set');
+        }
     }
 }

@@ -83,77 +83,6 @@ function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=f
     $str .= "</select>\n";
     return $str;
 }
-
-
-
-
-/**
- *
- * Список [Фамилия Имя Отчество]
- *  <select></select>
- *
- * @param string $table Таблица
- * @param string $pole  Имя параметра name
- * @param int    $id_u  id of Univercity
- * @param int    $size  Size of list
- * @return string
- */
-function selectListAuthorsOrLeaders(string $table, string $pole, int $id_u, int $size): string
-{
-    global $link;
-
-    $query = ($table === 'leaders')
-        ? 'SELECT * FROM `leaders` '
-        : 'SELECT * FROM `autors` ';
-
-    if (!empty($id_u)) {
-        $query .= " WHERE `id_u`='{$id_u}' ";
-    }
-    $query .= ' ORDER BY  `suname`';
-    $result = mysqli_query($link, $query)
-    or die('Invalid query: ' . mysqli_error($link));
-    //Проверка а вообще есть результаты по запросу
-    $count = mysqli_num_rows($result);
-    if ($count === 0) {
-        return 'Незнайдено';
-    }
-    $items = [];
-    while ($row = mysqli_fetch_array($result)) {
-        $items[] = "<option value='{$row['id']}' >" . implode(' ', [$row['suname'], $row['name'], $row['lname']]) . "</option>";
-    }
-    return "<select size='{$size}' name='{$pole}' class='w-100'><option value='-1' selected disabled>Оберіть...</option>"
-        . implode('', $items)
-        . '</select>';
-
-}
-/**
- * Возвращает список руководителей с выбором включать в лист приглашения
- *
- * @param Integer $id_u
- * @param Boolean $check
- */
-function list_leaders_invite($id_u, $check = true)
-{
-    global $link;
-    $query = 'SELECT `leaders`.*,`positions`.`position`  FROM `leaders`'
-        . 'JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`'
-        . "WHERE `leaders`.`id_u`='" . $id_u . "' ";
-    $query .= ($check) ? '' : ' AND `leaders`.`invitation` = TRUE ';
-    $query .= "ORDER BY  `suname` ASC";
-
-    $result = mysqli_query($link, $query) or die('Invalid query: ' . mysqli_error($link));
-    $count = mysqli_num_rows($result);
-    if ($count == 0) {
-        return false;
-    }
-    echo '<ol>';
-    while ($row = mysqli_fetch_array($result)) {
-        echo '<li>' . $row['suname'] . ' ' . $row['name'] . ' ' . $row['lname'] . ', ' . $row['position'] . '</li>';
-    }
-    echo '</ol>';
-}
-
-
 /**
  * Данные все данные по 1 полю в таблице
  *
@@ -231,24 +160,6 @@ function list_files($id_w, string $typeoffile = 'all')
     return $str;
 }
 
-/**
- * Выдает количество авторов (руководителей) у работы
- *
- * @param string $table Table in MySQL
- * @param int    $id_w  id Work
- * @return int
- */
-function count_la(string $table, int $id_w)
-{
-    global $link;
-    $query = ($table === 'wl')
-        ? "SELECT COUNT(*) FROM `wl` WHERE `id_w`='" . $id_w . "'"
-        : "SELECT COUNT(*) FROM `wa` WHERE `id_w`='" . $id_w . "'";
-    $result = mysqli_query($link, $query)
-    or die('Помилка запиту функція count_la: ' . mysqli_error($link));
-    $row = mysqli_fetch_array($result);
-    return (int)$row[0];
-}
 
 /**
 * @param string $table
@@ -476,19 +387,6 @@ function short_list_leader_or_autors_str($id_w, $who, $showId = false)
     }
 }
 
-/**
- * Функция выводит только первых $num букв названия файла если длинна имени файла больше
- *
- * @param string $str
- * @param int    $num
- * @return string
- */
-function file_name_format(string $str, int $num):string
-{
-    return (mb_strlen($str) > $num)
-        ? mb_substr($str, 0, $num) . '...'
-        : $str;
-}
 
 /**
  * @param string $page

@@ -12,7 +12,6 @@ require '../vendor/autoload.php';
 header('Content-Type: text/html; charset=utf-8');
 session_name('tzLogin');
 session_start();
-global $link;
 global $FROM;
 //переменная для определения предка вызова сценария
 $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
