@@ -61,7 +61,9 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * @return array
+     * Повертає список ІД користувачів, що мають ознаку "Адміністратор"
+     *
+     * @return array Список ІД корисувачів
      */
     public function getUserIdAsAdmin(): array
     {
