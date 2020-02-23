@@ -20,6 +20,14 @@ class Status extends Record
     /**
      *
      */
+    public const NO_STATUS_TITLE = '-немає-';
+    /**
+     *
+     */
+    public const NO_STATUS_ID = 1;
+    /**
+     *
+     */
     protected const FLUSH_CACHE = true;
     /**
      * @var int ІД запису

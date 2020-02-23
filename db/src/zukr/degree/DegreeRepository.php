@@ -16,7 +16,9 @@ use zukr\base\Base;
  */
 class DegreeRepository extends AbstractRepository
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $__className = Degree::class;
     /**
      * @var array
@@ -24,9 +26,24 @@ class DegreeRepository extends AbstractRepository
     private $degrees;
 
     /**
-     * @return array|\MysqliDb
+     * @return array Список наукових ступенів
      */
-    public function getDropDownList()
+    public function getDropDownList(): array
+    {
+        $degreesList = $this->getDegrees();
+        $degrees = [];
+        if (!empty($degreesList)) {
+            foreach ($degreesList as $id => $d) {
+                $degrees [$id] = $d['degreefull'];
+            }
+        }
+        return $degrees;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getDegrees()
     {
         if ($this->degrees === null) {
             $statuses = Base::$app->cacheGetOrSet(Degree::class,
@@ -47,7 +64,7 @@ class DegreeRepository extends AbstractRepository
         try {
             return Degree::find()
                 ->map('id')
-                ->get(Degree::getTableName(), null, ['id', 'degreefull']);
+                ->get(Degree::getTableName());
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];

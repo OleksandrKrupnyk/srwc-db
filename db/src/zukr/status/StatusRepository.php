@@ -31,6 +31,21 @@ class StatusRepository extends AbstractRepository
      */
     public function getDropDownList()
     {
+        $statusesList = $this->getStatuses();
+        $statuses = [];
+        if (!empty($statusesList)) {
+            foreach ($statuses as $id => $s) {
+                $statuses[$id] = $s['statusfull'];
+            }
+        }
+        return $statuses;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getStatuses()
+    {
         if ($this->statuses === null) {
             $statuses = Base::$app->cacheGetOrSet(
                 Status::class,
@@ -43,6 +58,7 @@ class StatusRepository extends AbstractRepository
         return $this->statuses;
     }
 
+
     /**
      * @return array|\MysqliDb
      */
@@ -51,7 +67,7 @@ class StatusRepository extends AbstractRepository
         try {
             return Status::find()
                 ->map('id')
-                ->get(Status::getTableName(), null, ['id', 'statusfull']);
+                ->get(Status::getTableName());
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];

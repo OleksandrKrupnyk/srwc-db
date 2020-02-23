@@ -17,6 +17,17 @@ use zukr\base\Record;
  */
 class Degree extends Record
 {
+    /**
+     *
+     */
+    public const NO_DEGREE_TITLE = '-немає-';
+    /**
+     *
+     */
+    public const NO_DEGREE_ID = 1;
+    /**
+     *
+     */
     public const FLUSH_CACHE = true;
     /**
      * @var int ІД запису
