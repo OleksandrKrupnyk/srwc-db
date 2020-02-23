@@ -27,7 +27,7 @@ class PersonHelper
      */
     public static function getShortName(array $person): string
     {
-        return $person['suname'] . ' '
+        return $person['suname'] . '&nbsp;'
             . \mb_substr($person['name'], 0, 1, 'UTF-8') . '.'
             . \mb_substr($person['lname'], 0, 1, 'UTF-8') . '.';
     }

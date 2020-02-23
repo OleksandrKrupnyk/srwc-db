@@ -294,7 +294,7 @@ abstract class Record implements RecordInterface
     /**
      * Анулювання результатів кешування запису
      */
-    protected function flushCacheRecord()
+    public function flushCacheRecord()
     {
         if (static::FLUSH_CACHE === true) {
             Base::$app->deleteItem(static::class);
