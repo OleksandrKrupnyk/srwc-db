@@ -4,10 +4,17 @@
 namespace zukr\work;
 
 
+use zukr\author\AuthorHelper;
 use zukr\base\Base;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
 use zukr\base\RecordHelper;
+use zukr\degree\Degree;
+use zukr\degree\DegreeHelper;
+use zukr\leader\LeaderHelper;
+use zukr\position\PositionHelper;
+use zukr\status\Status;
+use zukr\status\StatusHelper;
 
 /**
  * Class WorkHelper
@@ -246,5 +253,59 @@ class WorkHelper extends RecordHelper
             $this->worksRepository = new WorkRepository();
         }
         return $this->worksRepository;
+    }
+
+    /**
+     * @param int $workId
+     * @return string
+     */
+    public function getListLeadersForProgramaByWorkId(int $workId): string
+    {
+        $dh = DegreeHelper::getInstance();
+        $degrees = $dh->getDegreeRepository()->getDegrees();
+        $sh = StatusHelper::getInstance();
+        $statuses = $sh->getStatusRepository()->getStatuses();
+        $ph = PositionHelper::getInstance();
+        $positions = $ph->getPositionRepository()->getDropDownList();
+        $lh = LeaderHelper::getInstance();
+        $leadersList = $lh->getLeadersByWorkId($workId);
+
+        $leaders = implode('',
+            array_map(function ($person) use ($positions, $statuses, $degrees) {
+                $items = [];
+                if ((int)$person['id_deg'] !== Degree::NO_DEGREE_ID) {
+                    $status = (int)$person['id_sat'] !== Status::NO_STATUS_ID
+                        ? ',&nbsp;' . $statuses[$person['id_sat']]['status']
+                        : '';
+                    $items[] = $degrees[$person['id_deg']]['degree'] . $status;
+                } else {
+                    $items[] = $positions[$person['id_pos']];
+                }
+                $items[] = PersonHelper::getShortName($person);
+                return implode(',<br/>', $items);
+            }, $leadersList)
+        );
+        return $leaders;
+    }
+
+    /**
+     * @param int $workId
+     * @return string
+     */
+    public function getListAuthorsForProgramaByWorkId(int $workId): string
+    {
+        $ah = AuthorHelper::getInstance();
+        $authorList = $ah->getAutorsByWorkId($workId);
+        $authors = implode('<br/>',
+            array_map(
+                function ($person) {
+                    $items = [];
+                    $items[] = PersonHelper::getShortName($person);
+                    $items[] = '<span id="id" >(№' . $person['id'] . ')</span>';
+                    return implode('', $items);
+                }
+                , $authorList)
+        );
+        return $authors;
     }
 }

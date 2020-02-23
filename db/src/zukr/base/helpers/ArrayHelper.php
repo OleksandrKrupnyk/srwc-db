@@ -33,7 +33,9 @@ class ArrayHelper
     }
 
     /**
-     * @param $array
+     * Сортує масив
+     *
+     * @param array $array Список для сортування
      */
     public static function asort(&$array): void
     {
