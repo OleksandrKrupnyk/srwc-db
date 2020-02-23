@@ -18,8 +18,7 @@ use zukr\work\WorkHelper;
 header('Content-Type: text/html; charset=utf-8');
 Base::init();
 $settings = ArrayHelper::merge($settings, Base::$param->getAllsettingValue());
-global $link;
-if ('1' !== $settings['SHOW_PROGRAMA']) {
+if (Base::KEY_ON !== (int)$settings['SHOW_PROGRAMA']) {
     Go_page('index.php');
 }
 
