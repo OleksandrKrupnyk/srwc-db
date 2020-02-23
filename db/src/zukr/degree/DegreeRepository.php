@@ -26,6 +26,8 @@ class DegreeRepository extends AbstractRepository
     private $degrees;
 
     /**
+     * Список повних назв наукових ступенів
+     *
      * @return array Список наукових ступенів
      */
     public function getDropDownList(): array

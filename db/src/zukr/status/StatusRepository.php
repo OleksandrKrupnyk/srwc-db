@@ -27,14 +27,16 @@ class StatusRepository extends AbstractRepository
     private $statuses;
 
     /**
-     * @return array|\MysqliDb
+     * Список повних назв науквоких статусів
+     *
+     * @return array Список наукових статусів
      */
-    public function getDropDownList()
+    public function getDropDownList(): array
     {
         $statusesList = $this->getStatuses();
         $statuses = [];
         if (!empty($statusesList)) {
-            foreach ($statuses as $id => $s) {
+            foreach ($statusesList as $id => $s) {
                 $statuses[$id] = $s['statusfull'];
             }
         }
