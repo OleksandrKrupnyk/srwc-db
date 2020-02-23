@@ -23,6 +23,7 @@ $params = Base::$param->getContainer();
 if (!Base::$user->getUser()->isAdmin()) {
     Go_page('error');
 }
+Base::$app->cacheFlush();
 ?>
 <!DOCTYPE html>
 <html lang="ua">
