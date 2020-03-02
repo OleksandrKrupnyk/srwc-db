@@ -5,7 +5,6 @@ namespace zukr\base;
 
 
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonologLogger;
 use Monolog\Processor\IntrospectionProcessor;
@@ -70,8 +69,6 @@ class LoggerBuilder
             // add records to the log
             $logger->pushProcessor(new IntrospectionProcessor());
             $logger->pushHandler($stream);
-
-            $logger->pushHandler(new BrowserConsoleHandler());
             $this->_logger = $logger;
         }
         return $this->_logger;

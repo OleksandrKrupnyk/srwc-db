@@ -93,7 +93,7 @@ class AuthorsLeadersAction implements ApiActionsInterface
             ? $response ['listLeaders'] = $this->getLeaders($leadersIds)
                 . Html::a('Створити', 'action.php?action=leader_add&id_u=' . $this->id_u . '&id_w=' . $this->id_w, [
                     'class' => 'btn',
-                    'title' => "Внесення в базу даних автора"
+                    'title' => "Внесення в базу даних керівника"
                 ])
             : $response ['listLeaders'] = '<span class="info">Досить</span>';
 

@@ -721,14 +721,155 @@ input[id^=chkbox_]:checked + .toggle span {
 input[id^=chkbox_]:checked + .toggle span:before {
   transform: scale(1);
   opacity: 0;
-  transition: all 0.4s ease;
+    transition: all 0.4s ease;
 }
 
 .zebra tr:nth-child(2n+1) {
-  background: #f3dfdf;
+    background: #f3dfdf;
 }
+
 .zebra tr:hover {
-  background: #edaeaa;
+    background: #edaeaa;
+}
+
+.p-1 {
+    padding: 1em;
+}
+
+.px-1 {
+    padding: 0 1em;
+}
+
+.py-1 {
+    padding: 1em 0;
+}
+
+.pt-1 {
+    padding-top: 1em;
+}
+
+.pb-1 {
+    padding-bottom: 1em;
+}
+
+.pl-1 {
+    padding-left: 1em;
+}
+
+.pr-1 {
+    padding-right: 1em;
+}
+
+.p-2 {
+    padding: 2em;
+}
+
+.px-2 {
+    padding: 0 2em;
+}
+
+.py-2 {
+    padding: 2em 0;
+}
+
+.pt-2 {
+    padding-top: 2em;
+}
+
+.pb-2 {
+    padding-bottom: 2em;
+}
+
+.pl-2 {
+    padding-left: 2em;
+}
+
+.pr-2 {
+    padding-right: 2em;
+}
+
+.p-3 {
+    padding: 3em;
+}
+
+.px-3 {
+    padding: 0 3em;
+}
+
+.py-3 {
+    padding: 3em 0;
+}
+
+.pt-3 {
+    padding-top: 3em;
+}
+
+.pb-3 {
+    padding-bottom: 3em;
+}
+
+.pl-3 {
+    padding-left: 3em;
+}
+
+.pr-3 {
+    padding-right: 3em;
+}
+
+.p-4 {
+    padding: 4em;
+}
+
+.px-4 {
+    padding: 0 4em;
+}
+
+.py-4 {
+    padding: 4em 0;
+}
+
+.pt-4 {
+    padding-top: 4em;
+}
+
+.pb-4 {
+    padding-bottom: 4em;
+}
+
+.pl-4 {
+    padding-left: 4em;
+}
+
+.pr-4 {
+    padding-right: 4em;
+}
+
+.p-5 {
+    padding: 5em;
+}
+
+.px-5 {
+    padding: 0 5em;
+}
+
+.py-5 {
+    padding: 5em 0;
+}
+
+.pt-5 {
+    padding-top: 5em;
+}
+
+.pb-5 {
+    padding-bottom: 5em;
+}
+
+.pl-5 {
+    padding-left: 5em;
+}
+
+.pr-5 {
+    padding-right: 5em;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -66,20 +66,30 @@ Base::$session->setRedirectParam();
             ['required' => true, 'prompt' => 'Науковий ступінь...'])
         ?>
         <?= HtmlHelper::checkbox('Leader[arrival]', 'Відмітка про прибуття на конференцію', $leader['arrival']) ?>
-        <label for="leader-email">Електронна скринька:</label>
-        <input id="leader-email" type="email" name="Leader[email]" autocomplete="off" value="<?= $leader['email'] ?>"
-               placeholder="user@mail.ru">
-        <?php
-        $phone_number = $leader['phone'] === '' ? 'відсутній' : $leader['phone'];
-        echo "<span id=\"phone\">{$phone_number}</span>";
-        ?>
-        <label for="leader-phone">Телефон:</label>
-        <input id="leader-phone" type="tel" pattern="\d{10}" size="10" maxlength="10" name="Leader[phone]"
-               value="<?= $leader['phone'] ?>"
-               placeholder="Номер телефону">
-        <br>
-
     </fieldset>
+    <br>
+    <div style="display:flex;flex-flow: nowrap row;align-content: space-between;">
+        <div class="w-100 px-1">
+            <label for="leader-email">Електронна скринька:</label>
+            <input class="w-100" id="leader-email" type="email" name="Leader[email]" autocomplete="off"
+                   value="<?= $leader['email'] ?>"
+                   placeholder="Електронна скринька">
+        </div>
+        <div class="w-100 px-1">
+
+            <label for="leader-phone">Телефон:</label>
+            <input class="w-100" id="leader-phone" type="tel" pattern="\d{10}" size="10" maxlength="10"
+                   name="Leader[phone]"
+                   value="<?= $leader['phone'] ?>"
+                   placeholder="Номер телефону"><br>
+            <?php
+            $phone_number = $leader['phone'] === '' ? 'відсутній' : $leader['phone'];
+            echo "<span id=\"phone\">{$phone_number}</span>";
+            ?>
+        </div>
+    </div>
+    <br>
+
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
     <input type="hidden" name="action" value="leader_edit">

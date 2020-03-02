@@ -53,11 +53,20 @@ Base::$session->setRedirectParam();
         ?>
     </fieldset>
     <br>
-    <label>Електронна скринька:</label>
-    <input type="email" name="Leader[email]" title="Наприклад:user@mail.ru" placeholder="Електронна скринька">
-    <label>Телефон:</label>
-    <input type="tel" pattern="\d{10}" size="10" maxlength="10" name="Leader[phone]" title="Наприклад:0985622012"
-           placeholder="Номер телефону">
+    <div style="display:flex;flex-flow: nowrap row;align-content: space-between;">
+        <div class="w-100 px-1">
+            <label for="leader-email">Електронна скринька:</label><br>
+            <input type="email" name="Leader[email]" id="leader-email" class="w-100" title="Наприклад:user@mail.ru"
+                   placeholder="Електронна скринька">
+        </div>
+        <div class="w-100 px-1">
+            <label for="leader-phone">Телефон:</label><br>
+
+            <input type="tel" pattern="\d{10}" size="10" maxlength="10" id="leader-phone" class="w-100"
+                   name="Leader[phone]" title="Наприклад:0985622012"
+                   placeholder="Номер телефону">
+        </div>
+    </div>
     <br>
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">

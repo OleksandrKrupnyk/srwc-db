@@ -7,8 +7,8 @@
 * * * * * * * { outline: 1px solid orange; }
 * * * * * * * * { outline: 1px solid blue; }*/
 $color_red: #970000;
-$color_red2 : #993333;
-$color_red3 : #e17979;
+$color_red2: #993333;
+$color_red3: #e17979;
 
 body {
   font-family: Verdana, Geneva, sans-serif;
@@ -740,3 +740,5 @@ td > output.balls {
 
 @import '_toggle.scss';
 @import '_table.scss';
+@import '_padding.scss';
+@import '_margin.scss';
