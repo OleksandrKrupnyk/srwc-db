@@ -39,7 +39,7 @@ class SelectWorksAction implements ApiActionsInterface
             throw new InvalidArgumentException('id_u Must be set');
         }
         if (empty($this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT))) {
-            throw new InvalidArgumentException('id_w Must be set');
+            $this->id_w = null;
         }
     }
 

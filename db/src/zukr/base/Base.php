@@ -3,6 +3,7 @@
 
 namespace zukr\base;
 use Monolog\Logger as MonologLogger;
+use zukr\base\exceptions\NoLogFileException;
 
 /**
  * Class Base
@@ -53,7 +54,10 @@ class Base
             $loggerBuilder = LoggerBuilder::getInstance();
             self::$session = Session::getInstance();
             self::$app = App::getInstance();
-            $logFile = \realpath(\getenv('LOG_FILE') ?? '/var/log/elm.log');
+            $logFile = \getenv('LOG_FILE') ?? '/var/log/elm.log';
+            if (!\is_file($logFile) && !touch($logFile)) {
+                throw new NoLogFileException('Log File not exist');
+            }
             self::$param = Params::getInstance();
             self::$log = $loggerBuilder->getLogger($logFile);
             self::$user = LoginUser::getInstance();
