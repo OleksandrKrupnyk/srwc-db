@@ -206,4 +206,23 @@ ORDER BY univerrod,suname;
             return [];
         }
     }
+
+    /**
+     * Усі дані по усіх керівниках
+     *
+     * @return array|\MysqliDb
+     */
+    public function getAllLeaders()
+    {
+        $table = $this->model::getTableName();
+        try {
+            return $this->model::find()
+                ->get($table);
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return [];
+        }
+
+
+    }
 }

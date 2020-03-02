@@ -35,6 +35,10 @@ class LeaderHelper extends RecordHelper
     /**
      * @var array
      */
+    private $leaders;
+    /**
+     * @var array
+     */
     private $leadersOfWork;
 
     /**
@@ -59,13 +63,14 @@ class LeaderHelper extends RecordHelper
     }
 
     /**
-     * @param $workId
+     * @param int $workId ІД роботи
+     *
      * @return array|mixed
      */
     public function getLeadersByWorkId($workId)
     {
-        if ($this->leadersOfWork == null) {
-            $worksLeaders = $this->getWorksLeaders();
+        if ($this->leadersOfWork === null) {
+            $worksLeaders = $this->getCachedWorksLeaders();
             $this->leadersOfWork = ArrayHelper::group($worksLeaders, 'id_w');
         }
         return $this->leadersOfWork[$workId] ?? [];
@@ -74,7 +79,7 @@ class LeaderHelper extends RecordHelper
     /**
      * @return array|\MysqliDb
      */
-    protected function getWorksLeaders()
+    protected function getCachedWorksLeaders()
     {
         if ($this->worksLeaders === null) {
             $this->worksLeaders = Base::$app->cacheGetOrSet(
@@ -89,12 +94,12 @@ class LeaderHelper extends RecordHelper
     }
 
     /**
-     * @param int $univerId
+     * @param int $univerId ІД університету
      * @return array
      */
     public function getAllLeadersByUniverId(int $univerId): array
     {
-        $leaders = $this->getWorksLeaders();
+        $leaders = $this->getLeaders();
         if (!empty($leaders)) {
             return \array_filter($leaders, static function ($leader) use ($univerId) {
                 return $leader['id_u'] === $univerId;
@@ -112,15 +117,15 @@ class LeaderHelper extends RecordHelper
     }
 
     /**
-     * @param int $univerId
-     * @return array
+     * @param int $univerId ІД університету
+     * @return array Список усіх запрошених керівників
      */
     public function getAllInvitationLeadersByUniverId(int $univerId): array
     {
         $leaders = $this->getLeaderRepository()->getAllByUniverId($univerId);
         if (!empty($leaders)) {
             return \array_filter($leaders, static function ($leader) {
-                return $leader['invitation'] === 1;
+                return $leader['invitation'] === Base::KEY_ON;
             });
         }
         return [];
@@ -162,5 +167,16 @@ class LeaderHelper extends RecordHelper
             $this->workLeaderRepository = new WorkLeaderRepository();
         }
         return $this->workLeaderRepository;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getLeaders()
+    {
+        if ($this->leaders === null) {
+            $this->leaders = $this->getLeaderRepository()->getAllLeaders();
+        }
+        return $this->leaders;
     }
 }
