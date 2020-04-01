@@ -13,8 +13,8 @@ $settings = ArrayHelper::merge($settings, Base::$param->getAllsettingValue());
 global $link;
 
 
-$setData = function () use ($link, $settings) {
-    $query = "
+$setData = static function () use ($link, $settings) {
+    $query = '
 SELECT w.id,
        w.title,
        w.tesis,
@@ -71,11 +71,11 @@ FROM `works` AS w
          LEFT JOIN `autors` AS a ON wa.id_a = a.id
 GROUP BY w.id
 ORDER BY w.id        
-        ";
+        ';
     $data = [];
-    $result = mysqli_query($link, $query);
+    $result = @mysqli_query($link, $query);
     // echo "<pre>{$query}</pre>";
-    while ($row = mysqli_fetch_array($result)) {
+    while ($result !== false &&  $row = mysqli_fetch_array($result)) {
         $s = [];
         $diplomas = [];
 

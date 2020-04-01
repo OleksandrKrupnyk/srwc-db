@@ -65,10 +65,14 @@ class MysqliDbWrapper extends MysqliDb
 
     /**
      * @param Dir $dir
-     * @return string
+     * @return string Шлях до файлу логів запитів БД
      */
     protected function getFileToLog(Dir $dir): string
     {
-        return \realpath($dir->getTmpDir() . '/db.log');
+        $logfile = $dir->getTmpDir() . DIRECTORY_SEPARATOR . 'db.log';
+        if ((bool)\realpath($logfile) === false) {
+            \touch($logfile);
+        }
+        return \realpath($logfile);
     }
 }
