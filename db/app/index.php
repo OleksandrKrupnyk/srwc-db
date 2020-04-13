@@ -96,7 +96,8 @@ ORDER BY w.id
 
 
         $s['univer'] = $row['univer'];
-        $s['invitation'] = ($row['invitation']) ? "<span class='invite2018'>&nbsp; Авторів роботи запрошено до участі у конференції&nbsp;</span>" : '';
+        //        $s['invitation'] = ($row['invitation']) ? "<span class='invite2018'>&nbsp; Авторів роботи запрошено до участі у конференції&nbsp;</span>" : '';
+        $s['invitation'] = '';
 
         // Дипломы
         if ('D' !== $row['place1'] && $row['place1'] !== null) {

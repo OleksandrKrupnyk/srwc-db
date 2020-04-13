@@ -80,7 +80,8 @@ class App
                 [
                     'server' => \getenv('REDIS_SERVER') ?? '127.0.0.1',
                     'port' => \getenv('RD_PORT') ?? '6379',
-                    'ttl' => $this->_ttl]
+                    'ttl' => $this->_ttl
+                ]
             ]
         ]);
 

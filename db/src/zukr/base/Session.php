@@ -28,6 +28,9 @@ class Session
      */
     private static $obj;
 
+    /**
+     * Session constructor.
+     */
     private function __construct()
     {
         $this->setName('tzlogin');
@@ -100,11 +103,17 @@ class Session
     }
 
 
+    /**
+     * @param $value
+     */
     public function setId($value)
     {
         session_id($value);
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return session_name();
