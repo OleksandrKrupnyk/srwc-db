@@ -152,10 +152,12 @@ if (!isset($_GET['action'])) {
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2016'>2016-2017</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2017'>2017-2018</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2018'>2018-2019</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2019'>2019-2020</a>
         &nbsp;&nbsp;&nbsp;&nbsp;навчальних років.
     </h4>
-    <h4><a href='http://elm-dstu-edu.org.ua/konkurs/index.php/digest/32-zbirnik-tez-2018'
-           title='Збірник тез доповідей 2017-2018 н.р.'>Збірник тез доповідей 2018</a>&#8658;</h4>
+
+<!--    <h4><a href='http://elm-dstu-edu.org.ua/konkurs/index.php/digest/32-zbirnik-tez-2018'-->
+<!--           title='Збірник тез доповідей 2017-2018 н.р.'>Збірник тез доповідей 2018</a>&#8658;</h4>-->
     <?php if ('1' === $settings['SHOW_PROGRAMA']): ?>
         <h4><a href='./programa.php'>Макет програми конференції&#8658;</a></h4>
     <?php endif; ?>
