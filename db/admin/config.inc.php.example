@@ -12,6 +12,7 @@ $timecooke = 60;
 
 define('DIR', './../files/');
 $dir = './../files/';
+define('APP_ROOT_DIR', __DIR__);
 
 define('IMGDIR', './../img/');
 $imgdir = './../img/';

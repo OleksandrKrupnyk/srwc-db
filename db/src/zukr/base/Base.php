@@ -80,9 +80,9 @@ class Base
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public static function getSNRCRF(): string
+    public static function getSNRCRF(): ?string
     {
         if (self::$session !== null && self::$app !== null) {
             $_SNRCRF = self::$session->get('_SNRCRF', null);

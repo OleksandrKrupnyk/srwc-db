@@ -148,7 +148,9 @@ function list_files($id_w, string $typeoffile = 'all')
                 $str2 = \zukr\base\helpers\StringHelper::truncate($str_title, 30);
                 //
                 $str .= "<li><a href=\"{$row['file']}\" class='link-file' title=\"{$str_title}\" >{$str2}</a>&nbsp;"
-                    . "<a href=\"action.php?action=file_delete&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a></li>";
+                    . "<a href=\"action.php?action=file_delete&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a>"
+                    . "<a href=\"action.php?action=file_remove&id_w={$id_w}&guid={$row['guid']}\" title=\"Видалити файл\"></a>"
+                    ."</li>";
                 unset($str2);
             }
             $str .= "</ol></details>";

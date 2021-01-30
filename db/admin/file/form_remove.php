@@ -15,8 +15,8 @@ use zukr\log\Log;
 
 if (($id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT)) !== false) {
     $log = Log::getInstance();
-    if (($id_f = filter_input(INPUT_GET, 'id_f', FILTER_VALIDATE_INT)) !== false) {
-        $file = (new FileRepository())->findById($id_f);
+    if (($guid = filter_input(INPUT_GET, 'guid', FILTER_SANITIZE_STRING)) !== false) {
+        $file = (new FileRepository())->findByGuid($guid);
         $filePath = FileSystemHelper::normalizePath(FileHelper::getInstance()->getRealPath($file));
         $checkFile = false;
         if (file_exists($filePath)) {
@@ -30,15 +30,14 @@ if (($id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT)) !== false) {
         if ($checkFile) {
             if (unlink($filePath)) {
                 $queryFile = $file->getDb();
-                $delete = $file->delete($queryFile->where('id', $id_f));
+                $delete = $file->delete($queryFile->where('guid', $guid));
                 if ($delete) {
                     $log->logAction(null, $file::getTableName(), $id_w);
                 } else {
                     Base::$log->error('Помилка видалення запису про файл з БД');
                 }
-
             } else {
-                Base::$log->error('Помилка видалення файлу за файлової системи');
+                Base::$log->error('Помилка видалення файлу за файлової системи ' . $filePath);
             }
         } else {
             Base::$log->error('Не можливо знайти файл ' . $filePath);

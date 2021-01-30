@@ -20,7 +20,9 @@
     "ext-intl": "*",
     "ext-iconv": "*",
     "mpdf/mpdf": "8.0.4",
-    "maximebf/debugbar": "1.16.1"
+    "maximebf/debugbar": "1.16.1",
+    "ramsey/uuid": "^4.1",
+    "ext-fileinfo": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",

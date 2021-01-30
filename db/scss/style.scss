@@ -608,6 +608,7 @@ a[href$=".ppt"], a[href$=".pptx"] {
 
 .js-delete-list-item,
 a[href*="_delete"],
+a[href*="_remove"],
 a[href^="#remove"] {
   background: url(../images/del.png) no-repeat;
   margin: 0;

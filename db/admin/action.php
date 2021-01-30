@@ -55,6 +55,7 @@ if (in_array($action, [
     'work_unlink',
     'work_delete',
     'file_delete',
+    'file_remove',
     'review_delete',
     'review_update'
 ])) {
@@ -163,6 +164,6 @@ $_type = $session->getFlash('recordSaveType', '');
     </script>
     <?= $debugbarRenderer->render() ?>
     </body>
-</html>
+    </html>
 <?php
 ob_flush();

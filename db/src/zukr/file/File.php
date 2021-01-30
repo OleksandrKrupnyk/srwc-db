@@ -9,6 +9,13 @@ use zukr\base\Record;
 /**
  * Class File
  *
+ * @property int $id_w
+ * @property string $file
+ * @property int $typeoffile
+ * @property string $date
+ * @property string $mime_type
+ * @property string $guid
+ *
  * @package      zukr\file
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
@@ -29,6 +36,10 @@ class File extends Record
      * @var int Файли презентацій
      */
     public const TYPE_OFFICE_PRESENTATION = 2;
+    /**
+     * @int int Файл
+     */
+    public const TYPE_INFORMATION = 3;
 
 
     /**
@@ -36,7 +47,7 @@ class File extends Record
      */
     public $id;
     /**
-     * @var int
+     * @var int  ІД запис роботи
      */
     public $id_w;
     /**
@@ -44,13 +55,21 @@ class File extends Record
      */
     public $file;
     /**
-     * @var int
+     * @var int Тип файлу
      */
     public $typeoffile = 0;
     /**
      * @var string
      */
     public $date = 'NOW';
+    /**
+     * @var string (127)
+     */
+    public $mime_type;
+    /**
+     * @var string (36)
+     */
+    public $guid;
 
     /**
      * @return string

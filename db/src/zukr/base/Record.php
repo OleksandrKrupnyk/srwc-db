@@ -117,6 +117,7 @@ abstract class Record implements RecordInterface
                     return $this->_db->where(static::getPrimaryKey(), $id)
                         ->getOne(static::getTableName());
                 }
+                throw new \Exception('Error filter_var FILTER_VALIDATE_INT ');
             } else {
 
                 if (\filter_var($id, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY)) {
@@ -128,8 +129,8 @@ abstract class Record implements RecordInterface
                     return $this->_db->where(static::getPrimaryKey(), $id)
                         ->getOne(static::getTableName());
                 }
+                throw new \Exception('Error filter_var FILTER_SANITIZE_STRING ');
             }
-            return null;
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return null;

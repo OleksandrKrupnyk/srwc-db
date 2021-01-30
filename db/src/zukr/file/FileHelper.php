@@ -82,7 +82,7 @@ class FileHelper extends RecordHelper
     }
 
     /**
-     * @return array Список файлів робіт сгрупованих по ІД запису роботи
+     * @return array Список файлів робіт згрупованих по ІД запису роботи
      */
     public function getAllWorkFilesIndexByWorkId()
     {
@@ -99,7 +99,7 @@ class FileHelper extends RecordHelper
     }
 
     /**
-     * @return array Список файлів тезисів сгрупованих по ІД запису роботи
+     * @return array Список файлів тезисів згрупованих по ІД запису роботи
      */
     public function getAllTesisFilesIndexByWorkId()
     {
@@ -107,10 +107,26 @@ class FileHelper extends RecordHelper
     }
 
     /**
-     * @return array Список файлів усіх типів сгрупованих по ІД запису роботи
+     * @return array Список файлів усіх типів згрупованих по ІД запису роботи
      */
     public function getAllFilesIndexByWorkId()
     {
         return ArrayHelper::group($this->getFiles(), 'id_w');
+    }
+
+    /**
+     * @param File|array $file
+     * @return string Реальний шлях до файлу
+     */
+    public function getRealPath($file): string
+    {
+        if ($file instanceof File) {
+            return APP_ROOT_DIR . DIRECTORY_SEPARATOR . $file->file;
+        }
+
+        if (\is_array($file) && isset($file['file'])) {
+            return APP_ROOT_DIR . DIRECTORY_SEPARATOR . $file['file'];
+        }
+        return '';
     }
 }
