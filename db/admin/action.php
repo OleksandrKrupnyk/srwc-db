@@ -54,7 +54,7 @@ $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
 if (in_array($action, [
     'work_unlink',
     'work_delete',
-    'file_delete',
+    //'file_delete',// Todo: remove handler of this action
     'file_remove',
     'review_delete',
     'review_update',

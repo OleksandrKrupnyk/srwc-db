@@ -66,7 +66,15 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
             }
         }
         //если он есть то удостоверимся что это действительно каталог
-        if (is_dir(DIR . $id_w)) {
+        if (\is_dir(DIR . $id_w)) {
+            if (!\file_exists(DIR . $id_w . DIRECTORY_SEPARATOR . 'index.php')) {
+                \file_put_contents(
+                    DIR . $id_w . DIRECTORY_SEPARATOR . 'index.php',
+                    "<?php\nheader(\"HTTP/1.0 404 Not Found\");"
+                );
+            }
+
+
             //да это каталог
             //Сформируем путь для копирования файла
             $file_name = DIR . $id_w . DIRECTORY_SEPARATOR . $file_name;
