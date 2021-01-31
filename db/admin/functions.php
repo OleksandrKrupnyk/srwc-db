@@ -5,6 +5,9 @@
  * @copyright 2014
  */
 
+use zukr\base\helpers\StringHelper;
+use zukr\base\html\Html;
+
 /**
  * Функция считытывания настроек програмы из таблици settings БД
  *
@@ -12,19 +15,22 @@
 function read_settings()
 {
     global $link;
-//Доступ к переменным масива из вне
+    //Доступ к переменным масива из вне
     global $settings;
     $query = 'SELECT * FROM `settings`';
     $result = mysqli_query($link, $query)
     or die('Помилка зчитування налаштувань програми: ' . mysqli_error($link));
     while ($row = mysqli_fetch_array($result)) {
         $parametr = $row['parametr'];
-        if ('1' === $row['value'])
+        if ('1' === $row['value']) {
             $settings[$parametr] = '1';
+        }
     }
 }
+
 /**
  * Функция журналирования системы
+ *
  * @param string $action
  * @param string $table
  * @param int $action_id
@@ -48,41 +54,44 @@ function log_action($action, $table, $action_id = 0, $tz_id = 888)
 /**
  *  Список университетов всех которые есть
  *  Возвращает значение в переменной id_u (тип integer)
- * @param int $chk  номер вуза
+ *
+ * @param int $chk номер вуза
  * @param int $size Размер списка
  * @param bool $invite
  * @param bool $shortname
  * @param bool $checkin
  *  list_univers(<номер отмеченого вуза>,<размер списка>,<1-отображать только из 1ИнфСооб>)
  * */
-function list_univers($chk, $size, $invite = true,$shortname = false, $checkin=false):string
+function list_univers($chk, $size, $invite = true, $shortname = false, $checkin = false): string
 {
     global $link;
     $query = "SELECT `univers`.*  FROM univers ";
-    $query .= ($checkin ==1)?" RIGHT JOIN works ON works.id_u=univers.id ":"";
-    $query .= ($invite == 1)?" WHERE `invite`= 1  OR `univers`.`id` = 1 " : ""; //`id` = 1 - это ВУЗ ДДТУ
-    $query .= ($checkin ==1)?" GROUP BY univers.id ":"";
+    $query .= ($checkin == 1) ? " RIGHT JOIN works ON works.id_u=univers.id " : "";
+    $query .= ($invite == 1) ? " WHERE `invite`= 1  OR `univers`.`id` = 1 " : ""; //`id` = 1 - это ВУЗ ДДТУ
+    $query .= ($checkin == 1) ? " GROUP BY univers.id " : "";
     $query .= "ORDER BY univer";
     //echo $query;
     $result = mysqli_query($link, $query)
     or die("Invalid query: " . mysqli_error($link));
-    $idString = ($shortname == 0)? "selunivers":"shortlistunivers";
+    $idString = ($shortname == 0) ? "selunivers" : "shortlistunivers";
 
-    $str =  "<select id=\"{$idString}\" name=\"id_u\" size=\"{$size}\" required class='w-100'><option value=\"-1\" disabled selected>Університет...</option>\n";
+    $str = "<select id=\"{$idString}\" name=\"id_u\" size=\"{$size}\" required class='w-100'><option value=\"-1\" disabled selected>Університет...</option>\n";
     while ($row = mysqli_fetch_array($result)) {
-        $NameUniver  = ($shortname == 0)? "{$row['univer']}({$row['univerfull'] })" : "{$row['univer']}";
+        $NameUniver = ($shortname == 0) ? "{$row['univer']}({$row['univerfull'] })" : "{$row['univer']}";
         if (isset($chk) && $chk != "" && $row['id'] == $chk) {
             $str .= "<option value=\"{$row['id']}\" selected>{$NameUniver}</option>\n";
         } else {
             if (isset($_COOKIE['cid_u']) && $row['id'] == $_COOKIE['cid_u'] && $chk == "") {
-                $str.= "<option value=\"{$row['id']}\" selected>{$NameUniver}</option>\n";
-            } else
-                $str.= "<option value=\"{$row['id'] }\">{$NameUniver}</option>\n";
+                $str .= "<option value=\"{$row['id']}\" selected>{$NameUniver}</option>\n";
+            } else {
+                $str .= "<option value=\"{$row['id'] }\">{$NameUniver}</option>\n";
+            }
         }
     }
     $str .= "</select>\n";
     return $str;
 }
+
 /**
  * Данные все данные по 1 полю в таблице
  *
@@ -139,23 +148,31 @@ function list_files($id_w, string $typeoffile = 'all')
         or die('Помилка запиту функція list_files: ' . mysqli_error($link));
         $count = mysqli_num_rows($result);
         if ($count != 0) {
-            $str = "<details><summary>Файли</summary><ol>";
+            $str = "<details><summary>Файли</summary>";
+            $list = [];
             while ($row = mysqli_fetch_array($result)) {
-                //$str2=explode("/",$row['file']);
-                //$str2=end($str2);
-                $str_title = basename($row['file']);
+                $fullFileName = basename($row['file']);
+                $fileNameParts = explode('.', $fullFileName);
+                $fileExtension = end($fileNameParts);
                 //
-                $str2 = \zukr\base\helpers\StringHelper::truncate($str_title, 30);
+                $truncateFileName = StringHelper::truncate($fullFileName, 30);
                 //
-                $str .= "<li><a href=\"{$row['file']}\" class='link-file' title=\"{$str_title}\" >{$str2}</a>&nbsp;"
-                    . "<a href=\"action.php?action=file_delete&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a>"
-                    . "<a href=\"action.php?action=file_remove&id_w={$id_w}&guid={$row['guid']}\" title=\"Видалити файл\"></a>"
-                    ."</li>";
-                unset($str2);
+                $list[] = Html::a(
+                        $truncateFileName,
+                        "action.php?action=file_get&guid={$row['guid']}", [
+                        'class' => "link-file",
+                        'title' => $fullFileName,
+                        'data-ext' => $fileExtension,
+                        'style' => "margin-right:10px"
+                    ])
+                    . Html::a('', "action.php?action=file_remove&id_w={$id_w}&guid={$row['guid']}", [
+                        'title' => 'Видалити файл',
+                    ]);
             }
-            $str .= "</ol></details>";
-        } else
+            $str .= Html::ol($list) . "</details>";
+        } else {
             $str = '';
+        }
     } else {
         $str = '<mark>Нема файлів для відображення</mark>';
     }
@@ -164,8 +181,8 @@ function list_files($id_w, string $typeoffile = 'all')
 
 
 /**
-* @param string $table
-*/
+ * @param string $table
+ */
 function list_emails($table)
 {
     global $link;
@@ -180,9 +197,8 @@ function list_emails($table)
                  WHERE works.invitation = '1'
                  ORDER BY autors.suname";
         $get_text = "&t=a";
-    }
-    elseif ($table === 'leaders'){
-        $query= "SELECT works.title,leaders.id, leaders.suname, leaders.name,leaders.lname,leaders.hash,leaders.email,leaders.email_recive,leaders.email_date
+    } elseif ($table === 'leaders') {
+        $query = "SELECT works.title,leaders.id, leaders.suname, leaders.name,leaders.lname,leaders.hash,leaders.email,leaders.email_recive,leaders.email_date
                  FROM works
                  LEFT JOIN wl ON wl.id_w = works.id
                  LEFT JOIN leaders ON wl.id_l = leaders.id
@@ -208,17 +224,17 @@ function list_emails($table)
             $sub_row_str .= "<input type=\"hidden\" name=emails[] value =" . $row['email'] . " >";
             $sub_row_str .= "<input type=\"hidden\" name=whom[]   value =\"" . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . "\" >";
             $sub_row_str .= "<input type=\"hidden\" name=hashs[]  value =\"" . $row['hash'] . "\">";
-             $sub_row_str .="<input type=\"hidden\" name=titles[] value =\"".$row['title']."\">";
-             $sub_row_str .= "</li>\n";
-         }
-         else
-            {$sub_row_str_nomail.= "<li>".$row['suname']." ".$row['name']." ".$row['lname']." <mark>Поштова скринька відсутня!</mark>";}
+            $sub_row_str .= "<input type=\"hidden\" name=titles[] value =\"" . $row['title'] . "\">";
+            $sub_row_str .= "</li>\n";
+        } else {
+            $sub_row_str_nomail .= "<li>" . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . " <mark>Поштова скринька відсутня!</mark>";
+        }
 
         //print_r($row);
 
-        }
-    $sub_row_str_nomail .="</ol>\n</details>";
-    $sub_row_str .= "</ol>\n</details>\n".$sub_row_str_nomail;
+    }
+    $sub_row_str_nomail .= "</ol>\n</details>";
+    $sub_row_str .= "</ol>\n</details>\n" . $sub_row_str_nomail;
     return $sub_row_str;
 }
 
@@ -227,10 +243,10 @@ function list_emails($table)
  * Список авторов или руководителей
  *
  * @param string $object 'author' or 'leader'
- * @param bool   $phone
- * @param bool   $email
- * @param bool   $hash
- * @param bool   $onlyReviwers
+ * @param bool $phone
+ * @param bool $email
+ * @param bool $hash
+ * @param bool $onlyReviwers
  * @return string
  */
 function getListOfObjects(string $object, bool $phone = false, bool $email = false, bool $hash = false, bool $onlyReviwers = false)
@@ -304,26 +320,23 @@ JOIN univers ON leaders.id_u = univers.id";
 }
 
 
-
-
-
-
 /**
  * @param bool $showAllInfo
  */
-function listLeadersWhoArrival($showAllInfo = false){
+function listLeadersWhoArrival($showAllInfo = false)
+{
     global $link;
-    $query = "SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as  fio FROM leaders WHERE arrival='1' ORDER BY fio ASC" ;
+    $query = "SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as  fio FROM leaders WHERE arrival='1' ORDER BY fio ASC";
     $text = "";
     $rowTable = "%s<br>";
-    if ($showAllInfo){
+    if ($showAllInfo) {
         $query = "SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as fio, degreefull, statusfull, position,univerrod FROM leaders
                   LEFT JOIN positions ON positions.id = leaders.id_pos 
                   LEFT JOIN univers ON univers.id = leaders.id_u
                   LEFT JOIN degrees ON degrees.id = leaders.id_deg
                   LEFT JOIN statuses ON statuses.id = leaders.id_sat
                   WHERE arrival='1' ORDER BY fio ASC";
-        $text= '(Розгорнутий)';
+        $text = '(Розгорнутий)';
         $rowTable = "%s, %s, %s, %s %s<br>";
 
     }
@@ -331,12 +344,12 @@ function listLeadersWhoArrival($showAllInfo = false){
     or die('Помилка запиту функція listLeadersWhoArrival: ' . mysqli_error($link));
     echo "<h3> </h3>";
     echo "<details><summary>Список супроводжуючих/керівників, що прибули для участі у роботі журі {$text}</summary>";
-    while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         //print_r($row);
-        echo vsprintf($rowTable,$row);
+        echo vsprintf($rowTable, $row);
     }
     echo "</details>";
-    }
+}
 
 /**
  * Список руководителей или авторов без нумерации Используцется при формировании программы
@@ -402,18 +415,19 @@ function Go_page($page)
 
 /**
  * Print gerb
- * @param  bool $empty
+ *
+ * @param bool $empty
  * */
- function PrintGerb($empty = true)
- {
-     $DATA = '<div class = "hDATA">';
-     $DATA .= $empty
-         ? '______________№____________________'
-         : '<span>&nbsp;&nbsp;XX/XX/2018&nbsp;&nbsp;</span>№<span>' . TAB_SP . "108-08/10-69" . TAB_SP . "</span>";
-     $DATA .= TAB_SP . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;На&nbsp;№__________________від____________</div>';
-     return $DATA;
+function PrintGerb($empty = true)
+{
+    $DATA = '<div class = "hDATA">';
+    $DATA .= $empty
+        ? '______________№____________________'
+        : '<span>&nbsp;&nbsp;XX/XX/2018&nbsp;&nbsp;</span>№<span>' . TAB_SP . "108-08/10-69" . TAB_SP . "</span>";
+    $DATA .= TAB_SP . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;На&nbsp;№__________________від____________</div>';
+    return $DATA;
 
- }
+}
 
 /**
  * @param string $action_string
@@ -428,7 +442,7 @@ function execute_get_action(string $action_string)
             $fileName = 'form_' . $action[1] . '.php';
             $path[] = $fileName;
             $file = implode(DIRECTORY_SEPARATOR, $path);
-            if(is_file($file)){
+            if (is_file($file)) {
                 include_once $file;
             }
         }

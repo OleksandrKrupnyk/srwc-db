@@ -57,7 +57,8 @@ if (in_array($action, [
     'file_delete',
     'file_remove',
     'review_delete',
-    'review_update'
+    'review_update',
+    'file_get',
 ])) {
     execute_get_action($action);
     // каждое действие заканчивается  header(...)

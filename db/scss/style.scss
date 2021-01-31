@@ -574,31 +574,38 @@ a > input[type="button"],
   outline: none;
 }
 
-a[href$=".zip"], a[href$=".rar"], a[href$=".7z"], a[href$=".RAR"], a[href$=".ZIP"], a[href$=".7Z"] {
+a[href$=".zip"], a[href$=".rar"], a[href$=".7z"], a[href$=".RAR"], a[href$=".ZIP"], a[href$=".7Z"],
+a[data-ext="zip"], a[data-ext="rar"], a[data-ext="7z"], a[data-ext="RAR"], a[data-ext="ZIP"], a[data-ext="7Z"] {
   background: url(../images/arch.png) no-repeat; /* Добавляем фоновый рисунок */
 }
 
-a[href$=".doc"], a[href$=".docx"] {
+a[href$=".doc"], a[href$=".docx"],
+a[data-ext="doc"], a[data-ext="docx"] {
   background: url(../images/doc.png) no-repeat;
 }
 
-a[href$=".jpg"], a[href$=".jpeg"], a[href$=".png"], a[href$=".JPG"], a[href$=".JPEG"], a[href$=".PNG"] {
+a[href$=".jpg"], a[href$=".jpeg"], a[href$=".png"], a[href$=".JPG"], a[href$=".JPEG"], a[href$=".PNG"],
+a[data-ext="jpg"], a[data-ext="jpeg"], a[data-ext="png"], a[data-ext="JPG"], a[data-ext="JPEG"], a[data-ext="PNG"] {
   background: url(../images/img.png) no-repeat;
 }
 
-a[href$=".djvu"], a[href$=".djv"], a[href$=".DJVU"], a[href$=".DJV"] {
+a[href$=".djvu"], a[href$=".djv"], a[href$=".DJVU"], a[href$=".DJV"],
+a[data-ext="djvu"], a[data-ext="djv"], a[data-ext="DJVU"], a[data-ext="DJV"] {
   background: url(../images/djvu.png) no-repeat;
 }
 
-a[href$=".odt"], a[href$=".ODT"] {
+a[href$=".odt"], a[href$=".ODT"],
+a[data-ext="odt"], a[data-ext="ODT"] {
   background: url(../images/odt.png) no-repeat;
 }
 
-a[href$=".pdf"] {
+a[href$=".pdf"],
+a[data-ext="pdf"] {
   background: url(../images/pdf.png) no-repeat;
 }
 
-a[href$=".ppt"], a[href$=".pptx"] {
+a[href$=".ppt"], a[href$=".pptx"],
+a[data-ext="ppt"], a[data-ext="pptx"] {
   background: url(../images/ppt.png) no-repeat; /* Добавляем фоновый рисунок */
 }
 

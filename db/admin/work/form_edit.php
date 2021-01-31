@@ -91,7 +91,7 @@ Base::$session->setRedirectParam();
 <form class="addWorkFiles form" enctype="multipart/form-data" method="post" action="action.php">
     <fieldset>
         <legend>Завантаження</legend>
-        <?php echo(list_files($_GET['id_w'])); ?>
+        <?=list_files($_GET['id_w']) ?>
         <fieldset>
             <legend>Оберіть тип файлу:</legend>
             <label>Текст з роботою</label><input type="radio" name="typeoffile" value="common" checked/>
