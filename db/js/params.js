@@ -43,19 +43,22 @@ $(document).ready(function () {
             const btn = $(this);
             isLoading = true;
             let input = btn.siblings('input[type="text"]');
+            let js_input = btn.parents('tr').find('input.js_action')
+            let js_action_value = js_input.val() || 'change-param';
             let value = input.val() || '',
                 paramName = btn.parents('tr').data('key'),
                 type = btn.parents('tr').data('type');
 
             input.attr('disabled', true);
+            js_input.attr('disabled', true);
             btn.attr('disabled', true);
-            console.log(value);
+            console.log(value, js_action_value);
             $.ajax({
                 type: "POST",
                 url: "ajax.php",
                 data: {
                     "param": paramName,
-                    "action": "change-param",
+                    "action": js_action_value,
                     "value": value,
                     "_SNRCRF": _SNRCRF,
                     "type": type
@@ -65,6 +68,9 @@ $(document).ready(function () {
                     isLoading = false;
                     btn.removeAttr('disabled');
                     input.removeAttr('disabled');
+                    if (js_input.data('superUser')){
+                        js_input.removeAttr('disabled');
+                    }
                     try {
                         const data = JSON.parse(response);
                         $.notify(data.message || 'No message', data.type || 'error');

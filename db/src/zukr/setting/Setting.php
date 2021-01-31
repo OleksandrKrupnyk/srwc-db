@@ -10,6 +10,12 @@ use zukr\base\Record;
  *
  * Модель запису налаштування системи
  *
+ * @property string $parametr
+ * @property string $value
+ * @property string $description
+ * @property  string $type
+ * @property  string $action
+ *
  * @package      zukr\setting
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread
@@ -17,10 +23,10 @@ use zukr\base\Record;
 class Setting extends Record
 {
     protected const NOTIFICATION_ACTIONS = false;
-    const           BOOL                 = 'bool';
-    const STRING                         = 'string';
-    const INT                            = 'int';
-    const TYPES                          = [
+    const           BOOL = 'bool';
+    const STRING = 'string';
+    const INT = 'int';
+    const TYPES = [
         self::BOOL,
         self::STRING,
         self::INT
@@ -41,6 +47,10 @@ class Setting extends Record
      * @var string
      */
     public $type;
+    /**
+     * @var string JS-action
+     */
+    public $action;
 
     /**
      * @{inheritDoc}

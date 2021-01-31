@@ -41,21 +41,22 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
      */
     const PARAMS = [
         'ALLOW_EMAIL',
+        'DATEPL',
+        'DATEPO',
         'DENNY_EDIT_REVIEW',
+        'FILL_EMPTY_GUID',
         'INVITATION',
+        'NYEARS',
+        'N_AUTORS',
+        'N_LEADERS',
+        'ORDERPL',
+        'ORDERPO',
         'PRINT_DDTU_HEADER',
         'SHOW_DB_TABLE',
         'SHOW_FILES_LINK',
         'SHOW_PROGRAMA',
         'SHOW_RAITING',
-        'DATEPL',
-        'DATEPO',
-        'N_AUTORS',
-        'N_LEADERS',
-        'NYEARS',
-        'ORDERPL',
-        'ORDERPO',
-        'YEAR'
+        'YEAR',
     ];
     /**
      * @var Params
@@ -260,7 +261,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
     }
 
     /**
-     * Спсиок значень налаштувань індексований за назвою параметра
+     * Список значень налаштувань індексований за назвою параметра
      *
      * @return array Список налаштувань
      */

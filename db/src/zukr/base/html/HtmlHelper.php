@@ -76,7 +76,11 @@ class HtmlHelper
             ['title' => 'Призове місце:(D-Диплом за участь)', 'required' => true, 'prompt' => 'Місце...']);
     }
 
-
+    /**
+     * Список файлів
+     * @param array $files
+     * @return string
+     */
     public static function listFiles(array $files)
     {
         if (empty($files)) {
@@ -84,12 +88,20 @@ class HtmlHelper
         }
         $list = [];
         foreach ($files as $file) {
-            $title = StringHelper::basename($file['file']);
-            $fileName = StringHelper::truncate($title, 30);
-            //<a href=\"{$row['file']}\" class='link-file' title=\"{$str_title}\" >{$str2}</a>
-            $link1 = Html::a($title, $file['file'], ['title' => $fileName, 'class' => 'link-file']);
-            // <a href=\"action.php?action=file_delete&id_w={$id_w}&id_f={$row['id']}\" title=\"Видалити файл\"></a>
-            $link2 = Html::a('', "action.php?action=file_delete&id_w={$file['id_w']}&id_f={$file['id']}",
+            $fullFileName = StringHelper::basename($file['file']);
+            $fileNameParts = explode('.', $fullFileName);
+            $fileExtension = end($fileNameParts);
+            $truncateFileName = StringHelper::truncate($fullFileName, 30);
+
+            $link1 = Html::a(
+                $truncateFileName,
+                "action.php?action=file_get&guid={$file['guid']}", [
+                'class' => "link-file",
+                'title' => $fullFileName,
+                'data-ext' => $fileExtension,
+                'style' => "margin-right:10px"
+            ]);
+            $link2 = Html::a('', "action.php?action=file_remove&id_w={$file['id_w']}&guid={$file['guid']}",
                 ['title' => 'Видалити файл', 'class' => 'link-delete-file']);
             $list [] = Html::tag('li', $link1 . $link2, []);
         }

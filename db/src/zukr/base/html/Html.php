@@ -176,7 +176,19 @@ class Html
                     $html .= " {$name}";
                 }
             } elseif (is_array($value)) {
-                if ($name === 'class') {
+                if (in_array($name, static::$dataAttributes)) {
+                    foreach ($value as $n => $v) {
+                        if (is_array($v)) {
+                            $html .= " $name-$n='" . static::encode($v) . "'";
+                        } elseif (is_bool($v)) {
+                            if ($v) {
+                                $html .= " $name-$n";
+                            }
+                        } else {
+                            $html .= " $name-$n=\"" . static::encode($v) . '"';
+                        }
+                    }
+                } elseif ($name === 'class') {
                     if (empty($value)) {
                         continue;
                     }

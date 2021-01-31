@@ -50,7 +50,7 @@ echo '<form class="form" action="settings.php" method=POST><h2>Коротка і
     . '<h5>Максимальний розмір POST запиту:' . ini_get('post_max_size') . '</h5>'
     . '
 <table class="params">
-        <tr><th>Налаштування</th><th>Значення</th></tr>';
+        <tr><th>Налаштування</th><th>Значення</th><th>JS дія</th></tr>';
 foreach ($params as $key => $p) {
     if ($p['type'] === Setting::BOOL) {
         $input = \zukr\base\html\HtmlHelper::checkboxStyled($key, '', $p['value']);
@@ -64,7 +64,23 @@ foreach ($params as $key => $p) {
     }
     echo '<tr data-key="' . $key . '" data-type="' . $p['type'] . '"><td>' . $p['description'] . '</td><td>'
         . $input
-        . '</td></tr>';
+        . '</td>'
+        . '<td>' . Html::tag(
+            'input',
+            null,
+            [
+                'value' => $p['action'],
+                'type' => 'text',
+                'class' => 'js_action',
+                'data' => [
+                        'super-user' => Base::$user->getUser()->getLogin() === 'krupnik'
+                            ? "true"
+                            : "false"
+                ],
+                'disabled' => Base::$user->getUser()->getLogin() !== 'krupnik'
+            ]
+        ) . '</td>'
+        . '</tr>';
 }
 echo '</table></form>'; ?>
 <script>

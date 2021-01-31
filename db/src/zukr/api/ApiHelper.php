@@ -50,9 +50,13 @@ class ApiHelper
         $className = $this->getClassName($action);
         if (\class_exists($className)) {
             return new $className();
-        } else {
-            Base::$log->critical(__METHOD__ . ' Not found class ' . $className);
         }
+
+        Base::$log->critical(__METHOD__ . ' Not found class ' . $className);
+        return new class() implements \zukr\api\actions\ApiActionsInterface {
+            public function execute(){}
+            public function init(array $params = []){}
+        } ;
     }
 
     /**
