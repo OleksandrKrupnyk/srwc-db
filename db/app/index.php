@@ -7,11 +7,16 @@ require '../vendor/autoload.php';
 
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\html\Html;
 
 Base::init();
 $settings = ArrayHelper::merge($settings, Base::$param->getAllsettingValue());
 global $link;
-
+if (isset($_GET['action'])) {
+    if ($_GET['action'] === 'file_get') {
+        include "ag_file_get_content.php";
+    }
+}
 
 $setData = static function () use ($link, $settings) {
     $query = '
@@ -59,11 +64,11 @@ SELECT w.id,
        FROM `reviews` as r
        WHERE r.id_w =  w.id
        LIMIT 1,2) AS reviewer2,
-       (SELECT f.file
+       (SELECT f.guid
        FROM `files` as f
        WHERE f.id_w = w.id
          AND f.typeoffile = 0
-       LIMIT 1) AS path
+       LIMIT 1) AS file_guid
 FROM `works` AS w
          LEFT JOIN `univers` AS u ON w.id_u = u.id
          LEFT JOIN `sections` AS s ON w.id_sec = s.id
@@ -91,8 +96,14 @@ ORDER BY w.id
                 ('D' !== $row['place2'] && $row['place2'] !== null)
             )
             &&
-            $row['path'] !== null // Запись о файле есть в системе
-        ) ? "<a href='{$row['path']}' title='{$row['title']}'>{$row['title']}</a>" : $row['title'];
+            $row['file_guid'] !== null // Запись о файле есть в системе
+        )
+            ? Html::a(
+                $row['title'],
+                'index.php?action=file_get&guid=' . $row['file_guid'],
+                ['title' => $row['title']]
+            )
+            : $row['title'];
 
 
         $s['univer'] = $row['univer'];
@@ -140,8 +151,11 @@ if (!isset($_GET['action'])) {
     <title><?= Base::$app->app_name ?></title>
 </head>
 <body>
-<?php if (isset($_GET['action']) && $_GET['action'] === 'review_view'): ?>
-    <?php include "ag_form_view_review.php"; ?>
+<?php if (isset($_GET['action'])): ?>
+    <?php
+    if ($_GET['action'] === 'review_view') {
+        include "ag_form_view_review.php";
+    }?>
 <?php else: ?>
     <h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт
         <br>&quot;Електротехніка та електромеханіка&quot; <?= Base::$param->NYEARS ?> н.р.</h1>
@@ -185,10 +199,7 @@ if (!isset($_GET['action'])) {
             <?php foreach ($data as $d): ?>
                 <tr>
                     <td class='numero'><?= $d['id'] ?></td>
-                    <td title="Останні зміни:<?= $d['date'] ?>" class='title'>
-                        <?= $d['title'] ?>
-                        <br><?= $d['univer'] ?><?= $d['invitation'] ?><?= $d['diploma'] ?? '' ?>
-                    </td>
+                    <td title="Останні зміни:<?= $d['date'] ?>" class='title'><?= $d['title'] ?><br><?= $d['univer'] ?><?= $d['invitation'] ?><?= $d['diploma'] ?? '' ?></td>
                     <td class='review'><?= $d['review'] ?></td>
                     <td class='section'><?= $d['section'] ?></td>
                 </tr>

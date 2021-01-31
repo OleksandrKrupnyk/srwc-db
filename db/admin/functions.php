@@ -167,6 +167,7 @@ function list_files($id_w, string $typeoffile = 'all')
                     ])
                     . Html::a('', "action.php?action=file_remove&id_w={$id_w}&guid={$row['guid']}", [
                         'title' => 'Видалити файл',
+                        'class' => 'link-delete-file'
                     ]);
             }
             $str .= Html::ol($list) . "</details>";
