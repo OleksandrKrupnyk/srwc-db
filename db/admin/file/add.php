@@ -93,11 +93,16 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
                     $realFilePathZip = FileSystemHelper::normalizePath(APP_ROOT_DIR . $file_name);
                     $realFilePath = FileSystemHelper::normalizePath(APP_ROOT_DIR . $fileNameCyrillic);
                     $commandString = "zip -j " . $realFilePathZip . " \"" . $realFilePath . "\"";
-                    if (!exec($commandString)) {
+
+                    if (!exec($commandString, $output, $resultCode)) {
                         echo "<pre>Помилка при архівуванні файлу</pre>";
                         Base::$log->error(
-                            'Помилка при архівуванні файлу. Помилка виконання команди'
+                            'Exec result code is :' . $resultCode . ' on command :'
                             . PHP_EOL . $commandString
+                        );
+                        Base::$log->error(
+                            'Exec output :'
+                            . PHP_EOL . \implode(', ', $output)
                         );
                     } else { //удаление файла после архивирования
                         Base::$log->info($realFilePath);
