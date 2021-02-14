@@ -92,7 +92,7 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
                     $file_name = DIR . $id_w . "/id_" . $id_w . "_text.zip";
                     $realFilePathZip = FileSystemHelper::normalizePath(APP_ROOT_DIR . $file_name);
                     $realFilePath = FileSystemHelper::normalizePath(APP_ROOT_DIR . $fileNameCyrillic);
-                    $commandString = "zip -j " . $realFilePathZip . " \"" . $realFilePath . "\"";
+                    $commandString = "/usr/local/bin/zip -j " . $realFilePathZip . " \"" . $realFilePath . "\"";
 
                     if (!exec($commandString, $output, $resultCode)) {
                         echo "<pre>Помилка при архівуванні файлу</pre>";
