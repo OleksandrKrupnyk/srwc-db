@@ -80,10 +80,13 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
             //Сформируем путь для копирования файла
             $file_name = DIR . $id_w . DIRECTORY_SEPARATOR . $file_name;
             // Если операционная система сервера windows то провести преобразование имени файла
-            $fileNameCyrillic = \strtoupper(\substr(PHP_OS, 0, 3)) === 'WIN'
-                ? \iconv('UTF-8', 'windows-1251', $file_name)
-                : $file_name;  // Если же Linux то ничего не делать
-
+            if (\strtoupper(\substr(PHP_OS, 0, 3)) === 'WIN') {
+                $fileNameCyrillic = \iconv('UTF-8', 'windows-1251', $file_name);
+                $commandZip = "zip";
+            } else {
+                $fileNameCyrillic = $file_name;
+                $commandZip = "/usr/local/bin/zip";
+            }
             if (!\move_uploaded_file($file_temp_name, $fileNameCyrillic)) {
                 echo '<pre>Помилка при копіюванні файлу</pre>';
                 Base::$log->error('Помилка при копіюванні файлу...');
@@ -92,7 +95,7 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
                     $file_name = DIR . $id_w . "/id_" . $id_w . "_text.zip";
                     $realFilePathZip = FileSystemHelper::normalizePath(APP_ROOT_DIR . $file_name);
                     $realFilePath = FileSystemHelper::normalizePath(APP_ROOT_DIR . $fileNameCyrillic);
-                    $commandString = "/usr/local/bin/zip -j " . $realFilePathZip . " \"" . $realFilePath . "\"";
+                    $commandString = $commandZip . " -j " . $realFilePathZip . " \"" . $realFilePath . "\"";
 
                     if (!exec($commandString, $output, $resultCode)) {
                         echo "<pre>Помилка при архівуванні файлу</pre>";
