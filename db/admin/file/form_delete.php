@@ -8,7 +8,6 @@
 
 
 use zukr\base\Base;
-use zukr\base\helpers\FileSystemHelper;
 use zukr\file\FileHelper;
 use zukr\file\FileRepository;
 use zukr\log\Log;
@@ -17,7 +16,7 @@ if (($id_w = filter_input(INPUT_GET, 'id_w', FILTER_VALIDATE_INT)) !== false) {
     $log = Log::getInstance();
     if (($id_f = filter_input(INPUT_GET, 'id_f', FILTER_VALIDATE_INT)) !== false) {
         $file = (new FileRepository())->findById($id_f);
-        $filePath = FileSystemHelper::normalizePath(FileHelper::getInstance()->getRealPath($file));
+        $filePath = FileHelper::getInstance()->getRealPath($file);
         $checkFile = false;
         if (file_exists($filePath)) {
             $checkFile = true;

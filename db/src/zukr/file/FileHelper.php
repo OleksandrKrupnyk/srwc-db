@@ -5,6 +5,7 @@ namespace zukr\file;
 
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\helpers\FileSystemHelper;
 use zukr\base\RecordHelper;
 
 /**
@@ -121,11 +122,15 @@ class FileHelper extends RecordHelper
     public function getRealPath($file): string
     {
         if ($file instanceof File) {
-            return APP_ROOT_DIR . DIRECTORY_SEPARATOR . $file->file;
+            $filePath = FileSystemHelper::normalizePath(APP_ROOT_DIR . DIRECTORY_SEPARATOR . $file->file);
+            Base::$log->info($filePath);
+            return $filePath;
         }
 
         if (\is_array($file) && isset($file['file'])) {
-            return APP_ROOT_DIR . DIRECTORY_SEPARATOR . $file['file'];
+            $filePath = FileSystemHelper::normalizePath(APP_ROOT_DIR . DIRECTORY_SEPARATOR . $file['file']);
+            Base::$log->info($filePath);
+            return $filePath;
         }
         return '';
     }

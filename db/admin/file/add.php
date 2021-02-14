@@ -10,6 +10,7 @@
 
 use Ramsey\Uuid\Uuid;
 use zukr\base\Base;
+use zukr\base\helpers\FileSystemHelper;
 use zukr\file\File;
 use zukr\log\Log;
 
@@ -79,31 +80,45 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
             //Сформируем путь для копирования файла
             $file_name = DIR . $id_w . DIRECTORY_SEPARATOR . $file_name;
             // Если операционная система сервера windows то провести преобразование имени файла
-            $fileNameCyrillic = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
-                ? iconv('UTF-8', 'windows-1251', $file_name)
+            $fileNameCyrillic = \strtoupper(\substr(PHP_OS, 0, 3)) === 'WIN'
+                ? \iconv('UTF-8', 'windows-1251', $file_name)
                 : $file_name;  // Если же Linux то ничего не делать
 
-            if (!move_uploaded_file($file_temp_name, $fileNameCyrillic)) {
+            if (!\move_uploaded_file($file_temp_name, $fileNameCyrillic)) {
                 echo '<pre>Помилка при копіюванні файлу</pre>';
                 Base::$log->error('Помилка при копіюванні файлу...');
             } else {
                 if (File::TYPE_WORK === $typeoffile) { // Если файл с текcтом работы то положим его в архив zip
-                    if (!exec("zip -j " . DIR . $id_w . "/id_" . $id_w . "_text.zip  \"" . $fileNameCyrillic . "\"")) {
+                    $file_name = DIR . $id_w . "/id_" . $id_w . "_text.zip";
+                    $realFilePathZip = FileSystemHelper::normalizePath(APP_ROOT_DIR . $file_name);
+                    $realFilePath = FileSystemHelper::normalizePath(APP_ROOT_DIR . $fileNameCyrillic);
+                    $commandString = "zip -j " . $realFilePathZip . " \"" . $realFilePath . "\"";
+                    if (!exec($commandString)) {
                         echo "<pre>Помилка при архівуванні файлу</pre>";
-                        Base::$log->error('Помилка при архівуванні файлу');
+                        Base::$log->error(
+                            'Помилка при архівуванні файлу. Помилка виконання команди'
+                            . PHP_EOL . $commandString
+                        );
                     } else { //удаление файла после архивирования
-                        unlink($fileNameCyrillic);
+                        Base::$log->info($realFilePath);
+                        \unlink($fileNameCyrillic);
                     }
                     //Новое имя для внесения в запись БД
-                    $file_name = DIR . $id_w . "/id_" . $id_w . "_text.zip";
+                    $file->file = $file_name;
+                } else {
+                    $file->file = $fileNameCyrillic;
                 }
-                $file->file = $file_name;
-                $file->typeoffile = $typeoffile;
-                $file->mime_type = mime_content_type($file_name);
-                $file->guid = Uuid::uuid4()->toString();
-                $file->id_w = $id_w;
-                $file->save();
-                $log->logAction(null, $file::getTableName(), $file->id_w);
+                $filePath = FileSystemHelper::normalizePath(APP_ROOT_DIR . $file->file);
+                if (\file_exists($filePath)) {
+                    $file->typeoffile = $typeoffile;
+                    $file->mime_type = \mime_content_type($filePath);
+                    $file->guid = Uuid::uuid4()->toString();
+                    $file->id_w = $id_w;
+                    $file->save();
+                    $log->logAction(null, $file::getTableName(), $file->id_w);
+                } else {
+                    Base::$log->error('Помилка при зберіганні даних файлу. ' . PHP_EOL . $filePath);
+                }
                 Go_page("action.php?action=all_view#id_w" . $file->id_w);
                 /*
                 $query = "";//Очищаем запрос
