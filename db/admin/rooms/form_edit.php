@@ -1,5 +1,5 @@
 <?php
-/** ВИбір аудиторії
+/** Вибір аудиторії
  * Created by PhpStorm.
  * User: sasha
  * Date: 21.03.2018
@@ -12,7 +12,7 @@ use zukr\section\SectionRepository;
 
 $sections = (new SectionRepository())->getSectionAndCountRooms();
 ?>
-<!-- Роспеределение секций по аудиториям-->
+<!-- Распределение секций по аудиториям-->
 <header><a href="action.php">Меню</a></header>
 <header>Аудиторії</header>
 <table id='tableSelectRoom'>

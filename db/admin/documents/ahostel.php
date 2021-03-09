@@ -11,7 +11,7 @@ $listAuthors = (new AuthorRepository())->getListAutorsForHostel();
 if (!empty($listAuthors)) {
     $listUnivers = ArrayHelper::group($listAuthors, 'univer');
     unset($listAuthors);
-    $html = '<h1>Список студентів на поселеня у гуртожитку</h1>';
+    $html = '<h1>Список студентів на поселення у гуртожитку</h1>';
     foreach ($listUnivers as $univer => $autors) {
         $html .= '<div id="univer_title"><em>' . $univer . '</em></div>';
         $list = [];
@@ -21,6 +21,6 @@ if (!empty($listAuthors)) {
         $html .= '<ol>' . implode('', $list) . '</ol>';
     }
 } else {
-    $html = '<mark>За данним запитом данних не знайдено!</mark>';
+    $html = '<mark>За даним запитом даних не знайдено!</mark>';
 }
 echo $html;

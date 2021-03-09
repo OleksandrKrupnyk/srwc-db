@@ -37,7 +37,7 @@ $title = StringHelper::truncate($row['title'], 30);
 $section = $row['section'];
 $ph = PlaceHelper::getInstance();
 ?>
-    <!-- Распределение мест стреди студентов которые приехали на конференцию-->
+    <!-- Распределение мест среди студентов которые приехали на конференцию-->
     <header><a href='action.php'>Меню</a></header>
     <header>Призначення місць.</header>
     Сума місць[<span id='summaryResult'></span>]

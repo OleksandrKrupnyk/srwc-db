@@ -144,6 +144,7 @@ if ($count > 0) {
     <span><?= Base::$user->getUser()->isAdmin() ? 'A' : '' ?></span>
     <span><?= Base::$user->getUser()->isReview() ? 'R' : '' ?></span>
 </div>
+<!--suppress HtmlUnknownTag -->
 <autor class="autor">Krupnik&copy;</autor>
 </body>
 </html>

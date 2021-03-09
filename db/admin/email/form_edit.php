@@ -11,7 +11,7 @@ use zukr\base\Base;
 $settings = Base::$param;
 $str = ($settings->ALLOW_EMAIL === "1")
     ? 'УВАГА! Налаштування розсилки ДОЗВОЛЕНО'
-    : "Безпечна робота розсилка вымкнута!";
+    : "Безпечна робота розсилка вимкнута!";
 $buttonName = ("1" == $settings->ALLOW_EMAIL)
     ? "Надіслати листи"
     : "Перевірити листи";
@@ -32,7 +32,7 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
         <mark>{title}</mark>
         --Назва роботи;<br>
         <mark>{link}</mark>
-        --посылання на підтвердження отримання листа.
+        --посилання на підтвердження отримання листа.
     </fieldset>
     <textarea name="letter2leaders" id="letter2leaders"
               class="w-100"><?= file_get_contents("letter2leaders.tte"); ?></textarea>
@@ -51,7 +51,7 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
         <mark>{title}</mark>
         --Назва роботи;<br>
         <mark>{link}</mark>
-        --посылання на підтвердження отримання листа.
+        --посилання на підтвердження отримання листа.
     </fieldset>
     <textarea name="letter2autors" id="letter2autors" class="w-100"><?= file_get_contents("letter2autors.tte"); ?>
         </textarea>

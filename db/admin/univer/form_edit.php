@@ -22,7 +22,7 @@ Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование данных университета -->
 <header><a href="action.php">Меню</a></header>
-<header>Редагування данних університету</header>
+<header>Редагування даних університету</header>
 <form class="editUniver form" method="post" action="action.php">
     <label>Коротка назва</label>
     <input type="text" name="Univer[univer]" title="Скорочена назва. Наприклад:ДДТУ,СумДУ."

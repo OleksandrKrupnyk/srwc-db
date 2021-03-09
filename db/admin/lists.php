@@ -15,7 +15,7 @@ session_start();
 global $FROM;
 //переменная для определения предка вызова сценария
 $FROM = trim(urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
-// Прочитать насторйки программы из БД
+// Прочитать настройки программы из БД
 Base::init();
 $settings = Base::$param;
 if (Base::$user->getUser()->isGuest()) {

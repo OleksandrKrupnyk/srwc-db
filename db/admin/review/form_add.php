@@ -101,7 +101,7 @@ if (Base::$user->getUser()->isAdmin()) {
     <fieldset>
         <legend><label for="review-defects">Зауваження та недоліки</label></legend>
         <textarea id='review-defects' name="Review[defects]" rows="4" cols="40" maxlength="4096" class="w-100"
-                  placeholder="Недлоліки роботи по пунктах в яких низька кількість балів або об’єктина оцінка. В середньому 2-4 речення."></textarea>
+                  placeholder="Недоліки роботи по пунктах в яких низька кількість балів або об’єктивна оцінка. В середньому 2-4 речення."></textarea>
     </fieldset>
     <br>
     <label for="review-conclusion">Висновок рецензента :</label>

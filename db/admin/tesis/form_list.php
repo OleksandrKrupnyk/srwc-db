@@ -42,7 +42,7 @@ while ($row = mysqli_fetch_array($result)) {
         short_list_leader_or_autors_str($row['id'], "wa");
         echo(list_files($row['id'], 1));
         echo TAB_SP . "(" . $row['title'] . ")" . TAB_SP . "<strong><em>" . $row['town'] . "</em></strong><br>"; // Напишем название работы
-    } else {//Секциия поменялась
+    } else {//Секция поменялась
         //Запомним новую секцию
         $section = $row['section'];
         //Напишем название секции
@@ -55,4 +55,4 @@ while ($row = mysqli_fetch_array($result)) {
     }
 }
 ?>
-<!-- Окончание списока тезисов по секциям -->
+<!-- Окончание списка тезисов по секциям -->

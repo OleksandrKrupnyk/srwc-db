@@ -138,7 +138,7 @@ $id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
                 ?></div>
             <div class="form-input">
                 <label for="work-motto">Девіз(ШИФР):</label>
-                <input type="text" name="Work[motto]" id="work-motto" title="Дивіз роботи." placeholder="Девіз..."
+                <input type="text" name="Work[motto]" id="work-motto" title="Девіз роботи." placeholder="Девіз..."
                        required
                        autocomplete="off" class="w-100"><br>
             </div>

@@ -17,7 +17,7 @@ $session->setFromParam();
 ?>
 <!-- Редактирование списка университетов в которые следует направить первое информационное сообщение -->
 <header><a href='action.php'>Меню</a></header>
-<header>Список университетів</header>
+<header>Список університетів</header>
 <table id='tableInviteUnivers' class="zebra">
     <tr>
         <th>№</th>

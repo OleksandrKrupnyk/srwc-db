@@ -37,7 +37,7 @@ $count_title++; // увеличить счетчик работ
 while ($row = mysqli_fetch_array($result)) {
     //print_r($row);
     if ($fio <> $row['fio']) { // сменился автор
-        echo "</ul></li>"; //закрыит список
+        echo "</ul></li>"; //закрыть список
         $fio = $row['fio']; // запомнить нового автора
         $count_fio++; // увеличить счетчик авторов
         $count_title = 0; // сбросить счетчик работ в ноль

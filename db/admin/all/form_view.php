@@ -15,7 +15,7 @@ use zukr\univer\UniverHelper;
 use zukr\work\WorkHelper;
 
 /**
- * Выводит заголовок  "название университета" в таблице посмотра данных о работах
+ * Выводит заголовок  "название университета" в таблице просмотра данных о работах
  *
  * @param string $univer_title
  * @param int    $id_u
@@ -119,7 +119,7 @@ function print_work_row(array $work, LoginUser $userLogin)
             <td rowspan="{$rowspan}" class="workID"><div id="id_w{$work['id']}">{$work['id']}</div></td>
             <td colspan="4" class="title" title="Останні зміни :$date">
             <!-- Действия над работой -->
-            {$title}&nbsp;&nbsp;<a href="action.php?action=work_link&id_w={$work['id']}" title="Звязати з роботою керівника/автора">&laquo;</a>&nbsp;&nbsp;&nbsp;&nbsp;{$delete_work} 
+            {$title}&nbsp;&nbsp;<a href="action.php?action=work_link&id_w={$work['id']}" title="Зв'язати з роботою керівника/автора">&laquo;</a>&nbsp;&nbsp;&nbsp;&nbsp;{$delete_work} 
             </td>
 </tr>        
 <tr   class="{$invitateClassWork}">
@@ -258,7 +258,7 @@ if (isset($_GET['who'])) {
 $who = filter_input(INPUT_GET, 'who', FILTER_SANITIZE_STRING) ?? '';
 $count = count($allWorks);
 ?>
-<!-- Просмотр  таблици работ -->
+<!-- Просмотр  таблицы работ -->
 <header><a href="action.php">Меню</a></header>
 <header>Перегляд бази (<?= $count ?> робіт)</header>
 <menu class="viewTableMenu"><?= vsprintf('%s %s %s %s %s %s %s %s', $viewMenuitem); ?></menu>
@@ -268,7 +268,7 @@ $count = count($allWorks);
             <th>id<br/>номер</th>
             <th class="title">Назва роботи</th>
             <th class="title">Рецензія</th>
-            <th>Керівникі</th>
+            <th>Керівники</th>
             <th>Автори
                 &lt;номер&gt;(місце)[приїхав]
             </th>

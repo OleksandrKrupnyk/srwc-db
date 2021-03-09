@@ -47,7 +47,7 @@ $sectionList = ArrayHelper::group($wh->getInvitationWorks(), 'id_sec');
     $sectionCounter = 1;
     foreach ($sectionList as $id_sec => $works) {
         echo '<tr><th colspan="5"> Секція №' . $sectionCounter . '. Аудиторія ' . $sections[$id_sec]['room'] . ' <br>' . $sections[$id_sec]['section'] . '</th></tr>'
-            . '<tr><th>№</th><th>Доповідь</th><th>Доповідач(i)/<br>Ширф автора</th><th>Керівник</th><th>ВНЗ</th></tr>';
+            . '<tr><th>№</th><th>Доповідь</th><th>Доповідач(i)/<br>Шифр автора</th><th>Керівник</th><th>ВНЗ</th></tr>';
         $i = 1;
         uasort($works, function ($a, $b) {
             return $a['title'] <=> $b['title'];

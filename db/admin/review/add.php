@@ -36,7 +36,7 @@ try {
 
         $countOfReviews = (new ReviewRepository())->getCountOfReviewByWorkId($review->id_w);
         if ($countOfReviews > 1) {
-            Base::$session->setFlash('recordSaveMsg', 'Достатьно рецензій для даної роботи');
+            Base::$session->setFlash('recordSaveMsg', 'Достатньо рецензій для даної роботи');
             Base::$session->setFlash('recordSaveType', 'error');
             if (isset($_POST['save'])) {
                 $url2go = 'action.php?' . http_build_query(['action' => 'review_add', 'id_w' => $id_w, 'id_u' => $id_u]);

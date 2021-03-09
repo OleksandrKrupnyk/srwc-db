@@ -84,7 +84,7 @@ $univers = $uh->getDropDownListShotFull(
 
                 } else {//Без Shift добавить приглашение
                     value = 1;
-                    answer = confirm('Відмитити приїзд на конференцію?\nВи впевнені?');
+                    answer = confirm('Відмітити приїзд на конференцію?\nВи впевнені?');
                     if (!answer) {
                         isLoading = false;
                         return false;
@@ -123,7 +123,7 @@ $univers = $uh->getDropDownListShotFull(
             changeInvitation.call(this, e)
         });
 
-        //обработка собития обновления отметки о прибытии работы при двойном клике на названии меню
+        //обработка события обновления отметки о прибытии работы при двойном клике на названии меню
         $('#update_arrival_works').on('dblclick', function () {
             if (!isLoading) {
                 isLoading = true;

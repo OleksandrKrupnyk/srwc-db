@@ -27,7 +27,7 @@ Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование автора -->
 <header><a href="action.php">Меню</a></header>
-<header>Редагування данних автора</header>
+<header>Редагування даних автора</header>
 <form class="editAutor form" method="post" action="action.php">
     <?= Html::select('Author[id_u]', $author['id_u'], $univers,
         ['id' => 'selunivers', 'required' => true, 'prompt' => 'Університет...', 'class' => 'w-100'])

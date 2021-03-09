@@ -91,7 +91,7 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
                 echo '<pre>Помилка при копіюванні файлу</pre>';
                 Base::$log->error('Помилка при копіюванні файлу...');
             } else {
-                if (File::TYPE_WORK === $typeoffile) { // Если файл с текcтом работы то положим его в архив zip
+                if (File::TYPE_WORK === $typeoffile) { // Если файл с текстом работы то положим его в архив zip
                     $file_name = DIR . $id_w . "/id_" . $id_w . "_text.zip";
                     $realFilePathZip = FileSystemHelper::normalizePath(APP_ROOT_DIR . $file_name);
                     $realFilePath = FileSystemHelper::normalizePath(APP_ROOT_DIR . $fileNameCyrillic);
@@ -131,7 +131,7 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
                 /*
                 $query = "";//Очищаем запрос
 
-                switch ($_POST['typeoffile'])//Проверяем тип загруженого файла и формируем запрос в БД для обновления
+                switch ($_POST['typeoffile'])//Проверяем тип загруженного файла и формируем запрос в БД для обновления
                 {
                     case "tesis":
                         {

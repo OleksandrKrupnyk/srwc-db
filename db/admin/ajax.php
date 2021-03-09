@@ -10,7 +10,7 @@ require '../vendor/autoload.php';
 $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRIPPED);
 try {
     $apih = ApiHelper::getInstance();
-    /** ApiActionsInterface $classObj */
+    /** @var ApiActionsInterface $classObj */
     $classObj = $apih->getActionByName($action);
     if ($classObj instanceof ApiActionsInterface) {
         $classObj->init();

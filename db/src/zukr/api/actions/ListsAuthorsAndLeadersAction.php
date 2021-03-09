@@ -13,7 +13,7 @@ use zukr\leader\LeaderRepository;
 /**
  * Class ListsAuthorsAndLeadersAction
  *
- * Додававання усіх відомостей про роботу списки керівників та авторів
+ * Додавання усіх відомостей про роботу списки керівників та авторів
  *
  * @package      zukr\api\actions
  * @author       Alex.Krupnik <krupnik_a@ukr.net>

@@ -43,11 +43,12 @@ if (in_array($actionPost, [
     'review_edit',
     'section_add',
     'section_edit',
+    'invitation_add'
 ])) {
     execute_post_action($actionPost);
 }
 /**
- * комманды переданные по GET Для обработки перед формирванием страницы
+ * команды переданные по GET Для обработки перед формированием страницы
  * После каждой команды идет перенаправление на страницу
  */
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
@@ -59,6 +60,7 @@ if (in_array($action, [
     'review_delete',
     'review_update',
     'file_get',
+    'invitation_delete',
 ])) {
     execute_get_action($action);
     // каждое действие заканчивается  header(...)
@@ -129,7 +131,9 @@ $_type = $session->getFlash('recordSaveType', '');
         'statistic_view',
         'email_edit',
         'test_edit',
-        'error_list',])) {
+        'error_list',
+        'invitation_list',
+    ])) {
         execute_get_action($action);
     } else {
         $menuData = include 'menu.php';

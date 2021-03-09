@@ -10,7 +10,7 @@ SELECT u.univerfull,u.adress FROM univers AS u WHERE u.id IN (SELECT DISTINCT id
 FROM works AS w 
 WHERE w.invitation = 1 AND id<>1) ORDER BY u.univerfull;
 ");
-//ТОлько те работы у коротых есть приглашенные работы минус ДДТУ
+//Только те работы у которых есть приглашенные работы минус ДДТУ
 $html = '<div class="adress2">'
     . '<header>Список розсилки 2-го інформаційного повідомлення <br>Всеукраїнського конкурсу студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</header>'
     . '<div id="table">
