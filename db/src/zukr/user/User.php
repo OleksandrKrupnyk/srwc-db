@@ -87,7 +87,7 @@ class User extends Record implements AuthInterface
      */
     public function getProfile(): array
     {
-        if ($this->_profile === null) {
+        if (empty($this->_profile)) {
             $this->_profile = $this->id !== 0
                 ? (new LeaderRepository())->getByTzMemberId($this->id)
                 : [];
@@ -100,7 +100,7 @@ class User extends Record implements AuthInterface
      */
     public function isReview(): bool
     {
-        if ($this->_isReview === null) {
+        if (empty($this->_isReview)) {
             $profile = $this->getProfile();
             $this->_isReview = isset($profile['review'])
                 ? (int)$profile['review'] === self::KEY_ON
