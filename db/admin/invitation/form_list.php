@@ -28,9 +28,9 @@ foreach ($scanFiles as $scanFile) {
         <?= Html::ol($listFiles) ?>
     </form>
 <?php else: ?>
-    <p>
+    <div class="form">
         <mark>Нема файлів для відображення</mark>
-    </p>
+    </div>
 <?php endif; ?>
 
 <form class="addScanFiles form" enctype="multipart/form-data" method="post" action="action.php?action=invitation_add">

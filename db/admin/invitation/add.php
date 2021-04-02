@@ -50,6 +50,7 @@ try {
 
     $scanFile->filename = 'Запрошення_' . \basename($file_name);
     $scanFile->md5sum = $file_md5;
+    $scanFile->file = $file_name;
     $scanFile->save();
     $log->logAction(null, $scanFile::getTableName(), $scanFile->id_u);
 

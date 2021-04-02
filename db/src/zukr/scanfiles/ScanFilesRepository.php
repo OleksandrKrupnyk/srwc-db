@@ -23,6 +23,16 @@ class ScanFilesRepository extends AbstractRepository
     protected $__className = ScanFiles::class;
 
     /**
+     * @param $id
+     * @return \zukr\base\Record|\zukr\base\RecordInterface|null|ScanFiles
+     */
+    public function findById($id)
+    {
+        return parent::findById($id);
+    }
+
+
+    /**
      * Список усіх відсканованих запрошень для журі
      *
      * @return array|\MysqliDb|string
@@ -34,7 +44,7 @@ class ScanFilesRepository extends AbstractRepository
         try {
             return $this->model::find()
                 ->join($joinTable, $table . '.id_u=' . $joinTable . '.id')
-                ->get($table);
+                ->get($table, null, [$table . '.*', 'univerrod',]);
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];
