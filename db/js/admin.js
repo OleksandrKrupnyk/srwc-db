@@ -239,32 +239,32 @@ $(document).ready(function () {
 // Телефонный номер
     var phone_list = $('span[id^="phone"]');
     $(function () {
-        phone_list.each(function () {
-                var phone = $(this).text();
-                var operator = (phone != 'відсутній') ? phone[0] + phone[1] + phone[2] : "000";
+            phone_list.each(function () {
+                    var phone = $(this).text();
+                    var operator = (phone != 'відсутній') ? phone[0] + phone[1] + phone[2] : "000";
 
-                switch (operator) {/*МТС*/
-                    case '050':
-                    case '066':
-                    case '095':
-                    case '099': {
-                        $(this).addClass("mobo-mts-16");
-                    }
-                        break;
-                    case '067':/*Киевстар*/
-                    case '068':
-                    case '097':
-                    case '098': {
-                        $(this).addClass("mobo-kyivstar-16");
-                    }
-                        break;
-                    case '091': {
-                        $(this).addClass("mobo-utel-16");
-                    }
-                        break;
-                    case '092': {
-                        $(this).addClass("mobo-peoplenet-16");
-                    }
+                    switch (operator) {/*МТС*/
+                        case '050':
+                        case '066':
+                        case '095':
+                        case '099': {
+                            $(this).addClass("mobo-mts-16");
+                        }
+                            break;
+                        case '067':/*Киевстар*/
+                        case '068':
+                        case '097':
+                        case '098': {
+                            $(this).addClass("mobo-kyivstar-16");
+                        }
+                            break;
+                        case '091': {
+                            $(this).addClass("mobo-utel-16");
+                        }
+                            break;
+                        case '092': {
+                            $(this).addClass("mobo-peoplenet-16");
+                        }
                             break;
                         case '093':
                         case '063': {/*Лайф*/
@@ -328,3 +328,26 @@ $(document).ready(function () {
 
 }); // окончание загрузки документа
 /*-------------- Окончание файла ----------------------------*/
+const iFrame = $('.window-iframe');
+iFrame.on('load', function () {
+    let image = $(this).contents().find("img");
+    if (image !== undefined) {
+        image.css("width", "900px")
+    }
+});
+$('a.js-window-iframe').on('click', function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    let href = $(this).attr('href') || '',
+        titleString = $(this).data('file') || 'Заголовок',
+        title = $('.window-title');
+    title.children('a')
+        .html(titleString)
+        .attr('href', href)
+        .css('background', "none")
+    iFrame.attr('src', href);
+    $('.window-background').fadeIn(400);
+});
+$('.window-close-btn').on('click', function () {
+    $(this).parents('.window-background').fadeOut(400)
+});

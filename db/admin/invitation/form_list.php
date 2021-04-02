@@ -13,7 +13,7 @@ $univers = $uh->getInvitedDropdownList();
 $listFiles = [];
 foreach ($scanFiles as $scanFile) {
     $content = 'Для ' . $scanFile['univerrod'] . '&#9;' . Html::a($scanFile['filename'], $scanFile['file'], [
-            'class' => 'link-file',
+            'class' => 'link-file js-window-iframe', 'data-file' => $scanFile['filename'],
         ]) . '&nbsp;' . Html::a('', 'action.php?action=invitation_delete&id=' . $scanFile['id'], [
             'title' => 'Видалити файл',
             'class' => 'link-delete-file'
@@ -38,7 +38,7 @@ foreach ($scanFiles as $scanFile) {
         <legend>Завантаження сканованих запрошень</legend>
         <label for="selunivers">ВНЗ:</label><br/>
         <?= Html::select('ScanFiles[id_u]', null, $univers,
-            ['id' => 'selunivers', 'required' => true, 'prompt' => 'ВНЗ...', 'class' => 'w-100', 'style' => 'width:100%'])
+            ['id' => 'selunivers', 'required' => true, 'prompt' => 'ВНЗ...', 'class' => 'w-100', 'style' => 'max-width:100%!important'])
         ?><br/>
         <label>Файл:</label>
         <input type="file" name="file" size="20">

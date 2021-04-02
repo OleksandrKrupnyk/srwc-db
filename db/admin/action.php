@@ -167,6 +167,19 @@ $_type = $session->getFlash('recordSaveType', '');
             $.notify(_msg, _type);
         }
     </script>
+    <div class="window-background" z-index="9999">
+        <div class="window-popup">
+            <div class="title-row" style="">
+                <div class="window-title" style=""><a href="" download="" title="Завантажити">Title window</a></div>
+                <div class="window-close-btn" title="Зачинити">X</div>
+            </div>
+            <div class="window-content">
+                <iframe class="window-iframe" frameborder="0" allowfullscreen src=""
+                marginheight="0px" marginwidth="0px"
+                ></iframe>
+            </div>
+        </div>
+    </div>
     <?= $debugbarRenderer->render() ?>
     </body>
     </html>
