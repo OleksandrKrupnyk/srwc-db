@@ -9,7 +9,7 @@ $html = '';
 if (!empty($listLeaders)) {
     $listUniver = ArrayHelper::group($listLeaders, 'univerrod');
     $txt = [];
-    $txt[] = '<h1>Список керівників на поселеня</h1>';
+    $txt[] = '<h1>Список керівників на поселення</h1>';
     foreach ($listUniver as $univer => $listLeaders) {
         $txt[] = '<div id="univer_title"><em>' . $univer . '</em></div>';
         $list = [];
@@ -20,6 +20,6 @@ if (!empty($listLeaders)) {
     }
     $html = implode('', $txt);
 } else {
-    $html = '<mark>За данним запитом данних не знайдено!</mark>';
+    $html = '<mark>За даним запитом даних не знайдено!</mark>';
 }
 echo $html;

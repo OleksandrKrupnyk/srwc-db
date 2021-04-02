@@ -746,6 +746,49 @@ td > output.balls {
   }
 }
 
+.window-background {
+  background: rgba(0.5, 0.5, 0.5, 0.5);
+  display: none;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+  .window-popup {
+    background-color: white;
+    height: 90%;
+    margin: 15px auto;
+    width: 75%;
+
+    .title-row {
+      display: flex;
+      flex-direction: row;
+      height: 20px;
+      justify-content: space-between;
+
+      .window-title {
+        padding: 1em;
+      }
+
+      .window-close-btn {
+        cursor: pointer;
+        margin: 1em;
+      }
+    }
+
+    .window-content {
+      height: 90%;
+      padding: 1em;
+
+      iframe.window-iframe {
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
+
 @import '_toggle.scss';
 @import '_table.scss';
 @import '_padding.scss';

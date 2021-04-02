@@ -33,10 +33,10 @@ if (isset($_SESSION['access']) && !isset($_COOKIE['tzRemember']) && !$_SESSION['
     $_SESSION = [];
     session_destroy();
 
-    // Удалаяем сессию
+    // Удаляем сессию
 }
 
-/* Преход был из другой формы? */
+/* Переход был из другой формы? */
 if (isset($_POST['submit'])) {
     //Да
     $err = [];
@@ -50,11 +50,11 @@ if (isset($_POST['submit'])) {
         $_POST['username'] = mysqli_real_escape_string($link, $_POST['username']);
         $_POST['password'] = mysqli_real_escape_string($link, $_POST['password']);
         $_POST['rememberMe'] = (int)$_POST['rememberMe'];
-        // Получаем все ввденые данные
+        // Получаем все введенные данные
 
         $query = "SELECT id,usr FROM tz_members WHERE usr='" . $_POST['username'] . "' AND pass='" . md5($_POST['password']) . "'";
         $result = mysqli_query($link, $query)
-        or die('Невірний запрос до бази данних: ' . mysqli_error($link));
+        or die('Невірний запрос до бази даних: ' . mysqli_error($link));
 
         $row = mysqli_fetch_array($result);
 
@@ -91,7 +91,7 @@ if (isset($_POST['submit'])) {
     <link rel="manifest" href="manifest.json">
     <link href="../css/login.css" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="../js/jquery.js"></script>
-    <title>Реєст <?= Base::$app->app_name ?></title>
+    <title>Реєстр <?= Base::$app->app_name ?></title>
 </head>
 <?php if (!isset($_SESSION['access'])) : ?>
     <!-- Форма авторизации на страничке -->
@@ -110,7 +110,7 @@ if (isset($_POST['submit'])) {
         <div class="form-row">
             <input type="password" name="password" id="password" required><label for="password">Пароль</label>
         </div>
-        <input name="rememberMe" id="rememberMe" type="checkbox" value="1" checked><label for="rememberMe">Запамятати
+        <input name="rememberMe" id="rememberMe" type="checkbox" value="1" checked><label for="rememberMe">Запам'ятати
             мене</label>
         <button name="submit" class="bt_login" value="login">Увійти</button>
         <input type="button" value="Реєстр" onclick="window.location='./../app/index.php'">

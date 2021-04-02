@@ -49,7 +49,7 @@ if (isset($id_u) && isset($work)) {
     $JS = <<< SCRIPT
 <script type="text/javascript">
 $(function(){
-    selectWork({$id_u},{$work['id']});
+    selectWork({$id_u},{$work['id']})
 })
 </script>
 SCRIPT;

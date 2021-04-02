@@ -43,7 +43,7 @@ Base::$session->setRedirectParam();
     ?>
 
     <label for="work-motto">Девіз(ШИФР):</label>
-    <input type="text" name="Work[motto]" id="work-motto" title="Дивіз роботи." placeholder="Девіз..." required
+    <input type="text" name="Work[motto]" id="work-motto" title="Девіз роботи." placeholder="Девіз..." required
            autocomplete="off" class="w-100"><br>
     <label for="work-public">Результати публікації:</label>
     <input type="text" name="Work[public]" id='work-public' title="Наприклад: 1 патент, 2 статті"

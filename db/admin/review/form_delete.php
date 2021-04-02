@@ -1,5 +1,5 @@
 <?php
-// удаление рецензи
+// удаление рецензии
 use zukr\base\Base;
 use zukr\base\exceptions\InvalidArgumentException;
 use zukr\base\exceptions\UnauthorizedAccessException;

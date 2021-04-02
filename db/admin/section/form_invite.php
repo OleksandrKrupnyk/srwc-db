@@ -14,7 +14,7 @@ use zukr\work\WorkHelper;
 use zukr\work\WorkRepository;
 
 $wh = WorkHelper::getInstance();
-//Выберем только те работы котрые реально существуют
+//Выберем только те работы которые реально существуют
 $works = (new WorkRepository())->getWorksForInvitationAndSection();
 $sections = SectionHelper::getInstance()->getDropdownList();
 ?>

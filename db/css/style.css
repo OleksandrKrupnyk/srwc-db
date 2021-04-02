@@ -671,6 +671,43 @@ td > output.balls {
     border: none;
   }
 }
+.window-background {
+  background: rgba(1, 1, 1, 0.5);
+  display: none;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+.window-background .window-popup {
+  background-color: white;
+  height: 90%;
+  margin: 15px auto;
+  width: 75%;
+}
+.window-background .window-popup .title-row {
+  display: flex;
+  flex-direction: row;
+  height: 20px;
+  justify-content: space-between;
+}
+.window-background .window-popup .title-row .window-title {
+  padding: 1em;
+}
+.window-background .window-popup .title-row .window-close-btn {
+  cursor: pointer;
+  margin: 1em;
+}
+.window-background .window-popup .window-content {
+  height: 90%;
+  padding: 1em;
+}
+.window-background .window-popup .window-content iframe.window-iframe {
+  height: 100%;
+  width: 100%;
+}
+
 .toggle {
   position: relative;
   display: block;

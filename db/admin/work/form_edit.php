@@ -48,7 +48,7 @@ Base::$session->setRedirectParam();
     ?>
     <br>
     <label for="work-motto">Девіз(ШИФР):</label>
-    <input type="text" name="Work[motto]" id="work-motto" title="Дивіз роботи."
+    <input type="text" name="Work[motto]" id="work-motto" title="Девіз роботи."
            value="<?= htmlspecialchars($work['motto']) ?>"
            placeholder="Девіз..." required
            autocomplete="off" class="w-100"><br>
@@ -79,7 +79,7 @@ Base::$session->setRedirectParam();
                   placeholder="Зауваження та коментарії"
                   class="comments w-100"><?= htmlspecialchars($work['comments']) ?></textarea>
         <label>Сумма балів за рецензію :</label>
-        <mark title="Отримана шляхом сумуваня двох рейензій"><?= $work['balls'] ?></mark>
+        <mark title="Отримана шляхом сумування двох рецензій"><?= $work['balls'] ?></mark>
         <br>
     </fieldset>
     <input type="submit" value="Зберегти та вийти" name="save+exit">
@@ -87,14 +87,15 @@ Base::$session->setRedirectParam();
     <input type="hidden" name="action" value="work_edit">
     <input type="hidden" name="id_w" value="<?= $work['id'] ?>">
 </form>
-<!-- Форма загрузкки файлов работы при её редактировании -->
+<!-- Форма загрузки файлов работы при её редактировании -->
 <form class="addWorkFiles form" enctype="multipart/form-data" method="post" action="action.php">
     <fieldset>
         <legend>Завантаження</legend>
         <?=list_files($_GET['id_w']) ?>
         <fieldset>
             <legend>Оберіть тип файлу:</legend>
-            <label>Текст з роботою</label><input type="radio" name="typeoffile" value="common" checked/>
+            <label>Текст з роботою</label><!--suppress HtmlFormInputWithoutLabel -->
+            <input type="radio" name="typeoffile" value="common" checked/>
             <label>Інші файли</label><input type="radio" name="typeoffile" value="information"/>
             <label>Тези</label><input type="radio" name="typeoffile" value="tesis"/>
             <label>Презентація</label><input type="radio" name="typeoffile" value="presentation"/>

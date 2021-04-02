@@ -2,6 +2,8 @@
 
 
 namespace zukr\base;
+
+use DebugBar\StandardDebugBar;
 use Monolog\Logger as MonologLogger;
 use zukr\base\exceptions\NoLogFileException;
 
@@ -15,7 +17,7 @@ use zukr\base\exceptions\NoLogFileException;
  */
 class Base
 {
-    public const KEY_ON  = 1;
+    public const KEY_ON = 1;
     public const KEY_OFF = 0;
     private static $isInit = false;
 
@@ -44,6 +46,10 @@ class Base
      * @var Dir
      */
     public static $dir;
+    /**
+     * @var
+     */
+    protected static $debugBar;
 
     /**
      *
@@ -93,6 +99,22 @@ class Base
             return null;
         }
         return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getDebugBar()
+    {
+        return self::$debugBar;
+    }
+
+    /**
+     * @param StandardDebugBar $debugBar
+     */
+    public static function setDebugBar(StandardDebugBar $debugBar): void
+    {
+        self::$debugBar = $debugBar;
     }
 
 }

@@ -244,7 +244,7 @@ class AuthorsLeadersAction implements ApiActionsInterface
                     'title' => 'Відокремити від роботи'
                 ]);
             }
-            $href = 'action.php?action=author_edit&id_l=' . $author['id'];
+            $href = 'action.php?action=author_edit&id_a=' . $author['id'];
             $item = Html::a(PersonHelper::getShortName($author), $href, [
                     'title' => 'Ред.:' . PersonHelper::getShortName($author)
                 ]) . $content;
