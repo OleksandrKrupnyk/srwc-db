@@ -49,7 +49,7 @@ try {
         'invitation',
         'invitation2',
         'ahostel',
-        'badge_autors',
+        'badge_authors',
         'badge_leaders',
         'charters',
         'diploms',
