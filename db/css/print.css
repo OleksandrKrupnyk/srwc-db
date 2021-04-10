@@ -5,14 +5,12 @@
   src: url(../fonts/unn.ttf);
   /* Путь к файлу со шрифтом */
 }
-
 @font-face {
   font-family: unn;
   /* Имя шрифта */
   src: url(../fonts/unn.ttf);
   /* Путь к файлу со шрифтом */
 }
-
 * {
   font-weight: normal;
   /*   border: 1px dashed #ccc;*/
@@ -23,81 +21,68 @@
 }
 
 .v_invitation_1 {
-  padding: 0 1cm;
   border: 1px dashed gray;
+  padding: 0 1cm;
 }
-
 .v_invitation_1 .hGERB {
-  padding-bottom: 12pt;
-  margin-left: 7.8cm;
-  width: 86px;
   height: 120px;
+  margin-left: 7.8cm;
+  padding-bottom: 12pt;
+  width: 86px;
 }
-
 .v_invitation_1 .hMON {
-  letter-spacing: 1px;
-  font-weight: bold;
   font-size: 12.5pt;
+  font-weight: bold;
+  letter-spacing: 1px;
   padding-bottom: 16pt;
   text-align: center;
 }
-
 .v_invitation_1 .hDDTUfull, .v_invitation_1 .hDDTUshort {
   font-size: 12.5pt;
   font-weight: bold;
   text-align: center;
 }
-
 .v_invitation_1 .hDDTUshort, .v_invitation_1 .hMAIL {
+  display: block;
   padding-bottom: 12pt;
   text-align: center;
-  display: block;
 }
-
 .v_invitation_1 .hMAIL > span {
   text-decoration: underline;
 }
-
 .v_invitation_1 .hADRESS {
   font-size: 12pt;
   text-align: center;
 }
-
 .v_invitation_1 .hDATA {
   padding-bottom: 6pt;
 }
-
 .v_invitation_1 .hDATA span {
-  text-decoration: underline;
   font-family: handwrite;
   font-size: 14pt;
+  text-decoration: underline;
 }
-
 .v_invitation_1 #rectory {
   margin-left: 10cm;
   margin-top: 1cm;
 }
-
 .v_invitation_1 #message {
   margin-top: 1cm;
 }
-
 .v_invitation_1 #message p {
   margin: 3pt 0;
   text-align: justify;
   text-indent: 20px;
 }
-
 .v_invitation_1 #message2 p {
   margin: 3pt 0;
+  margin-top: 0;
   text-align: justify;
   text-indent: 20px;
-  margin-top: 0;
 }
-
 .v_invitation_1 #message2 ol {
-  margin-top: 0;
   margin-left: 1.25cm;
+  margin-top: 0;
 }
 
 ol {
@@ -105,30 +90,28 @@ ol {
 }
 
 .v_invitation_1, .v_invitation_2 {
-  width: 18cm;
   font-family: "Times New Roman", Times, serif;
   font-weight: normal;
+  width: 18cm;
 }
-
 .v_invitation_1 #golova, .v_invitation_2 #golova {
   float: left;
   margin-left: 1.5cm;
   padding-top: 1em;
   width: 45%;
 }
-
 .v_invitation_1 #podpis, .v_invitation_2 #podpis {
   margin-left: 11.5cm;
   padding-bottom: 30pt;
   padding-top: 1em;
 }
 .v_invitation_1 #dstuheader, .v_invitation_1 #dstuheader2, .v_invitation_2 #dstuheader, .v_invitation_2 #dstuheader2 {
-  background-image: url(../img/dstuheader5.jpg);
+  background-image: url(../img/dstuheader6.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 16cm auto;
   height: 7.5cm;
-  margin-left: 2cm;
+  margin: 0 auto;
   width: 16cm;
 }
 
@@ -136,11 +119,9 @@ ol {
   margin-left: 15.5cm;
   width: 2.2cm;
 }
-
 .v_invitation_2 #listsudents_title, .v_invitation_2 #univer_title {
   text-align: center;
 }
-
 .v_invitation_2 #message p {
   margin: 3pt 0;
   text-align: justify;
@@ -517,10 +498,10 @@ display:none;
 @media print {
   /* Make page break always when see on print*/
   .whom-address,
-  #podpis_image,
-  .charters,
-  .diplom,
-  .gratitudes {
+#podpis_image,
+.charters,
+.diplom,
+.gratitudes {
     page-break-after: always;
   }
 
@@ -579,54 +560,46 @@ display:none;
     border: none;
     padding: 0;
   }
-
   .v_invitation_1 .hGERB {
-    padding-bottom: 12pt;
     margin-left: 7.8cm;
+    padding-bottom: 12pt;
   }
-
   .v_invitation_1 .hMON {
-    letter-spacing: 1px;
-    font-weight: bold;
+    display: block;
     font-size: 12.5pt;
+    font-weight: bold;
+    letter-spacing: 1px;
     padding-bottom: 16pt;
     text-align: center;
-    display: block;
   }
-
   .v_invitation_1 .hDDTUfull, .v_invitation_1 .hDDTUshort {
+    display: block;
     font-size: 12.5pt;
     font-weight: bold;
     text-align: center;
-    display: block;
   }
-
   .v_invitation_1 .hDDTUshort, .v_invitation_1 .hMAIL {
+    display: block;
     padding-bottom: 12pt;
     text-align: center;
-    display: block;
   }
-
   .v_invitation_1 .hMAIL > span {
     text-decoration: underline;
   }
-
   .v_invitation_1 .hADRESS {
+    display: block;
     font-size: 12pt;
     text-align: center;
-    display: block;
   }
-
   .v_invitation_1 .hDATA {
+    display: block;
     padding-bottom: 6pt;
     text-align: center;
-    display: block;
   }
-
   .v_invitation_1 .hDATA span {
-    text-decoration: underline;
     font-family: unn;
     font-size: 14pt;
+    text-decoration: underline;
   }
 }
 /* END Print*/
@@ -636,8 +609,8 @@ display:none;
 
 #test {
   color: #7b68ee;
-  font-size: 12pt;
   font-family: unn;
+  font-size: 12pt;
 }
 
 /*# sourceMappingURL=print.css.map */
