@@ -27,7 +27,7 @@ interface RecordInterface
     public static function getPrimaryKey();
 
     /**
-     * Повертаэ назву таблиці
+     * Повертає назву таблиці
      *
      * @return string  Назва таблиці
      */

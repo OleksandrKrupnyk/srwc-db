@@ -133,6 +133,7 @@ $_type = $session->getFlash('recordSaveType', '');
         'test_edit',
         'error_list',
         'invitation_list',
+        'template_list',
     ])) {
         execute_get_action($action);
     } else {

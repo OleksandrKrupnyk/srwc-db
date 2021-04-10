@@ -186,7 +186,7 @@ return [
             [
                 'value' => 'Скелет програми',
                 'href'  => 'programa.php',
-                'title' => 'Программа конференції',
+                'title' => 'Програма конференції',
             ],
             [
                 'value' => 'Розподіл секцій за аудиторіями',
@@ -227,7 +227,7 @@ return [
                         'href' => 'lists.php?action=diploms',
                     ],
                     [
-                        'value' => 'Грамоты',
+                        'value' => 'Грамоти',
                         'href' => 'lists.php?action=charters',
                     ],
                     [
@@ -290,6 +290,12 @@ return [
                     ],
                 ]
             ],
+            [
+                'value' => 'Шаблони',
+                'href' => 'action.php?action=template_list',
+                'title' => '',
+                'class' => 'special',
+            ]
 
         ],
     ]

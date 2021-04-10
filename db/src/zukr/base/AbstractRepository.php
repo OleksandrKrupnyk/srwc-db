@@ -13,7 +13,9 @@ namespace zukr\base;
  */
 abstract class AbstractRepository implements BaseRepositoryInterface
 {
-    /** @var Record */
+    /**
+     * @var Record
+     */
     protected $model;
     /**
      * @var string|Record Назва класу

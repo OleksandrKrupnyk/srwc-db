@@ -27,7 +27,7 @@ class StatusRepository extends AbstractRepository
     private $statuses;
 
     /**
-     * Список повних назв науквоких статусів
+     * Список повних назв наукових статусів
      *
      * @return array Список наукових статусів
      */
