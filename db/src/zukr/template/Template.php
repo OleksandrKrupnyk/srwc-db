@@ -22,7 +22,9 @@ namespace zukr\template;
  */
 class Template extends \zukr\base\Record
 {
-
+    protected const DONT_STRIP_TAGS = [
+        'content'
+    ];
     /**
      * @var int ІД запису
      */

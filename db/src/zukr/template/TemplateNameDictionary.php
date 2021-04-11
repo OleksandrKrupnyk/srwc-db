@@ -18,4 +18,9 @@ class TemplateNameDictionary
      * Сторінка завантаження запрошень на конференцію учасниками (журі)
      */
     public const INVITATION_PAGE_DESCRIPTION = 'INVITATION_PAGE_DESCRIPTION';
+
+    public static function getAll(): array
+    {
+        return (new \ReflectionClass(self::class))->getConstants();
+    }
 }

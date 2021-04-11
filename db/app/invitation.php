@@ -45,18 +45,10 @@ if (empty($id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT))):
     </head>
     <body>
     <div class="invitation-block">
-        <h1>Запрошення для учасників конкурсу</h1>
-        <p>2-4 квітня 2018 року на поштові адреси ВНЗ направлені листи ректорам з повідомленням про авторів студентських
-            наукових робіт, яких запрошено до участі в конференції.
-        </p>
-        <p>У кожному конверті 3 аркуші:</p>
-        <ul>
-            <li>лист на офіційному бланку університету зі списком журі;</li>
-            <li>додаток 1 зі списком студентів;</li>
-            <li>додаток 2 з інформацією про конференцію.</li>
-        </ul>
-        <p>Електронну копію повідомлення ви можете переглянути та роздрукувати на цій сторінці скориставшись відповідними
-            кнопками.</p>
+        <?php
+        echo (new \zukr\template\TemplateService())
+            ->getBlockByName(\zukr\template\TemplateNameDictionary::INVITATION_PAGE_DESCRIPTION);
+        ?>
     </div>
     <br/>
     <?= Html::select('id_u', null, $univers, ['id' => 'seluniverinv']) ?>

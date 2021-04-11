@@ -6,6 +6,8 @@ namespace zukr\template;
 
 use zukr\base\AbstractRepository;
 use zukr\base\Base;
+use zukr\base\exceptions\InvalidArgumentException;
+use zukr\base\Record;
 
 /**
  * Class TemplateRepository
@@ -35,7 +37,7 @@ class TemplateRepository extends AbstractRepository
         $list = [];
         foreach ($data as $item) {
             $model = clone $this->model;
-            $model->load($item,false);
+            $model->load($item, false);
             $list[] = $model;
         }
         return $list;
@@ -57,6 +59,30 @@ class TemplateRepository extends AbstractRepository
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());
             return [];
+        }
+    }
+
+    /**
+     * @param string $blockName Назва блоку
+     * @return ?Template
+     */
+    public function getLastVersionPublishedBlock(string $blockName)
+    {
+        try {
+            $table = $this->model::getTableName();
+            $model = clone $this->model;
+            $data = Template::find()
+                ->where('name', $blockName)
+                ->where('published', (string)Record::KEY_ON)
+                ->getOne($table);
+            if (empty($data)) {
+                throw new InvalidArgumentException('Empty data for model ' . $this->__className);
+            }
+            $model->load($data, false);
+            return $model;
+        } catch (\Exception $e) {
+            Base::$log->error($e->getMessage());
+            return null;
         }
     }
 }

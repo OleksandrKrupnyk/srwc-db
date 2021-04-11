@@ -16,9 +16,13 @@ abstract class Record implements RecordInterface
      * Інформувати користувача про зміні в записі
      */
     protected const NOTIFICATION_ACTIONS = true;
-    public const    KEY_ON               = 1;
-    public const    KEY_OFF              = 0;
-    protected const FLUSH_CACHE          = false;
+    public const    KEY_ON = 1;
+    public const    KEY_OFF = 0;
+    protected const FLUSH_CACHE = false;
+    /**
+     * Список полів з яких не слід видаляти теги html
+     */
+    protected const DONT_STRIP_TAGS = [];
     /**
      * @var bool
      */
@@ -65,7 +69,7 @@ abstract class Record implements RecordInterface
      *  load(['a'=>1],false)
      *
      * ```
-     * @param array            $arrayData
+     * @param array $arrayData
      * @param bool|string|null $form
      */
     public function load(array $arrayData, $form = null)
@@ -82,7 +86,15 @@ abstract class Record implements RecordInterface
 
         if (!empty($data)) {
             foreach ($data as $field => $value) {
-                $this->{$field} = ($form === false) ? ($value) : \strip_tags(\trim($value));
+                if ($form === false) {
+                    $this->{$field} = ($value);
+                } else {
+                    if (!\in_array($field, static::DONT_STRIP_TAGS)) {
+                        $this->{$field} = \strip_tags(\trim($value));
+                    } else {
+                        $this->{$field} = (\trim($value));
+                    }
+                }
             }
         }
     }

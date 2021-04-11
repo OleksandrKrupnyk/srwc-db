@@ -43,7 +43,8 @@ if (in_array($actionPost, [
     'review_edit',
     'section_add',
     'section_edit',
-    'invitation_add'
+    'invitation_add',
+    'template_edit',
 ])) {
     execute_post_action($actionPost);
 }
@@ -85,6 +86,8 @@ $_type = $session->getFlash('recordSaveType', '');
         <script type="text/javascript" src="../js/jquery.min.js"></script>
         <script type="text/javascript" src="../js/notify.js"></script>
         <script type="text/javascript" src="../js/jquery-confirm.min.js"></script>
+        <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+        <script type="text/javascript" src="../ckeditor/config.js"></script>
         <script type="text/javascript" src="../js/menuscript.js"></script>
         <script type="text/javascript" src="../js/comon.js"></script>
         <script type="text/javascript" src="../js/admin.js" async></script>
@@ -134,6 +137,7 @@ $_type = $session->getFlash('recordSaveType', '');
         'error_list',
         'invitation_list',
         'template_list',
+        'template_edit',
     ])) {
         execute_get_action($action);
     } else {

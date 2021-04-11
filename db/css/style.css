@@ -621,6 +621,11 @@ td > output.balls {
   font-weight: bold;
 }
 
+input.disabled {
+  background-color: #ccc;
+  border: none;
+}
+
 /*Вывод на печать*/
 @media print {
   *, * *, * * *, th, td, li, ol, tr, .fistPlace td, .secondPlace td, .invitateWork td, header {

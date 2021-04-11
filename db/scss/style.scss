@@ -691,7 +691,10 @@ td > output.balls {
   color: white;
   font-weight: bold;
 }
-
+input.disabled {
+  background-color: #ccc;
+  border: none;
+}
 
 /*Вывод на печать*/
 @media print {
