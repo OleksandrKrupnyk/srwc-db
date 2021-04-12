@@ -19,15 +19,16 @@ use zukr\base\helpers\ArrayHelper;
  * @property string $SHOW_FILES_LINK
  * @property string $SHOW_PROGRAMA
  * @property string $SHOW_RAITING
- * @property string DENNY_EDIT_REVIEW
- * @property string DATEPL
- * @property string DATEPO
- * @property string N_AUTORS
- * @property string N_LEADERS
- * @property string NYEARS
- * @property string ORDERPL
- * @property string ORDERPO
- * @property string YEAR
+ * @property string $MARK_INVITE_WORKS
+ * @property string $DENNY_EDIT_REVIEW
+ * @property string $DATEPL
+ * @property string $DATEPO
+ * @property string $N_AUTORS
+ * @property string $N_LEADERS
+ * @property string $NYEARS
+ * @property string $ORDERPL
+ * @property string $ORDERPO
+ * @property string $YEAR
  *
  * @package zukr\base
  */
@@ -46,6 +47,7 @@ class Params implements ArrayAccess, Countable, Iterator, Serializable
         'DENNY_EDIT_REVIEW',
         'FILL_EMPTY_GUID',
         'INVITATION',
+        'MARK_INVITE_WORKS',
         'NYEARS',
         'N_AUTORS',
         'N_LEADERS',
