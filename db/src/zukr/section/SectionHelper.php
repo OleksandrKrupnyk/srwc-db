@@ -83,4 +83,18 @@ class SectionHelper extends RecordHelper
         }
         return $this->sectionRepository;
     }
+
+    /**
+     * Повертає список секцій індексований за ІД секції
+     *
+     * @return array Список секцій
+     */
+    public function getSections(): array
+    {
+        $list = [];
+        foreach ($this->getAllSections() as $id => $section) {
+            $list[$id] = $section;
+        }
+        return $list;
+    }
 }

@@ -37,6 +37,10 @@ class Section extends Record
      * @var string Аудиторія за замовчуванням
      */
     public $room = '7-53';
+    /**
+     * @var string Посилання
+     */
+    public $link = '#';
 
     /**
      * @return string

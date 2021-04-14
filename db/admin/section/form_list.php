@@ -7,8 +7,9 @@ use zukr\section\SectionHelper;
 Base::$session->setFromParam();
 $sh = SectionHelper::getInstance();
 $list = [];
-foreach ($sh->getDropdownList() as $id => $item) {
-    $list[$id] = Html::tag('span', $item, ['class' => 'editable'])
+foreach ($sh->getSections() as $id => $item) {
+    $list[$id] = Html::tag('span', $item['section'] ?? '', ['class' => 'editable']) . '<br/>'
+        . Html::a($item['link'] ?? '', $item['link'] ?? '#', ['class' => 'editable-connect-meet'])
         . Html::a('', '#', ['class' => 'js-delete-list-item']);
 }
 ?>
