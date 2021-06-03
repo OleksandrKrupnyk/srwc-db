@@ -496,7 +496,7 @@ class StringHelper
      */
     public static function right($str, $num)
     {
-        $len = \strlen($str);
+        $len = \mb_strlen($str);
         return \mb_substr($str, $len - $num, $len);
     }
 }
