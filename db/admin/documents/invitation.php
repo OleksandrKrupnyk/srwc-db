@@ -5,6 +5,8 @@ use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
 use zukr\pdf\PdfWrapper;
+use zukr\template\TemplateNameDictionary;
+use zukr\template\TemplateService;
 
 $db = Base::$app->db;
 
@@ -40,6 +42,9 @@ $settings = Base::$param;
 $invitations = '';
 if (!empty($universList)) {
     $gerb = PrintGerb($empty = true);
+    $template = (new TemplateService())
+        ->getBlockByName(TemplateNameDictionary::INVITATION);
+    $replaceService = (new \zukr\base\ReplacerService());
     foreach ($universList as $row) {
         $rector = (!empty($row['rector_r']))
             ? $row['rector_r']
@@ -53,7 +58,12 @@ if (!empty($universList)) {
             }
             $leaders .= '<div id="message2"><p>Запрошуємо взяти участь у роботі журі конкурсної комісії конференції представників вашого ВНЗ.</p>' . Html::ol($list) . '</div>';
         }
-
+        $invitationItem = $replaceService->makeReplace($template, [
+            '{@posada}' => $row['posada'],
+            '{@univerrod}' => $row['univerrod'],
+            '{@rector}' => $rector,
+            '{@leaders}'=>$leaders,
+        ]);
         $invitation = <<<__INVITATION__
 <div class="v_invitation_1">
     <!-- БЛАНК УНИВЕРСИТЕТА -->
@@ -64,22 +74,7 @@ if (!empty($universList)) {
     <div class = "hADRESS">вул. Дніпробудівська, 2 м. Кам’янське, 51918, тел./факс (0569) 538523</div>
     <div class = "hMAIL">Е-mail: <span>science@dstu.dp.ua</span> код ЄДРПОУ 02070737</div>
     {$gerb}
-    <div id='rectory'>{$row['posada']} {$row['univerrod']}<br>{$rector}</div>
-    <div id="message">
-        <p>Галузева конкурсна комісія Всеукраїнського конкурсу студентських наукових робіт 
-        з галузі &quot;Електротехніка та електромеханіка&quot; запрошує до участі у підсумковій науково-практичній конференції 
-        авторів кращих робіт. </p>
-        <p>Список запрошених авторів наукових робіт наведено у Додатку 1.</p>
-        <p>Відповідно до &quot;Положення про  проведення Всеукраїнського конкурсу студентських наукових робіт  з природничих, 
-        технічних та гуманітарних наук&quot; від {$settings->DATEPO} №{$settings->ORDERPO} автор наукової 
-        роботи, який  не  брав  участі  у  підсумковій науково-практичній конференції, не може бути претендентом на нагородження.
-        </p>
-    </div>
-    {$leaders}
-    <div id="message2">
-    <p>Інформація про підсумкову конференцію наведена у Додатку 2.</p>
-    </div>
-    <div id="podpis">Перший проректор ДДТУ,<br>Голова галузевої конкурсної комісії<br><br>_______________   В.М.Гуляєв</div>
+    $invitationItem
 </div>
 <div class="page-break"></div> 
 <!-- Окончание БЛАНК УНИВЕРСИТЕТА -->

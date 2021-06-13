@@ -17,6 +17,8 @@ use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
 use zukr\leader\LeaderHelper;
 use zukr\position\PositionRepository;
+use zukr\template\TemplateNameDictionary;
+use zukr\template\TemplateService;
 use zukr\univer\UniverHelper;
 use zukr\workauthor\WorkAuthorRepository;
 
@@ -46,8 +48,9 @@ if (empty($id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT))):
     <body>
     <div class="invitation-block">
         <?php
-        echo (new \zukr\template\TemplateService())
-            ->getBlockByName(\zukr\template\TemplateNameDictionary::INVITATION_PAGE_DESCRIPTION);
+        $template = (new TemplateService())
+            ->getBlockByName(TemplateNameDictionary::INVITATION_PAGE_DESCRIPTION);
+        echo (new \zukr\base\ReplacerService())->makeReplace($template);
         ?>
     </div>
     <br/>

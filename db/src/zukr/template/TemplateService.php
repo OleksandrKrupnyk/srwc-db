@@ -42,25 +42,10 @@ class TemplateService
                 throw new InvalidArgumentException('Block page not found with name: ' . $blockName);
 
             }
-            return $this->replaceParams($blockPage->content, []);
+            return $blockPage->content;
         } catch (\Throwable $e) {
             Base::$log->error($e->getMessage());
             return '';
         }
     }
-
-    /**
-     * @param string $content
-     * @param array $replacementBlock
-     * @return string
-     */
-    protected function replaceParams(string $content, array $replacementBlock)
-    {
-        if (empty($content)) {
-            return '';
-
-        }
-        return $content;
-    }
-
 }
