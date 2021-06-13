@@ -10,7 +10,9 @@ use zukr\base\Base;
 /**
  * Class SectionRepository
  *
+ *
  * @method getSection()
+ *
  * @package      zukr\section
  * @author       Alex.Krupnik <krupnik_a@ukr.net>
  * @copyright (c), Thread

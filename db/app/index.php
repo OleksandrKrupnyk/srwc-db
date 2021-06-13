@@ -9,13 +9,14 @@ use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\html\Html;
 
+/**
+ * @var array $settings
+ */
 Base::init();
 $settings = ArrayHelper::merge($settings, Base::$param->getAllsettingValue());
 global $link;
-if (isset($_GET['action'])) {
-    if ($_GET['action'] === 'file_get') {
-        include "ag_file_get_content.php";
-    }
+if (isset($_GET['action']) && $_GET['action'] === 'file_get') {
+    include __DIR__ . DIRECTORY_SEPARATOR . 'ag_file_get_content.php';
 }
 
 $setData = static function () use ($link, $settings) {
@@ -80,7 +81,7 @@ ORDER BY w.id
     $data = [];
     $result = @mysqli_query($link, $query);
     // echo "<pre>{$query}</pre>";
-    while ($result !== false &&  $row = mysqli_fetch_array($result)) {
+    while ($result !== false && $row = mysqli_fetch_array($result)) {
         $s = [];
         $diplomas = [];
 
@@ -105,10 +106,11 @@ ORDER BY w.id
             )
             : $row['title'];
 
-
         $s['univer'] = $row['univer'];
-        //        $s['invitation'] = ($row['invitation']) ? "<span class='invite2018'>&nbsp; Авторів роботи запрошено до участі у конференції&nbsp;</span>" : '';
-        $s['invitation'] = '';
+
+        $s['invitation'] = ('1' === Base::$param->MARK_INVITE_WORKS && !empty($row['invitation']))
+            ? "<span class='invite2018'>&nbsp; Авторів роботи запрошено до участі у конференції&nbsp;</span>"
+            : '';
 
         // Дипломы
         if ('D' !== $row['place1'] && $row['place1'] !== null) {
@@ -141,11 +143,11 @@ if (!isset($_GET['action'])) {
 <html lang="ua">
 <head>
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <meta content="Конкурс,СНР,Електротехніка,електромеханіка,ДДТУ,ЕЛМ,студентських,науових,робіт,конференція"
+    <meta content="Конкурс,СНР,Електротехніка,електромеханіка,ДДТУ,ЕЛМ,студентських,наукових,робіт,конференція"
           name="keywords">
     <meta content="Електротехніка та електромеханіка - реєстр робіт Всеукраїнського конкурсу студентських наукових робіт"
           name="description">
-    <?php include_once 'analyticstracking.php'; ?>
+    <?php include_once __DIR__ . DIRECTORY_SEPARATOR . 'analyticstracking.php'; ?>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="../css/userstyle.min.css" type="text/css" rel="stylesheet">
     <title><?= Base::$app->app_name ?></title>
@@ -155,7 +157,7 @@ if (!isset($_GET['action'])) {
     <?php
     if ($_GET['action'] === 'review_view') {
         include "ag_form_view_review.php";
-    }?>
+    } ?>
 <?php else: ?>
     <h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт
         <br>&quot;Електротехніка та електромеханіка&quot; <?= Base::$param->NYEARS ?> н.р.</h1>
@@ -170,8 +172,8 @@ if (!isset($_GET['action'])) {
         &nbsp;&nbsp;&nbsp;&nbsp;навчальних років.
     </h4>
 
-<!--    <h4><a href='http://elm-dstu-edu.org.ua/konkurs/index.php/digest/32-zbirnik-tez-2018'-->
-<!--           title='Збірник тез доповідей 2017-2018 н.р.'>Збірник тез доповідей 2018</a>&#8658;</h4>-->
+    <!--    <h4><a href='http://elm-dstu-edu.org.ua/konkurs/index.php/digest/32-zbirnik-tez-2018'-->
+    <!--           title='Збірник тез доповідей 2017-2018 н.р.'>Збірник тез доповідей 2018</a>&#8658;</h4>-->
     <?php if ('1' === $settings['SHOW_PROGRAMA']): ?>
         <h4><a href='./programa.php'>Макет програми конференції&#8658;</a></h4>
     <?php endif; ?>
@@ -199,7 +201,8 @@ if (!isset($_GET['action'])) {
             <?php foreach ($data as $d): ?>
                 <tr>
                     <td class='numero'><?= $d['id'] ?></td>
-                    <td title="Останні зміни:<?= $d['date'] ?>" class='title'><?= $d['title'] ?><br><?= $d['univer'] ?><?= $d['invitation'] ?><?= $d['diploma'] ?? '' ?></td>
+                    <td title="Останні зміни:<?= $d['date'] ?>" class='title'><?= $d['title'] ?>
+                        <br><?= $d['univer'] ?><?= $d['invitation'] ?><?= $d['diploma'] ?? '' ?></td>
                     <td class='review'><?= $d['review'] ?></td>
                     <td class='section'><?= $d['section'] ?></td>
                 </tr>
@@ -216,7 +219,7 @@ if (!isset($_GET['action'])) {
     <?php else: ?>
         <h1>Конкурс СНР <?= Base::$param->NYEARS ?> н.р. завершено. Результати переміщено в архів.</h1>
         <!--
-        Закоментировав предидущую строку раскоментируй следующую (2018.06.13)
+        Закоментировав предыдущую строку расскоментируй следующую (2018.06.13)
         <h1>Вибачте Реєст знаходиться в обробці. Завітайте на нашу сторінку пізніше.</h1>
         <h2>(Зараз. Роботи отримують рецензію. Після цього процесу та підбиття підсумків буде оприлюднено рейтинг робіт, а також інформація про роботи автори яких запрошено на підсумкову конференцію.)</h2>
         <p>Після офіційної розсилки запрошень до ВНЗ учасників конкурсу, а також після розислки запрошень на електронні поштові скриньки на цій сторінці можна буде завантажити відскановані копії запршень для оформлення відряджень.</p>
