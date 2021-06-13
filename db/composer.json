@@ -9,9 +9,9 @@
   ],
   "require": {
     "joshcam/mysqli-database-class": "2.9.3",
-    "monolog/monolog": "2.0.1",
-    "vlucas/phpdotenv": "3.6.0",
-    "tedivm/stash": "0.14.2",
+    "monolog/monolog": "2.2.0",
+    "vlucas/phpdotenv": "5.3.0",
+    "tedivm/stash": "0.16.0",
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mysqli": "*",
@@ -19,19 +19,16 @@
     "ext-gd": "*",
     "ext-intl": "*",
     "ext-iconv": "*",
-    "mpdf/mpdf": "8.0.4",
-    "maximebf/debugbar": "1.16.1",
+    "ext-pcre": "*",
+    "mpdf/mpdf": "8.0.11",
+    "maximebf/debugbar": "1.16.5",
     "ramsey/uuid": "^4.1",
     "ext-fileinfo": "*",
     "league/mime-type-detection": "^1.7"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
-    "php-console/php-console": "3.1.8",
-    "codeception/codeception": "4.1.1",
-    "codeception/module-phpbrowser": "^1.0.0",
-    "codeception/module-asserts": "^1.0.0",
-    "codeception/module-db": "^1.0"
+    "php-console/php-console": "3.1.8"
   },
   "autoload": {
     "psr-4": {
