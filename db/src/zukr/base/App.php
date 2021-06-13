@@ -9,12 +9,13 @@ use Stash\Driver\FileSystem;
 use Stash\Driver\Redis;
 use Stash\Pool;
 use zukr\base\database\MysqliDbWrapper as DB;
+use zukr\base\helpers\FileSystemHelper;
 
 /**
  * Class App
  *
  * @property string app_name
- * @property DB     $db
+ * @property DB $db
  * @property string $_snrcrf
  * @package zukr\base
  */
@@ -62,7 +63,8 @@ class App
      */
     private function __construct()
     {
-        Dotenv::create(__DIR__ . '/../../../')->load();
+        $dotenv = Dotenv::createUnsafeImmutable(FileSystemHelper::normalizePath(__DIR__ . '/../../../'));
+        $dotenv->load();
         $this->setAppName(\getenv('APP_NAME'));
         $this->isCached = \getenv('CACHE');
         $this->isCached = $this->isCached ?? false;
