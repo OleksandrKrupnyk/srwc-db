@@ -102,7 +102,7 @@ ol {
 }
 
 .v_invitation_1, .v_invitation_2 {
-  font-family: "Times New Roman", Times, serif;;
+  font-family: "Times New Roman", Times, serif;
   font-weight: normal;
   width: 18cm;
 
@@ -127,25 +127,6 @@ ol {
     height: 7.5cm;
     margin: 0 auto;
     width: 16cm;
-  }
-}
-
-.v_invitation_2 {
-  #application1 {
-    margin-left: 15.5cm;
-    width: 2.2cm;
-  }
-
-  #listsudents_title, #univer_title {
-    text-align: center;
-  }
-
-  #message {
-    p {
-      margin: 3pt 0;
-      text-align: justify;
-      text-indent: 20px;
-    }
   }
 }
 
@@ -226,11 +207,9 @@ td {
 
 strong {
   font-weight: bold;
-  font-size: 10pt;
 }
 
 strong > ins {
-  font-size: 10pt;
   font-weight: bold;
   text-decoration: underline;
 }

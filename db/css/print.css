@@ -115,19 +115,6 @@ ol {
   width: 16cm;
 }
 
-.v_invitation_2 #application1 {
-  margin-left: 15.5cm;
-  width: 2.2cm;
-}
-.v_invitation_2 #listsudents_title, .v_invitation_2 #univer_title {
-  text-align: center;
-}
-.v_invitation_2 #message p {
-  margin: 3pt 0;
-  text-align: justify;
-  text-indent: 20px;
-}
-
 header {
   margin: 5mm 10% 2mm 10%;
   text-align: center;
@@ -202,11 +189,9 @@ td {
 
 strong {
   font-weight: bold;
-  font-size: 10pt;
 }
 
 strong > ins {
-  font-size: 10pt;
   font-weight: bold;
   text-decoration: underline;
 }
