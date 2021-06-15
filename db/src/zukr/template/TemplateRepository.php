@@ -73,12 +73,16 @@ class TemplateRepository extends AbstractRepository
             $model = clone $this->model;
             $data = Template::find()
                 ->where('name', $blockName)
-                ->where('published', (string)Record::KEY_ON)
+                ->orderBy('version')
                 ->getOne($table);
             if (empty($data)) {
                 throw new InvalidArgumentException('Empty data for model ' . $this->__className);
             }
             $model->load($data, false);
+            if ($model->published === Record::KEY_OFF) {
+                $model->content = '';
+                Base::$log->warning('Template ' . $model->name . ' (v.' . $model->version . ') is unpublished');
+            }
             return $model;
         } catch (\Exception $e) {
             Base::$log->error($e->getMessage());

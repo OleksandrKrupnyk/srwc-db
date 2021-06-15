@@ -1,6 +1,8 @@
 <?php
 
 use zukr\base\Base;
+use zukr\template\TemplateNameDictionary;
+use zukr\template\TemplateService;
 
 $db = Base::$app->db;
 $univers = $db->rawQuery("
@@ -10,20 +12,29 @@ WHERE w.invitation = 1 AND id<>1) ORDER BY u.univerfull;
 ");
 $envelops = '';
 if (!empty($univers)) {
+    $template = (new TemplateService())
+        ->getBlockByName(TemplateNameDictionary::ENVELOP2);
+    $replaceService = (new \zukr\base\ReplacerService());
     foreach ($univers as $row) {
-        $envelop = <<<__ENVELOP__
-    <div class="from-address">
-        <strong><ins>Всеукраїнський конкурс студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</ins></strong><br>
-        <em>вул.&nbsp;Дніпробудівська,2 м.&nbsp;Кам’янське,
-        <br>Дніпропетровська обл.</em><br><strong>51918</strong>
-    </div>
-    <div class="whom-address">
-        <strong><ins>{$row['univerfull']}</ins></strong><br>
-        <em>{$row['adress']}</em><br>
-        <strong>{$row['zipcode']}</strong>
-    </div>
-    <hr>
-__ENVELOP__;
+//        $envelop = <<<__ENVELOP__
+//    <div class="from-address">
+//        <strong><ins>Всеукраїнський конкурс студентських наукових робіт з галузі &quot;Електротехніка та електромеханіка&quot;</ins></strong><br>
+//        <em>вул.&nbsp;Дніпробудівська,2 м.&nbsp;Кам’янське,
+//        <br>Дніпропетровська обл.</em><br><strong>51918</strong>
+//    </div>
+//    <div class="whom-address">
+//        <strong><ins>{$row['univerfull']}</ins></strong><br>
+//        <em>{$row['adress']}</em><br>
+//        <strong>{$row['zipcode']}</strong>
+//    </div>
+//    <hr>
+//__ENVELOP__;
+
+        $envelop = $replaceService->makeReplace($template, [
+            '{@univerfull}' => $row['univerfull'],
+            '{@adress}' => $row['adress'],
+            '{@zipcode}' => $row['zipcode'],
+        ]);
         $envelops .= $envelop;
     }
 }

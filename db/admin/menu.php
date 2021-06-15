@@ -87,7 +87,7 @@ return [
             [
                 'value' => 'Список I',
                 'href'  => 'action.php?action=univer_invite',
-                'title' => 'Друкуєтья у 2-х примірниках (пошта, канцелярія)',
+                'title' => 'Друкується у 2-х примірниках (пошта, канцелярія)',
             ],
             [
                 'value' => 'Конверти I',
@@ -174,7 +174,7 @@ return [
                     ],
                     [
                         'value' => 'Бейджики Авторів',
-                        'href' => 'lists.php?action=badge_autors',
+                        'href' => 'lists.php?action=badge_authors',
                     ],
                     [
                         'value' => 'Бейджики Керівників',

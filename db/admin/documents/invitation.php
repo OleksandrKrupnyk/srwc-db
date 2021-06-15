@@ -10,7 +10,7 @@ use zukr\template\TemplateService;
 
 $db = Base::$app->db;
 
-$pdf = PdfWrapper::getInstance();
+
 $universList = $db->rawQuery("
 SELECT
   w.*,
@@ -62,7 +62,7 @@ if (!empty($universList)) {
             '{@posada}' => $row['posada'],
             '{@univerrod}' => $row['univerrod'],
             '{@rector}' => $rector,
-            '{@leaders}'=>$leaders,
+            '{@leaders}' => $leaders,
         ]);
         $invitation = <<<__INVITATION__
 <div class="v_invitation_1">
@@ -85,6 +85,7 @@ __INVITATION__;
     $invitations .= '<mark>Помилка запиту даних.</mark>';
 }
 if (filter_input(INPUT_GET, 'pdf')) {
+    $pdf = PdfWrapper::getInstance();
     $pdf->getPdf($invitations);
 } else {
     echo $invitations;

@@ -2,12 +2,17 @@
 global $link;
 //бейджики руководителей
 //Формируем запрос в БД
-$query = "SELECT CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio,univerfull,position,status,degree 
-                            FROM leaders 
-                                JOIN univers ON leaders.id_u = univers.id 
-                                LEFT JOIN  positions ON leaders.id_pos = positions.id 
-                                LEFT outer join statuses ON leaders.id_sat = statuses.id 
-                                LEFT outer join degrees ON leaders.id_deg = degrees.id";
+$query = "
+SELECT 
+       CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname) AS fio,
+       univerfull,
+       position,
+       status,degree 
+FROM leaders 
+    JOIN univers ON leaders.id_u = univers.id 
+    LEFT JOIN  positions ON leaders.id_pos = positions.id 
+    LEFT outer join statuses ON leaders.id_sat = statuses.id 
+    LEFT outer join degrees ON leaders.id_deg = degrees.id";
 if (
 !empty($listLeadersId = filter_input(INPUT_POST, 'works_id', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))
 ) {

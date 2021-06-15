@@ -23,9 +23,17 @@ class TemplateNameDictionary
      */
     public const ENVELOP = 'ENVELOP';
     /**
+     * Конверт Другого  інформаційного повідомлення
+     */
+    public const ENVELOP2 = 'ENVELOP2';
+    /**
      * Листи запрошень ректорам університетів
      */
     public const INVITATION = 'INVITATION';
+    /**
+     * Списки студентів запрошених до участі у підсумковій конференції
+     */
+    public const INVITATION2 = 'INVITATION2';
 
     public static function getAll(): array
     {

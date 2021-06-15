@@ -26,7 +26,9 @@ class ReplacerService
      */
     public function makeReplace(string $text, array $inputReplacer = []): string
     {
-
+        if (empty($text)) {
+            return '';
+        }
         $keyText = \md5($text);
         if (\array_key_exists($keyText, $this->texts)) {
             extract($this->texts[$keyText], EXTR_OVERWRITE);

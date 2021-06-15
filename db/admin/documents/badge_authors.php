@@ -3,26 +3,38 @@ global $link;
 if (
 !empty(($badge = filter_input(INPUT_GET, 'badge', FILTER_VALIDATE_INT)))
 ) {
-    $query = "SELECT univers.univerfull AS univerfull, concat(autors.name, '<br>', autors.suname) AS if_a, autors.id AS a_id FROM autors JOIN univers ON (autors.id_u = univers.id)
-                        WHERE autors.id = {$badge}";
+    $query = "
+SELECT univers.univerfull AS univerfull, 
+       concat(autors.name, '<br>', autors.suname) AS if_a, 
+       autors.id AS a_id 
+FROM autors 
+    JOIN univers ON (autors.id_u = univers.id)
+    WHERE autors.id = {$badge}";
 } elseif (
 !empty($listAutorsId = filter_input(INPUT_POST, 'works_id', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))
 ) {
     sort($listAutorsId);
-    $query = "SELECT univers.univerfull AS univerfull, concat(autors.name, '<br>', autors.suname) AS if_a, autors.id AS a_id FROM autors JOIN univers ON (autors.id_u = univers.id) ";
-    $query .= ' WHERE autors.id IN (' . implode(',', $listAutorsId) . ') GROUP BY a_id';
+    $listAutors = '(' . \implode(',', $listAutorsId) . ')';
+    $query = "
+SELECT univers.univerfull AS univerfull, 
+       concat(autors.name, '<br>', autors.suname) AS if_a, 
+       autors.id AS a_id 
+FROM autors 
+    JOIN univers ON (autors.id_u = univers.id) 
+WHERE autors.id IN {$listAutors} GROUP BY a_id;";
 } elseif (!isset($_GET['badge'])) {
     $query = "
-                            SELECT works.id AS id, 
-                            works.id_u AS id_u, univers.univerfull AS univerfull, 
-                                concat(autors.name,'<br>',autors.suname) 
-                              AS if_a, autors.id AS a_id 
-                            FROM (((works join wa on(wa.id_w = works.id)) 
-                                join autors on(wa.id_a = autors.id))  
-                                join univers on(works.id_u = univers.id)) 
-                            WHERE (works.invitation = '1' AND autors.bprint<>'1') 
-                            GROUP BY works.id,a_id  
-                            ORDER BY works.id,if_a;";
+SELECT works.id AS id, 
+works.id_u AS id_u, univers.univerfull AS univerfull, 
+    concat(autors.name,'<br>',autors.suname) 
+  AS if_a, autors.id AS a_id 
+FROM (((works join wa on(wa.id_w = works.id)) 
+    join autors on(wa.id_a = autors.id))  
+    join univers on(works.id_u = univers.id)) 
+WHERE (works.invitation = '1' AND autors.bprint<>'1') 
+GROUP BY works.id,a_id  
+ORDER BY works.id,if_a;
+";
 }
 echo '<div class="badges">';
 if (!empty($query)) {
