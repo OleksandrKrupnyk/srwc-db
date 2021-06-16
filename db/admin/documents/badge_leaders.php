@@ -1,5 +1,9 @@
 <?php
-global $link;
+
+use zukr\base\Base;
+use zukr\pdf\PdfWrapper;
+
+$db = Base::$app->db;
 //бейджики руководителей
 //Формируем запрос в БД
 $query = "
@@ -19,32 +23,40 @@ if (
     sort($listLeadersId);
     $queryWhere = ' WHERE leaders.id IN (' . implode(',', $listLeadersId) . ') GROUP BY leaders.id';
     $query .= $queryWhere;
+
 } else {
     $query .= (isset($_GET['badge']))
         ? " WHERE leaders.id = '{$_GET['badge']}' GROUP BY leaders.id"
         : " WHERE leaders.arrival='1' GROUP BY leaders.id";
     //echo $query;
 }
-echo '<div class="badges">';
 if (!empty($query)) {
-    $result = mysqli_query($link, $query);
-    while ($row = mysqli_fetch_array($result)) {
-        $badge = '<div class="badge">'
-            . '<div>Всеукраїнський конкурс студентських наукових робіт з галузі знань</div>'
-            . '<div>&quot;Електротехніка та електромеханіка&quot;</div>'
-            . '<div class="buniverfull">' . $row['univerfull'] . '</div>';
+    $results = $db->rawQuery($query);
+    $content = '';
+    foreach ($results as $badge) {
         $str = '';
-        if ($row['degree'] !== '-немає-') {
-            $str .= $row['degree'];
-            if ($row['status'] !== '-немає-') {
-                $str .= ', ' . $row['status'];
+        if ($badge['degree'] !== '-немає-') {
+            $str .= $badge['degree'];
+            if ($badge['status'] !== '-немає-') {
+                $str .= ', ' . $badge['status'];
             }
         } else {
-            $str .= $row['position'];
+            $str .= $badge['position'];
         }
-        $badge .= '<div class="bfio">' . $str . '<br>' . $row['fio'] . '</div>';
-        $badge .= '</div>';
-        echo $badge;
+
+        $content .= '
+<div class="badge">
+    <div>Всеукраїнський конкурс студентських наукових робіт з галузі знань</div>
+    <div>&quot;Електротехніка та електромеханіка&quot;</div>
+    <div class="buniverfull">' . $badge['univerfull'] . '</div>
+    <div class="bfio">' . $str . '<br>' . $badge['fio'] . '</div>
+</div>';
     }
 }
-echo '</div>';
+$content = '<div class="badges">' . $content . '</div>';
+if (filter_input(INPUT_GET, 'pdf')) {
+    $pdf = PdfWrapper::getInstance();
+    $pdf->getPdf($content);
+} else {
+    echo $content;
+}
