@@ -299,9 +299,6 @@ p {
     font-style: normal;
     padding-top: 100mm;
   }
-}
-
-.diplom, .charters {
   .line2 {
     font-style: normal;
   }
@@ -319,21 +316,9 @@ p {
   .line5 {
     height: 6em;
   }
-}
-
-.diplom .line6 {
-}
-
-.charters .line6 {
-  font-size: 13pt;
-}
-
-.diplom .line7, .charters .line7 {
-  height: 4em;
-}
-
-.charters .line7 {
-  font-size: 13pt;
+  .line7{
+    height: 4em;
+  }
 }
 
 .diplom, .charters, .gratitudes {
@@ -407,6 +392,13 @@ p {
   div {
     border: 1px solid #ccc;
   }
+  .line8 {
+    width: 80mm;
+  }
+  .line9 {
+    width: 70mm;
+    padding-left: 80mm;
+  }
 }
 
 .charters {
@@ -416,13 +408,10 @@ p {
   background-size: 100%;
   font-size: 14pt;
   height: 282mm;
-  text-align: center;
   width: 200mm;
 
   div {
     border: 1px solid #ccc;
-    font-style: italic;
-    font-weight: bolder;
     margin-left: 35mm;
     width: 130mm;
   }
@@ -431,19 +420,20 @@ p {
     padding-top: 110mm;
 
   }
-}
-
-.charters .line8, .gratitudes .line8 {
-  width: 80mm;
-}
-
-.charters .line9, .gratitudes .line9 {
-  width: 50mm;
-  padding-left: 80mm;
-}
-
-.gratitudes .line9 {
-  width: 70mm;
+  .line6 {
+    font-size: 13pt;
+  }
+  .line7 {
+    font-size: 13pt;
+    height: 4em;
+  }
+  .line8{
+    width: 80mm;
+  }
+  .line9{
+    width: 50mm;
+    padding-left: 80mm;
+  }
 }
 
 .tableprotocol {

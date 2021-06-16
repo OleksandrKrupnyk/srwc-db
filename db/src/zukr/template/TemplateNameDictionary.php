@@ -34,6 +34,10 @@ class TemplateNameDictionary
      * Списки студентів запрошених до участі у підсумковій конференції
      */
     public const INVITATION2 = 'INVITATION2';
+    /**
+     * Грамота за активну участь
+     */
+    public const CHARTER = 'CHARTER';
 
     public static function getAll(): array
     {

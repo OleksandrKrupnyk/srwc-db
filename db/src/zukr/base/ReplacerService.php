@@ -75,6 +75,7 @@ class ReplacerService
             '{@order_po}' => Base::$param['ORDERPO'],
             '{@year}' => Base::$param['YEAR'],
             '{@gerb}' => '',
+            '{@nyears}'=>Base::$param['NYEARS'],
 
             '{@test}' => function (): string {
                 return Base::$param['ORDERPO'];
