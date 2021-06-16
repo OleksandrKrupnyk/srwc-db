@@ -39,6 +39,7 @@ if (empty($template) || !$id) {
     <br>
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
+    <a href="action.php?action=template_list" class="btn" >Вийти</a>
     <input type="hidden" name="action" value="template_edit">
     <input type="hidden" name="Template[id]" value="<?= $template['id'] ?>">
     <input type="hidden" name="id" value="<?= $id ?>">

@@ -445,6 +445,12 @@ a > input[type=button],
   text-shadow: 2px 3px 9px white;
 }
 
+input[type=submit]:hover, input[type=button]:hover {
+  color: #970000;
+  background: #ff7979;
+  cursor: pointer;
+}
+
 #viewtable {
   width: 1024px;
   margin-left: 0;

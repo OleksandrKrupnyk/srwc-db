@@ -1,6 +1,4 @@
 <?php
-global $link;
-
 //Грамоты
 use zukr\base\Base;
 use zukr\base\helpers\PersonHelper;
