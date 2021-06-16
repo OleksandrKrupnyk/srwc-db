@@ -14,10 +14,11 @@ $univers = $uh->getDropDownListShotFull(
 <!-- Отметки о прибытии на конкурс  -->
 <div class="layout">
     <header><a href="action.php">Меню</a></header>
-    <header id="update_arrival_works" class="header pointer"
-            title="Подвійне клацання для оновлення відміток у таблиці робіт">Реєстрація
-        учасників конференції
-    </header>
+    <header class="header pointer">Реєстрація учасників конференції</header>
+    <a href="#" id="update_arrival_works"
+       title="Подвійне клацання для оновлення відміток у таблиці робіт"
+       class="btn"
+    >Оновити відмітки про доповідь роботи у конференції</a>
     <?= Html::select('id_u', null, $univers, ['class' => 'w-100', 'size' => 10, 'id' => 'univer_reseption']) ?>
     <div style="display : flex;justify-content: space-around;align-items: stretch">
         <div id="columnAutors">
@@ -124,8 +125,9 @@ $univers = $uh->getDropDownListShotFull(
         });
 
         //обработка события обновления отметки о прибытии работы при двойном клике на названии меню
-        $('#update_arrival_works').on('dblclick', function () {
-            if (!isLoading) {
+        $('#update_arrival_works').on('dblclick', function (e) {
+            e.preventDefault();
+            if (confirm('Оновити відмітки?') && !isLoading) {
                 isLoading = true;
                 //console.log('Дважды нажали');
                 $.ajax({
