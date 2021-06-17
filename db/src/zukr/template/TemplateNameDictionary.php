@@ -38,6 +38,16 @@ class TemplateNameDictionary
      * Грамота за активну участь
      */
     public const CHARTER = 'CHARTER';
+    /**
+     * Диплом переможця
+     */
+    public const DIPLOM = 'DIPLOM';
+    /**
+     * Подяка журі
+     */
+    public const GRATITUDE = 'GRATITUDE';
+
+
 
     public static function getAll(): array
     {

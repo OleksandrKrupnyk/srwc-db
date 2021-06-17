@@ -287,9 +287,6 @@ p {
   width: 200mm;
 
   div {
-    /*border: 1px solid #ccc;*/
-    font-style: italic;
-    font-weight: bolder;
     margin-left: 28mm;
     width: 140mm;
   }
@@ -358,26 +355,20 @@ p {
 
   div {
     /*border: 1px solid #ccc;*/
-    font-style: italic;
-    font-weight: bolder;
     margin-left: 28mm;
     width: 150mm;
   }
 
   .line1 {
-    font-weight: bold;
     padding-top: 100mm;
   }
 
   .line2 {
-    font-weight: bold;
     margin-top: 2mm;
   }
 
   .line3 {
     font-size: 18pt;
-    font-style: normal;
-    font-weight: bolder;
     height: 2em;
     margin-top: 5mm;
     text-transform: uppercase;
@@ -385,7 +376,6 @@ p {
 
   .line6, .line5, .line4 {
     font-size: 16pt;
-    font-weight: bold;
     padding: 3mm 0;
   }
 

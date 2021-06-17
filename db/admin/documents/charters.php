@@ -6,7 +6,6 @@ use zukr\pdf\PdfWrapper;
 use zukr\template\TemplateNameDictionary;
 use zukr\template\TemplateService;
 
-$settings = Base::$param;
 $db = Base::$app->db;
 $query = "
 SELECT

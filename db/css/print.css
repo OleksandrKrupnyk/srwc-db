@@ -266,9 +266,6 @@ p {
   width: 200mm;
 }
 .diplom div {
-  /*border: 1px solid #ccc;*/
-  font-style: italic;
-  font-weight: bolder;
   margin-left: 28mm;
   width: 140mm;
 }
@@ -328,30 +325,23 @@ p {
 }
 .gratitudes div {
   /*border: 1px solid #ccc;*/
-  font-style: italic;
-  font-weight: bolder;
   margin-left: 28mm;
   width: 150mm;
 }
 .gratitudes .line1 {
-  font-weight: bold;
   padding-top: 100mm;
 }
 .gratitudes .line2 {
-  font-weight: bold;
   margin-top: 2mm;
 }
 .gratitudes .line3 {
   font-size: 18pt;
-  font-style: normal;
-  font-weight: bolder;
   height: 2em;
   margin-top: 5mm;
   text-transform: uppercase;
 }
 .gratitudes .line6, .gratitudes .line5, .gratitudes .line4 {
   font-size: 16pt;
-  font-weight: bold;
   padding: 3mm 0;
 }
 .gratitudes div {
