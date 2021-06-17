@@ -1,12 +1,90 @@
 <?php
+
+use zukr\base\Base;
+use zukr\base\html\Html;
+
 require 'config.inc.php';
 require 'functions.php';
+require '../vendor/autoload.php';
 session_name('tzLogin');
 session_start();
-global $link;
-
+Base::init();
 //Если есть доступ к странице
-?>
+$db = Base::$app->db;
+if ($_SESSION['access']) {
+    $content = '<header><a href="action.php">Меню</a></header>';
+    if (isset($_GET['view'])) {
+        $content .= "<header>Данні {$_GET['view']}</header><header><a href=\"log.php\" >Журнал</a></header>";
+        $query = "
+SELECT tz_id, 
+       date,  
+       DAYNAME(date) as `dayname`,   
+       YEAR(date) as `year`,   
+       MONTHNAME(date) AS `monthname`,
+  TIME(date) AS `time`,   
+       MONTH(date) AS `month`,   
+       DAY(date) as `day`,   
+       action, 
+       action_id,
+  tz_members.usr as `operator` 
+FROM log   
+    JOIN tz_members ON log.tz_id=tz_members.id 
+WHERE log.table = '{$_GET['view']}' 
+ORDER BY log.date DESC";
+        $records = $db->rawQuery($query);
+        $records = \zukr\base\helpers\ArrayHelper::index($records, null, ['year', 'monthname']);
+        $table = '<table><tr><th>Хто</th><th>Коли</th><th>Що робив</th><th>З записом</th></tr>';
+        foreach ($records as $year => $mouths) {
+            $table .= "<tr><th colspan='4'>{$year}</th></tr>";
+            foreach ($mouths as $mouth => $events) {
+                $table .= "<tr><th colspan='4'>{$mouth}</th></tr>";
+                foreach ($events as $event) {
+                    $table .= "<tr><td>{$event['operator']} ({$event['tz_id']})</td><td>{$event['dayname']},{$event['day']} {$event['time']}</td><td>{$event['action']} </td><td>{$event['action_id']}</td></tr>";
+                }
+            }
+        }
+        $table .= '</table><hr/>';
+        $content.= $table;
+    } else {
+        $records = $db->rawQuery("
+SELECT `table` FROM `log` GROUP BY `table`
+");
+        $tables = [];
+        foreach ($records as $record) {
+            $tables[] = Html::a($record['table'], 'log.php?view=' . $record['table']);
+        }
+        $list = Html::ol($tables);
+        $content .= <<<__HTML__
+<header>Журнал дій за таблицями</header>
+$list
+__HTML__;
+    }
+}
+$statistics = $db->rawQuery("
+SELECT review1,
+       COUNT(*) AS countReview,
+       CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname)AS fio
+FROM `reviews`
+         JOIN leaders ON review1 = leaders.id
+GROUP BY reviews.`review1`
+ORDER BY countReview DESC;");
+$a = [];
+$reviewers = [];
+foreach ($statistics as $reviewer) {
+    $reviewers[] = $reviewer['fio'] . ' - ' . $reviewer['countReview'];
+    $a[] = $reviewer['countReview'];
+}
+$list = Html::ol($reviewers);
+$sumCountReview = array_sum($a);
+$src = 'imgchart.php?' . http_build_query(['a' => $a]);
+$contentStatistics = <<<__HTML__
+<p>Статистика рецензування:</p>
+{$list}
+Всього рецензій : {$sumCountReview}
+<br><img src="{$src}" alt='рецензии'>
+__HTML__;
+
+$html = <<<__HTML__
 <!DOCTYPE html>
 <html lang="ua">
 <head>
@@ -17,66 +95,11 @@ global $link;
     <title>Журнал &quot;СНР 2020&quot;&copy;</title>
 </head>
 <body>
-<?php
-if ($_SESSION['access']) {
-    echo '<header><a href="action.php">Меню</a></header>';
-    if (isset($_GET['view'])) {
-        echo "<header>Данні {$_GET['view']}</header>"
-            . '<header><a href="log.php" >Журнал</a></header>';
-        $query = "SELECT tz_id, date,  DAYNAME(date) as `dayname`,   YEAR(date) as `year`,   MONTHNAME(date) AS `monthname`,
-  TIME(date) AS `time`,   MONTH(date) AS `month`,   DAY(date) as `day`,   action, action_id,
-  tz_members.usr as `operator` FROM log   JOIN tz_members ON log.tz_id=tz_members.id WHERE log.table = '{$_GET['view']}' ORDER BY log.date DESC";
-        //echo $query;
-        $result = mysqli_query($link, $query);
-        echo '<table>'
-            . '<tr><th>Хто</th><th>Коли</th><th>Що робив</th><th>З записом</th></tr>';
-        $row = mysqli_fetch_array($result);
-        $year = $row['year'];
-        $month = $row['month'];
-        echo "<tr><th colspan='4'>{$year}</th></tr>"
-            . "<tr><th colspan='4'>{$row['monthname']}</th></tr>"
-            . "<tr><td>{$row['operator']} ({$row['tz_id']})</td><td>{$row['dayname']},{$row['day']} {$row['time']}</td><td>{$row['action']} </td><td>{$row['action_id']}</td></tr>";
-        while ($row = mysqli_fetch_array($result)) {
-            if ($year != $row['year']) {
-                $year = $row['year'];
-                echo "<tr><th colspan='4'>{$year}</th></tr>";
-            }
-            if ($month != $row['month']) {
-                $month = $row['month'];
-                echo "<tr><th colspan='4'>{$row['monthname']}</th></tr>";
-            }
-            echo "<tr><td>{$row['operator']} ({$row['tz_id']})</td><td>{$row['dayname']},{$row['day']} {$row['time']}</td><td>{$row['action']}</td><td>{$row['action_id']}</td></tr>";
-        }
-        echo '</table>';
-    } else {
-        echo '<header>Журнал дій за таблицями</header>';
-        $query = 'SELECT `table` FROM `log` GROUP BY `table`';
-        $result = mysqli_query($link, $query);
-        echo '<ol>';
-        while ($row = mysqli_fetch_array($result)) {
-            echo "<li><a href=log.php?view={$row['table']}>{$row['table']}</a></li>";
-        }
-        echo '</ol>';
-    }
-}//if
-$query = "SELECT review1,
-       COUNT(*) AS countReview,
-       CONCAT(leaders.suname,' ',leaders.name,' ',leaders.lname)AS fio
-FROM `reviews`
-         JOIN leaders ON review1 = leaders.id
-GROUP BY reviews.`review1`
-ORDER BY countReview DESC";
-$result = mysqli_query($link, $query);
-$a = [];
-while ($row = mysqli_fetch_array($result)) {
-    $items[] = sprintf('<li>%s - %s</li>', $row['fio'], $row['countReview']);
-    $a[] = $row['countReview'];
-}
-$query = http_build_query(['a' => $a]);
-$sumCountReview = array_sum($a);
-echo '<p>Статистика рецензування:</p><ol>' . implode('', $items) . '</ol>'
-    . 'Всього рецензій : ' . $sumCountReview
-    . '<br><img src="' . 'imgchart.php?' . $query . '" alt=\'рецензии\'>';
-?>
+{$content}
+{$contentStatistics}
 </body>
 </html>
+__HTML__;
+echo $html;
+
+
