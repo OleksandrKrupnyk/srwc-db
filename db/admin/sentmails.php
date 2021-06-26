@@ -1,12 +1,18 @@
 <?php
+
+
 require 'config.inc.php';
 require 'functions.php';
-header('Content-Type: text/html; charset=utf-8');
-global $link;
-global $settings;
 require_once 'Mail.php';
 require_once 'Mail/mime.php';
-read_settings();
+require '../vendor/autoload.php';
+
+use zukr\base\Base;
+use zukr\base\Params;
+
+Base::init();
+
+header('Content-Type: text/html; charset=utf-8');
 // Настройки почты
 $params['host'] = 'ssl://smtp.gmail.com';
 $params['port'] = '465';
@@ -58,17 +64,14 @@ if (
         $headers['To'] = "\"{$whom[$key]}\" <{$email}>";
         $recipient     = "<{$email}>";
         //Замена
-        $html = str_replace('{whom}', "{$whom[$key]}", $html_base);
-        $html = str_replace("{title}", "{$titles[$key]}", $html);
-        $html = str_replace("{link}", "http://elm-dstu-edu.org.ua/db/admin/getmails.php?hash=" . $hashs[$key] . $get_text, $html);
-        $html = str_replace("{email}", "{$emails[$key]}", $html);
+        $html = str_replace(['{whom}', "{title}", "{link}", "{email}"], ["{$whom[$key]}", "{$titles[$key]}", "http://elm-dstu-edu.org.ua/db/admin/getmails.php?hash=" . $hashs[$key] . $get_text, "{$emails[$key]}"], $html_base);
         //Создание тела
         $mime->setHTMLBody($html);
         //print_r(quoted_printable_decode($headers["To"]));
         $message = $mime->get($mimeparams);
         $headers2 = $mime->headers($headers);
 
-        if ('1' == $settings['ALLOW_EMAIL']) {
+        if (Params::TURN_ON == Base::$param->ALLOW_EMAIL) {
             $mail_message =& Mail::factory('smtp', $params);
             $mail_message->send($recipient, $headers2, $message);
             unset($headers2);
