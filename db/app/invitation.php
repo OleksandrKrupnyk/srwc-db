@@ -12,9 +12,10 @@ require './../admin/functions.php';
 require '../vendor/autoload.php';
 
 use zukr\base\Base;
-use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
 use zukr\base\html\Html;
+use zukr\base\Params;
+use zukr\base\ReplacerService;
 use zukr\leader\LeaderHelper;
 use zukr\position\PositionRepository;
 use zukr\template\TemplateNameDictionary;
@@ -23,13 +24,10 @@ use zukr\univer\UniverHelper;
 use zukr\workauthor\WorkAuthorRepository;
 
 Base::init();
-$settings = ArrayHelper::merge($settings, Base::$param->getAllsettingValue());
-if (Base::KEY_OFF === (int)$settings['INVITATION']) {
+if (Params::TURN_OFF === Base::$param->INVITATION) {
     Go_page('./');
 }
-?>
 
-<?php
 $letter = filter_input(INPUT_GET, 'letter', FILTER_VALIDATE_INT);
 $uh = UniverHelper::getInstance();
 if (empty($id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT))):
@@ -50,7 +48,7 @@ if (empty($id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT))):
         <?php
         $template = (new TemplateService())
             ->getBlockByName(TemplateNameDictionary::INVITATION_PAGE_DESCRIPTION);
-        echo (new \zukr\base\ReplacerService())->makeReplace($template);
+        echo (new ReplacerService())->makeReplace($template);
         ?>
     </div>
     <br/>
@@ -91,6 +89,8 @@ if (empty($id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT))):
                 . '<ol>' . implode('', $list) . '</ol>'
                 . '</div>';
         }
+        $datepo = Base::$param->DATEPO;
+        $orderpo = Base::$param->ORDERPO;
         $CONTENT = <<<__HTML__
 <div class="v_invitation_1">
     <div id="dstuheader" title="Відсканована верхівка офіційного листа"></div>
@@ -102,7 +102,7 @@ if (empty($id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT))):
     <p>Список запрошених авторів наукових робіт наведено у Додатку 1.</p>
     <p>Відповідно до &quot;Положення про  проведення Всеукраїнського конкурсу студентських наукових робіт  
     з природничих, технічних та гуманітарних наук&quot; 
-    від {$settings['DATEPO']} №{$settings['ORDERPO']} автор наукової роботи, який  не  брав  участі  у  
+    від {$datepo} №{$orderpo} автор наукової роботи, який  не  брав  участі  у  
     підсумковій науково-практичній конференції,  не може бути претендентом на нагородження.</p>
     </div>
     {$leaders}

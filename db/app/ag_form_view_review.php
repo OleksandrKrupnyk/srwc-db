@@ -1,11 +1,14 @@
 <?php
+
+use zukr\base\Base;
+
+$db = Base::$app->db;
 $query = "SELECT `reviews`.*, works.title,
           SUM(`actual`+`original`+`methods`+`theoretical`+`practical`+`literature`+`selfcontained`+`design`+`publication`+`government`+`tendentious`) AS sumball
           FROM `reviews`
           JOIN `works` ON `works`.`id` = `reviews`.`id_w` 
           WHERE `reviews`.`id` ='{$_GET['id']}'";
-$result = mysqli_query($link, $query) or die('Invalid query in function list_reviews_for_one_work : ' . mysqli_error($link));
-$row = mysqli_fetch_array($result);
+$row = $db->rawQueryOne($query);
 echo '<h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт<br>&quot;Електротехніка та електромеханіка&quot;</h1>'
     . '<h2>Рецензія на студентську наукову роботу</h2>'
     . "<h3>&laquo;{$row['title']}&raquo;</h3>";

@@ -8,19 +8,18 @@ require '../vendor/autoload.php';
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\html\Html;
+use zukr\base\Params;
 
 /**
  * @var array $settings
  */
 Base::init();
 $settings = ArrayHelper::merge($settings, Base::$param->getAllsettingValue());
-global $link;
+$db = Base::$app->db;
 if (isset($_GET['action']) && $_GET['action'] === 'file_get') {
     include __DIR__ . DIRECTORY_SEPARATOR . 'ag_file_get_content.php';
 }
-
-$setData = static function () use ($link, $settings) {
-    $query = '
+$query = '
 SELECT w.id,
        w.title,
        w.tesis,
@@ -78,16 +77,15 @@ FROM `works` AS w
 GROUP BY w.id
 ORDER BY w.id        
         ';
-    $data = [];
-    $result = @mysqli_query($link, $query);
-    // echo "<pre>{$query}</pre>";
-    while ($result !== false && $row = mysqli_fetch_array($result)) {
+
+$setData2 = static function () use ($db,$query){
+    $results = $db->rawQuery($query);
+    foreach ($results as $row){
         $s = [];
         $diplomas = [];
 
         $s['id'] = $row['id'];
         $s['date'] = $row['date'];
-
         $s['title'] = (
             '1' === Base::$param->SHOW_FILES_LINK // Настройка активна
             &&
@@ -108,10 +106,9 @@ ORDER BY w.id
 
         $s['univer'] = $row['univer'];
 
-        $s['invitation'] = ('1' === Base::$param->MARK_INVITE_WORKS && !empty($row['invitation']))
+        $s['invitation'] = (Params::TURN_ON === Base::$param->MARK_INVITE_WORKS && !empty($row['invitation']))
             ? "<span class='invite2018'>&nbsp; Авторів роботи запрошено до участі у конференції&nbsp;</span>"
             : '';
-
         // Дипломы
         if ('D' !== $row['place1'] && $row['place1'] !== null) {
             $diplomas [] = "<span class='invite2018'>&nbsp;Диплом&nbsp;{$row['place1']}-го&nbsp;ступеня</span>";
@@ -134,9 +131,8 @@ ORDER BY w.id
     }
     return $data;
 };
-
 if (!isset($_GET['action'])) {
-    $data = Base::$app->cacheGetOrSet('table', $setData, 30);
+    $data = Base::$app->cacheGetOrSet('table', $setData2, 30);
 }
 ?>
 <!DOCTYPE html >
@@ -174,11 +170,11 @@ if (!isset($_GET['action'])) {
 
     <!--    <h4><a href='http://elm-dstu-edu.org.ua/konkurs/index.php/digest/32-zbirnik-tez-2018'-->
     <!--           title='Збірник тез доповідей 2017-2018 н.р.'>Збірник тез доповідей 2018</a>&#8658;</h4>-->
-    <?php if ('1' === $settings['SHOW_PROGRAMA']): ?>
+    <?php if (Params::TURN_ON === Base::$param->SHOW_PROGRAMA): ?>
         <h4><a href='./programa.php'>Макет програми конференції&#8658;</a></h4>
     <?php endif; ?>
 
-    <?php if ('1' === $settings['INVITATION']): ?>
+    <?php if (Params::TURN_ON === Base::$param->INVITATION): ?>
         <h4><a href='./invitation.php'>Сторінка завантажень запрошень учасників конференції</a>&#8658;</h4>
     <?php endif; ?>
 
@@ -186,7 +182,7 @@ if (!isset($_GET['action'])) {
     //echo "<h4><a href='http://elm-dstu-edu.org.ua/db/document3.pdf' title='МАКЕТ Збірника тез доповідей 2017-2018 н.р.'>Збірник тез доповідей 2018 [МАКЕТ від 13.04.18] &#8658;</a></h4>";
     //echo "<p>Просимо авторів тез первірити наявність публікації в МАКЕТІ збірника. У випадку, якшо вами були надіслані тези у форматі ТЕХ, але вони відсутні в МАКЕТІ збірника просимо повдомити про це на поштову скриньку <span class='invite2018'><a href=\"mailto:conkstudrabot@gmail.com\">conkstudrabot@gmail.com</span></a> до 14 квітня 2018р вказавши в тексті листа номер роботи та дату відправлення електронного листа з тезами.</p>";
     ?>
-    <?php if ('1' === $settings['SHOW_DB_TABLE']): ?>
+    <?php if (Params::TURN_ON === Base::$param->SHOW_DB_TABLE): ?>
         <h3>Роботи авторів та відомості про їх рецензування, а також наявність тез доповідей. Розподіл за секціями.</h3>
         <table style="border-collapse: collapse">
             <thead>
