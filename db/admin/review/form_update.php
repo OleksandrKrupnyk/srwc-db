@@ -6,8 +6,14 @@
  * Time: 21:22
  */
 // обновление балов в таблице work
-$query = "UPDATE  works SET
-          works.balls = 
+use zukr\base\Base;
+use zukr\log\Log;
+use zukr\work\Work;
+
+$db = Base::$app->db;
+$query = "
+UPDATE  works SET
+        works.balls = 
           (SELECT sumball FROM 
           (SELECT 
                   sum(
@@ -15,12 +21,7 @@ $query = "UPDATE  works SET
               ) AS sumball, id_w 
           FROM  reviews GROUP BY id_w
               ) AS tmp 
-          WHERE works.id = tmp.id_w )";
-//$error_message = $query;
-global $link;
-mysqli_query($link, "SET NAMES 'utf8'");
-mysqli_query($link, "SET CHARACTER SET 'utf8'");
-$result = mysqli_query($link, $query)
-or die("Invalid query функція action.php?action=review_update: " . mysqli_error($link));
-log_action($_GET['action'], "works", "ALL");
-?>
+WHERE works.id = tmp.id_w );";
+$db->rawQuery($query);
+$log = Log::getInstance();
+$log->logAction($_GET['action'], Work::getTableName(), 'ALL');
