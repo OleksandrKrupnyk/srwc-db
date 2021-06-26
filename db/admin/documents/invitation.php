@@ -3,6 +3,7 @@
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
+use zukr\base\helpers\TextHelper;
 use zukr\base\html\Html;
 use zukr\pdf\PdfWrapper;
 use zukr\template\TemplateNameDictionary;
@@ -41,7 +42,7 @@ $staff = ArrayHelper::group($staff, 'id_u');
 $settings = Base::$param;
 $invitations = '';
 if (!empty($universList)) {
-    $gerb = PrintGerb($empty = true);
+    $gerb = TextHelper::printGerb($empty = true);
     $template = (new TemplateService())
         ->getBlockByName(TemplateNameDictionary::INVITATION);
     $replaceService = (new \zukr\base\ReplacerService());

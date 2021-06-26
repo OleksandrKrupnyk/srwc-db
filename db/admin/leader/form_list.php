@@ -16,6 +16,6 @@ Base::$session->setFromParam();
     <a href="action.php?action=leader_add">[+ керівник]</a>
 </header>
 <form class="form" method="POST" action="lists.php?action=badge_leaders">
-    <?= getListOfObjects('leader', true, true, false); ?>
+    <?= getListOfObjects(Base::$app->db, 'leader', true, true, false, false); ?>
     <input type="submit" value="Print"/>
 </form>

@@ -75,6 +75,45 @@ class Html
     public static $dataAttributes = ['data', 'data-ng', 'ng'];
 
     /**
+     * @param $name
+     * @param array $options
+     * @return string
+     */
+    public static function beginTag($name, $options = [])
+    {
+        if ($name === null || $name === false) {
+            return '';
+        }
+
+        return "<$name" . static::renderTagAttributes($options) . '>';
+    }
+
+    /**
+     * @param $name
+     * @return string
+     */
+    public static function endTag($name)
+    {
+        if ($name === null || $name === false) {
+            return '';
+        }
+
+        return "</$name>";
+    }
+
+    /**
+     * @param $text
+     * @param null $email
+     * @param array $options
+     * @return string
+     */
+    public static function mailto($text, $email = null, $options = [])
+    {
+        $options['href'] = 'mailto:' . ($email === null ? $text : $email);
+        return static::tag('a', $text, $options);
+    }
+
+    /**
      * @param       $name
      * @param null  $value
      * @param array $items
@@ -126,13 +165,6 @@ class Html
         return static::tag('select', "\n" . implode("\n", $selectOptions) . "\n", $options);
     }
 
-
-    /**
-     * @param $name
-     * @param $content
-     * @param $options
-     * @return string
-     */
     /**
      * @param $name
      * @param $content
@@ -305,6 +337,91 @@ class Html
             $items [] = self::tag('li', $item, ['data-key' => $key]);
         }
         return self::tag('ol', implode('', $items), $options);
+    }
+    /**
+     * Generates a checkbox input.
+     * @param string $name the name attribute.
+     * @param bool $checked whether the checkbox should be checked.
+     * @param array $options the tag options in terms of name-value pairs.
+     * See [[booleanInput()]] for details about accepted attributes.
+     *
+     * @return string the generated checkbox tag
+     */
+    public static function checkbox($name, $checked = false, $options = [])
+    {
+        return static::booleanInput('checkbox', $name, $checked, $options);
+    }
+    protected static function booleanInput($type, $name, $checked = false, $options = [])
+    {
+        // 'checked' option has priority over $checked argument
+        if (!isset($options['checked'])) {
+            $options['checked'] = (bool) $checked;
+        }
+        $value = array_key_exists('value', $options) ? $options['value'] : '1';
+        if (isset($options['uncheck'])) {
+            // add a hidden field so that if the checkbox is not selected, it still submits a value
+            $hiddenOptions = [];
+            if (isset($options['form'])) {
+                $hiddenOptions['form'] = $options['form'];
+            }
+            // make sure disabled input is not sending any value
+            if (!empty($options['disabled'])) {
+                $hiddenOptions['disabled'] = $options['disabled'];
+            }
+            $hidden = static::hiddenInput($name, $options['uncheck'], $hiddenOptions);
+            unset($options['uncheck']);
+        } else {
+            $hidden = '';
+        }
+        if (isset($options['label'])) {
+            $label = $options['label'];
+            $labelOptions = isset($options['labelOptions']) ? $options['labelOptions'] : [];
+            unset($options['label'], $options['labelOptions']);
+            $content = static::label(static::input($type, $name, $value, $options) . ' ' . $label, null, $labelOptions);
+            return $hidden . $content;
+        }
+
+        return $hidden . static::input($type, $name, $value, $options);
+    }
+
+    /**
+     * @param $type
+     * @param null $name
+     * @param null $value
+     * @param array $options
+     * @return string
+     */
+    public static function input($type, $name = null, $value = null, $options = [])
+    {
+        if (!isset($options['type'])) {
+            $options['type'] = $type;
+        }
+        $options['name'] = $name;
+        $options['value'] = $value === null ? null : (string) $value;
+        return static::tag('input', '', $options);
+    }
+
+    /**
+     * @param $name
+     * @param null $value
+     * @param array $options
+     * @return string
+     */
+    public static function hiddenInput($name, $value = null, $options = [])
+    {
+        return static::input('hidden', $name, $value, $options);
+    }
+
+    /**
+     * @param $content
+     * @param null $for
+     * @param array $options
+     * @return string
+     */
+    public static function label($content, $for = null, $options = [])
+    {
+        $options['for'] = $for;
+        return static::tag('label', $content, $options);
     }
 
 }

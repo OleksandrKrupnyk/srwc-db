@@ -85,7 +85,7 @@ while ($row = mysqli_fetch_array($result)) {
 ?>
 </table>
 <?php
-listLeadersWhoArrival();
-listLeadersWhoArrival(true);
+listLeadersWhoArrival(false, null);
+listLeadersWhoArrival(true, null);
 ?>
 <!-- Окончание  Протокол засідання-->

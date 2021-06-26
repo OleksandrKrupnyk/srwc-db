@@ -22,7 +22,7 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
 <header>Список розсилки</header>
 <h1 title="Попередження"><?= $str ?></h1>
 <form class="form" method="post" action="sentmails.php">
-    <fieldset><?= list_emails("leaders"); ?></fieldset>
+    <fieldset><?= list_emails("leaders", null); ?></fieldset>
     <label>Перегляд листа</label>
     <div id="previewletter2leaders"><?= file_get_contents("letter2leaders.tte"); ?></div>
     <label>Редагування листа</label>
@@ -41,7 +41,7 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
 </form>
 <form class="form" method="post" action="sentmails.php">
     <h2>Листи для авторів</h2>
-    <fieldset><?= list_emails("autors") ?></fieldset>
+    <fieldset><?= list_emails("autors", null) ?></fieldset>
     <label>Перегляд листа</label>
     <div id="previewletter2autors"><?= file_get_contents("letter2autors.tte"); ?></div>
     <label>Редагування листа</label>

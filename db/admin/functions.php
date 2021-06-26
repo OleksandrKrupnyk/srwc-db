@@ -12,12 +12,12 @@ use zukr\base\html\Html;
  * список файлов работы
  *
  * @param int $id_w
+ * @param MysqliDb $db
  * @param string $typeoffile
  * @return String
  */
-function list_files($id_w, string $typeoffile = 'all')
+function list_files($id_w, MysqliDb $db, string $typeoffile = 'all')
 {
-    global $link;
     if (!empty($id_w)) {
         $query = "SELECT * FROM `files` WHERE `id_w`='{$id_w}'";
         switch ($typeoffile) {
@@ -42,37 +42,32 @@ function list_files($id_w, string $typeoffile = 'all')
                 }
                 break;
         }
+        $results = $db->rawQuery($query);
 
-        $result = mysqli_query($link, $query)
-        or die('Помилка запиту функція list_files: ' . mysqli_error($link));
-        $count = mysqli_num_rows($result);
-        if ($count != 0) {
-            $str = "<details><summary>Файли</summary>";
-            $list = [];
-            while ($row = mysqli_fetch_array($result)) {
-                $fullFileName = basename($row['file']);
-                $fileNameParts = explode('.', $fullFileName);
-                $fileExtension = end($fileNameParts);
-                //
-                $truncateFileName = StringHelper::truncate($fullFileName, 30);
-                //
-                $list[] = Html::a(
-                        $truncateFileName,
-                        "action.php?action=file_get&guid={$row['guid']}", [
-                        'class' => "link-file",
-                        'title' => $fullFileName,
-                        'data-ext' => $fileExtension,
-                        'style' => "margin-right:10px"
-                    ])
-                    . Html::a('', "action.php?action=file_remove&id_w={$id_w}&guid={$row['guid']}", [
-                        'title' => 'Видалити файл',
-                        'class' => 'link-delete-file'
-                    ]);
-            }
-            $str .= Html::ol($list) . "</details>";
-        } else {
-            $str = '';
+        $list = [];
+        foreach ($results as $row) {
+            $fullFileName = basename($row['file']);
+            $fileNameParts = explode('.', $fullFileName);
+            $fileExtension = end($fileNameParts);
+            //
+            $truncateFileName = StringHelper::truncate($fullFileName, 30);
+            //
+            $list[] = Html::a(
+                    $truncateFileName,
+                    "action.php?action=file_get&guid={$row['guid']}", [
+                    'class' => "link-file",
+                    'title' => $fullFileName,
+                    'data-ext' => $fileExtension,
+                    'style' => "margin-right:10px"
+                ])
+                . Html::a('', "action.php?action=file_remove&id_w={$id_w}&guid={$row['guid']}", [
+                    'title' => 'Видалити файл',
+                    'class' => 'link-delete-file'
+                ]);
         }
+        $str = count($results) > 0
+            ? '<details><summary>Файли</summary>' . Html::ol($list) . '</details>'
+            : '<div><mark>Нема файлів для відображення</mark></div>';
     } else {
         $str = '<mark>Нема файлів для відображення</mark>';
     }
@@ -82,8 +77,9 @@ function list_files($id_w, string $typeoffile = 'all')
 
 /**
  * @param string $table
+ * @param MysqliDb|null $db
  */
-function list_emails($table)
+function list_emails($table, MysqliDb $db = null)
 {
     global $link;
     $query = '';
@@ -142,6 +138,7 @@ function list_emails($table)
 /**
  * Список авторов или руководителей
  *
+ * @param MysqliDb $db
  * @param string $object 'author' or 'leader'
  * @param bool $phone
  * @param bool $email
@@ -149,9 +146,15 @@ function list_emails($table)
  * @param bool $onlyReviwers
  * @return string
  */
-function getListOfObjects(string $object, bool $phone = false, bool $email = false, bool $hash = false, bool $onlyReviwers = false)
+function getListOfObjects(
+    MysqliDb $db,
+    string $object,
+    bool $phone = false,
+    bool $email = false,
+    bool $hash = false,
+    bool $onlyReviwers = false
+)
 {
-    global $link;
     if (empty($object) || !in_array($object, ['author', 'leader'])) {
         return '';
     }
@@ -170,22 +173,24 @@ JOIN positions ON leaders.id_pos = positions.id
 JOIN degrees ON leaders.id_deg = degrees.id
 JOIN statuses ON leaders.id_sat = statuses.id
 JOIN univers ON leaders.id_u = univers.id";
-        $query .= $onlyReviwers == true ? " WHERE leaders.review = '1' " : '';
+        $query .= $onlyReviwers === true ? " WHERE leaders.review = '1' " : '';
         $query .= ' ORDER BY `suname` ASC';
     }
 
-    $result = mysqli_query($link, $query)
-    or die('Invalid query функція list_autors_or_leaders: ' . mysqli_error($link));
-    $sub_row_str = '<ol data-object-name=' . $object . '>';
-    while ($row = mysqli_fetch_array($result)) {
-        //print_r($row);
-        $sub_row_str .= '<li data-index=' . $row['id'] . ' title="Останні зміни :' . htmlspecialchars($row['date']) . '">'
-            . "<a href=action.php?action=" . rtrim($object, "s") . '_edit&' . $id . '=' . $row['id'] . "  title=\"Ред.{$row['univer']}\">"
-            . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . '</a>  ';
+    $results = $db->rawQuery($query);
+    foreach ($results as $row) {
+        $sub_row_str = Html::a(
+            $row['suname'] . " " . $row['name'] . " " . $row['lname'],
+            "action.php?" . http_build_query(['action' => "{$object}_edit", $id => $row['id']]),
+            [
+                'title' => 'Ред.' . $row['univer'],
+            ]);
         if (!$onlyReviwers && (int)$row['arrival'] === 0) {
-            $sub_row_str .= '<a href="#" title="Видалити з реестру" class="js-delete-list-item"></a>';
+            $sub_row_str .= Html::a('', '#', ['title' => 'Видалити з реестру', 'class' => "js-delete-list-item"]);
         }
-        $sub_row_str .= (int)$row['arrival'] === 1 ? '<span title="Прибув на конференцію">&nbsp;[&radic;]&nbsp;</span>' : '';
+        $sub_row_str .= (int)$row['arrival'] === 1
+            ? Html::tag('span', '&nbsp;[&radic;]&nbsp;', ['title' => 'Прибув на конференцію'])
+            : '';
 
         $get_text = '&t=a'; // для GET запроса в хеш сторку
         if ($object === 'leaders') {
@@ -198,32 +203,42 @@ JOIN univers ON leaders.id_u = univers.id";
         if (!$onlyReviwers) {
             $phone_number = ($row['phone'] !== '') && $phone ? $row['phone'] : 'відсутній';
             $email_text = ($row['email'] !== '') && $email
-                ? '<strong>e-mail:</strong><a href="mailto:' . $row['email'] . '">' . $row['email'] . '</a>'
+                ? Html::tag('strong', 'e-mail:') . Html::mailto($row['email'], $row['email'])
                 : '';
-            $sub_row_str .= $phone ? '<span id="phone">' . $phone_number . '</span>' : '';
+
+            $sub_row_str .= $phone ? Html::tag('span', $phone_number, ['id' => "phone"]) : '';
             $sub_row_str .= '' . $email_text;
 
 
             $sub_row_str .= $hash
-                ? '<a href="getmails.php?hash=' . $row['hash'] . $get_text . '">Получить письмо!</a>'
+                ? Html::a('Получить письмо!', 'getmails.php?hash=' . $row['hash'] . $get_text)
                 : '';
             if ($row['email_recive'] == 1 && $hash) {
                 $sub_row_str .= ' [The email have received and read.' . $row['email_date'] . ' ] ';
             }
-            $sub_row_str .= "<a href=\"lists.php?action=badge_{$object}s&badge={$row['id']}\" title=\"Друкувати посвідчення(тільки зв'язані з роботою)\"></a>";
-            $sub_row_str .= '<input type="checkbox" name="works_id[]" value="' . $row['id'] . '">';
-            $sub_row_str .= "</li>\n";
+            $sub_row_str .= Html::a('',
+                "lists.php?" . http_build_query(['action' => "badge_{$object}s", 'badge' => $row['id']]),
+                ['title' => 'Друкувати посвідчення(тільки зв\'язані з роботою)']
+            );
+            $sub_row_str .= Html::checkbox('works_id[]', false, ['value' => $row['id']]);
         }
+        $list [] = Html::tag('li', $sub_row_str, [
+            'title' => 'Останні зміни :' . \htmlspecialchars($row['date']),
+            'data-index' => $row['id']
+        ]);
     }
-    $sub_row_str .= '</ol>';
-    return $sub_row_str;
+    $items = implode('', $list);
+    return <<<__HTML__
+<ol data-object-name="{$object}">{$items}</ol>
+__HTML__;
 }
 
 
 /**
  * @param bool $showAllInfo
+ * @param MysqliDb|null $db
  */
-function listLeadersWhoArrival($showAllInfo = false)
+function listLeadersWhoArrival($showAllInfo = false, MysqliDb $db = null)
 {
     global $link;
     $query = "SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as  fio FROM leaders WHERE arrival='1' ORDER BY fio ASC";
@@ -258,8 +273,9 @@ function listLeadersWhoArrival($showAllInfo = false)
  * @param      $id_w
  * @param      $who
  * @param bool $showId
+ * @param MysqliDb|null $db
  */
-function short_list_leader_or_autors_str($id_w, $who, $showId = false)
+function short_list_leader_or_autors_str($id_w, $who, $showId = false, MysqliDb $db = null)
 {
     global $link;
     $query = ($who === 'wa') ?
@@ -311,22 +327,6 @@ function Go_page($page)
     $page = ($page === 'error' || $page === null) ? 'action.php?action=error_list' : $page;
     header('location: ' . urldecode($page));
     exit();
-}
-
-/**
- * Print gerb
- *
- * @param bool $empty
- * */
-function PrintGerb($empty = true)
-{
-    $DATA = '<div class = "hDATA">';
-    $DATA .= $empty
-        ? '______________№____________________'
-        : '<span>&nbsp;&nbsp;XX/XX/2018&nbsp;&nbsp;</span>№<span>' . TAB_SP . "108-08/10-69" . TAB_SP . "</span>";
-    $DATA .= TAB_SP . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;На&nbsp;№__________________від____________</div>';
-    return $DATA;
-
 }
 
 /**
