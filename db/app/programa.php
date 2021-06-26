@@ -11,14 +11,14 @@ require '../vendor/autoload.php';
 
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
+use zukr\base\Params;
 use zukr\section\SectionHelper;
 use zukr\univer\UniverHelper;
 use zukr\work\WorkHelper;
 
 header('Content-Type: text/html; charset=utf-8');
 Base::init();
-$settings = ArrayHelper::merge($settings, Base::$param->getAllsettingValue());
-if (Base::KEY_ON !== (int)$settings['SHOW_PROGRAMA']) {
+if (Params::TURN_ON !== Base::$param->SHOW_PROGRAMA) {
     Go_page('index.php');
 }
 
@@ -71,5 +71,6 @@ $sectionList = ArrayHelper::group($wh->getInvitationWorks(), 'id_sec');
         $sectionCounter++;
     } ?>
 </table>
+
 </body>
 </html>
