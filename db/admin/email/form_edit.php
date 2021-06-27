@@ -8,21 +8,22 @@
 
 use zukr\base\Base;
 
-$settings = Base::$param;
-$str = ($settings->ALLOW_EMAIL === "1")
+$db = Base::$app->db;
+$str = (Base::$param->ALLOW_EMAIL === \zukr\base\Params::TURN_ON)
     ? 'УВАГА! Налаштування розсилки ДОЗВОЛЕНО'
     : "Безпечна робота розсилка вимкнута!";
-$buttonName = ("1" == $settings->ALLOW_EMAIL)
+$buttonName = (\zukr\base\Params::TURN_ON == Base::$param->ALLOW_EMAIL)
     ? "Надіслати листи"
     : "Перевірити листи";
 ?>
+
 <!-- Список на отправку писем-->
 <!-- Меню действий -->
 <header><a href="action.php">Меню</a></header>
 <header>Список розсилки</header>
 <h1 title="Попередження"><?= $str ?></h1>
 <form class="form" method="post" action="sentmails.php">
-    <fieldset><?= list_emails("leaders", null); ?></fieldset>
+    <fieldset><?= list_emails("leaders", $db); ?></fieldset>
     <label>Перегляд листа</label>
     <div id="previewletter2leaders"><?= file_get_contents("letter2leaders.tte"); ?></div>
     <label>Редагування листа</label>
@@ -41,7 +42,7 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
 </form>
 <form class="form" method="post" action="sentmails.php">
     <h2>Листи для авторів</h2>
-    <fieldset><?= list_emails("autors", null) ?></fieldset>
+    <fieldset><?= list_emails("autors", $db) ?></fieldset>
     <label>Перегляд листа</label>
     <div id="previewletter2autors"><?= file_get_contents("letter2autors.tte"); ?></div>
     <label>Редагування листа</label>
@@ -59,8 +60,6 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
     <input type="hidden" name="t" value="a">
 </form>
 <script>
-
-    //Изменение в Области textarea
     const textAC1 = $('#letter2autors'),
         textAC2 = $('#letter2leaders');
     textAC1.on('keyup', function () {
@@ -68,13 +67,11 @@ $buttonName = ("1" == $settings->ALLOW_EMAIL)
     })
         .on('change', function () {
             $('#previewletter2autors').html(textAC1.val());
-            //console.log("Изменеие зафиксированы");
         });
     textAC2.on('keyup', function () {
         $('#previewletter2leaders').html(textAC2.val());
     })
         .on('change', function () {
             $('#previewletter2leaders').html(textAC2.val());
-            //console.log("Изменеие зафиксированы");
         });
 </script>

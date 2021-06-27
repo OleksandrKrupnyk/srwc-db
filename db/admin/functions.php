@@ -15,11 +15,12 @@ use zukr\base\html\Html;
  * @param MysqliDb $db
  * @param string $typeoffile
  * @return String
+ * @throws Exception
  */
-function list_files($id_w, MysqliDb $db, string $typeoffile = 'all')
+function list_files(int $id_w, MysqliDb $db, string $typeoffile = 'all'): string
 {
     if (!empty($id_w)) {
-        $query = "SELECT * FROM `files` WHERE `id_w`='{$id_w}'";
+        $query = "SELECT * FROM `files` WHERE `id_w`='$id_w'";
         switch ($typeoffile) {
             case '0':
                 {
@@ -54,13 +55,20 @@ function list_files($id_w, MysqliDb $db, string $typeoffile = 'all')
             //
             $list[] = Html::a(
                     $truncateFileName,
-                    "action.php?action=file_get&guid={$row['guid']}", [
+                    "action.php?" . http_build_query([
+                        'action' => 'file_get',
+                        'guid' => $row['guid']
+                    ]), [
                     'class' => "link-file",
                     'title' => $fullFileName,
                     'data-ext' => $fileExtension,
                     'style' => "margin-right:10px"
                 ])
-                . Html::a('', "action.php?action=file_remove&id_w={$id_w}&guid={$row['guid']}", [
+                . Html::a('', "action.php?" . http_build_query([
+                        'action' => 'file_remove',
+                        'id_w' => $id_w,
+                        'guid' => $row['guid']
+                    ]), [
                     'title' => 'Видалити файл',
                     'class' => 'link-delete-file'
                 ]);
@@ -78,10 +86,11 @@ function list_files($id_w, MysqliDb $db, string $typeoffile = 'all')
 /**
  * @param string $table
  * @param MysqliDb|null $db
+ * @return string
+ * @throws Exception
  */
-function list_emails($table, MysqliDb $db = null)
+function list_emails(string $table, MysqliDb $db): string
 {
-    global $link;
     $query = '';
     $get_text = '';
     //Формируем запрос на получение таблицы
@@ -92,7 +101,7 @@ function list_emails($table, MysqliDb $db = null)
                  LEFT JOIN autors ON wa.id_a = autors.id
                  WHERE works.invitation = '1'
                  ORDER BY autors.suname";
-        $get_text = "&t=a";
+        $get_text = "a";
     } elseif ($table === 'leaders') {
         $query = "SELECT works.title,leaders.id, leaders.suname, leaders.name,leaders.lname,leaders.hash,leaders.email,leaders.email_recive,leaders.email_date
                  FROM works
@@ -100,38 +109,39 @@ function list_emails($table, MysqliDb $db = null)
                  LEFT JOIN leaders ON wl.id_l = leaders.id
                  WHERE works.invitation = '1'
                  ORDER BY leaders.suname ";
-        $get_text = "&t=l";
+        $get_text = "l";
     }
+    $results = $db->rawQuery($query);
 
-    //echo $query."\n";
-    $result = mysqli_query($link, $query)
-    or die("Invalid query функція list_emails: " . mysqli_error($link));
-    $sub_row_str_nomail = "<details><summary>Не надали адресу</summary><ol>";
-    $sub_row_str = "<details><summary>Список отримувачів</summary><ol name=" . $table . ">";
-    while ($row = mysqli_fetch_array($result)) {
-
-
-        if ($row['email'] != "") {
-            $sub_row_str .= "<li>" . $row['suname'] . " " . $row['name'] . " " . $row['lname'];
-            $sub_row_str .= "<a href=\"getmails.php?hash=" . $row['hash'] . $get_text . "\">Получить письмо!</a>";
-            if ($row['email_recive'] == 1) {
-                $sub_row_str .= " [The email have recived and read." . $row['email_date'] . " ] ";
+    $listEmails = [];
+    $listNoEmails = [];
+    foreach ($results as $row) {
+        $name = $row['suname'] . " " . $row['name'] . " " . $row['lname'];
+        $content = [];
+        if (!empty($row['email'])) {
+            $content[] = $name;
+            $content[] = Html::a(
+                'Получить письмо!',
+                'getmails.php?' . http_build_query(['hash' => $row['hash'], 't' => $get_text])
+            );
+            if ((string)$row['email_recive'] === '1') {
+                $content[] = " [The email have received and read." . $row['email_date'] . " ] ";
             }
-            $sub_row_str .= "<input type=\"hidden\" name=emails[] value =" . $row['email'] . " >";
-            $sub_row_str .= "<input type=\"hidden\" name=whom[]   value =\"" . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . "\" >";
-            $sub_row_str .= "<input type=\"hidden\" name=hashs[]  value =\"" . $row['hash'] . "\">";
-            $sub_row_str .= "<input type=\"hidden\" name=titles[] value =\"" . $row['title'] . "\">";
-            $sub_row_str .= "</li>\n";
+            $content[] = Html::hiddenInput('emails[]', $row['email']);
+            $content[] = Html::hiddenInput('whom[]', $name);
+            $content[] = Html::hiddenInput('hashs[]', $row['hash']);
+            $content[] = Html::hiddenInput('titles[]', $row['title']);
+            $listEmails [] = Html::tag('li', implode('', $content));
         } else {
-            $sub_row_str_nomail .= "<li>" . $row['suname'] . " " . $row['name'] . " " . $row['lname'] . " <mark>Поштова скринька відсутня!</mark>";
+            $listNoEmails [] = Html::tag('li', $name . " <mark>Поштова скринька відсутня!</mark>");
         }
-
-        //print_r($row);
-
     }
-    $sub_row_str_nomail .= "</ol>\n</details>";
-    $sub_row_str .= "</ol>\n</details>\n" . $sub_row_str_nomail;
-    return $sub_row_str;
+    $listEmails = implode('', $listEmails);
+    $listNoEmails = implode('', $listNoEmails);
+    return <<<__HTML__
+<details><summary>Список отримувачів</summary><ol name="{$table}">$listEmails</ol></details>
+<details><summary>Не надали адресу</summary><ol>$listNoEmails</ol></details>
+__HTML__;
 }
 
 
@@ -145,6 +155,7 @@ function list_emails($table, MysqliDb $db = null)
  * @param bool $hash
  * @param bool $onlyReviwers
  * @return string
+ * @throws Exception
  */
 function getListOfObjects(
     MysqliDb $db,
@@ -153,7 +164,7 @@ function getListOfObjects(
     bool $email = false,
     bool $hash = false,
     bool $onlyReviwers = false
-)
+): string
 {
     if (empty($object) || !in_array($object, ['author', 'leader'])) {
         return '';
@@ -178,6 +189,7 @@ JOIN univers ON leaders.id_u = univers.id";
     }
 
     $results = $db->rawQuery($query);
+    $list = [];
     foreach ($results as $row) {
         $sub_row_str = Html::a(
             $row['suname'] . " " . $row['name'] . " " . $row['lname'],
@@ -213,7 +225,7 @@ JOIN univers ON leaders.id_u = univers.id";
             $sub_row_str .= $hash
                 ? Html::a('Получить письмо!', 'getmails.php?hash=' . $row['hash'] . $get_text)
                 : '';
-            if ($row['email_recive'] == 1 && $hash) {
+            if ((string)$row['email_recive'] === '1' && $hash) {
                 $sub_row_str .= ' [The email have received and read.' . $row['email_date'] . ' ] ';
             }
             $sub_row_str .= Html::a('',
@@ -223,106 +235,103 @@ JOIN univers ON leaders.id_u = univers.id";
             $sub_row_str .= Html::checkbox('works_id[]', false, ['value' => $row['id']]);
         }
         $list [] = Html::tag('li', $sub_row_str, [
-            'title' => 'Останні зміни :' . \htmlspecialchars($row['date']),
+            'title' => 'Останні зміни :' . htmlspecialchars($row['date']),
             'data-index' => $row['id']
         ]);
     }
     $items = implode('', $list);
     return <<<__HTML__
-<ol data-object-name="{$object}">{$items}</ol>
+<ol data-object-name="$object">$items</ol>
 __HTML__;
 }
 
 
 /**
- * @param bool $showAllInfo
  * @param MysqliDb|null $db
+ * @return string
+ * @throws Exception
  */
-function listLeadersWhoArrival($showAllInfo = false, MysqliDb $db = null)
+function getListLeadersWhoArrival(MysqliDb $db): string
 {
-    global $link;
-    $query = "SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as  fio FROM leaders WHERE arrival='1' ORDER BY fio ASC";
-    $text = "";
-    $rowTable = "%s<br>";
-    if ($showAllInfo) {
-        $query = "SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as fio, degreefull, statusfull, position,univerrod FROM leaders
-                  LEFT JOIN positions ON positions.id = leaders.id_pos 
-                  LEFT JOIN univers ON univers.id = leaders.id_u
-                  LEFT JOIN degrees ON degrees.id = leaders.id_deg
-                  LEFT JOIN statuses ON statuses.id = leaders.id_sat
-                  WHERE arrival='1' ORDER BY fio ASC";
-        $text = '(Розгорнутий)';
-        $rowTable = "%s, %s, %s, %s %s<br>";
+    $query = "
+SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as fio, 
+       degreefull, 
+       statusfull, 
+       position,
+       univerrod 
+FROM `leaders`
+      LEFT JOIN positions ON positions.id = leaders.id_pos 
+      LEFT JOIN univers ON univers.id = leaders.id_u
+      LEFT JOIN degrees ON degrees.id = leaders.id_deg
+      LEFT JOIN statuses ON statuses.id = leaders.id_sat
+  WHERE arrival='1' ORDER BY fio;";
 
-    }
-    $result = mysqli_query($link, $query)
-    or die('Помилка запиту функція listLeadersWhoArrival: ' . mysqli_error($link));
-    echo "<h3> </h3>";
-    echo "<details><summary>Список супроводжуючих/керівників, що прибули для участі у роботі журі {$text}</summary>";
-    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-        //print_r($row);
-        echo vsprintf($rowTable, $row);
-    }
-    echo "</details>";
+    $results = $db->rawQuery($query);
+    $list = implode('<br/>', array_map(static function ($item) {
+        return vsprintf("%s, %s, %s, %s %s", $item);
+    }, $results));
+    return <<<__HTML__
+<h3> </h3>
+<details>
+<summary>Список супроводжуючих/керівників, що прибули для участі у роботі журі (Розгорнутий)</summary>$list
+</details>
+__HTML__;
 }
 
 /**
- * Список руководителей или авторов без нумерации Используцется при формировании программы
+ * @param MysqliDb $db
+ * @return string
+ * @throws Exception
+ */
+function getShortListLeadersWhoArrival(MysqliDb $db): string
+{
+    $query = "
+SELECT CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as  fio 
+FROM `leaders` 
+WHERE `arrival`='1' 
+ORDER BY fio;
+";
+    $results = $db->rawQuery($query);
+    $list = implode('<br/>', array_map(static function ($item) {
+        return $item['fio'];
+    }, $results));
+    return <<<__HTML__
+<h3> </h3>
+<details>
+<summary>Список супроводжуючих/керівників, що прибули для участі у роботі журі</summary>$list
+</details>
+__HTML__;
+}
+
+/**
+ * Список авторов без нумерации
+ *
  *  Фамилия и инициалы
  *
- * @param      $id_w
- * @param      $who
- * @param bool $showId
- * @param MysqliDb|null $db
+ * @param MysqliDb $db
+ * @param int $id_w
+ * @return string
+ * @throws Exception
  */
-function short_list_leader_or_autors_str($id_w, $who, $showId = false, MysqliDb $db = null)
+function getShortListAutors(MysqliDb $db, int $id_w):string
 {
-    global $link;
-    $query = ($who === 'wa') ?
-        "SELECT autors.id, 
-        CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as fio\n 
-        FROM `wa` left outer join `autors` ON `wa`.`id_a`=`autors`.`id`\n" :
-        "SELECT leaders.id, CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as  fio,
-        `position`,`status`,`degree`FROM `wl` 
-        LEFT OUTER JOIN `leaders` ON `wl`.`id_l`=`leaders`.`id`
-        LEFT OUTER JOIN `positions` ON `leaders`.`id_pos` = `positions`.`id`
-        LEFT OUTER JOIN `statuses` ON `leaders`.`id_sat` = `statuses`.`id`
-        LEFT OUTER JOIN `degrees` ON `leaders`.`id_deg` = `degrees`.`id`";
-
-
-    $query .= "WHERE `id_w`='" . $id_w . "' ORDER BY `fio` ASC";
-    //echo $query;
-
-    $result = mysqli_query($link, $query)
-    or die('Помилка запиту функція short_list_leader_or_autors_str: ' . mysqli_error($link));
-    while ($row = mysqli_fetch_array($result)) {
-        //print_r($row);
-        if ($who === 'wa') {
-            $str = $row['fio'];
-            $str .= ($showId == true) ? "<span id=\"id\" >(№" . $row['id'] . ")</span>" : "";
-        } else {
-            $str = '';
-            if ($row['degree'] !== '-немає-') {
-                $str .= $row['degree'];
-                if ($row['status'] !== '-немає-') {
-                    $str .= ', ' . $row['status'] . ",<br/> " . $row['fio'];
-                } else {
-                    $str .= ",<br/> " . $row['fio'];
-                }
-            } else {
-                $str .= $row['position'] . ",<br/> " . $row['fio'];
-            }
-        }
-        $str .= "<br>";
-        echo $str;
-    }
+    $query = "
+SELECT autors.id, 
+        CONCAT(`suname`,'&nbsp;',left(`name`,1),'.',left(`lname`,1),'.') as fio 
+FROM `wa` 
+    left outer join `autors` ON `wa`.`id_a`=`autors`.`id` 
+WHERE `id_w`='" . $id_w . "' ORDER BY `fio`;";
+    $results = $db->rawQuery($query);
+    return implode('<br/>', array_map(static function ($item) {
+        return $item['fio'];
+    }, $results));
 }
 
 
 /**
- * @param string $page
+ * @param string|null $page
  */
-function Go_page($page)
+function Go_page(?string $page):void
 {
     $page = ($page === 'error' || $page === null) ? 'action.php?action=error_list' : $page;
     header('location: ' . urldecode($page));

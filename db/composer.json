@@ -34,6 +34,9 @@
     "psr-4": {
       "zukr\\": "src/zukr/",
       "test\\": "tests/"
-    }
+    },
+    "files": [
+      "admin/functions.php"
+    ]
   }
 }

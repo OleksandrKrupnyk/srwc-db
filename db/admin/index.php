@@ -7,10 +7,9 @@ use zukr\log\Log;
 
 header('Content-Type: text/html; charset=utf-8');
 require 'config.inc.php';
-require 'functions.php';
 require '../vendor/autoload.php';
 Base::init();
-global $link;
+$db = Base::$app->db;
 $log = Log::getInstance();;
 
 session_name('tzLogin');
@@ -47,16 +46,11 @@ if (isset($_POST['submit'])) {
     // Проверяем заполненные поля.Поля заполнены?
     if (empty($err)) {
         //Да?
-        $_POST['username'] = mysqli_real_escape_string($link, $_POST['username']);
-        $_POST['password'] = mysqli_real_escape_string($link, $_POST['password']);
         $_POST['rememberMe'] = (int)$_POST['rememberMe'];
         // Получаем все введенные данные
 
         $query = "SELECT id,usr FROM tz_members WHERE usr='" . $_POST['username'] . "' AND pass='" . md5($_POST['password']) . "'";
-        $result = mysqli_query($link, $query)
-        or die('Невірний запрос до бази даних: ' . mysqli_error($link));
-
-        $row = mysqli_fetch_array($result);
+        $row = $db->rawQueryOne($query);
 
         if (!empty($row['usr'])) {
             // Если все в порядке - входим в систему

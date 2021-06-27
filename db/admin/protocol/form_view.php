@@ -5,6 +5,11 @@
  * Date: 21.03.2018
  * Time: 0:34
  */
+
+use zukr\base\Base;
+
+$db = Base::$app->db;
+
 //Запрос на сбор статистики конкурса
 global $link;
 $query = "SELECT COUNT(id) AS count FROM works
@@ -85,7 +90,7 @@ while ($row = mysqli_fetch_array($result)) {
 ?>
 </table>
 <?php
-listLeadersWhoArrival(false, null);
-listLeadersWhoArrival(true, null);
+echo getShortListLeadersWhoArrival($db);
+echo getListLeadersWhoArrival($db);
 ?>
 <!-- Окончание  Протокол засідання-->

@@ -12,7 +12,6 @@ use zukr\univer\UniverHelper;
 use zukr\work\WorkHelper;
 
 require 'config.inc.php';
-require 'functions.php';
 require '../vendor/autoload.php';
 header("Content-Type: text/html; charset=utf-8");
 session_name('tzLogin');

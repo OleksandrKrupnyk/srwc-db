@@ -2,7 +2,6 @@
 
 
 require 'config.inc.php';
-require 'functions.php';
 require_once 'Mail.php';
 require_once 'Mail/mime.php';
 require '../vendor/autoload.php';

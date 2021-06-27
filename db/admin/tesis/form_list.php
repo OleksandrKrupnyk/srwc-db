@@ -12,7 +12,6 @@ use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 
 $db = Base::$app->db;
-global $link;
 $query = "SELECT works.title,works.id,sections.section,univers.town FROM works 
 LEFT JOIN sections ON works.id_sec=sections.id 
 LEFT JOIN univers ON works.id_u=univers.id
@@ -35,9 +34,9 @@ foreach ($results as $section => $result) {
     echo "<div id='sectiontitle' class='sectiontitle'>{$section}</div>";
     foreach ($result as $row) {
         //Запишем первую работу из новой секции
-        short_list_leader_or_autors_str($row['id'], "wa", false, null);
+        echo getShortListAutors($db, $row['id'])
         /*Вставить список файлов работы*/
-        echo list_files($row['id'], $db, 1);
-        echo TAB_SP . "(" . $row['title'] . ")" . TAB_SP . "<strong><em>" . $row['town'] . "</em></strong><br>"; // Напишем название работы
+        .list_files($row['id'], $db, 1)
+        . TAB_SP . "(" . $row['title'] . ")" . TAB_SP . "<strong><em>" . $row['town'] . "</em></strong><br>"; // Напишем название работы
     }
 }

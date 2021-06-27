@@ -7,7 +7,6 @@
 use zukr\base\Base;
 
 require 'config.inc.php';
-require 'functions.php';
 require '../vendor/autoload.php';
 header('Content-Type: text/html; charset=utf-8');
 session_name('tzLogin');

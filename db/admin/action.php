@@ -1,6 +1,5 @@
 <?php
 require 'config.inc.php';
-require 'functions.php';
 require '../vendor/autoload.php';
 
 use DebugBar\DataCollector\MessagesCollector;

@@ -128,44 +128,6 @@ if (isset($_FILES['file']))//проверяем загрузился ли фай
                     Base::$log->error('Помилка при зберіганні даних файлу. ' . PHP_EOL . $filePath);
                 }
                 Go_page("action.php?action=all_view#id_w" . $file->id_w);
-                /*
-                $query = "";//Очищаем запрос
-
-                switch ($_POST['typeoffile'])//Проверяем тип загруженного файла и формируем запрос в БД для обновления
-                {
-                    case "tesis":
-                        {
-                            $query = "UPDATE `works` SET `tesis`='1',`date`=NOW() WHERE `id`='{$id_w}'";
-                            $temptable = "works"; // табл.для лога
-                        }
-                        break;
-                    case "presentation":
-                        {
-                            $query = "UPDATE `files` SET `typeoffile`='2',`date`=NOW() WHERE `id`='{$id_w}'";
-                            $temptable = "files";
-                        }
-                        break;
-                    case "information":
-                        {
-                            $query = "UPDATE `files` SET `typeoffile`='3',`date`=NOW() WHERE `id`='{$id_w}'";
-                            $temptable = "files";
-                        }
-                        break;
-                    default:
-                    {//ничего  не делаем
-                    }
-                }
-                if (!("" === $query))//Если запрос не пустой то отправить его в БД
-                {
-                    //echo "<pre>Запрос не пустой!</pre>";
-                    $result = mysqli_query($link, $query)
-                    or die("Полка оновлення запису дія work_edit_add_file_2: " . mysqli_error($link));
-                    log_action($_POST['action'], $temptable, $id_w);
-                }
-                //print_r($query);
-
-                header("Location: action.php?action=all_view#id_w" . $id_w);
-                */
             }
         }
 

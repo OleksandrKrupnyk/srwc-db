@@ -4,7 +4,6 @@ use zukr\base\Base;
 use zukr\base\html\Html;
 
 require 'config.inc.php';
-require 'functions.php';
 require '../vendor/autoload.php';
 session_name('tzLogin');
 session_start();
