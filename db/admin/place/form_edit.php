@@ -7,11 +7,12 @@
  * Time: 0:37
  */
 
-use zukr\base\helpers\StringHelper;
+use zukr\base\Base;
+use zukr\base\helpers\ArrayHelper;
 use zukr\base\html\Html;
 use zukr\place\PlaceHelper;
 
-global $link;
+$db = Base::$app->db;
 $query = "SELECT a.id, 
        CONCAT(a.suname,' ',a.name,' ',a.lname) AS fio, 
        univers.univer,
@@ -28,13 +29,9 @@ FROM `autors` AS a
   WHERE a.arrival = '1' 
     AND works.invitation = '1' 
 ORDER BY sections.id, a.id;";
-$result = mysqli_query($link, $query)
-or die("Помилка запиту: " . mysqli_error($link));
 
-$row = mysqli_fetch_array($result);
-
-$title = StringHelper::truncate($row['title'], 30);
-$section = $row['section'];
+$results = $db->rawQuery($query);
+$results = ArrayHelper::group($results, 'section');
 $ph = PlaceHelper::getInstance();
 ?>
     <!-- Распределение мест среди студентов которые приехали на конференцию-->
@@ -50,23 +47,22 @@ $ph = PlaceHelper::getInstance();
             <th>Учасник/Автор</th>
             <th>ВНЗ</th>
             <th>Місце</th>
-            <th>(шифр) &sum;реценз.; Робота</th>
+            <th>(шифр) &sum;реценз. ; Робота</th>
         </tr>
         <?php
-        echo "<tr><th colspan='5'>{$section}</th></tr>
-          <tr data-key='{$row['id']}'><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>"
-            . Html::select('place', $row['place'], $ph->getPlaceList(), ['title' => "Призове місце:(D-Диплом за участь)"])
-            . "</td><td title=\"{$row['title']}\">({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
-        while ($row = mysqli_fetch_array($result)) {
-            if ($section !== $row['section']) {
-                $section = $row['section'];
-                echo "<tr><th colspan='5'>{$section}</th></tr>";
+        foreach ($results as $section => $rows) {
+            echo "<tr><th colspan='5'>$section</th></tr>";
+             uasort($rows, static function($a,$b){
+                return $a['balls'] <= $b['balls'];
+             });
+            foreach ($rows as $row) {
+                $title = mb_substr($row['title'], 0, 30, "utf-8") . "...";
+                echo "<tr data-key='{$row['id']}'><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>"
+                    . Html::select('place', $row['place'], $ph->getPlaceList(), ['title' => "Призове місце:(D-Диплом за участь)"])
+                    . "</td><td title='{$row['title']}'>({$row['id_w']}) &sum;{$row['balls']} ; $title</td></tr>";
             }
-            $title = mb_substr($row['title'], 0, 30, "utf-8") . "...";
-            echo "<tr data-key='{$row['id']}'><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>"
-                . Html::select('place', $row['place'], $ph->getPlaceList(), ['title' => "Призове місце:(D-Диплом за участь)"])
-                . "</td><td title='{$row['title']}'>({$row['id_w']}) &sum;{$row['balls']} ; {$title}</td></tr>";
-        } ?>
+        }
+        ?>
     </table>
     <!-- Распределение мест стреди студентов которые приехали на конференцию-->
 <?= $ph->registerJS('place.js') ?>
