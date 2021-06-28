@@ -2,7 +2,6 @@
 
 
 require './../admin/config.inc.php';
-require './../admin/functions.php';
 require '../vendor/autoload.php';
 
 use zukr\base\Base;
