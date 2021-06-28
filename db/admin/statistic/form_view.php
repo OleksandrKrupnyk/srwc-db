@@ -47,7 +47,7 @@ foreach ($results as $i => $row) {
 }
 ?>
 <!-- Статистична довідка -->
-<header><a href='action.php'>Меню</a></header>
+<header><a href='action.php'><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Статистична довідка</header>
 <?= $txt ?>
 <table>

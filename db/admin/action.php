@@ -82,6 +82,7 @@ $_type = $session->getFlash('recordSaveType', '');
         <link href="../css/phone.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/jquery-confirm.min.css" type="text/css" rel="stylesheet"/>
         <link href="../css/style.css" type="text/css" rel="stylesheet"/>
+        <link href="../css/icofont.min.css" rel="stylesheet"/>
         <script type="text/javascript" src="../js/jquery.min.js"></script>
         <script type="text/javascript" src="../js/notify.js"></script>
         <script type="text/javascript" src="../js/jquery-confirm.min.js"></script>
@@ -143,7 +144,7 @@ $_type = $session->getFlash('recordSaveType', '');
         $menuData = include 'menu.php';
         $menu = new Menu($menuData);
         $session->setFromParam();
-        echo "<header>Меню</header>"
+        echo "<header><i class='icofont-navigation-menu'></i> Меню</header>"
             . $menu->getMenu();
     }
     ?>

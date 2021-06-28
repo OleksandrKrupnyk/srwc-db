@@ -34,7 +34,7 @@ $users = (new UserRepository())->getDropDownList();
 Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование руководителя -->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Редагування даних керівника</header>
 <form class="editLeader form" method="post" action="action.php">
     <?= Html::select('Leader[id_u]', $leader['id_u'], $univers,

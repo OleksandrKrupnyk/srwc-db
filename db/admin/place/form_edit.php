@@ -35,7 +35,7 @@ $results = ArrayHelper::group($results, 'section');
 $ph = PlaceHelper::getInstance();
 ?>
     <!-- Распределение мест среди студентов которые приехали на конференцию-->
-    <header><a href='action.php'>Меню</a></header>
+    <header><a href='action.php'><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header>Призначення місць.</header>
     Сума місць[<span id='summaryResult'></span>]
     <menu class='viewTableMenu'>

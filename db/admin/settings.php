@@ -39,7 +39,7 @@ Base::$app->cacheFlush();
     <title>Налаштування</title>
 </head>
 <body>
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <?php
 echo '<form class="form" action="settings.php" method=POST><h2>Коротка інформація про систему</h2>'
     . '<h5>Обмеження розміру файлу на завантаження:' . ini_get('upload_max_filesize') . '</h5>'

@@ -42,7 +42,7 @@ foreach ($results as $row) {
 }
 ?>
 <!-- Протокол засідання -->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Протокол засідання</header>
 <?= "<p>Галузева конкурсна комісія забезпечила рецензування 
     {$statData['count_works']}&nbsp;студентських наукових робіт, що надійшли з 

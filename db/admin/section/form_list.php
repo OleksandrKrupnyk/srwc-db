@@ -14,7 +14,7 @@ foreach ($sh->getSections() as $id => $item) {
 }
 ?>
     <!-- Список секций -->
-    <header><a href="action.php">Меню</a></header>
+    <header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header>
         <div>Список секцій</div>
     </header>

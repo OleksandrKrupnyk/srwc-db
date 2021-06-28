@@ -26,7 +26,7 @@ $univers = $uh->getInvitedDropdownList();
 Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование автора -->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Редагування даних автора</header>
 <form class="editAutor form" method="post" action="action.php">
     <?= Html::select('Author[id_u]', $author['id_u'], $univers,

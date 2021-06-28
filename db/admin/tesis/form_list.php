@@ -27,7 +27,7 @@ $results = ArrayHelper::group($results, 'section');
             font-weight: bold;
         }
     </style>
-    <header><a href='action.php'>Меню</a></header>
+    <header><a href='action.php'><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header>Тезиси</header>
 <?php
 foreach ($results as $section => $result) {

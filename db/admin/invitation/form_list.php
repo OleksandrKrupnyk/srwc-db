@@ -21,7 +21,7 @@ foreach ($scanFiles as $scanFile) {
     $listFiles[] = $content;
 }
 ?>
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <h1>Список відсканованих запрошень</h1>
 <?php if (!empty($listFiles)): ?>
     <form class="form">

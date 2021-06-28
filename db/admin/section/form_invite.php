@@ -37,7 +37,7 @@ foreach ($results as $row) {
 ?>
 <!--Запрошення робіт-->
 <!-- Разделение по секциям и приглашения -->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Запрошення (<?= count($works) ?> всього)</header>
 <table id="tableInvitationSection" class="zebra">
     <tr>

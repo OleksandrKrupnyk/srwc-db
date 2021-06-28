@@ -1,13 +1,14 @@
-@charset "UTF-8";
 /* Стили демонстрационной страницы */
+
 /* Стили основного меню */
+
 /* Секция закладок */
 #tabs-container {
   clear: both;
   font-size: 12px;
   height: 34px;
   margin: 0 auto;
-  padding: 0;
+  padding: 0
 }
 
 .tabs {
@@ -16,36 +17,41 @@
   padding: 1px 0 2px;
   position: absolute;
   z-index: 100;
+
+  li {
+    float: left;
+    list-style: none;
+    position: relative;
+    margin: 7px 0 0 0;
+
+    a {
+      background: #f3f3f3;
+      border: none;
+      border-left: 1px solid #d5d5d5;
+      border-right: 1px solid #d5d5d5;
+      border-top: 1px solid #d5d5d5;
+      color: #333;
+      display: block;
+      margin: 0 2px 0 0;
+      padding: 6px 10px 4px;
+
+      &:first-child {
+        margin-left: 10px
+      }
+
+      &:hover {
+        background: #fafafa;
+        border-bottom: 1px solid #d5d5d5;
+        color: #fff;
+        text-decoration: none
+      }
+      i {
+        font-size: 13pt;
+      }
+    }
+  }
 }
-.tabs li {
-  float: left;
-  list-style: none;
-  position: relative;
-  margin: 7px 0 0 0;
-}
-.tabs li a {
-  background: #f3f3f3;
-  border: none;
-  border-left: 1px solid #d5d5d5;
-  border-right: 1px solid #d5d5d5;
-  border-top: 1px solid #d5d5d5;
-  color: #333;
-  display: block;
-  margin: 0 2px 0 0;
-  padding: 6px 10px 4px;
-}
-.tabs li a:first-child {
-  margin-left: 10px;
-}
-.tabs li a:hover {
-  background: #fafafa;
-  border-bottom: 1px solid #d5d5d5;
-  color: #fff;
-  text-decoration: none;
-}
-.tabs li a i {
-  font-size: 13pt;
-}
+
 
 .tabs li.active a {
   -webkit-border-radius: 4px 4px 0 0;
@@ -57,7 +63,7 @@
   border-top: 1px solid #d5d5d5;
   color: #222;
   display: block;
-  padding: 6px 10px 4px;
+  padding: 6px 10px 4px
 }
 
 .tabs li.child a {
@@ -67,13 +73,14 @@
   color: #333;
   display: block;
   margin: 0;
-  padding: 6px 10px 4px;
+  padding: 6px 10px 4px
 }
 
 /* Меню первого уровня */
+
 .tabs > li > a:hover {
   background: #ececec;
-  color: #222;
+  color: #222
 }
 
 .tabs > li.active > a:hover {
@@ -82,7 +89,7 @@
   background: #fff;
   border-bottom: 1px solid #fff;
   border-radius: 3px 3px 0 0;
-  color: #222;
+  color: #222
 }
 
 /*Выпадающая навигация*/
@@ -93,7 +100,7 @@
   font-size: 12px;
   height: 45px;
   margin: 0 auto;
-  padding: 0;
+  padding: 0
 }
 
 /* Меню первого и второго уровня */
@@ -103,60 +110,65 @@
   padding: 5px 0 2px;
   position: absolute;
   z-index: 100;
-}
-.nav li {
-  float: left;
-  list-style: none;
-  position: relative;
-  margin: 0;
-}
-.nav li a {
-  background: no-repeat right;
-  border: none;
-  color: #222;
-  display: block;
-  margin: 0 5px 0 0;
-  padding: 5px 20px 5px 8px;
-}
-.nav li a i {
-  font-size: 13pt;
-}
-.nav li ul {
-  -moz-border-radius-bottomleft: 3px;
-  -moz-border-radius-bottomright: 3px;
-  -moz-border-radius-topright: 3px;
-  -moz-box-shadow: 1px 1px 1px #333;
-  -webkit-border-bottom-right-radius: 3px;
-  -webkit-box-shadow: 1px 1px 1px #333;
-  background: #ff7979;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  border-top-right-radius: 3px;
-  box-shadow: 1px 1px 1px #333;
-  color: #222;
-  display: none;
-  margin: 0;
-  padding: 2px 5px;
-  position: absolute;
-  /*width:100px*/
-}
-.nav li ul li {
-  width: 100px;
-}
-.nav li ul li a {
-  background: #ff7979;
-  border: none;
-  color: #eee;
-  line-height: 25px;
-  margin: 0;
-  padding: 0 0 0 1px;
-}
-.nav li ul li a:hover {
-  background: #e17979;
-  -webkit-border-radius: 3px 3px 0 0;
-  -webkit-box-shadow: 1px 1px 1px #333;
-  -moz-border-radius: 3px 3px 0 0;
-  -moz-box-shadow: 1px 1px 1px #333;
+
+  li {
+    float: left;
+    list-style: none;
+    position: relative;
+    margin: 0;
+
+    a {
+      background: no-repeat right;
+      border: none;
+      color: #222;
+      display: block;
+      margin: 0 5px 0 0;
+      padding: 5px 20px 5px 8px;
+      i {
+        font-size: 13pt;
+      }
+
+    }
+
+    ul {
+      -moz-border-radius-bottomleft: 3px;
+      -moz-border-radius-bottomright: 3px;
+      -moz-border-radius-topright: 3px;
+      -moz-box-shadow: 1px 1px 1px #333;
+      -webkit-border-bottom-right-radius: 3px;
+      -webkit-box-shadow: 1px 1px 1px #333;
+      background: #ff7979;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+      border-top-right-radius: 3px;
+      box-shadow: 1px 1px 1px #333;
+      color: #222;
+      display: none;
+      margin: 0;
+      padding: 2px 5px;
+      position: absolute;
+      /*width:100px*/
+      li {
+        width: 100px;
+        a {
+          background: #ff7979;
+          border: none;
+          color: #eee;
+          line-height: 25px;
+          margin: 0;
+          padding: 0 0 0 1px;
+
+          &:hover {
+            background: #e17979;
+            -webkit-border-radius: 3px 3px 0 0;
+            -webkit-box-shadow: 1px 1px 1px #333;
+            -moz-border-radius: 3px 3px 0 0;
+            -moz-box-shadow: 1px 1px 1px #333;
+          }
+        }
+      }
+    }
+  }
 }
 
 .nav > li > a:hover {
@@ -165,7 +177,7 @@
   background: #ff7979 no-repeat right;
   border-radius: 3px 3px 0 0;
   color: #fff;
-  padding: 5px 20px 5px 8px;
+  padding: 5px 20px 5px 8px
 }
 
 /* Меню второго уровня */
@@ -173,6 +185,8 @@
     border-top:1px solid #e17979;
     font-weight:600
 }*/
+
+
 /* Класс добавляется с помощью jQuery */
 .nav li.current > a {
   -moz-border-radius: 3px 3px 0 0;
@@ -182,12 +196,10 @@
   background: #ff7979 no-repeat right;
   border-radius: 3px 3px 0 0;
   box-shadow: 1px 1px 1px #333;
-  color: #fff;
+  color: #fff
 }
 
 /* Обратная совместимость CSS */
 .nav li:hover > ul.child {
-  display: block;
+  display: block
 }
-
-/*# sourceMappingURL=menustyle.css.map */

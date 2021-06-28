@@ -11,7 +11,7 @@ Base::init();
 //Если есть доступ к странице
 $db = Base::$app->db;
 if ($_SESSION['access']) {
-    $content = '<header><a href="action.php">Меню</a></header>';
+    $content = '<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>';
     if (isset($_GET['view'])) {
         $content .= "<header>Данні {$_GET['view']}</header><header><a href=\"log.php\" >Журнал</a></header>";
         $query = "

@@ -4,6 +4,7 @@
 
 use zukr\base\Base;
 use zukr\log\Log;
+use zukr\login\LoginForm;
 
 header('Content-Type: text/html; charset=utf-8');
 require 'config.inc.php';
@@ -11,8 +12,7 @@ require '../vendor/autoload.php';
 Base::init();
 $db = Base::$app->db;
 $log = Log::getInstance();;
-
-session_name('tzLogin');
+Base::$session->setName('tzLogin');
 session_set_cookie_params(2 * 7 * 24 * 60 * 60);
 // Устанавливаем время жизни куки 2 недели
 session_start();
@@ -31,35 +31,39 @@ if (isset($_SESSION['access']) && !isset($_COOKIE['tzRemember']) && !$_SESSION['
     $log->logAction('logoff', 'tz_members', '');
     $_SESSION = [];
     session_destroy();
-
-    // Удаляем сессию
 }
 
 /* Переход был из другой формы? */
-if (isset($_POST['submit'])) {
+if (filter_has_var(INPUT_POST, 'submit')) {
     //Да
     $err = [];
     // Запоминаем ошибки
-    if (!$_POST['username'] || !$_POST['password']) {
-        $err[] = 'Все поля должны быть заполнены!';
+    if (!(
+        filter_has_var(INPUT_POST, 'username')
+        &&
+        strlen(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)) > 0
+    )) {
+        $err[] = 'Логін не переданий';
+    }
+    if (!(filter_has_var(INPUT_POST, 'password') &&
+        strlen(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING)) > 0)) {
+        $err[] = 'Пароль не переданий';
     }
     // Проверяем заполненные поля.Поля заполнены?
     if (empty($err)) {
-        //Да?
-        $_POST['rememberMe'] = (int)$_POST['rememberMe'];
-        // Получаем все введенные данные
-
-        $query = "SELECT id,usr FROM tz_members WHERE usr='" . $_POST['username'] . "' AND pass='" . md5($_POST['password']) . "'";
-        $row = $db->rawQueryOne($query);
-
-        if (!empty($row['usr'])) {
+        $loginForm = new LoginForm(
+            $_POST['username'],
+            md5($_POST['password']),
+            $_POST['rememberMe']
+        );
+        if ($loginForm->validate()) {
             // Если все в порядке - входим в систему
-            $_SESSION['usr'] = $row['usr'];
-            $_SESSION['id'] = $row['id'];
+            $_SESSION['usr'] = $loginForm->userName;
+            $_SESSION['id'] = $loginForm->getId();
             $log->logAction('login', 'tz_members', '');
-            $_SESSION['rememberMe'] = $_POST['rememberMe'];
+            $_SESSION['rememberMe'] = $loginForm->rememberMe;
             $_SESSION['access'] = 'YES';
-            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['user_id'] = $loginForm->getId();
             // Сохраняем некоторые данные сессии
             setcookie('tzRemember', $_POST['rememberMe']);
             Go_page('action.php');
@@ -67,12 +71,13 @@ if (isset($_POST['submit'])) {
             $err[] = 'Ошибочный пароль или/и имя пользователя!';
         }
     }
+
     if ($err) {
         $_SESSION['msg']['login-err'] = implode('<br />', $err);
     }
     // Сохраняем сообщение об ошибке сессии
     Go_page('index.php');
-}//if
+}
 ?>
 <!DOCTYPE html >
 <html lang="ua">
@@ -83,37 +88,71 @@ if (isset($_POST['submit'])) {
     <link rel="icon" type="image/png" href="../images/favicon-96x96.png" sizes="96x96">
     <link rel="icon" type="image/png" href="../images/favicon-192x192.png" sizes="192x192">
     <link rel="manifest" href="manifest.json">
-    <link href="../css/login.css" type="text/css" rel="stylesheet">
-    <script type="text/javascript" src="../js/jquery.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/icofont.min.css">
     <title>Реєстр <?= Base::$app->app_name ?></title>
 </head>
-<?php if (!isset($_SESSION['access'])) : ?>
+<body>
+
+<?php
+if (Base::$session->get('access') === null) : ?>
     <!-- Форма авторизации на страничке -->
-    <body>
-    <form method='post' action='' class="ui-form">
-        <h3>Вхід<br><?= Base::$app->app_name ?></h3>
-        <?php
-        if (isset($_SESSION['msg']['login-err'])) {
-            echo "<div class='err'>{$_SESSION['msg']['login-err']}</div>";
-            unset($_SESSION['msg']['login-err']);
-        }
-        ?>
-        <div class="form-row">
-            <input type="text" name="username" id="username" required><label for="username">Логін</label>
+    <div class="container">
+        <div class="row">
+            <div class="col-5 m-auto">
+                <form method='post' action='index.php'>
+
+                    <h3 class="text-center"><i class="h3 icofont-company"></i> Вхід <?= Base::$app->app_name ?></h3>
+                    <?php
+                    if (isset($_SESSION['msg']['login-err'])) {
+                        echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+{$_SESSION['msg']['login-err']}
+<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+</div>";
+                        unset($_SESSION['msg']['login-err']);
+                    }
+                    ?>
+                    <div class="mb-3">
+                        <label class="form-label" for="username">Логін</label>
+                        <div class="input-group">
+                            <div class="input-group-text"><i class="icofont-user-alt-3"></i></div>
+                            <input class="form-control" type="text" name="username" id="username"
+                            >
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="password"> Пароль</label>
+                        <div class="input-group">
+                            <div class="input-group-text"><i class="icofont-ui-password"></i></i></div>
+                            <input class="form-control" type="password" name="password" id="password">
+                        </div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input class="form-check-input" name="rememberMe" id="rememberMe" type="checkbox" value="1"
+                               checked/>
+                        <label class="form-check-label" for="rememberMe">Запам'ятати мене</label>
+                    </div>
+                    <div class="mb-3">
+                        <button name="submit" class="btn btn-primary w-100" value="login"><i class="icofont-login"></i>
+                            Увійти
+                        </button>
+                    </div>
+                    <div class="mb-3">
+                        <a class="btn btn-primary w-100"
+                           href="../app/index.php"><i class="icofont-list"></i> Реєстр</a>
+                    </div>
+                    <div class="mb-3">
+                        <a class="btn btn-primary w-100" href="../../konkurs/"><i class="icofont-brand-joomla"></i> Сайт</a>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="form-row">
-            <input type="password" name="password" id="password" required><label for="password">Пароль</label>
-        </div>
-        <input name="rememberMe" id="rememberMe" type="checkbox" value="1" checked><label for="rememberMe">Запам'ятати
-            мене</label>
-        <button name="submit" class="bt_login" value="login">Увійти</button>
-        <input type="button" value="Реєстр" onclick="window.location='./../app/index.php'">
-        <input type="button" value="Сайт" onclick="window.location='./../../konkurs/'">
-    </form>
-    </body>
+    </div>
 <?php else: ?>
     <header><a href="action.php" title="Торжественно клянусь, что замышляю только шалость!">Працювати</a></header>
     <span></span>
     <footer><a href="index.php?logoff" title="Доббі вільний!">Вийти</a></footer>
 <?php endif; ?>
+</body>
+<script src="../js/bootstrap.bundle.min.js"></script>
 </html>

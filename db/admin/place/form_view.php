@@ -118,7 +118,7 @@ $result = $db->rawQueryOne($query);
 ?>
 <!-- просмотр результата распределения мест -->
 <header>
-    <a href="action.php">Меню</a>
+    <a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a>
 </header>
 <header title="Розподіл призових місць серед вузів які брали участь у конференції">Розподіл призових місць серед
     авторів

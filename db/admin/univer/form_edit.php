@@ -21,7 +21,7 @@ if (empty($univer) || !$id_u) {
 Base::$session->setRedirectParam();
 ?>
 <!-- Редактирование данных университета -->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Редагування даних університету</header>
 <form class="editUniver form" method="post" action="action.php">
     <label>Коротка назва</label>

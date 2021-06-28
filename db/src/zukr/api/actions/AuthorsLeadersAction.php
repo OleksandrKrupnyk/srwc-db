@@ -67,10 +67,10 @@ class AuthorsLeadersAction implements ApiActionsInterface
     {
         if (empty($this->id_u = \filter_input(INPUT_POST, 'id_u', FILTER_VALIDATE_INT))) {
             throw new InvalidArgumentException('id_u Must be set');
-        };
+        }
         if (empty($this->id_w = \filter_input(INPUT_POST, 'id_w', FILTER_VALIDATE_INT))) {
             throw new InvalidArgumentException('id_w Must be set');
-        };
+        }
     }
 
     /**

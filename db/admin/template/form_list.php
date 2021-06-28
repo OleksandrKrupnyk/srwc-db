@@ -6,7 +6,7 @@ use zukr\base\html\Html;
 $templateRepository = new \zukr\template\TemplateRepository();
 $templates = $templateRepository->findTemplateFromDB();
 ?>
-    <header><a href='action.php'>Меню</a></header>
+    <header><a href='action.php'><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header>Шаблони</header>
     <table>
         <tr>

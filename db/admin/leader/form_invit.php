@@ -15,7 +15,7 @@ $univers = $uh->getDropDownListShot(
 );
 ?>
     <!--Формування списку запрошень журі-->
-    <header><a href="action.php">Меню</a></header>
+    <header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header style="justify-content:center">Запрошення (&nbsp;<span
                 id="countLeaders"><?= $lh->getCountInvitationLeaders() ?></span>&nbsp;всього)
     </header>

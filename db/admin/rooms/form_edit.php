@@ -13,7 +13,7 @@ use zukr\section\SectionRepository;
 $sections = (new SectionRepository())->getSectionAndCountRooms();
 ?>
 <!-- Распределение секций по аудиториям-->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Аудиторії</header>
 <table id='tableSelectRoom'>
     <tr>

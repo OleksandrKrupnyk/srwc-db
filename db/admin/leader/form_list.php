@@ -6,7 +6,7 @@ Base::$session->setFromParam();
 ?>
 <!-- Список руководителей работ -->
 <header>
-    <a href="action.php">Меню</a>
+    <a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a>
 </header>
 <header>
     <a href="action.php?action=author_list">Список авторів</a>

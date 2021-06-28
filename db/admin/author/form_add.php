@@ -20,7 +20,7 @@ $univers = $uh->getInvitedDropdownList();
 $session->setRedirectParam();
 ?>
 <!-- Форма добавления автора-->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Данні автора</header>
 <form class="addautorForm form" method="post" action="action.php" name='Autor'>
     <?= Html::select('Author[id_u]', $id_u, $univers,

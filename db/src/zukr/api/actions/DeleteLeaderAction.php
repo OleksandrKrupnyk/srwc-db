@@ -34,7 +34,7 @@ class DeleteLeaderAction implements ApiActionsInterface
         try {
             $workAuthorData = (new WorkLeaderRepository())->getByLeaderId($this->id);
             if (!empty($workAuthorData)) {
-                throw new \Exception('Керівник звязаний з роботою', 610);
+                throw new \Exception('Керівник зв`язаний з роботою', 610);
             }
             $leaderData = (new LeaderRepository())->getById($this->id);
             if (empty($leaderData)) {

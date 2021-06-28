@@ -23,7 +23,7 @@ $sections = $sh->getDropdownList();
 Base::$session->setRedirectParam();
 ?>
 <!-- Форма добавления работы-->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Данні роботи</header>
 <form class="addworkForm form" method="post" action="action.php">
     <label for="selunivers">Університет:</label>

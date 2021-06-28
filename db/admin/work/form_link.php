@@ -16,7 +16,7 @@ $univerIds = $wh->getTakePartUniversIds();
 $univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($univerIds));
 ?>
     <!-- Связывание работы -->
-    <header><a href="action.php">Меню</a></header>
+    <header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header>Зв'язування роботи</header>
     <form class="linkworkForm form" method="post" action="action.php">
         <?= Html::select('Work[id_u]', $id_u, $univers,

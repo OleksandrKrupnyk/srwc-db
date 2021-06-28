@@ -23,7 +23,7 @@ $sections = $sh->getDropdownList();
 $id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
 ?>
     <!-- Форма добавления всех сведений-->
-    <header><a href="action.php">Меню</a></header>
+    <header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header>Усі данні роботи</header>
     <form class="addAllForm form" method="post" action="action.php">
         <label>Університет</label>

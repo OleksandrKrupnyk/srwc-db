@@ -13,7 +13,7 @@ $univers = $uh->getDropDownListShotFull(
 <!-- Отметки на регистрации в 3-м корпусе -->
 <!-- Отметки о прибытии на конкурс  -->
 <div class="layout">
-    <header><a href="action.php">Меню</a></header>
+    <header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header class="header pointer">Реєстрація учасників конференції</header>
     <a href="#" id="update_arrival_works"
        title="Подвійне клацання для оновлення відміток у таблиці робіт"

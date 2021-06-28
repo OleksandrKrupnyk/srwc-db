@@ -259,7 +259,7 @@ $who = filter_input(INPUT_GET, 'who', FILTER_SANITIZE_STRING) ?? '';
 $count = count($allWorks);
 ?>
 <!-- Просмотр  таблицы работ -->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Перегляд бази (<?= $count ?> робіт)</header>
 <menu class="viewTableMenu"><?= vsprintf('%s %s %s %s %s %s %s %s', $viewMenuitem); ?></menu>
 <div id="viewtable">

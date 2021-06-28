@@ -19,7 +19,7 @@ $buttonName = (\zukr\base\Params::TURN_ON == Base::$param->ALLOW_EMAIL)
 
 <!-- Список на отправку писем-->
 <!-- Меню действий -->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Список розсилки</header>
 <h1 title="Попередження"><?= $str ?></h1>
 <form class="form" method="post" action="sentmails.php">

@@ -5,7 +5,7 @@ use zukr\base\Base;
 Base::$session->setFromParam();
 ?>
 <!-- Список авторов работ -->
-<header><a href="action.php">Меню</a></header>
+<header><a href="action.php"><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>
     <div>Список авторів</div>
     <a href="action.php?action=leader_list">Список керівників</a>

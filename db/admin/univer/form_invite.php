@@ -16,7 +16,7 @@ $session = Base::$session;
 $session->setFromParam();
 ?>
 <!-- Редактирование списка университетов в которые следует направить первое информационное сообщение -->
-<header><a href='action.php'>Меню</a></header>
+<header><a href='action.php'><i class="icofont-navigation-menu"></i> Меню</a></header>
 <header>Список університетів</header>
 <table id='tableInviteUnivers' class="zebra">
     <tr>
