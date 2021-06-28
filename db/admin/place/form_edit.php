@@ -37,10 +37,8 @@ $ph = PlaceHelper::getInstance();
     <!-- Распределение мест среди студентов которые приехали на конференцию-->
     <header><a href='action.php'><i class="icofont-navigation-menu"></i> Меню</a></header>
     <header>Призначення місць.</header>
-    Сума місць[<span id='summaryResult'></span>]
-    <menu class='viewTableMenu'>
-        <li><a href='action.php?action=place_view'>Деталі</a></li>
-    </menu>
+    <header style="width:fit-content;"><a href='action.php?action=place_view'>Деталі</a></header>
+    <p>Сума місць[<span id='summaryResult'></span>]</p>
     <table id='tableSetPlace'>
         <tr>
             <th>ID учас.</th>
@@ -52,9 +50,9 @@ $ph = PlaceHelper::getInstance();
         <?php
         foreach ($results as $section => $rows) {
             echo "<tr><th colspan='5'>$section</th></tr>";
-             uasort($rows, static function($a,$b){
+            uasort($rows, static function ($a, $b) {
                 return $a['balls'] <= $b['balls'];
-             });
+            });
             foreach ($rows as $row) {
                 $title = mb_substr($row['title'], 0, 30, "utf-8") . "...";
                 echo "<tr data-key='{$row['id']}'><td>{$row['id']}</td><td>{$row['fio']}</td><td>{$row['univer']}</td><td>"

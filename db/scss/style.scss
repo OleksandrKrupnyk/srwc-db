@@ -341,7 +341,11 @@ header {
     justify-content: space-around;
 
     a {
-      text-shadow: 2px 3px 9px white;
+      text-shadow: 2px 3px 9px black;
+      color: white;
+      &:hover{
+        text-shadow: 2px 3px 9px white;
+      }
     }
 
     & + header {
@@ -620,7 +624,6 @@ a[data-ext="ppt"], a[data-ext="pptx"] {
 }
 
 .js-delete-list-item,
-a[href*="_delete"],
 a[href*="_remove"],
 a[href^="#remove"] {
   background: url(../images/del.png) no-repeat;

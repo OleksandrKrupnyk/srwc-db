@@ -44,6 +44,7 @@ $session->setRedirectParam();
     <br>
     <input type="submit" value="Зберегти та вийти" name="save+exit">
     <input type="submit" value="Зберегти" name="save">
+    <a href="action.php" class="btn" >Вийти</a>
     <input type="hidden" name="action" value="author_add">
     <?php
     if (isset($_GET['id_w'])) {

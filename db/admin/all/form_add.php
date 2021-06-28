@@ -166,6 +166,7 @@ $id_u = filter_input(INPUT_GET, 'id_u', FILTER_VALIDATE_INT);
         </fieldset>
         <br>
         <input type="submit" value="Зберегти та вийти" name="save+exit">
+        <a href="action.php" class="btn" >Вийти</a>
         <input type="hidden" name="action" value="all_add">
     </form>
     <!-- Окончание Форма добавления всех сведений-->

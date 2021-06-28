@@ -123,9 +123,10 @@ $result = $db->rawQueryOne($query);
 <header title="Розподіл призових місць серед вузів які брали участь у конференції">Розподіл призових місць серед
     авторів
 </header>
-<menu class='viewTableMenu'>
-    <li><a href='action.php?action=place_edit'>Редагувати</a></li>
-</menu>
+<header style="width:fit-content;">
+<a  href='action.php?action=place_edit'>Редагувати</a>
+</header>
+
 <table>
     <tr>
         <th>№</th>

@@ -41,8 +41,9 @@ foreach ($scanFiles as $scanFile) {
             ['id' => 'selunivers', 'required' => true, 'prompt' => 'ВНЗ...', 'class' => 'w-100', 'style' => 'max-width:100%!important'])
         ?><br/>
         <label>Файл:</label>
-        <input type="file" name="file" size="20">
+        <input type="file" name="file" size="20"><br/>
         <input type="submit" value="Завантажити">
+        <a href="action.php" class="btn" >Вийти</a>
         <input type="hidden" name="action" value="invitation_add">
     </fieldset>
 </form>

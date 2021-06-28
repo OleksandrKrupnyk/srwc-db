@@ -144,8 +144,7 @@ $_type = $session->getFlash('recordSaveType', '');
         $menuData = include 'menu.php';
         $menu = new Menu($menuData);
         $session->setFromParam();
-        echo "<header><i class='icofont-navigation-menu'></i> Меню</header>"
-            . $menu->getMenu();
+        echo '<header><i class="icofont-navigation-menu"></i> Меню</header>'. $menu->getMenu();
     }
     ?>
     <div class="upPageLink pointer" id="btnUp" onclick="window.scrollTo(0, 0);">вгору</div>

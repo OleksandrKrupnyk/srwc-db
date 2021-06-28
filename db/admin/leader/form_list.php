@@ -12,8 +12,8 @@ Base::$session->setFromParam();
     <a href="action.php?action=author_list">Список авторів</a>
     <div>Список керівників</div>
 </header>
-<header>
-    <a href="action.php?action=leader_add">[+ керівник]</a>
+<header style="width:fit-content;">
+    <a href="action.php?action=leader_add" title="Додати керівника"><i class="icofont-plus"><i class="icofont-teacher"></i></i></a>
 </header>
 <form class="form" method="POST" action="lists.php?action=badge_leaders">
     <?= getListOfObjects(Base::$app->db, 'leader', true, true, false, false); ?>

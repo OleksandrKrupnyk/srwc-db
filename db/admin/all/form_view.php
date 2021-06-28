@@ -5,6 +5,7 @@ use zukr\base\AuthInterface;
 use zukr\base\Base;
 use zukr\base\helpers\ArrayHelper;
 use zukr\base\helpers\PersonHelper;
+use zukr\base\html\Html;
 use zukr\base\html\HtmlHelper;
 use zukr\base\LoginUser;
 use zukr\file\FileHelper;
@@ -18,7 +19,7 @@ use zukr\work\WorkHelper;
  * Выводит заголовок  "название университета" в таблице просмотра данных о работах
  *
  * @param string $univer_title
- * @param int    $id_u
+ * @param int $id_u
  * @param string $univer
  *
  * @return string
@@ -38,7 +39,7 @@ function print_work_univer($univer_title, $id_u, $univer)
 /**
  * Выводит рядок в таблице просмотра данных о работе
  *
- * @param array     $work
+ * @param array $work
  * @param LoginUser $userLogin
  *
  * @return string
@@ -76,7 +77,7 @@ function print_work_row(array $work, LoginUser $userLogin)
 
     $tesis = (int)$work['tesis'] === Base::KEY_OFF ? '' : '<strong>З тезами</strong>';
 
-    $list_leaders =  WorkHelper::leaderList($leaders, false);
+    $list_leaders = WorkHelper::leaderList($leaders, false);
 
     $list_autors = WorkHelper::authorList($autors, true, true);
 
@@ -94,7 +95,7 @@ function print_work_row(array $work, LoginUser $userLogin)
         ? '<a href="action.php?action=review_add&id_w=' . $work['id'] . '&id_u=' . $work['id_u'] . '">додати рецензію</a>'
         : '';
 
-    $reviewsData =list_reviews_for_one_work(
+    $reviewsData = list_reviews_for_one_work(
         $work['id'],
         ($user->isReview() && (int)Base::$param->DENNY_EDIT_REVIEW === Base::KEY_OFF) || $user->isAdmin(),
         $user->isAdmin(),
@@ -109,8 +110,11 @@ function print_work_row(array $work, LoginUser $userLogin)
         ? "<br/><strong>Публікації</strong> :{$work['public']}" . PHP_EOL
         : '';
     $delete_work = Base::$user->getUser()->isAdmin()
-        ? '<a href=action.php?action=work_delete&id_w=' . $work['id']
-        . ' title="Видалити роботу з реєстру (Зникнуть зв\'язки, автори та керівникі будуть у базі)"></a>' . PHP_EOL
+        ? Html::a(
+            '<i class="icofont-ui-delete"></i>',
+            'action.php?' . http_build_query(['action' => 'work_delete', 'id_w' => $work['id']]),
+            ['title' => "Видалити роботу з реєстру (Зникнуть зв\'язки, автори та керівникі будуть у базі)"])
+        . PHP_EOL
         : '' . PHP_EOL;
     $files = HtmlHelper::listFiles($filesOfWork);
     $rowspan = '3';
@@ -141,10 +145,10 @@ ROWTABLE;
 }
 
 /**
- * @param int  $id_w ІД запису роботи
+ * @param int $id_w ІД запису роботи
  * @param bool $href TRUE if you need to show link for edit
  * @param bool $isAdmin
- * @param int  $loginId ІД запису користувача
+ * @param int $loginId ІД запису користувача
  * @return string Numeric list of reviews with links
  */
 function list_reviews_for_one_work($id_w, bool $href = false, bool $isAdmin = false, int $loginId = 0)
@@ -160,12 +164,20 @@ function list_reviews_for_one_work($id_w, bool $href = false, bool $isAdmin = fa
         $item = '';
         $fio = PersonHelper::getFullName($review);
         if ($href) {
-            $item .= "<a href='action.php?action=review_edit&id={$review['id']}' title='Ред. Рец.:{$fio}'>&#9998;:[{$review['sumball']}]</a>";
+            $item .= Html::a(
+                "<i class='icofont-ui-edit'></i>:[{$review['sumball']}]",
+                'action.php?' . http_build_query(['action' => 'review_edit', 'id' => $review['id']]),
+                ['title' => 'Ред. Рец.:' . $fio]);
             if (isAuthorOfReview($loginId, $review) || $isAdmin) {
-                $item .= "<a href='action.php?action=review_delete&id={$review['id']}&id_w={$review['id_w']}'  title='Видалити рецензію'></a>";
+                $item .= Html::a('<i class="icofont-ui-delete"></i>',
+                    'action.php?' . http_build_query(['action' => 'review_delete', 'id' => $review['id'], 'id_w' => $review['id_w']]),
+                    ['title' => 'Видалити рецензію']);
             }
         } else {
-            $item .= "<a href='action.php?action=review_view&id={$review['id']}' title='[{$review['sumball']}]'>Реценз.</a>";
+            $item .= Html::a(
+                'Реценз.',
+                'action.php?' . http_build_query(['action' => 'review_view', 'id' => $review['id']]),
+                ['title' => '[' . $review['sumball'] . ']']);
         }
         $conclusions .= (int)$review['conclusion'] === Base::KEY_ON ? 'ТАК&nbsp;' : 'НІ&nbsp;';
 

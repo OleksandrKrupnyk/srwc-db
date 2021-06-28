@@ -41,6 +41,7 @@ $univers = $uh->getDropDownListShotFull($uh->getTakePartUniversDropDownList($uni
             </tbody>
         </table>
         <input type="submit" value="Записати">
+        <a href="action.php" class="btn" >Вийти</a>
         <input type="hidden" name="action" value="work_link">
     </form>
     <!-- Окончание Связывание работы -->

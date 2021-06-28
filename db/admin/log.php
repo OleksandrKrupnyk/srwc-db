@@ -89,6 +89,7 @@ $html = <<<__HTML__
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="../css/style.css" type="text/css" rel="stylesheet"/>
+    <link href="../css/icofont.min.css" rel="stylesheet"/>
     <script type="text/javascript" src="../js/jquery.js"></script>
     <script type="text/javascript" src="../js/admin.js"></script>
     <title>Журнал &quot;СНР 2020&quot;&copy;</title>

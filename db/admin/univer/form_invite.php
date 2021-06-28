@@ -33,5 +33,7 @@ $session->setFromParam();
               </tr>';
 
     endforeach; ?>
-</table><a href='lists.php?action=adress'><input type='button' value='Друкувати список'></a>
+</table>
+<a href='lists.php?action=adress'><input type='button' value='Друкувати список'></a>
+<a href="action.php" class="btn" >Вийти</a>
 <?= $uh->registerJS('univer.js') ?>

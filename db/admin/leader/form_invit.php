@@ -8,7 +8,7 @@ use zukr\univer\UniverHelper;
 Base::$session->setFromParam();
 $lh = LeaderHelper::getInstance();
 $uh = UniverHelper::getInstance();
-$univers = $uh->getDropDownListShot(
+$univers = $uh->getDropDownListShotFull(
     $uh->getTakePartUniversDropDownList(
         $uh->getUniversIdWhoSendWork()
     )
@@ -19,22 +19,24 @@ $univers = $uh->getDropDownListShot(
     <header style="justify-content:center">Запрошення (&nbsp;<span
                 id="countLeaders"><?= $lh->getCountInvitationLeaders() ?></span>&nbsp;всього)
     </header>
-    <menu class="viewTableMenu">
-        <li><a href="lists.php?action=invitation">Листи ректорам</a></li>
-    </menu>
-    <table id="tableInvitationLeaders">
+    <a class="btn" href="lists.php?action=invitation">Листи ректорам</a>
+    <table id="tableInvitationLeaders" class="w-100">
         <tr>
             <th class="w-50">ВНЗ що надіслали роботи</th>
             <th class="w-50">Представники / Керівники</th>
         </tr>
         <tr>
-            <td class="w-50"><?= Html::select('id_u', null, $univers, [
-                    'size' => 10,
+            <td class="w-50" style="vertical-align: top"><?= Html::select('id_u', null, $univers, [
+                    'size' => 20,
                     'class' => 'w-100',
                     'id' => 'shortlistunivers'
                 ]) ?></td>
-            <td class="w-50">
-                <div id="listleaders"></div>
+            <td class="w-50" style="vertical-align:top;">
+                <div id="listleaders">
+                    <div style="padding-top:20% ">
+                        <i class="icofont-2x icofont-hand-left"></i> Оберіть вищий навчальний заклад
+                    </div>
+                </div>
             </td>
         </tr>
     </table>

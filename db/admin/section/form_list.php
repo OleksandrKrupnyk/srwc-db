@@ -18,7 +18,7 @@ foreach ($sh->getSections() as $id => $item) {
     <header>
         <div>Список секцій</div>
     </header>
-    <header>
+    <header style="width:fit-content;">
         <a href="action.php?action=rooms_edit">Аудиторії</a>
     </header>
     <div style="display: flex; flex-flow: row nowrap">
