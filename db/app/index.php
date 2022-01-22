@@ -157,13 +157,10 @@ if (!isset($_GET['action'])) {
     <h1>Реєстр робіт Всеукраїнського конкурсу студентських наукових робіт
         <br>&quot;Електротехніка та електромеханіка&quot; <?= Base::$param->NYEARS ?> н.р.</h1>
     <h4>Данні реєстрів робіт
-        &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2013'>2013-2014</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2014'>2014-2015</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2015'>2015-2016</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2016'>2016-2017</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2017'>2017-2018</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2018'>2018-2019</a>
         &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2019'>2019-2020</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href='../../db2020'>2020-2021</a>
         &nbsp;&nbsp;&nbsp;&nbsp;навчальних років.
     </h4>
 
