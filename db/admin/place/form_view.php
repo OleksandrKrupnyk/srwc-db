@@ -51,7 +51,7 @@ LEFT JOIN
     group by id_u)as t6 
 ON autors.id_u = t6.id_u
 LEFT JOIN univers ON univers.id=autors.id_u
-GROUP BY univers.id ORDER BY `univer`;";
+GROUP BY univers.id ORDER BY univer, t1.first,t2.second,t3.third,t4.diplom,t44.conf,t5.count_invitation,t6.count_takepart;";
 
 const SUPERSQL2 = "select ' ' as `univer`, 
 sum(t.first) as `first`,
