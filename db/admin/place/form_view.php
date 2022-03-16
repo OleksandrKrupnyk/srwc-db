@@ -9,6 +9,7 @@
 use zukr\base\Base;
 
 $db = Base::$app->db;
+$db->rawQueryOne("SET sql_mode = ''");
 const SUPERSQL = "
 SELECT univer, t1.first,t2.second,t3.third,t4.diplom,t44.conf,t5.count_invitation,t6.count_takepart  
 FROM `autors` 
